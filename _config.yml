@@ -1,28 +1,30 @@
-# ----------------------- #
-#      Main Configs       #
-# ----------------------- #
+# Site settings
+title: Grayscale
+email: your-email@domain.com
+url: https://example.github.io
+description: "Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description."
 
-url: https://mrkaye97.github.io
-title: Home
-email: kayem@carleton.edu
-author: Matthew Kaye
-description: > # "Hi! I'm Matt, a junior economics and mathematics double major at Carleton College in Northfield, Minnesota. I'm interested in economic research, public policy, statistics, data analytics, and data visualization. This is my home page! Check out my LinkedIn, GitHub, and blog!
-copyright: 'Copyright &copy; 2018 Matthew Kaye All Rights Reserved.'
+# Color settings (hex-codes without the leading hash-tag)
+color:
+  primary-dark: '#000000'
+  links: '#219ab3'
 
-# ----------------------- #
-#    Jekyll & Plugins     #
-# ----------------------- #
+# Footer settings
+footer: Your Website
+
+# Social networks usernames (many more available: google-plus, flickr, dribbble, pinterest, instagram, tumblr, linkedin, etc.)
+social:
+  - title: twitter
+    url: https://twitter.com/SBootstrap
+  - title: facebook
+    url:
+  - title: stack-overflow
+    url: http://stackoverflow.com/questions/tagged/jekyll
+  - title: bitbucket
+    url: http://bitbucket.org/jekyll
+  - title: github
+    url: https://github.com/IronSummitMedia/startbootstrap
 
 # Build settings
 markdown: kramdown
 permalink: pretty
-
-# ----------------------- #
-#   3rd Party Settings    #
-# ----------------------- #
-
-social:
-  - title: github
-    url: https://github.com/mrkaye97
-  - title: linkedin
-    url: https://www.linkedin.com/in/kayem20/
