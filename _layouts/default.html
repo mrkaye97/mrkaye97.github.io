@@ -1,24 +1,14 @@
 <!DOCTYPE html>
-<html lang="{{ page.lang | default: site.langs[0] | default: "en" }}">
-
-  {% include head.html %}
-
-  <body>
-
+<html>
+    {% include head.html %}
+    <body id="page-top" data-spy="scroll" data-target=".navbar-fixed-top">
+    {% include nav.html %}
     {% include header.html %}
-
-    {% if page.layout == "post" %}
-    <main class="post-content" aria-label="Content">
-    {% else %}
-    <main class="page-content" aria-label="Content">
-    {% endif %}
-      <div class="wrapper">
-        {{ content }}
-      </div>
-    </main>
-
+    {% include about.html %}
+    {% include download.html %}
+    {% include contact.html %}
+    {% include map.html %}
     {% include footer.html %}
-
-  </body>
-
+    {% include js.html %}
+    </body>
 </html>
