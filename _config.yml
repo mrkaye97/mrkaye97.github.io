@@ -17,8 +17,6 @@ social:
     url: https://www.linkedin.com/in/kayem20/
   - title: github
     url: https://github.com/mrkaye97
-  - title: resume
-    url: <object data="Matthew_Kaye_Resume.pdf" width="1000" height="1000" type='application/pdf'/>
 
 # Build settings
 markdown: kramdown
