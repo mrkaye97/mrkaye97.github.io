@@ -26,8 +26,8 @@ body {
   margin-bottom: 10px;
 }
 .navbar-default {
-  background-color: #cccccc;
-  border-color: #cc9900;
+  background-color: #cc9900;
+  border-color: #cccccc;
 }
 .navbar-default .navbar-brand {
   color: #cc9900;
@@ -39,7 +39,7 @@ body {
   color: #000000;
 }
 .navbar-default .navbar-nav > li > a {
-  color: #cc9900;
+  color: #cccccc;
 }
 .navbar-default .navbar-nav > li > a:hover, .navbar-default .navbar-nav > li > a:focus { /*color of buttons on navbar when selected*/
   color: #000000;
