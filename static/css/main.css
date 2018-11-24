@@ -66,7 +66,7 @@ body {
   border-color: #6b6b6b;
 }
 .navbar-default .navbar-link {
-  color: #6b6b6b;
+  color: #000000;
 }
 .navbar-default .navbar-link:hover {
   color: #000000;
@@ -79,7 +79,7 @@ body {
     color: #6b6b6b;
   }
   .navbar-default .navbar-nav .open .dropdown-menu > .active > a, .navbar-default .navbar-nav .open .dropdown-menu > .active > a:hover, .navbar-default .navbar-nav .open .dropdown-menu > .active > a:focus {
-    color: #6b6b6b;
+    color: #000000;
     background-color: #ffffff;
   }
 }
