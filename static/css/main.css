@@ -3,7 +3,7 @@
 html,
 body {
   height: 100%;
-  background-color: #e6e6e6;
+  background-color: #f2f2f2;
   font-family: 'Source Sans Pro', sans-serif;
   /* The html and body elements cannot have any padding or margin. */
   border-top: 3px solid #bfbfbf;
@@ -26,23 +26,23 @@ body {
   margin-bottom: 10px;
 }
 .navbar-default {
-  background-color: #bfbfbf;
-  border-color: #bfbfbf;
+  background-color: #cccccc;
+  border-color: #cccccc;
 }
 .navbar-default .navbar-brand {
-  color: #6b6b6b;
+  color: #cccccc;
 }
 .navbar-default .navbar-brand:hover, .navbar-default .navbar-brand:focus {
-  color: #6b6b6b;
+  color: #cccccc;
 }
 .navbar-default .navbar-text {
-  color: #6b6b6b;
+  color: #cccccc;
 }
 .navbar-default .navbar-nav > li > a {
-  color: #6b6b6b;
+  color: #cccccc;
 }
 .navbar-default .navbar-nav > li > a:hover, .navbar-default .navbar-nav > li > a:focus {
-  color: #6b6b6b;
+  color: #cccccc;
 }
 .navbar-default .navbar-nav > .active > a, .navbar-default .navbar-nav > .active > a:hover, .navbar-default .navbar-nav > .active > a:focus {
   color: #6b6b6b;
