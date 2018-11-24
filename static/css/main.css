@@ -3,7 +3,7 @@
 html,
 body {
   height: 100%;
-  background-color: #bfbfbf;
+  background-color: #404040;
   font-family: 'Source Sans Pro', sans-serif;
   /* The html and body elements cannot have any padding or margin. */
   border-top: 3px solid #b3ccff;
