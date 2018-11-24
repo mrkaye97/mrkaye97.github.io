@@ -6,7 +6,7 @@ body {
   background-color: #f2f2f2;
   font-family: 'Source Sans Pro', sans-serif;
   /* The html and body elements cannot have any padding or margin. */
-  border-top: 3px solid #000000;
+  border-top: 3px solid #cccccc;
 }
 /* Wrapper for page content to push down footer */
 #wrap {
@@ -26,11 +26,11 @@ body {
   margin-bottom: 10px;
 }
 .navbar-default {
-  background-color: #000000;
-  border-color: #000000;
+  background-color: #cccccc;
+  border-color: #cccccc;
 }
 .navbar-default .navbar-brand {
-  color: #000000;
+  color: #cccccc;
 }
 .navbar-default .navbar-brand:hover, .navbar-default .navbar-brand:focus {
   color: #000000;
@@ -39,7 +39,7 @@ body {
   color: #000000;
 }
 .navbar-default .navbar-nav > li > a {
-  color: #000000;
+  color: #cccccc;
 }
 .navbar-default .navbar-nav > li > a:hover, .navbar-default .navbar-nav > li > a:focus {
   color: #000000;
