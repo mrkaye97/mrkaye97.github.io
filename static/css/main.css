@@ -29,8 +29,8 @@ body {
   background-color: #cccccc;
   border-color: #cccccc;
 }
-.navbar-default .navbar-brand {
-  color: #cc9900;
+.navbar-default .navbar-brand { /*COLOR OF HOME BUTTON OR BLOG & RESUME BUTTONS*/
+  color: #ff4d4d;
 }
 .navbar-default .navbar-brand:hover, .navbar-default .navbar-brand:focus {/*color of home button on navbar when selected*/
   color: #000000;
@@ -38,8 +38,8 @@ body {
 .navbar-default .navbar-text {
   color: #000000;
 }
-.navbar-default .navbar-nav > li > a {
-  color: #cc9900;
+.navbar-default .navbar-nav > li > a { /*COLOR OF HOME BUTTON OR BLOG & RESUME BUTTONS*/
+  color: #ff4d4d;
 }
 .navbar-default .navbar-nav > li > a:hover, .navbar-default .navbar-nav > li > a:focus { /*color of buttons on navbar when selected*/
   color: #000000;
