@@ -30,7 +30,7 @@ body {
   border-color: #cccccc;
 }
 .navbar-default .navbar-brand { /*COLOR OF HOME BUTTON OR BLOG & RESUME BUTTONS*/
-  color: #ff4d4d;
+  color: #000000;
 }
 .navbar-default .navbar-brand:hover, .navbar-default .navbar-brand:focus {/*color of home button on navbar when selected*/
   color: #000000;
@@ -39,7 +39,7 @@ body {
   color: #000000;
 }
 .navbar-default .navbar-nav > li > a { /*COLOR OF HOME BUTTON OR BLOG & RESUME BUTTONS*/
-  color: #ff4d4d;
+  color: #000000;
 }
 .navbar-default .navbar-nav > li > a:hover, .navbar-default .navbar-nav > li > a:focus { /*color of buttons on navbar when selected*/
   color: #000000;
