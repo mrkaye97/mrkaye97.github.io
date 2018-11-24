@@ -6,7 +6,7 @@ body {
   background-color: #f2f2f2;
   font-family: 'Source Sans Pro', sans-serif;
   /* The html and body elements cannot have any padding or margin. */
-  border-top: 3px solid #bfbfbf;
+  border-top: 3px solid #cccccc;
 }
 /* Wrapper for page content to push down footer */
 #wrap {
