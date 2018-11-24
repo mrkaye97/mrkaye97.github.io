@@ -8,6 +8,8 @@ paginate: 5
 plugins: [jekyll-paginate]
 port: 3000
 safe: true
+exclude: [node_modules]
+
 
 
 # edit here to achieve your personal greatness
