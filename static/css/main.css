@@ -12,6 +12,7 @@ body {
 #wrap {
   padding-bottom: 50px;	
   min-height: 100%;
+  max-width: 10px;
   height: auto;
   /* Negative indent footer by its height */
   margin: 0 auto -65px;
