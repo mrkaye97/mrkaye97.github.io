@@ -14,5 +14,4 @@ Last night, after getting all of my stuff set up, I roamed around the city a whi
 
 Side note: I've been taking a lot of photos but don't know how to embed them into these HTML posts from my phone, but will post some when I get home. 
 
-![Image of Matt]
-(mrkaye97.github.io/photo.png)
+![Image of Matt](mrkaye97.github.io/photo.png)
