@@ -13,3 +13,6 @@ Anyways, I made it to Vienna in one piece, and Wombats' Naschmarkt is a very nic
 Last night, after getting all of my stuff set up, I roamed around the city a while. There was a line at a stand selling würstl, so I got one of those and explored some of the Christmas markets. The ones at Karlsplatz and especially Stephansplatz were massive and very busy. Two of my roommates and I wound up going back to Karlsplatz later last night for some beer, mulled wine, and an open-faced sandwich with what looked like raw bacon on it. All went well -- mulled wine is what I imagine the kings and queens of old drinking, and where more appropriate to try it for the first time than an outdoor Christmas market in the old capital of the Austrian Empire?
 
 Side note: I've been taking a lot of photos but don't know how to embed them into these HTML posts from my phone, but will post some when I get home. 
+
+![Image of Matt]
+(https://github.com/mrkaye97/mrkaye97.github.io/photo.png)
