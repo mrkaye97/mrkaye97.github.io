@@ -16,4 +16,4 @@ Side note: I've been taking a lot of photos but don't know how to embed them int
 
 After some thought, I opted to create a public link to my Google Photos album, for anyone who wants to see all of the photos I took on my trip. Enjoy!
 
-https://photos.app.goo.gl/baghrtMVhe9DX9vL9
+[Google Photos Album](https://photos.app.goo.gl/baghrtMVhe9DX9vL9)
