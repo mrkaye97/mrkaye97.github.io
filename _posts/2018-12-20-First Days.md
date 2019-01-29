@@ -14,4 +14,6 @@ Last night, after getting all of my stuff set up, I roamed around the city a whi
 
 Side note: I've been taking a lot of photos but don't know how to embed them into these HTML posts from my phone, but will post some when I get home. 
 
-![Stephansplatz Christmas Market](mrkaye97.github.io/photos/stephansplatz_xmas.jpg)
+After some thought, I opted to create a public link to my Google Photos album, for anyone who wants to see all of the photos I took on my trip. Enjoy!
+
+[Google Photos Album](https://photos.app.goo.gl/baghrtMVhe9DX9vL9)
