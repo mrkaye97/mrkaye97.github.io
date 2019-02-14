@@ -1,1 +1,5 @@
 _site/
+*.log
+*.aux
+*.synctex.gz
+*.DS_Store
