@@ -21,24 +21,18 @@ Title: Bio
   box-sizing: border-box;
 }
 
-/* Create three equal columns that floats next to each other */
-.column {
-  float: left;
-  width: 33.33%;
-  padding: 15px;
-  height: 300px; /* Should be removed. Only for demonstration */
-}
-
-/* Clear floats after the columns */
-.row:after {
-  content: "";
+.col-container {
   display: table;
-  clear: both;
+  width: 100%;
+}
+.col {
+  display: table-cell;
+  padding: 16px;
 }
 
-/* Responsive layout - makes the three columns stack on top of each other instead of next to each other */
-@media screen and (max-width: 600px) {
-  .column {
+@media only screen and (max-width: 600px) {
+  .col { 
+    display: block;
     width: 100%;
   }
 }
@@ -46,26 +40,24 @@ Title: Bio
 </head>
 <body>
 
-<center>
 
-<h2>Bio</h2>
+<h2>The Basics</h2>
 
-<div class="row">
-	<div class="column" style="background-color:#bbb;">
+<div class="col-container">
+  <div class="col" style="background:orange">
     <h2>Where I've Been</h2>
     <p>Testing. Testing.</p>
   </div>
-  <div class="column" style="background-color:#aaa;">
+
+  <div class="col" style="background:yellow">
     <h2>Where I Am</h2>
     <p>I'm a rising senior at Carleton College double majoring in economics and mathematics. Most of my focus at school so far has been in applied microeconomics, statistics, and computer science to build strong analytical skills for a future in economics or data science. I'm spending next fall (2019) in Stockholm at the Stockholm School of Economics, and graduating two trimesters early.</p>
   </div>
-  <div class="column" style="background-color:#bbb;">
+
+  <div class="col" style="background:orange">
     <h2>Where I'm Going</h2>
     <p>I'm interested in economics and economic research, public policy, and data science. Hopefully I can work in one of these fields after graduation, maybe at a place like the Federal Reserve, a think tank, a major tech company or a professional sports team's front office. In the longer term, I hope to go back to graduate school for something like economics, statistics, or machine learning. Finally, I'm hoping that I get an opportunity to live abroad (or maybe stay in Sweden after my time there). Living abroad is something that I've always wanted to do, and I think that I have a pretty unique opportunity to take the bull by the horns this early in my life.</p>
   </div>
-
 </div>
-</center>
-
 </body>
 </html>
