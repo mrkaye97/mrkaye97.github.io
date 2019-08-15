@@ -1,18 +1,14 @@
 - title: About
   url: /about.html
-- title: Team
-  url: /team.html
-- title: Contact
-  url: /contact.html
-- title: Store
-  url: /store.html
+- title: Blog
+  url: /blog.html
 - title: Support
-  url: /support.html
+  url: /about.html
   sublinks:
     - title: FAQ
-      url: /faq.html
+      url: /about.html
     - title: Documentation
-      url: /documentation.html
+      url: /about.html
     - title: separator
     - title: Customer Support
-      url: /customer-support.html
+      url: /about.html
