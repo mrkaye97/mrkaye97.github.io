@@ -21,18 +21,24 @@ Title: Bio
   box-sizing: border-box;
 }
 
-.col-container {
-  display: table;
-  width: 100%;
-}
-.col {
-  display: table-cell;
-  padding: 16px;
+/* Create three equal columns that floats next to each other */
+.column {
+  float: left;
+  width: 33.33%;
+  padding: 10px;
+  height: 300px; /* Should be removed. Only for demonstration */
 }
 
-@media only screen and (max-width: 600px) {
-  .col { 
-    display: block;
+/* Clear floats after the columns */
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+/* Responsive layout - makes the three columns stack on top of each other instead of next to each other */
+@media screen and (max-width: 600px) {
+  .column {
     width: 100%;
   }
 }
@@ -40,24 +46,47 @@ Title: Bio
 </head>
 <body>
 
+<h2>Responsive Three Column Layout</h2>
+<p>Resize the browser window to see the responsive effect (the columns will stack on top of each other instead of floating next to each other, when the screen is less than 600px wide).</p>
 
-<h2>The Basics</h2>
+<div class="row">
+  <div class="column" style="background-color:#aaa;">
+    <h2>Column 1</h2>
+    <p>Some text..</p>
+  </div>
+  <div class="column" style="background-color:#bbb;">
+    <h2>Column 2</h2>
+    <p>Some text..</p>
+  </div>
+  <div class="column" style="background-color:#ccc;">
+    <h2>Column 3</h2>
+    <p>Some text..</p>
+  </div>
+</div>
 
-<div class="col-container">
-  <div class="col" style="background:orange">
+</body>
+<body>
+
+<center>
+
+<h2>Bio</h2>
+
+<div class="row">
+	<div class="column" style="background-color:#bbb;">
     <h2>Where I've Been</h2>
     <p>Testing. Testing.</p>
   </div>
-
-  <div class="col" style="background:yellow">
+  <div class="column" style="background-color:#aaa;">
     <h2>Where I Am</h2>
     <p>I'm a rising senior at Carleton College double majoring in economics and mathematics. Most of my focus at school so far has been in applied microeconomics, statistics, and computer science to build strong analytical skills for a future in economics or data science. I'm spending next fall (2019) in Stockholm at the Stockholm School of Economics, and graduating two trimesters early.</p>
   </div>
-
-  <div class="col" style="background:orange">
+  <div class="column" style="background-color:#bbb;">
     <h2>Where I'm Going</h2>
     <p>I'm interested in economics and economic research, public policy, and data science. Hopefully I can work in one of these fields after graduation, maybe at a place like the Federal Reserve, a think tank, a major tech company or a professional sports team's front office. In the longer term, I hope to go back to graduate school for something like economics, statistics, or machine learning. Finally, I'm hoping that I get an opportunity to live abroad (or maybe stay in Sweden after my time there). Living abroad is something that I've always wanted to do, and I think that I have a pretty unique opportunity to take the bull by the horns this early in my life.</p>
   </div>
+
 </div>
+</center>
+
 </body>
 </html>
