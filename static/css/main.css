@@ -112,14 +112,17 @@ body {
   text-align: left;
   line-height: 24px;
   font-size: 22px;
+  vertical-align: middle;
 }
 .panel-default h5 {
   text-align: left;
   line-height: 30px;
   font-size: 18px;
+  vertical-align: middle;
 }
 .panel-default h6 {
   font-size: 15px;
+  vertical-align: middle;
 }
 .panel-default h4 a, h5 a {
   color: #ff4d4d;
@@ -133,6 +136,7 @@ body {
 .panel-body {
   padding-top: -10px;
   text-align: left;
+  vertical-align: middle;
 }
 .social {
   padding-top: 12px;
