@@ -28,14 +28,22 @@ Title: About Me
 			  <h3><strong>Where I am:</strong></h3>
 				<head>
 				<style> 
+
+				.vertical-center {
+				  margin: 0;
+				  position: absolute;
+				  top: 50%;
+				  -ms-transform: translateY(-50%);
+				  transform: translateY(-50%);
+				}
 				#myDIV {
-				  width: 100%;
+				  width: 110%;
 				  height: 100px;
-				  background-color: silver;
+				  background-color: MintCream;
 				  color: black;
-				  border-radius:8%; /*supported by all latest Browser*/
-				  -moz-border-radius:8%; /*For older Browser*/
-				  -webkit-border-radius:8%;/*For older Browser*/
+				  border-radius:1%; /*supported by all latest Browser*/
+				  -moz-border-radius:1%; /*For older Browser*/
+				  -webkit-border-radius:1%;/*For older Browser*/
 				}
 
 				/* Safari 4.0 - 8.0 */
@@ -49,7 +57,7 @@ Title: About Me
 				</style>
 				</head>
 				<center>
-				<div id="myDIV">
+				<div id="myDIV" class="vertical-center">
 				  <h3 style="font-size:16px;margin-left: 2.5em;margin-right: 2.5em">I'm a rising senior at Carleton College double majoring in economics and mathematics. Most of my focus at school so far has been in applied microeconomics, statistics, and computer science to build strong analytical skills for a future in economics or data science. I'm spending next fall (2019) in Stockholm at the Stockholm School of Economics, and graduating two trimesters early.</h3>			
 				</div>
 				</center>
