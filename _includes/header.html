@@ -1,32 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Bootstrap Example</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+</head>
+<body>
 
-<nav id="navbar" class="collapse navbar-collapse">
+<nav class="navbar navbar-inverse">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="#">WebSiteName</a>
+    </div>
     <ul class="nav navbar-nav">
-        {% assign links = site.data.navigation %}
-        {% for link in links %}
-            {% assign class = nil %}
-            {% if page.url contains link.url %}
-                {% assign class = 'active' %}
-            {% endif %}
-            {% if link.sublinks %}
-                <li class="dropdown {{ class }}">
-                    <a href="{{ site.url }}{{ site.baseurl }}{{ link.url }}" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{ link.title }} <span class="caret"></span></a>
-                    <ul class="dropdown-menu">
-                        {% for sublink in link.sublinks %}
-                            {% if sublink.title == 'separator' %}
-                                <li role="separator" class="divider"></li>
-                            {% else %}
-                                <li>
-                                    <a href="{{ site.url }}{{ site.baseurl }}{{ sublink.url }}">{{ sublink.title }}</a>
-                                </li>
-                            {% endif %}
-                        {% endfor %}
-                    </ul>
-                </li>
-            {% else %}
-                <li class="{{ class }}">
-                    <a href="{{ site.url }}{{ site.baseurl }}{{ link.url }}">{{ link.title }}</a>
-                </li>
-            {% endif %}
-        {% endfor %}
+      <li class="active"><a href="#">Home</a></li>
+      <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Page 1 <span class="caret"></span></a>
+        <ul class="dropdown-menu">
+          <li><a href="#">Page 1-1</a></li>
+          <li><a href="#">Page 1-2</a></li>
+          <li><a href="#">Page 1-3</a></li>
+        </ul>
+      </li>
+      <li><a href="#">Page 2</a></li>
+      <li><a href="#">Page 3</a></li>
     </ul>
+  </div>
 </nav>
+  
+<div class="container">
+  <h3>Navbar With Dropdown</h3>
+  <p>This example adds a dropdown menu for the "Page 1" button in the navigation bar.</p>
+</div>
+
+</body>
+</html>
