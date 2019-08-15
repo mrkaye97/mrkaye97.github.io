@@ -1,3 +1,5 @@
+<!DOCTYPE html>
+<html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -54,30 +56,26 @@ body {
 </style>
 </head>
 
-<nav class="navbar navbar-default">
-  <div class="container">
-    <div class="navbar-header">
-      <a class="navbar-brand" href="{{ site.url }}"><i class="fa fa-home"></i></a>
+<body>
+
+<div class="navbar">
+  <a href="Matthew_Kaye_Resume.pdf">RESUME</a>
+  <a href="{{ site.baseurl }}projects.html">PROJECTS</a>
+  <a href="{{ site.baseurl }}blog.html">BLOG</a>
+  <div class="dropdown">
+    <button class="dropbtn">ABOUT ME 
+      <i class="fa fa-caret-down"></i>
+    </button>
+    <div class="dropdown-content">
+      <a href="#">Link 1</a>
+      <a href="#">Link 2</a>
+      <a href="#">Link 3</a>
     </div>
-    <div id="navbar">
-      <ul class="nav navbar-nav navbar-right">
-        <li><a href="{{ site.baseurl }}about.html">ABOUT ME</a></li>
-        <li><a href="{{ site.baseurl }}projects.html">PROJECTS</a></li>
-        <li><a href="{{ site.baseurl }}blog.html">BLOG</a></li>
-        <li><a href="Matthew_Kaye_Resume.pdf">RESUME</a></li>
-        <li>
-          <div class="dropdown">
-            <button class="dropbtn">Dropdown 
-              <i class="fa fa-caret-down"></i>
-            </button>
-            <div class="dropdown-content">
-              <a href="#">Link 1</a>
-              <a href="#">Link 2</a>
-              <a href="#">Link 3</a>
-            </div>
-          </div> 
-        </li>
-      </ul>
-    </div>
-  </div>
-</nav>
+  </div> 
+</div>
+
+<h3>Dropdown Menu inside a Navigation Bar</h3>
+<p>Hover over the "Dropdown" link to see the dropdown menu.</p>
+
+</body>
+</html>
