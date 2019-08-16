@@ -19,3 +19,7 @@ All-time Stat: Oakland Athletics outfielder Khris Davis hit .247 for four years 
 
 7/9/19 - MLB Network: "Gleyber Torres is only the third ever Yankee to make two All Star games before the age of 23. The other two are Mickey Mantle and Joe DiMaggio."
 
+Early 2019 - Effectively Wild Podcast, paraphrased: Mike Trout has amassed about 65 WAR throughout his career, and is projected to have another 70 or so over the next ten seasons. Essentially, this means he has already had one Hall of Fame career, and is about to have another.
+
+Pre-2019 Season: Only 10 players have ever had 5+ seasons of 9+ WAR. They are: Babe Ruth, Rogers Hornsby, Barry Bonds, Willie Mays, Alex Rodriguez, Ty Cobb, Lou Gehrig, Honus Wagner, Ted Williams, and Mike Trout.
+
