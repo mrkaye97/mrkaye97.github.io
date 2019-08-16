@@ -23,13 +23,14 @@ Title: Bio
 
 /* Create three equal columns that floats next to each other */
 .column {
-  margin: 0 auto;
   float: left;
   width: 32%;
   padding: 18px;
   height: 300px; /* Should be removed. Only for demonstration */
   vertical-align: middle;
   text-align: center;
+  position: relative;
+  left: -50%; /* or right 50% */
 }
 
 /* Clear floats after the columns */
