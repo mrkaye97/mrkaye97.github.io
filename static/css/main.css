@@ -111,17 +111,17 @@ body {
 .panel-default h4 {
   text-align: left;
   line-height: 24px;
-  font-size: 22px;
+  font-size: 24px;
   vertical-align: middle;
 }
 .panel-default h5 {
   text-align: left;
   line-height: 30px;
-  font-size: 18px;
+  font-size: 20px;
   vertical-align: middle;
 }
 .panel-default h6 {
-  font-size: 15px;
+  font-size: 17px;
   vertical-align: middle;
 }
 .panel-default h4 a, h5 a {
