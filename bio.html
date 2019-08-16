@@ -23,8 +23,8 @@ Title: Bio
 
 /* Create three equal columns that floats next to each other */
 .column {
-  float: none;
-  width: 30%;
+  float: left;
+  width: 33.33%;
   padding: 18px;
   height: 300px; /* Should be removed. Only for demonstration */
   vertical-align: middle;
@@ -32,6 +32,7 @@ Title: Bio
 
 /* Clear floats after the columns */
 .row:after {
+  padding: 18px;
   content: "";
   display: table;
   clear: both;
