@@ -1,7 +1,6 @@
 ---
 layout: post
 title: Solo Trip to Europe in December, 2018
-sticky: true
 tags:
 - Travel
 - Update
