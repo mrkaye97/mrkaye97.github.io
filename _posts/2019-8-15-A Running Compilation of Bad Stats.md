@@ -7,7 +7,7 @@ tags:
 - Statistics
 ---
 
-This is a rolling compilation of good and bad stats and quotes heard on TV broadcasts or otherwise, mainly having to do with sports and politics. The good / bad labels are left for the reader. Kindly excuse any slight misquotes, and enjoy!
+This is a rolling compilation of good and bad stats and quotes heard on TV broadcasts or otherwise, mainly having to do with sports and politics. Decisions about which are good and which are bad are left to the reader. Kindly excuse any slight misquotes, and enjoy!
 
 All-time Stat: Oakland Athletics outfielder Khris Davis hit .247 for four years in a row.
 
