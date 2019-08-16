@@ -11,7 +11,7 @@ This is a rolling compilation of good and bad stats and quotes heard on TV broad
 
 All-time Stat: Oakland Athletics outfielder Khris Davis hit .247 for four years in a row.
 
-8/13/19 - MLB Network: <i>Discussing Gleyber Torres's immense success against Orioles pitching: </i>"If it were up to Gleyber Torres, the Yankees would play the Orioles every day of the week and twice on Sunday"
+8/13/19 - MLB Network: <i>Discussing Gleyber Torres's immense success against Orioles pitching: </i>"If it were up to Gleyber Torres, the Yankees would play the Orioles every day of the week and twice on Sunday."
 
 7/15/19 - MLB Network: <i>The night before, the Rays had a team no-hitter broken up by a single through the shift in the 9th inning. The hit went to where the second baseman would normally be positioned.</i> A misquote, but the general gist: "The craziest part about this single was that its hit probability was only 16%." 
 
