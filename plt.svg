@@ -1308,18 +1308,18 @@
     <rect x='0.00' y='0.00' width='713.00' height='456.00' />
   </clipPath>
 </defs>
-<rect x='179.00' y='412.36' width='357.98' height='29.24' style='stroke-width: 1.16; stroke: none; fill: #F0F0F0;' clip-path='url(#cpMC4wMHw3MTMuMDB8NDU2LjAwfDAuMDA=)' />
-<g clip-path='url(#cpMC4wMHw3MTMuMDB8NDU2LjAwfDAuMDA=)'><text x='184.98' y='431.28' style='font-size: 12.00px; fill: #3C3C3C; font-family: Arial;' textLength='34.02px' lengthAdjust='spacingAndGlyphs'>Status</text></g>
-<rect x='224.98' y='418.34' width='17.28' height='17.28' style='stroke-width: 1.16; stroke: none; fill: #F0F0F0;' clip-path='url(#cpMC4wMHw3MTMuMDB8NDU2LjAwfDAuMDA=)' />
-<rect x='225.12' y='418.48' width='17.00' height='17.00' style='stroke-width: 0.21; stroke: #FFFFFF; stroke-linejoin: miter; fill: #440154; fill-opacity: 0.85;' clip-path='url(#cpMC4wMHw3MTMuMDB8NDU2LjAwfDAuMDA=)' />
-<rect x='290.34' y='418.34' width='17.28' height='17.28' style='stroke-width: 1.16; stroke: none; fill: #F0F0F0;' clip-path='url(#cpMC4wMHw3MTMuMDB8NDU2LjAwfDAuMDA=)' />
-<rect x='290.48' y='418.48' width='17.00' height='17.00' style='stroke-width: 0.21; stroke: #FFFFFF; stroke-linejoin: miter; fill: #31688E; fill-opacity: 0.85;' clip-path='url(#cpMC4wMHw3MTMuMDB8NDU2LjAwfDAuMDA=)' />
-<rect x='367.93' y='418.34' width='17.28' height='17.28' style='stroke-width: 1.16; stroke: none; fill: #F0F0F0;' clip-path='url(#cpMC4wMHw3MTMuMDB8NDU2LjAwfDAuMDA=)' />
-<rect x='368.07' y='418.48' width='17.00' height='17.00' style='stroke-width: 0.21; stroke: #FFFFFF; stroke-linejoin: miter; fill: #35B779; fill-opacity: 0.85;' clip-path='url(#cpMC4wMHw3MTMuMDB8NDU2LjAwfDAuMDA=)' />
-<rect x='427.17' y='418.34' width='17.28' height='17.28' style='stroke-width: 1.16; stroke: none; fill: #F0F0F0;' clip-path='url(#cpMC4wMHw3MTMuMDB8NDU2LjAwfDAuMDA=)' />
-<rect x='427.32' y='418.48' width='17.00' height='17.00' style='stroke-width: 0.21; stroke: #FFFFFF; stroke-linejoin: miter; fill: #FDE725; fill-opacity: 0.85;' clip-path='url(#cpMC4wMHw3MTMuMDB8NDU2LjAwfDAuMDA=)' />
-<g clip-path='url(#cpMC4wMHw3MTMuMDB8NDU2LjAwfDAuMDA=)'><text x='248.23' y='430.56' style='font-size: 9.60px; fill: #3C3C3C; font-family: Arial;' textLength='36.12px' lengthAdjust='spacingAndGlyphs'>Favorite</text></g>
-<g clip-path='url(#cpMC4wMHw3MTMuMDB8NDU2LjAwfDAuMDA=)'><text x='313.59' y='430.56' style='font-size: 9.60px; fill: #3C3C3C; font-family: Arial;' textLength='48.35px' lengthAdjust='spacingAndGlyphs'>Not Visited</text></g>
-<g clip-path='url(#cpMC4wMHw3MTMuMDB8NDU2LjAwfDAuMDA=)'><text x='391.18' y='430.56' style='font-size: 9.60px; fill: #3C3C3C; font-family: Arial;' textLength='30.01px' lengthAdjust='spacingAndGlyphs'>Visited</text></g>
-<g clip-path='url(#cpMC4wMHw3MTMuMDB8NDU2LjAwfDAuMDA=)'><text x='450.43' y='430.56' style='font-size: 9.60px; fill: #3C3C3C; font-family: Arial;' textLength='80.58px' lengthAdjust='spacingAndGlyphs'>Most Want to Visit</text></g>
+<rect x='191.23' y='412.36' width='333.54' height='29.24' style='stroke-width: 1.16; stroke: none; fill: #F0F0F0;' clip-path='url(#cpMC4wMHw3MTMuMDB8NDU2LjAwfDAuMDA=)' />
+<g clip-path='url(#cpMC4wMHw3MTMuMDB8NDU2LjAwfDAuMDA=)'><text x='197.20' y='431.28' style='font-size: 12.00px; fill: #3C3C3C; font-family: Arial;' textLength='34.02px' lengthAdjust='spacingAndGlyphs'>Status</text></g>
+<rect x='237.20' y='418.34' width='17.28' height='17.28' style='stroke-width: 1.16; stroke: none; fill: #F0F0F0;' clip-path='url(#cpMC4wMHw3MTMuMDB8NDU2LjAwfDAuMDA=)' />
+<rect x='237.34' y='418.48' width='17.00' height='17.00' style='stroke-width: 0.21; stroke: #FFFFFF; stroke-linejoin: miter; fill: #440154; fill-opacity: 0.85;' clip-path='url(#cpMC4wMHw3MTMuMDB8NDU2LjAwfDAuMDA=)' />
+<rect x='302.56' y='418.34' width='17.28' height='17.28' style='stroke-width: 1.16; stroke: none; fill: #F0F0F0;' clip-path='url(#cpMC4wMHw3MTMuMDB8NDU2LjAwfDAuMDA=)' />
+<rect x='302.70' y='418.48' width='17.00' height='17.00' style='stroke-width: 0.21; stroke: #FFFFFF; stroke-linejoin: miter; fill: #31688E; fill-opacity: 0.85;' clip-path='url(#cpMC4wMHw3MTMuMDB8NDU2LjAwfDAuMDA=)' />
+<rect x='380.15' y='418.34' width='17.28' height='17.28' style='stroke-width: 1.16; stroke: none; fill: #F0F0F0;' clip-path='url(#cpMC4wMHw3MTMuMDB8NDU2LjAwfDAuMDA=)' />
+<rect x='380.29' y='418.48' width='17.00' height='17.00' style='stroke-width: 0.21; stroke: #FFFFFF; stroke-linejoin: miter; fill: #35B779; fill-opacity: 0.85;' clip-path='url(#cpMC4wMHw3MTMuMDB8NDU2LjAwfDAuMDA=)' />
+<rect x='439.40' y='418.34' width='17.28' height='17.28' style='stroke-width: 1.16; stroke: none; fill: #F0F0F0;' clip-path='url(#cpMC4wMHw3MTMuMDB8NDU2LjAwfDAuMDA=)' />
+<rect x='439.54' y='418.48' width='17.00' height='17.00' style='stroke-width: 0.21; stroke: #FFFFFF; stroke-linejoin: miter; fill: #FDE725; fill-opacity: 0.85;' clip-path='url(#cpMC4wMHw3MTMuMDB8NDU2LjAwfDAuMDA=)' />
+<g clip-path='url(#cpMC4wMHw3MTMuMDB8NDU2LjAwfDAuMDA=)'><text x='260.46' y='430.56' style='font-size: 9.60px; fill: #3C3C3C; font-family: Arial;' textLength='36.12px' lengthAdjust='spacingAndGlyphs'>Favorite</text></g>
+<g clip-path='url(#cpMC4wMHw3MTMuMDB8NDU2LjAwfDAuMDA=)'><text x='325.82' y='430.56' style='font-size: 9.60px; fill: #3C3C3C; font-family: Arial;' textLength='48.35px' lengthAdjust='spacingAndGlyphs'>Not Visited</text></g>
+<g clip-path='url(#cpMC4wMHw3MTMuMDB8NDU2LjAwfDAuMDA=)'><text x='403.41' y='430.56' style='font-size: 9.60px; fill: #3C3C3C; font-family: Arial;' textLength='30.01px' lengthAdjust='spacingAndGlyphs'>Visited</text></g>
+<g clip-path='url(#cpMC4wMHw3MTMuMDB8NDU2LjAwfDAuMDA=)'><text x='462.66' y='430.56' style='font-size: 9.60px; fill: #3C3C3C; font-family: Arial;' textLength='56.13px' lengthAdjust='spacingAndGlyphs'>Want to Visit</text></g>
 </svg>
