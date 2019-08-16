@@ -1,6 +1,6 @@
 ---
 layout: post
-title: A Running Compilation of Good and Bad Stats
+title: A Rolling Compilation of Good and Bad Stats
 tags:
 - Sports
 - Politics
