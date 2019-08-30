@@ -8,7 +8,7 @@ AO,Angola,Not Visited
 AI,Anguilla,Not Visited
 AQ,Antarctica,Not Visited
 AG,Antigua And Barbuda,Not Visited
-AR,Argentina,Most Want to Visit
+AR,Argentina,Want to Visit
 AM,Armenia,Not Visited
 AW,Aruba,Not Visited
 AU,Australia,Not Visited
@@ -34,14 +34,14 @@ BN,Brunei Darussalam,Not Visited
 BG,Bulgaria,Not Visited
 BF,Burkina Faso,Not Visited
 BI,Burundi,Not Visited
-KH,Cambodia,Most Want to Visit
+KH,Cambodia,Want to Visit
 CM,Cameroon,Not Visited
 CA,Canada,Visited
 CV,Cape Verde,Not Visited
 KY,Cayman Islands,Not Visited
 CF,Central African Republic,Not Visited
 TD,Chad,Not Visited
-CL,Chile,Most Want to Visit
+CL,Chile,Want to Visit
 CN,China,Not Visited
 CX,Christmas Island,Not Visited
 CC,Cocos (keeling) Islands,Not Visited
@@ -52,7 +52,7 @@ CD,"Congo, The Democratic Republic Of The",Not Visited
 CK,Cook Islands,Not Visited
 CR,Costa Rica,Visited
 CI,Cote D'ivoire,Not Visited
-HR,Croatia,Most Want to Visit
+HR,Croatia,Want to Visit
 CU,Cuba,Visited
 CY,Cyprus,Not Visited
 CZ,Czech Republic,Visited
@@ -117,7 +117,7 @@ KV,Kosovo,Not Visited
 KW,Kuwait,Not Visited
 KG,Kyrgyzstan,Not Visited
 LA,Lao People's Democratic Republic,Not Visited
-LV,Latvia,Most Want to Visit
+LV,Latvia,Want to Visit
 LB,Lebanon,Not Visited
 LS,Lesotho,Not Visited
 LR,Liberia,Not Visited
@@ -169,7 +169,7 @@ PS,"Palestinian Territory, Occupied",Not Visited
 PA,Panama,Visited
 PG,Papua New Guinea,Not Visited
 PY,Paraguay,Not Visited
-PE,Peru,Most Want to Visit
+PE,Peru,Want to Visit
 PH,Philippines,Not Visited
 PN,Pitcairn,Not Visited
 PL,Poland,Visited
@@ -213,13 +213,13 @@ SY,Syrian Arab Republic,Not Visited
 TW,"Taiwan, Province Of China",Not Visited
 TJ,Tajikistan,Not Visited
 TZ,"Tanzania, United Republic Of",Not Visited
-TH,Thailand,Most Want to Visit
+TH,Thailand,Want to Visit
 TG,Togo,Not Visited
 TK,Tokelau,Not Visited
 TO,Tonga,Not Visited
 TT,Trinidad And Tobago,Not Visited
 TN,Tunisia,Not Visited
-TR,Turkey,Most Want to Visit
+TR,Turkey,Want to Visit
 TM,Turkmenistan,Not Visited
 TC,Turks And Caicos Islands,Not Visited
 TV,Tuvalu,Not Visited
@@ -233,7 +233,7 @@ UY,Uruguay,Not Visited
 UZ,Uzbekistan,Not Visited
 VU,Vanuatu,Not Visited
 VE,Venezuela,Not Visited
-VN,Viet Nam,Most Want to Visit
+VN,Viet Nam,Want to Visit
 VG,"Virgin Islands, British",Not Visited
 VI,"Virgin Islands, U.s.",Not Visited
 WF,Wallis And Futuna,Not Visited
