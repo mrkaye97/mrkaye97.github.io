@@ -52,4 +52,4 @@ plt <- map.world %>%
         axis.text = element_blank())
 
 
-ggsave('plt.svg', plt, 'svg', dpi = 'retina', path = '~/Documents/GitHub/mrkaye97.github.io/', width = 6, height = 5)
+ggsave('plt.svg', plt, 'svg', dpi = 'retina', path = '~/Documents/GitHub/mrkaye97.github.io/', width = 6, height = 4.8)
