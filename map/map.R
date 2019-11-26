@@ -50,7 +50,9 @@ plt <- map.world %>%
     scale_fill_viridis(discrete = TRUE, option = 'inferno', alpha = .75)+
   theme_fivethirtyeight()+
   theme(panel.grid.major = element_blank(),
-        axis.text = element_blank())
+        axis.text = element_blank(),
+        legend.title = element_blank(),
+        legend.spacing.x = unit(.15, 'cm'))
 
 
 ggsave('plt.svg', plt, 'svg', dpi = 'retina', path = '~/Documents/GitHub/mrkaye97.github.io/', width = 6, height = 4.8)
