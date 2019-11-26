@@ -29,7 +29,8 @@ countries <- read.csv("~/Documents/GitHub/mrkaye97.github.io/map/countries.csv")
                           'Dem. Rep. Korea' = 'North Korea',
                           "Côte d'Ivoire" = 'Ivory Coast',
                           'Republic of the Congo' = 'Republic of Congo'),
-         Status = replace_na(Status, 'Not Visited'))
+         Status = replace_na(Status, 'Not Visited'),
+         Status = factor(Status, levels = c("Haven\'t Been", "Been", "Favorite", "Next Stop")))
 
 map.world <- map_data("world") %>%
   rename('name_long'=5) %>%
@@ -46,7 +47,7 @@ plt <- map.world %>%
                      text=paste('Country: ', Long)), 
                  size=.1,
                  color='white')+
-    scale_fill_viridis(discrete = TRUE, option = 'viridis', alpha = .85)+
+    scale_fill_viridis(discrete = TRUE, option = 'inferno', alpha = .75)+
   theme_fivethirtyeight()+
   theme(panel.grid.major = element_blank(),
         axis.text = element_blank())
