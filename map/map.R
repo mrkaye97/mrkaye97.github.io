@@ -47,7 +47,7 @@ plt <- map.world %>%
                      text=paste('Country: ', Long)), 
                  size=.1,
                  color='white')+
-    scale_fill_viridis(discrete = TRUE, option = 'inferno', alpha = .75)+
+    scale_fill_manual(values = alpha(c("black", 'firebrick4', 'dodgerblue', 'goldenrod'), .8))+
   theme_fivethirtyeight()+
   theme(panel.grid.major = element_blank(),
         axis.text = element_blank(),
