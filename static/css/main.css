@@ -6,7 +6,6 @@ body {
   background-color: #f2f2f2;
   font-family: 'Source Sans Pro', sans-serif;
   /* The html and body elements cannot have any padding or margin. */
-  border-top: 3px solid #cccccc;
 }
 /* Wrapper for page content to push down footer */
 #wrap {
@@ -21,6 +20,55 @@ body {
 
 /* Navbar
 -------------------------------------------------- */
+/* Dropdown Button */
+.dropbtn {
+  background-color: #cccccc;
+  color: black;
+  padding: 15px;
+  font-size: 14px;
+  font-family: 'Source Sans Pro', sans-serif;
+  border: none;
+}
+
+/* The container <div> - needed to position the dropdown content */
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+/* Dropdown Content (Hidden by Default) */
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #cccccc;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+/* Links inside the dropdown */
+.dropdown-content a {
+  color: black !important;
+  font-family: 'Source Sans Pro', sans-serif;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+.dropdown :hover > a {
+    color: ##f2f2f2;
+}
+
+
+/* Change color of dropdown links on hover */
+
+.dropdown-content a:hover {background-color: #ddd;}
+
+/* Show the dropdown menu on hover */
+.dropdown:hover .dropdown-content {display: block;}
+
+/* Change the background color of the dropdown button when the dropdown content is shown */
+.dropdown:hover .dropbtn {background-color: #ddd;}
 
 .navbar-static-top {
   margin-bottom: 10px;
@@ -29,11 +77,13 @@ body {
   background-color: #cccccc;
   border-color: #cccccc;
 }
+
 .navbar-default .navbar-brand { /*COLOR OF HOME BUTTON OR BLOG & RESUME BUTTONS*/
   color: #000000;
 }
 .navbar-default .navbar-brand:hover, .navbar-default .navbar-brand:focus {/*color of home button on navbar when selected*/
   color: #000000;
+  background-color: #ddd;
 }
 .navbar-default .navbar-text {
   color: #000000;
@@ -43,6 +93,7 @@ body {
 }
 .navbar-default .navbar-nav > li > a:hover, .navbar-default .navbar-nav > li > a:focus { /*color of buttons on navbar when selected*/
   color: #000000;
+  background-color: #ddd;
 }
 .navbar-default .navbar-nav > .active > a, .navbar-default .navbar-nav > .active > a:hover, .navbar-default .navbar-nav > .active > a:focus {
   color: #000000;
@@ -71,18 +122,7 @@ body {
 .navbar-default .navbar-link:hover {
   color: #000000;
 }
-@media (max-width: 767px) {
-  .navbar-default .navbar-nav .open .dropdown-menu > li > a {
-    color: #6b6b6b;
-  }
-  .navbar-default .navbar-nav .open .dropdown-menu > li > a:hover, .navbar-default .navbar-nav .open .dropdown-menu > li > a:focus {
-    color: #6b6b6b;
-  }
-  .navbar-default .navbar-nav .open .dropdown-menu > .active > a, .navbar-default .navbar-nav .open .dropdown-menu > .active > a:hover, .navbar-default .navbar-nav .open .dropdown-menu > .active > a:focus {
-    color: #000000;
-    background-color: #ffffff;
-  }
-}
+
 
 
 /* Custom page CSS

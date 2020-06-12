@@ -2,17 +2,23 @@
   <div class="container">
     <div class="navbar-header">
       <a class="navbar-brand" href="{{ site.url }}"><i class="fa fa-home"></i></a>
-    </div>
-    <div id="navbar">
-      <ul class="nav navbar-nav navbar-right">
-        <li><a href="{{ site.baseurl }}bio.html">BIO</a></li>
-        <li><a href="{{ site.baseurl }}random.html">MY THREE FAVORITE</a></li>
-        <li><a href="{{ site.baseurl }}travel.html">TRAVEL MAP</a></li>
-        <li><a href="{{ site.baseurl }}stats.html">STATS</a></li>
-      <!--  <li><a href="{{ site.baseurl }}projects.html">PROJECTS</a></li> -->
-      <!--  <li><a href="{{ site.baseurl }}blog.html">BLOG</a></li> -->
-        <li><a href="Matthew_Kaye_Resume.pdf">RESUME</a></li>
-      </ul>
-    </div>
+        </div>
+        <div id="navbar">
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="Matthew_Kaye_Resume.pdf">RESUME</a></li>
+            <li><a href="{{ site.baseurl }}projects.html">PROJECTS</a></li>
+
+            <li>  <div class="dropdown">
+              <button class="dropbtn">ABOUT ME</button>
+              <div class="dropdown-content">
+                <a href="{{ site.baseurl }}bio.html">BIO</a>
+                <a href="{{ site.baseurl }}random.html">MY THREE FAVORITE</a>
+                <a href="{{ site.baseurl }}travel.html">TRAVEL MAP</a>
+                <a href="{{ site.baseurl }}stats.html">STATS BLOG</a>
+              </div>
+            </div>
+
+          </ul>
+        </div>
   </div>
 </nav>
