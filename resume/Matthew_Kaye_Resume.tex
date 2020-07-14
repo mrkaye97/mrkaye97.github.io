@@ -1,0 +1,243 @@
+%%%%%%%%%%%%%%%%%
+% This is an sample CV template created using altacv.cls
+% (v1.3, 10 May 2020) written by LianTze Lim (liantze@gmail.com). Now compiles with pdfLaTeX, XeLaTeX and LuaLaTeX.
+%
+%% It may be distributed and/or modified under the
+%% conditions of the LaTeX Project Public License, either version 1.3
+%% of this license or (at your option) any later version.
+%% The latest version of this license is in
+%%    http://www.latex-project.org/lppl.txt
+%% and version 1.3 or later is part of all distributions of LaTeX
+%% version 2003/12/01 or later.
+%%%%%%%%%%%%%%%%
+
+%% If you need to pass whatever options to xcolor
+\PassOptionsToPackage{dvipsnames}{xcolor}
+
+%% If you are using \orcid or academicons
+%% icons, make sure you have the academicons
+%% option here, and compile with XeLaTeX
+%% or LuaLaTeX.
+% \documentclass[10pt,a4paper,academicons]{altacv}
+
+%% Use the "normalphoto" option if you want a normal photo instead of cropped to a circle
+% \documentclass[10pt,a4paper,normalphoto]{altacv}
+
+\documentclass[10pt,a4paper,ragged2e,withhyper]{altacv}
+
+%% AltaCV uses the fontawesome5 and academicons fonts
+%% and packages.
+%% See http://texdoc.net/pkg/fontawesome5 and http://texdoc.net/pkg/academicons for full list of symbols. You MUST compile with XeLaTeX or LuaLaTeX if you want to use academicons.
+
+% Change the page layout if you need to
+\geometry{left=1.25cm,right=1.25cm,top=1.5cm,bottom=1.5cm,columnsep=1.2cm}
+
+% The paracol package lets you typeset columns of text in parallel
+\usepackage{paracol}
+
+% Change the font if you want to, depending on whether
+% you're using pdflatex or xelatex/lualatex
+\ifxetexorluatex
+% If using xelatex or lualatex:
+\setmainfont{Roboto Slab}
+\setsansfont{Lato}
+\renewcommand{\familydefault}{\sfdefault}
+\else
+% If using pdflatex:
+\usepackage[rm]{roboto}
+\usepackage[defaultsans]{lato}
+% \usepackage{sourcesanspro}
+\renewcommand{\familydefault}{\sfdefault}
+\fi
+
+% Change the colours if you want to
+\definecolor{SlateGrey}{HTML}{2E2E2E}
+\definecolor{LightGrey}{HTML}{666666}
+\definecolor{DarkPastelRed}{HTML}{989898}
+\definecolor{PastelRed}{HTML}{FF4D4D}
+\definecolor{GoldenEarth}{HTML}{A9A9A9}
+\colorlet{name}{black}
+\colorlet{tagline}{PastelRed}
+\colorlet{heading}{DarkPastelRed}
+\colorlet{headingrule}{GoldenEarth}
+\colorlet{subheading}{PastelRed}
+\colorlet{accent}{PastelRed}
+\colorlet{emphasis}{SlateGrey}
+\colorlet{body}{LightGrey}
+
+% Change some fonts, if necessary
+\renewcommand{\namefont}{\Huge\rmfamily\bfseries}
+\renewcommand{\personalinfofont}{\footnotesize}
+\renewcommand{\cvsectionfont}{\LARGE\rmfamily\bfseries}
+\renewcommand{\cvsubsectionfont}{\large\bfseries}
+
+
+% Change the bullets for itemize and rating marker
+% for \cvskill if you want to
+\renewcommand{\itemmarker}{{\small\textbullet}}
+\renewcommand{\ratingmarker}{\faCircle}
+
+%% sample.bib contains your publications
+\addbibresource{sample.bib}
+
+\begin{document}
+	\name{Matthew Kaye}
+	
+	%% You can add multiple photos on the left or right
+	% \photoL{2.5cm}{Yacht_High,Suitcase_High}
+	
+	\personalinfo{%
+		% Not all of these are required!
+		\homepage{mrkaye97.github.io}
+		\email{mrkaye97@gmail.com}
+		\phone{(646) 853-5997}
+		\linkedin{kayem20}
+		\github{mrkaye97}
+		%% You MUST add the academicons option to \documentclass, then compile with LuaLaTeX or XeLaTeX, if you want to use \orcid or other academicons commands.
+		% \orcid{0000-0000-0000-0000}
+		%% You can add your own arbtrary detail with
+		%% \printinfo{symbol}{detail}[optional hyperlink prefix]
+		% \printinfo{\faPaw}{Hey ho!}[https://example.com/]
+		%% Or you can declare your own field with
+		%% \NewInfoFiled{fieldname}{symbol}[optional hyperlink prefix] and use it:
+		% \NewInfoField{gitlab}{\faGitlab}[https://gitlab.com/]
+		% \gitlab{your_id}
+	}
+	
+	\makecvheader
+	%% Depending on your tastes, you may want to make fonts of itemize environments slightly smaller
+	% \AtBeginEnvironment{itemize}{\small}
+	
+	%% Set the left/right column width ratio to 6:4.
+	\columnratio{0.6}
+	
+	% Start a 2-column paracol. Both the left and right columns will automatically
+	% break across pages if things get too long.
+	\begin{paracol}{2}
+		\cvsection{Experience}
+		
+		\cvevent{Baseball Operations Fellow}{Baltimore Orioles}{Mar 2020 -- Present}{Baltimore, MD}
+		\begin{itemize}
+			\item Solving modeling problems with a number of statistical and machine learning techniques, including Bayesian gamma hurdle regression, XGBoost and random forest classifiers, and nearest neighbor algorithms
+			\item Applying industry knowledge to improve model performance
+		\end{itemize}
+		
+		\divider
+		
+		\cvevent{Research Intern}{Federal Reserve Bank of St. Louis}{June 2019 -- Aug 2019}{St. Louis, MO}
+		\begin{itemize}
+			\item Prepared new data series from the BLS, IMF, and more for upload to FRED, using pandas for data wrangling
+			\item Fit neural network and multinomial naïve Bayes models to apply correct descriptive tags to FRED series to improve search performance
+		\end{itemize}
+		
+		\divider
+		
+		\cvevent{Econometrics Teaching Assitant}{Carleton College Department of Economics}{Mar 2019 -- June 2019}{Northfield, MN}
+		\begin{itemize}
+			\item Ran semiweekly sessions to help econometrics students master course material, improve their R and LATEX skills, and hone their statistical intuition.
+			\item Helped students complete homework assignments and projects and prepare for exams
+			\item Graded homework assignments
+		\end{itemize}
+		
+		\divider
+		
+		\cvevent{Statistics Lab Assistant}{Carleton College Department of Mathematics}{Sept 2018 -- June 2019}{Northfield, MN}
+		\begin{itemize}
+		\item Explained and walked through examples of concepts in statistics courses, including (but not limited to) data cleaning, hypothesis testing, exploratory data analysis and visualization, and modeling
+		\item Worked with students on important R and debugging skills
+		\end{itemize}
+		
+		\divider
+		
+		\cvevent{Real Estate Risk / Data Science Intern}{Northfield Information Services}{June 2018 -- Aug 2018}{Boston, MA}
+		\begin{itemize}
+			\item Completed everyday data wrangling, data visualization, and ARIMA modeling tasks for the real estate risk team in R (dplyr, tidyr, data.table, forecast, etc.)
+		\end{itemize}
+		
+%		\cvsection{Projects}
+%		
+%		\cvevent{Project 1}{Funding agency/institution}{}{}
+%		\begin{itemize}
+%			\item Details
+%		\end{itemize}
+%		
+%		\divider
+%		
+%		\cvevent{Project 2}{Funding agency/institution}{Project duration}{}
+%		A short abstract would also work.
+%		
+%		\medskip
+		
+		\switchcolumn
+		
+		\cvsection{Skills}
+		
+		\cvtag{R}
+		\cvtag{Python}
+		\cvtag{Git}
+		\cvtag{SQL}\\
+		\cvtag{Tableau}
+		\cvtag{Keras}
+		\cvtag{Java}
+		\cvtag{Excel}\\
+		\cvtag{Pandas / Numpy / Scipy}
+		\cvtag{Tidyverse}
+		
+		\divider\smallskip
+		
+		\cvtag{Data Wrangling}
+		\cvtag{Data Visualization}\\
+		\cvtag{Bayesian Modeling and Inference}\\
+		\cvtag{Machine Learning}
+		
+		\cvsection{Languages}
+		
+		\cvskill{English}{5}
+		\divider
+		
+		\cvskill{Spanish}{4}
+		\divider
+		
+		\cvskill{Swedish}{2}
+		\divider
+		
+		\cvskill{French}{1}
+		\divider
+		
+		\cvskill{Portuguese}{1}
+		
+		%% Yeah I didn't spend too much time making all the
+		%% spacing consistent... sorry. Use \smallskip, \medskip,
+		%% \bigskip, \vpsace etc to make ajustments.
+		\medskip
+		
+		\cvsection{Education}
+		
+		\cvevent{B.A.\ Economics and Mathematics}{Carleton College}{Sept 2016 -- Nov 2019}{}
+		Economics Thesis: \textit{The Effect of Transit on Life Satisfaction: A Multilevel Modeling Exploration of Urban Happiness}\\
+		\smallskip
+		Mathematics Capstone: \textit{Dynamic Linear Models and the Kalman Filter}
+		
+		\divider
+		
+		\cvevent{}{Choate Rosemary Hall}{Sept 2013 -- June 2016}{}
+		
+		
+		\cvsection{Interests}
+		
+		\cvtag{Baseball}
+		\cvtag{Browsing r/AskReddit}\\
+		\cvtag{Cooking}
+		\cvtag{Running}
+		\cvtag{Minimalism}\\
+		\cvtag{Skiing}
+		\cvtag{Data Visualization}\\
+		\cvtag{Fantasy Novels}
+		\cvtag{Solo Travel}\\
+		\cvtag{Nature \& Architecture Photography}\\
+		
+		
+	\end{paracol}
+	
+	
+\end{document}
