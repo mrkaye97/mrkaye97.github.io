@@ -10,11 +10,11 @@ library(viridis)
 library(ggthemes)
 library(plotly)
 
-world <- read.csv("~/Documents/GitHub/mrkaye97.github.io/map/world.csv") %>%
+world <- read.csv("~/Google Drive/GitHub/mrkaye97.github.io/map/world.csv") %>%
   bind_rows(data.frame(iso_a2='FG', name_long='French Guiana'))
 
 
-countries <- read.csv("~/Documents/GitHub/mrkaye97.github.io/map/countries.csv") %>%
+countries <- read.csv("~/Google Drive/GitHub/mrkaye97.github.io/map/countries.csv") %>%
   rename('iso_a2' = 1,
          'Status' = 3) %>%
   right_join(world, by = 'iso_a2') %>%
@@ -55,4 +55,4 @@ plt <- map.world %>%
         legend.spacing.x = unit(.15, 'cm'))
 
 
-ggsave('plt.svg', plt, 'svg', dpi = 'retina', path = '~/Documents/GitHub/mrkaye97.github.io/', width = 6, height = 4.8)
+ggsave('plt.svg', plt, 'svg', dpi = 'retina', path = '~/Google Drive/GitHub/mrkaye97.github.io/', width = 6, height = 4.8)
