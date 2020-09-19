@@ -20,11 +20,10 @@
 %% or LuaLaTeX.
 % \documentclass[10pt,a4paper,academicons]{altacv}
 
-%% Use the "normalphoto" option if you want a normal photo instead of cropped to a circle
+% Use the "normalphoto" option if you want a normal photo instead of cropped to a circle
 % \documentclass[10pt,a4paper,normalphoto]{altacv}
 
-\documentclass[10pt,a4paper,ragged2e,withhyper]{altacv}
-
+\documentclass[10pt,a4paper,ragged2e,withhyper]{/Users/matt/Google Drive/GitHub/mrkaye97.github.io/resume/altacv}
 %% AltaCV uses the fontawesome5 and academicons fonts
 %% and packages.
 %% See http://texdoc.net/pkg/fontawesome5 and http://texdoc.net/pkg/academicons for full list of symbols. You MUST compile with XeLaTeX or LuaLaTeX if you want to use academicons.
@@ -116,11 +115,23 @@
 	% break across pages if things get too long.
 	\begin{paracol}{2}
 		\cvsection{Experience}
-		
-		\cvevent{Baseball Operations Fellow}{Baltimore Orioles}{Mar 2020 -- Present}{Baltimore, MD}
+	
+		\cvevent{Data Scientist}{CollegeVine}{Sept 2020 -- Present}{Boston, MA}
 		\begin{itemize}
-			\item Solving modeling problems with a number of statistical and machine learning techniques, including Bayesian gamma hurdle regression, XGBoost and random forest classifiers, and nearest neighbor algorithms
-			\item Applying industry knowledge to improve model performance
+		\item First member of the CollegeVine data science team
+		\end{itemize}
+		
+		\divider
+		
+		\cvevent{Baseball Operations Fellow}{Baltimore Orioles}{Mar 2020 -- Sept 2020}{Baltimore, MD}
+		\begin{itemize}
+	%		\item Solving modeling problems with a number of statistical and machine learning techniques, including Bayesian gamma hurdle regression, XGBoost and random forest classifiers, and nearest neighbor algorithms
+	%		\item Applying industry knowledge to improve model performance
+		\item Created a fully Bayesian, simulation-based projection system for MLB player performance over a six year time horizon
+		\item Created an Gradient Boosting- and simulation-based projection system for a minor league player's MLB performance
+		\item Created a gamma hurdle regression framework to predict free agent salaries
+		\item Implemented a robust-to-multimodality version of the Metropolis-Hastings algorithm to determine the optimal way to position our defense against a specific hitter
+		\item Worked on a variety of day-to-day data science tasks related to game strategy and player evaluation
 		\end{itemize}
 		
 		\divider
@@ -135,7 +146,7 @@
 		
 		\cvevent{Econometrics Teaching Assistant}{Carleton College Department of Economics}{Mar 2019 -- June 2019}{Northfield, MN}
 		\begin{itemize}
-			\item Ran semiweekly sessions to help econometrics students master course material, improve their R and LATEX skills, and hone their statistical intuition.
+			\item Ran semiweekly sessions to help econometrics students master course material, improve their R and \LaTeX \space skills, and hone their statistical intuition.
 			\item Helped students complete homework assignments and projects and prepare for exams
 			\item Graded homework assignments
 		\end{itemize}
@@ -147,13 +158,7 @@
 		\item Explained and walked through examples of concepts in statistics courses, including (but not limited to) data cleaning, hypothesis testing, exploratory data analysis and visualization, and modeling
 		\item Worked with students on important R and debugging skills
 		\end{itemize}
-		
-		\divider
-		
-		\cvevent{Real Estate Risk / Data Science Intern}{Northfield Information Services}{June 2018 -- Aug 2018}{Boston, MA}
-		\begin{itemize}
-			\item Completed everyday data wrangling, data visualization, and ARIMA modeling tasks for the real estate risk team in R (dplyr, tidyr, data.table, forecast, etc.)
-		\end{itemize}
+
 		
 %		\cvsection{Projects}
 %		
