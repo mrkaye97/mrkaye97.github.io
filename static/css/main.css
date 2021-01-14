@@ -3,7 +3,7 @@
 html,
 body {
   height: 100%;
-  background-color: #fefefe;
+  background-color: #f2f2f2;
   font-family: 'Source Sans Pro', sans-serif;
   /* The html and body elements cannot have any padding or margin. */
 }
@@ -56,7 +56,7 @@ body {
 }
 
 .dropdown :hover > a {
-    color: ##fefefe;
+    color: ##f2f2f2;
 }
 
 
