@@ -29,7 +29,7 @@
 %% See http://texdoc.net/pkg/fontawesome5 and http://texdoc.net/pkg/academicons for full list of symbols. You MUST compile with XeLaTeX or LuaLaTeX if you want to use academicons.
 
 % Change the page layout if you need to
-\geometry{left=1.25cm,right=1.25cm,top=1.5cm,bottom=1.5cm,columnsep=1.2cm}
+\geometry{left=1cm,right=1cm,top=1cm,bottom=1cm,columnsep=1cm}
 
 % The paracol package lets you typeset columns of text in parallel
 \usepackage{paracol}
@@ -109,19 +109,20 @@
 	% \AtBeginEnvironment{itemize}{\small}
 	
 	%% Set the left/right column width ratio to 6:4.
-	\columnratio{0.6}
+	\columnratio{0.7}
 	
 	% Start a 2-column paracol. Both the left and right columns will automatically
 	% break across pages if things get too long.
 	\begin{paracol}{2}
 		\cvsection{Experience}
 	
-		\cvevent{Data Scientist}{CollegeVine}{Sept 2020 -- Present}{Cambridge, MA}
+		\cvevent{Data Scientist}{CollegeVine}{Sept 2020 -- Present}{}
 		\begin{itemize}
-		\item First member of the CollegeVine data science team. Responsible for establishing data science workflow best practices, building out modeling pipelines, helping teammates do rigorous, thorough data analysis, and explaining data scientific methods to other members of the team to democratize data science work at CollegeVine
-		\item Transitioned our chancing algorithm (used by hundreds of thousands of students to get their chances at over 1,500 colleges and universities) away from a rules- and heuristics-based model to an ML-forward approach using feature engineering that incorporates expert knowledge of college admisions and rigorous testing and validation of the model
-		\item Implemented a dashboard with sequential testing tools to help CollegeVine product managers run tests more quickly without sacrificing statistical rigor
-		\item Serving as a subject matter expert for everyday statistics- and data science-related questions
+		\item First member of the CollegeVine data science team. Responsible for establishing data science best practices, building out modeling pipelines, helping teammates do rigorous data analysis, and explaining data scientific methods to other members of the team to democratize data scientific work at CollegeVine
+		\item Transitioned our chancing algorithm (used by hundreds of thousands of students to get their chances at over 1,500 colleges and universities) away from a rules- and heuristics-based model to an ML-forward approach. Built expert domain knowledge into the model features and made product-first modeling choices to ensure intuitive model behavior for users
+		\item Led a sequential testing revolution and built out a dashboard with sequential testing tools to help our PMs run A/B tests more quickly without sacrificing statistical rigor
+		\item Responsible for owning all components of the data science process, including wrangling data, doing data analysis, building and validating models, deploying models to production (generally as Dockerized microservices on Heroku), and monitoring models and APIs in production
+		\item Serving as a subject matter expert for everyday statistics- and data science-related questions and problems
 		\end{itemize}
 		
 		\divider
@@ -129,15 +130,14 @@
 		\cvevent{Open-Source R Developer}{slackr \& fitbitr}{Oct 2020 -- Present}{}
 		
 		\begin{itemize}
-		\item Current author and maintainer of $slackr$, an R package for connecting R to Slack with 210k+ downloads
+		\item Current author and maintainer of $slackr$, an R package for connecting R to Slack with 215k+ downloads
 		\item Author and creator of $fitbitr$, an R package that streamlines pulling Fitbit user data via the Fitbit API
-		\item Responsible for all aspects of package development and maintenance, including general maintenance tasks, implementing new methods, improving error handling, writing unit tests and setting up checks in CI, writing descriptive documentation, and more
-		\item Helping users work through bugs and questions submitted in issues, reviewing PRs, and doing other everyday package maintenance tasks
+		\item Responsible for all aspects of package development and maintenance, including implementing new methods, improving error handling and messaging, writing unit tests, establishing and maintaining a CI/CD pipeline, writing descriptive documentation, helping users work through issues and bugs, reviewing PRs, and more
 		\end{itemize}
 		
 		\divider
 
-		\cvevent{Baseball Operations Fellow}{Baltimore Orioles}{Mar 2020 -- Sept 2020}{Baltimore, MD}
+		\cvevent{Baseball Operations Fellow}{Baltimore Orioles}{Mar 2020 -- Sept 2020}{}
 		\begin{itemize}
 	%		\item Solving modeling problems with a number of statistical and machine learning techniques, including Bayesian gamma hurdle regression, XGBoost and random forest classifiers, and nearest neighbor algorithms
 	%		\item Applying industry knowledge to improve model performance
@@ -165,13 +165,25 @@
 		\switchcolumn
 		\smallskip
 		\cvsection{Skills}
-		\textbf{Languages:}\\
-		\smallskip
-		\cvtag{Haskell}
-		\cvtag{Java}
-		\cvtag{Python}		
-		\cvtag{R}
-		\cvtag{SQL}\\
+		\textbf{Programming Languages:}\\
+		\bigskip
+
+		\cvskill{R}{5}
+		\divider
+		
+		\cvskill{Python}{4}
+		\divider
+		
+		\cvskill{SQL}{4}
+		\divider
+		
+		\cvskill{Shell Scripting}{3}
+		\divider
+		
+		\cvskill{Haskell}{2}
+		\divider
+		
+		\cvskill{Java}{2}\\
 		
 		
 		\divider\smallskip\\
@@ -179,16 +191,14 @@
 		\smallskip\\
 		\smallskip\\
 		
-		\cvtag{AWS}
+		\cvtag{AWS (S3, Redshift, RDS, etc.)}\\
 		\cvtag{brms}
-		\cvtag{Docker} \\
-		\cvtag{Excel}
-		\cvtag{Git}
-		\cvtag{Heroku} \\
-		\cvtag{Numpy}
+		\cvtag{Docker}
+		\cvtag{Heroku}
+		\cvtag{Numpy} \\
 		\cvtag{Pandas}
-		\cvtag{R Shiny} \\
-		\cvtag{Scikit-Learn}
+		\cvtag{R Shiny}
+		\cvtag{Scikit-Learn} \\
 		\cvtag{Tidyverse + Tidymodels}\\
 		
 		
@@ -200,20 +210,8 @@
 		\cvtag{Bayesian Modeling and Inference}\\
 		\cvtag{Data Wrangling}
 		\cvtag{Data Visualization}\\
-		\cvtag{Machine Learning}
-		\cvtag{Statistical Inference}
+		\cvtag{Machine Learning}\\
 		\cvtag{Time Series Modeling}\\
-		
-		\cvsection{Languages}
-
-		\cvskill{English}{5}
-		\divider
-		
-		\cvskill{Spanish}{4}
-		\divider
-		
-		\cvskill{Swedish}{2}
-		\divider
 		
 		%% Yeah I didn't spend too much time making all the
 		%% spacing consistent... sorry. Use \smallskip, \medskip,
@@ -222,11 +220,8 @@
 		
 		\cvsection{Education}
 		
-		\cvevent{B.A.\ Economics and Mathematics}{Carleton College}{Sept 2016 -- Nov 2019}{}
-		Economics Thesis: \textit{The Effect of Transit on Life Satisfaction: A Multilevel Modeling Exploration of Urban Happiness}\\
-		\smallskip
-		Mathematics Capstone: \textit{Dynamic Linear Models and the Kalman Filter}
-		
+		\cvevent{Bachelor of Arts\\ Economics and Mathematics}{Carleton College}{Sept 2016 -- Nov 2019}{}
+
 		\divider
 		
 		\cvevent{}{Choate Rosemary Hall}{Sept 2013 -- June 2016}{}
