@@ -4,3 +4,4 @@ _site/
 *.synctex.gz
 *.DS_Store
 
+.Rproj.user
