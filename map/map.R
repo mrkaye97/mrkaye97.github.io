@@ -53,4 +53,4 @@ plt <- map.world %>%
         legend.spacing.x = unit(.15, 'cm'))
 
 
-ggsave('plt.svg', plt, 'svg', dpi = 'retina', path = '~/Google Drive/GitHub/mrkaye97.github.io/', width = 6, height = 4.8)
+ggsave('plt.svg', plt, 'svg', dpi = 'retina', path = '../', width = 6, height = 4.8)
