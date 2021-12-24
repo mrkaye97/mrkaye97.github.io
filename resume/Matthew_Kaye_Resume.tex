@@ -113,16 +113,17 @@
 	
 	% Start a 2-column paracol. Both the left and right columns will automatically
 	% break across pages if things get too long.
-	\begin{paracol}{2}
+	\begin{paracol}{1}
 		\cvsection{Experience}
 	
 		\cvevent{Data Scientist}{CollegeVine}{Sept 2020 -- Present}{}
 		\begin{itemize}
-		\item First member of the CollegeVine data science team. Responsible for establishing data science best practices, building out modeling pipelines, helping teammates do rigorous data analysis, and explaining data scientific methods to other members of the team to democratize data scientific work at CollegeVine
+		\item First member of the CollegeVine data science team. Responsible for establishing data science best practices, building out modeling, ETL, and MLOps infrastructure, helping teammates do rigorous data analysis, and explaining data scientific methods to other members of the team to democratize data science work at CollegeVine
 		\item Transitioned our chancing algorithm (used by hundreds of thousands of students to get their chances at over 1,500 colleges and universities) away from a rules- and heuristics-based model to an ML-forward approach. Built expert domain knowledge into the model features and made product-first modeling choices to ensure intuitive model behavior for users
 		\item Built a dashboard with sequential testing tools and helped explain the benefits of sequential testing to our PMs to let them run A/B tests more quickly without sacrificing statistical rigor
+		\item Created a multi-part recommender system which allowed us to suggest new colleges to students and to suggest "top candidates" to our college partners, driving leads and applications for colleges and universities
+		\item Built out a feature store to improve the data science developer experience (DX) at CollegeVine. The feature store has let us write more testable, maintainable code and helps us iterate faster by having a single source of clean data and ML features. It's also allowed us to perform common BI tasks more easily
 		\item Responsible for owning all components of the data science process, including wrangling data, doing data analysis, building and validating models, deploying models to production (generally as Dockerized microservices on Heroku), and monitoring models and APIs in production
-		\item Serving as a subject matter expert for everyday statistics- and data science-related questions and problems
 		\end{itemize}
 		
 		\divider
@@ -162,83 +163,23 @@
 %		
 %		\medskip
 		
-		\switchcolumn
-		\smallskip
-		\cvsection{Skills}
-		\textbf{Programming Languages:}\\
-		\bigskip
 
-		\cvskill{R}{5}
-		\divider
-		
-		\cvskill{Python}{4}
-		\divider
-		
-		\cvskill{SQL}{4}
-		\divider
-		
-		\cvskill{Shell Scripting}{3}
-		\divider
-		
-		\cvskill{Haskell}{2}
-		\divider
-		
-		\cvskill{Java}{2}\\
-		
-		
-		\divider\smallskip\\
-		\textbf{Frameworks, Software, and Tools:}\\
-		\smallskip\\
-		\smallskip\\
-		
-		\cvtag{AWS (S3, Redshift, RDS, etc.)}\\
-		\cvtag{brms}
-		\cvtag{Docker}
-		\cvtag{Heroku}
-		\cvtag{Numpy} \\
-		\cvtag{Pandas}
-		\cvtag{R Shiny}
-		\cvtag{Scikit-Learn} \\
-		\cvtag{Tidyverse + Tidymodels}\\
-		
-		
-		\divider\smallskip\\
-		\textbf{Data Science:}\\
-		\smallskip
-		\smallskip
-		
-		\cvtag{Bayesian Modeling and Inference}\\
-		\cvtag{Data Wrangling}
-		\cvtag{Data Visualization}\\
-		\cvtag{Machine Learning}\\
-		\cvtag{Time Series Modeling}\\
-		
-		%% Yeah I didn't spend too much time making all the
-		%% spacing consistent... sorry. Use \smallskip, \medskip,
-		%% \bigskip, \vpsace etc to make ajustments.
-		\medskip
-		
 		\cvsection{Education}
 		
 		\cvevent{Bachelor of Arts\\ Economics and Mathematics}{Carleton College}{Sept 2016 -- Nov 2019}{}
-
-		\divider
-		
-		\cvevent{}{Choate Rosemary Hall}{Sept 2013 -- June 2016}{}
-		
 		
 		\cvsection{Interests}
 		
 		\cvtag{Baseball}
-		\cvtag{Browsing r/AskReddit}\\
+		\cvtag{Browsing r/AskReddit}
 		\cvtag{Cooking}
 		\cvtag{Running}
-		\cvtag{Minimalism}\\
+		\cvtag{Minimalism}
 		\cvtag{Skiing}
-		\cvtag{Data Visualization}\\
+		\cvtag{Data Visualization}
 		\cvtag{Fantasy Novels}
-		\cvtag{Solo Travel}\\
-		\cvtag{Nature \& Architecture Photography}\\
+		\cvtag{Solo Travel}
+		\cvtag{Nature \& Architecture Photography}
 		
 		
 	\end{paracol}
