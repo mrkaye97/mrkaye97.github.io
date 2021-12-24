@@ -1,5 +1,3 @@
-rm(list = ls())
-
 library(tidyverse)
 library(ggmap)
 library(maptools)
@@ -10,11 +8,11 @@ library(viridis)
 library(ggthemes)
 library(plotly)
 
-world <- read.csv("~/Google Drive/GitHub/mrkaye97.github.io/map/world.csv") %>%
+world <- read.csv("world.csv") %>%
   bind_rows(data.frame(iso_a2='FG', name_long='French Guiana'))
 
 
-countries <- read.csv("~/Google Drive/GitHub/mrkaye97.github.io/map/countries.csv") %>%
+countries <- read.csv("countries.csv") %>%
   rename('iso_a2' = 1,
          'Status' = 3) %>%
   right_join(world, by = 'iso_a2') %>%
@@ -40,11 +38,11 @@ plt <- map.world %>%
   select(lat, long, group, Status, Long, pop) %>%
   drop_na(Status) %>%
   ggplot()+
-    geom_polygon(aes(x = long, 
-                     y = lat, 
-                     group = group, 
+    geom_polygon(aes(x = long,
+                     y = lat,
+                     group = group,
                      fill=Status,
-                     text=paste('Country: ', Long)), 
+                     text=paste('Country: ', Long)),
                  size=.1,
                  color='white')+
     scale_fill_manual(values = alpha(c("black", 'firebrick4', 'dodgerblue', 'goldenrod'), .8))+
