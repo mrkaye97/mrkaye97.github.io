@@ -1,6 +1,7 @@
 \PassOptionsToPackage{dvipsnames}{xcolor}
 
-\documentclass[10pt,a4paper,ragged2e,withhyper]{/Users/matt/documents/GitHub/mrkaye97.github.io/resume/altacv}
+\documentclass[10pt,a4paper,ragged2e,withhyper]{altacv}
+
 
 \geometry{left=1cm,right=1cm,top=1cm,bottom=1cm,columnsep=1cm}
 
@@ -50,18 +51,16 @@
 		\linkedin{mrkaye97}
 	}
 
-
-	 \makecvheader
+	 	\makecvheader
 		
 		\cvsection{Experience}
 	
 		\cvevent{Data Scientist}{CollegeVine}{Sept 2020 -- Present}{}
 		\begin{itemize}
-		\item First member of the CollegeVine data science team.  Responsible for owning all parts of the data scientific process and for establishing data engineering and MLOps infrastructure.
 		\item Devised and implemented an acceptance probability model used by hundreds of thousands of students every year to understand their chances at their favorite schools.
 		\item Built a sequential testing toolkit to enable our team to call A/B tests more quickly without sacrificing statistical rigor.
-		\item Created a recommender system to suggest new colleges to students. Additionally, utilized the recommender system to suggest "top candidates" to our college partners, driving leads and engagement.
-		\item Built out an analytics warehouse and feature store, enabling our team to iterate more quickly, repeat less code, and easily perform BI tasks that were previously infeasible.
+		\item Created a recommender system to suggest new colleges to students. Additionally, utilized the model to generate affinity scores to enable colleges to more intelligently recruit high school students.
+		\item Designed and built out an analytics warehouse, supercharging data science and analytical capabilities at CollegeVine.
 		\item Set up and managed an MLFlow instance,  dramatically improving data science developer experience (DX) at CollegeVine.
 		\item Spearheaded the transition of our workflows to Apache Airflow,  dramatically reducing the complexity of scheduling and running jobs
 		\item Owned the deployment and monitoring of machine learning models in production, generally as REST APIs packaged up as Dockerized microservices and deployed on Heroku.
@@ -94,8 +93,9 @@
 
 		\cvsection{Education}
 		
-		\cvevent{Bachelor of Arts\\ Economics,  Mathematics}{Carleton College}{Sept 2016 -- Nov 2019}{}\\
-		\divider\\
+		\cvevent{Bachelor of Arts\\ Economics,  Mathematics}{Carleton College}{Sept 2016 -- Nov 2019}{}
+		
+		\divider
 		\cvevent{}{Choate Rosemary Hall}{Sept 2013 -- June 2016}{}
 
 
