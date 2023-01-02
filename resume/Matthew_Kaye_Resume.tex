@@ -1,7 +1,6 @@
 \PassOptionsToPackage{dvipsnames}{xcolor}
 
-\documentclass[10pt,a4paper,ragged2e,withhyper]{altacv}
-
+\documentclass[10pt,a4paper,ragged2e,withhyper]{/Users/matt/documents/GitHub/mrkaye97.github.io/resume/altacv}
 
 \geometry{left=1cm,right=1cm,top=1cm,bottom=1cm,columnsep=1cm}
 
@@ -24,7 +23,7 @@
 \definecolor{GoldenEarth}{HTML}{A9A9A9}
 \colorlet{name}{black}
 \colorlet{tagline}{PastelRed}
-\colorlet{heading}{DarkPastelRed}
+%\colorlet{heading}{DarkPastelRed}
 \colorlet{headingrule}{GoldenEarth}
 \colorlet{subheading}{PastelRed}
 \colorlet{accent}{PastelRed}
@@ -48,37 +47,26 @@
 		\github{mrkaye97}
 		\email{mrkaye97@gmail.com}
 		\phone{(646) 853-5997}
-		\linkedin{mrkaye97}
 	}
 
-	 	\makecvheader
+
+	 \makecvheader
 		
 		\cvsection{Experience}
 	
 		\cvevent{Data Scientist}{CollegeVine}{Sept 2020 -- Present}{}
 		\begin{itemize}
-		\item Devised and implemented an acceptance probability model used by hundreds of thousands of students every year to understand their chances at their favorite schools.
-		\item Built a sequential testing toolkit to enable our team to call A/B tests more quickly without sacrificing statistical rigor.
-		\item Created a recommender system to suggest new colleges to students. Additionally, utilized the model to generate affinity scores to enable colleges to more intelligently recruit high school students.
-		\item Designed and built out an analytics warehouse, supercharging data science and analytical capabilities at CollegeVine.
-		\item Set up and managed an MLFlow instance,  dramatically improving data science developer experience (DX) at CollegeVine.
-		\item Spearheaded the transition of our workflows to Apache Airflow,  dramatically reducing the complexity of scheduling and running jobs
+		\item First member of the CollegeVine data team.  Responsible for infrastructure, processes, and execution of technical work including maintaining the code base, introducing new tooling to help the team ship quickly and painlessly, mentoring junior teammates, consulting on a wide variety of projects, and getting data products over the finish line and into production.
+		\item Devised and implemented an acceptance probability model used by hundreds of thousands of students and families every year to understand their chances at their favorite schools.  Chancing is a primary driver of traffic, new accounts, and retention on CollegeVine and powers other products like CollegeVine Applications, which automatically matches students with schools where they're a good fit and submits applications for them.
+		\item Created a recommender system to suggest new colleges to students based on their schools list and preferences. School recommendations also powers Collegevine Applications by generating automated matches between thousands of students and colleges they would be interested in.
+		\item Built a sequential testing toolkit to enable our team to call A/B tests more quickly without sacrificing statistical rigor. Wrote extensive documentation and tutorials to help teammates onboard to the new tooling, and gave talks introducing and explaining complex A/B testing topics in an approachable way.
+		\item Built out a data warehouse for analytics purposes, enabling our team to iterate more quickly, repeat less SQL,  be less prone to bugs and inconsistencies in metric definitions, and easily perform BI tasks that were previously infeasible.
+		\item Introduced new tooling (dbt, Airflow, MLFlow, AWS stack) and owned its adoption, maintenance (when applicable), and integration with the code base. 
 		\item Owned the deployment and monitoring of machine learning models in production, generally as REST APIs packaged up as Dockerized microservices and deployed on Heroku.
 		\end{itemize}
 		
 		\divider
 		
-		\cvevent{Open-Source Contributor}{mlflow,  slackr,  lightMLFlow,  fitbitr}{Oct 2020 -- Present}{}
-		
-		\begin{itemize}
-		\item Contributor to MLFlow,  an open-source platform for managing the machine learning lifecycle.
-		\item Current author and maintainer of $slackr$, an R package for connecting R to Slack with 250k+ downloads.
-		\item Author and creator of $lightMLFlow$, a lightweight, user-friendly R wrapper for the MLFlow REST API.
-		\item Author and creator of $fitbitr$, an R package that streamlines pulling Fitbit user data via the Fitbit API.
-		\item Responsible for all aspects of package development and maintenance, including implementing new methods, improving error handling and messaging, writing unit tests, establishing and maintaining a CI/CD pipeline, writing descriptive documentation, helping users work through issues and bugs, reviewing PRs, and more.
-		\end{itemize}
-		
-		\divider
 
 		\cvevent{Baseball Operations Fellow}{Baltimore Orioles}{Mar 2020 -- Sept 2020}{}
 		\begin{itemize}
@@ -87,22 +75,31 @@
 		\item Devised a Markov Chain Monte Carlo approach to determining optimal shifts against opposing hitters
 		\item Worked on a variety of day-to-day data science tasks related to game strategy and player evaluation
 		\end{itemize}
+		
+		\divider 
+		
+		\cvevent{Open-Source Contributor}{mlflow,  slackr,  lightMLFlow,  fitbitr}{Oct 2020 -- Present}{}
+		
+		\begin{itemize}
+		\item Contributor to MLFlow,  an open-source platform for managing the machine learning lifecycle.
+		\item Current author and maintainer of $slackr$, an R package for connecting R to Slack with 250k+ downloads.
+		\item Author and creator of $lightMLFlow$, a lightweight, user-friendly R wrapper for the MLFlow REST API.
+		\end{itemize}
 
 		\setcolumnwidth{4cm, 5cm,5cm} 
 		\begin{paracol}{3}
 
 		\cvsection{Education}
 		
-		\cvevent{Bachelor of Arts\\ Economics,  Mathematics}{Carleton College}{Sept 2016 -- Nov 2019}{}
-		
-		\divider
+		\cvevent{Bachelor of Arts\\ Economics,  Mathematics}{Carleton College}{Sept 2016 -- Nov 2019}{}\\
+		\divider\\
 		\cvevent{}{Choate Rosemary Hall}{Sept 2013 -- June 2016}{}
 
 
 		\switchcolumn
 		
 		\cvsection{Skills}
-		\textbf{Programming Languages:}\\
+		\textbf{Programming:}\\
 		\medskip
 		\cvtag{Bash}
 		\cvtag{Python}
@@ -113,24 +110,24 @@
 		\textbf{Frameworks, Software, and Tools:}\\
 		\medskip
 
+		\cvtag{AWS Tooling (Redshift, S3, Batch, etc.)} \\
 		\cvtag{Airflow}
-		\cvtag{AWS (Batch, Redshift, S3, etc.)} \\
-		\cvtag{CI/CD (Circle, GHA)} 
-		\cvtag{dbt} 
-		\cvtag{Docker} \\
+		\cvtag{CI/CD (Circle, GHA)}  \\
+		\cvtag{Docker}
 		\cvtag{Git}
-		\cvtag{Heroku} 
+		\cvtag{Heroku} \\
 		\cvtag{MLFlow}
 		\cvtag{\{\{plumber\}\}}
+		\cvtag{\{\{shiny\}\}}
 
 		\switchcolumn
 		
 		\cvsection{Hobbies}
 		
 		\cvtag{Distance running}\\
-		\cvtag{Learning Haskell and Rust}\\
+		\cvtag{Learning Haskell}\\
 		\cvtag{Low and slow cooking}\\
-		\cvtag{Nature and architecture photography}	
+		\cvtag{Nature \& architecture photography}	
 		\cvtag{Reading fantasy novels}\\
 		\cvtag{Skiing chop and powder}\\
 		\cvtag{Solo traveling + hostel hopping}\\
