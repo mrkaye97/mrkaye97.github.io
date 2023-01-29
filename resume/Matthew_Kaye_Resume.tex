@@ -1,3 +1,5 @@
+% !TEX root = Matthew_Kaye_Resume.tex
+
 \PassOptionsToPackage{dvipsnames}{xcolor}
 
 \documentclass[10pt,a4paper,ragged2e,withhyper]{/Users/matt/documents/GitHub/mrkaye97.github.io/resume/altacv}
@@ -56,11 +58,14 @@
 	
 		\cvevent{Data Scientist}{CollegeVine}{Sept 2020 -- Present}{}
 		\begin{itemize}
-		\item Devised and implemented an acceptance probability model used by hundreds of thousands of students and families every year to understand their chances at their favorite schools.  Chancing is a primary driver of traffic, new accounts, and retention on CollegeVine and powers other products like CollegeVine Applications, which automatically matches students with schools where they're a good fit and submits applications for them.
-		\item Created a recommender system to suggest new colleges to students based on their schools list and preferences. School recommendations also powers Collegevine Applications by generating automated matches between thousands of students and colleges they would be interested in.
-		\item Built a sequential testing toolkit to enable our team to call A/B tests more quickly without sacrificing statistical rigor. Wrote extensive documentation and tutorials to help teammates onboard to the new tooling, and gave talks introducing and explaining complex A/B testing topics in an approachable way.
-		\item Built out a data warehouse for analytics purposes, enabling our team to iterate more quickly, repeat less SQL,  be less prone to bugs and inconsistencies in metric definitions, and easily perform BI tasks that were previously infeasible.
-		\item Introduced new tooling (dbt, Airflow, MLFlow, AWS stack) and owned its adoption, maintenance (when applicable), and integration with the code base. 
+		\item First member of CollegeVine's data team. Responsible for all kinds of data projects, maintaining the codebase, integrating new tooling, and onboarding new team members. 
+		\item Promoted a culture of shipping data scientific products with software engineering best practices, including unit and integration testing and a CI/CD process.
+		\item Devised and implemented CollegeVine's Chancing model, used by hundreds of thousands of students and families every year to understand their chances of admission at their favorite schools.
+		\item Created a recommender system to suggest new colleges to students. School recommendations also powers affinity scoring, a major component of our college product and sales process driving hundreds of thousands of dollars in revenue.
+		\item Built a sequential testing toolkit to enable our team to call A/B tests more quickly without sacrificing statistical rigor, often cutting A/B test runtimes by half or more.
+		\item Built out our first data warehouse for analytics, helping teammates uncover insights into all aspects of our business more quickly and correctly.
+		\item Build and optimized data pipelines moving billions of rows from raw sources into our data warehouse to be consumed by downstream users.
+		\item Introduced new tooling (dbt, Airflow, MLFlow, AWS stack) and owned its adoption by the team and integration into the codebase.
 		\item Owned the deployment and monitoring of machine learning models in production, generally as REST APIs packaged up as Dockerized microservices and deployed on Heroku.
 		\end{itemize}
 		
@@ -81,7 +86,7 @@
 		
 		\begin{itemize}
 		\item Contributor to MLFlow,  an open-source platform for managing the machine learning lifecycle.
-		\item Current author and maintainer of $slackr$, an R package for connecting R to Slack with 250k+ downloads.
+		\item Current author and maintainer of $slackr$, an R package for connecting R to Slack with 350k+ downloads.
 		\item Author and creator of $lightMLFlow$, a lightweight, user-friendly R wrapper for the MLFlow REST API.
 		\end{itemize}
 
@@ -90,7 +95,7 @@
 
 		\cvsection{Education}
 		
-		\cvevent{Bachelor of Arts\\ Economics,  Mathematics}{Carleton College}{Sept 2016 -- Nov 2019}{}\\
+		\cvevent{Bachelor of Arts\\ Economics,  Mathematics}{Carleton College}{Sept 2016 -- Nov 2019}{}
 		\divider\\
 		\cvevent{}{Choate Rosemary Hall}{Sept 2013 -- June 2016}{}
 
@@ -112,6 +117,7 @@
 		\cvtag{AWS Tooling (Redshift, S3, Batch, etc.)} \\
 		\cvtag{Airflow}
 		\cvtag{CI/CD (Circle, GHA)}  \\
+		\cvtag{dbt}
 		\cvtag{Docker}
 		\cvtag{Git}
 		\cvtag{Heroku} \\

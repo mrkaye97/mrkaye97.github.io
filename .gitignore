@@ -5,3 +5,6 @@ _site/
 *.DS_Store
 
 .Rproj.user
+resume/Matthew_Kaye_Resume.out
+resume/Matthew_Kaye_Resume.fls
+resume/Matthew_Kaye_Resume.fdb_latexmk
