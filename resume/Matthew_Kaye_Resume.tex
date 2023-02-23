@@ -8,6 +8,18 @@
 
 \usepackage{paracol}
 
+\usepackage[usenames,dvipsnames]{xcolor}
+
+\usepackage[
+	colorlinks = true,
+	linkcolor = OrangeRed,
+	urlcolor  = OrangeRed,
+	citecolor = OrangeRed,
+	anchorcolor = OrangeRed
+]{hyperref}
+
+\newcommand{\MYhref}[3][red]{\href{#2}{\color{#1}{#3}}}%
+
 \ifxetexorluatex
 \setmainfont{Roboto Slab}
 \setsansfont{Lato}
@@ -81,13 +93,15 @@
 		\end{itemize}
 		
 		\divider 
-		
-		\cvevent{Open-Source Contributor}{mlflow,  slackr,  lightMLFlow,  fitbitr}{Oct 2020 -- Present}{}
-		
+				
+		\cvsection{Projects \& Open-Source}
+
 		\begin{itemize}
-		\item Contributor to MLFlow,  an open-source platform for managing the machine learning lifecycle.
-		\item Current author and maintainer of $slackr$, an R package for connecting R to Slack with 350k+ downloads.
-		\item Author and creator of $lightMLFlow$, a lightweight, user-friendly R wrapper for the MLFlow REST API.
+		\item Contributor to \MYhref{https://github.com/mlflow/mlflow}{MLFlow}, an open-source platform for managing the machine learning lifecycle.
+		\item Current author and maintainer of \MYhref{https://github.com/mrkaye97/slackr}{slackr}, an R package for connecting R to Slack with 350k+ downloads.
+		\item Contributor to \MYhref{https://github.com/statisticianinstilettos/recmetrics}{recmetrics}, a python library for evaluating recommender systems.
+		\item Author and creator of \MYhref{https://github.com/collegevine/lightMLFlow}{lightMLFlow}, a lightweight, opinionated R wrapper for the MLFlow REST API.
+		\item Author and creator of \MYhref{https://github.com/mrkaye97/fitbitr}{fitbitr}, an opinionated R wrapper for the Fitbit API.
 		\end{itemize}
 
 		\setcolumnwidth{4cm, 5cm,5cm} 
