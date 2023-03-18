@@ -28,7 +28,7 @@ website:
       - text: "Projects"
         file: projects.qmd
       - text: Resume
-        file: "resume/Matthew_Kaye_Resume.pdf"
+        file: "/resume/Matthew_Kaye_resume.pdf"
       - text: "More"
         menu:
           - text: "My three favorite"
