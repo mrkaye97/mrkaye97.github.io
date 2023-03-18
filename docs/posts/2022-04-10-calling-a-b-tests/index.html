@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.2.335">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Matt Kaye">
+<meta name="dcterms.date" content="2022-04-10">
+<meta name="description" content="Matt Kaye’s personal website.">
+
+<title>Matt Kaye - Calling A/B Tests</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+
+<script type="text/javascript">
+
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+ga('create', 'UA-69391421-1', 'auto');
+
+ga('send', {
+  hitType: 'pageview',
+  'anonymizeIp': true,
+});
+</script>
+
+
+<link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Matt Kaye</span>
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../posts.html">
+ <span class="menu-text">Blog</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../projects.html">
+ <span class="menu-text">Projects</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../resume/Matthew_Kaye_resume.pdf">
+ <span class="menu-text">Resume</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-more" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">More</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-more">    
+        <li>
+    <a class="dropdown-item" href="../../my-three-favorite.html">
+ <span class="dropdown-text">My three favorite</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../stats-in-the-wild.html">
+ <span class="dropdown-text">Statistics in the wild</span></a>
+  </li>  
+    </ul>
+  </li>
+</ul>
+              <div class="quarto-toggle-container">
+                  <a href="" class="quarto-color-scheme-toggle nav-link" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+              </div>
+              <div id="quarto-search" class="" title="Search"></div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#statistical-significance" id="toc-statistical-significance" class="nav-link active" data-scroll-target="#statistical-significance">Statistical Significance</a></li>
+  <li><a href="#eye-rolling" id="toc-eye-rolling" class="nav-link" data-scroll-target="#eye-rolling">Eye Rolling</a></li>
+  <li><a href="#a-common-mistake" id="toc-a-common-mistake" class="nav-link" data-scroll-target="#a-common-mistake">A Common Mistake</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Calling A/B Tests</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">data-science</div>
+    <div class="quarto-category">statistics</div>
+  </div>
+  </div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Matt Kaye </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">April 10, 2022</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+</header>
+
+<p>In the last post, I gave a bird’s eye level overview of the mechanics of running an A/B test. But at the end, we reached a problem: We had two conversion rates – 20% and 25% – but we didn’t know if the difference between those was really big enough to make a strong claim that the blue underlines were actually performing better than the red ones in some real world sense. If you’re asking yourself whether the five percentage point difference between the two conversion rates is statistically significant, then your head’s in the right place.</p>
+<p>In this post, we’ll discuss how we can determine whether our test results are statistically significant. But since statistical significance is an often confusing and nebulous topic, we’ll also explore what statistical significance even is (including what p-values are), when it’s important, and when it might not be.</p>
+<section id="statistical-significance" class="level2">
+<h2 class="anchored" data-anchor-id="statistical-significance">Statistical Significance</h2>
+<p>Misunderstandings about statistical significance run rampant. It’s not a reach for me to say that the majority of the time I hear someone mention that something is “statistically significant” I end up rolling my eyes. But before we get into common mistakes and misunderstandings, we need to first establish what statistical significance actually is.</p>
+<p>Intuitively, if something is <strong>statistically significant</strong>, it’s unlikely to have happened due to random chance. Not that scary, after all! How unlikely, though, varies wildly depending on the setting. For instance, if we’re running clinical trials to determine if a new drug is capable of curing cancer, then we want it to be <em>very</em> unlikely that we make a consequential mistake and claim that the drug works when it actually doesn’t.</p>
+<p>We use p-values as the indicator of the likelihood of our result being due to random chance. In this instance, we would run our test using the number of page views and the number of conversions for each group, and depending on how we ran our test we might get a p-value of 0.43% back. What this p-value actually means is that the probability of seeing the difference in conversion rates between groups that we do (five percentage points) due to purely random chance is 0.43%. A p-value threshold of 5% is very common, so in this case we’d call the test for the variant (since 0.43% is below 5%), and we’d assert that this difference in conversion rates is <em>statistically significant</em>.</p>
+</section>
+<section id="eye-rolling" class="level2">
+<h2 class="anchored" data-anchor-id="eye-rolling">Eye Rolling</h2>
+<p>Back to my eye rolling: I often roll my eyes when someone claims that something is statistically significant for two reasons.</p>
+<p>First and foremost: Something being <em>statistically significant</em> does not mean that thing is <em>significant</em>. Often we get so hung up on things being statistically significant that we forget that lifting some metric by 0.0001% isn’t <em>practically</em> significant, since it won’t make any difference in the end. If 0.0001% more people read my blog posts, what do I care? That’s something like 1 extra person every hundred years (optimistically).</p>
+<p>Secondly, I often roll my eyes because of the number of choices and assumptions that need to be made along the way, many of which tend to be difficult to defend. One choice, as previously mentioned, is the p-value threshold (alpha) that you choose. In some instances, we want to be <em>very</em> confident that we’re not leaning into results that are the result of random chance, and so we might use a lower threshold. In other cases, we might be okay with taking on more risk of a false positive result in order to run our tests faster and mitigate the risk of a false <em>negative</em> (saying something does not help when it actually does).</p>
+<p>Another thing that will affect the results we see is the type of test we’re running: one-tailed or two-tailed. Often, online calculators like <a href="https://www.evanmiller.org/ab-testing/chi-squared.html">this one</a> will use two-tailed tests by default because they’re more conservative. But in my opinion, using a two-tailed test doesn’t actually make any sense. Here’s why: A two-tailed test checks if the conversion rates of the variant and the control are <em>not equal</em>, which means that we can get a statistically significant result if the variant is significantly <em>worse</em> than the control, in addition to if it’s significantly <em>better</em>. But in A/B testing, we’re only going to call a test for the variant when it’s significantly better, so why do we care about the case where it’s worse? We want to test the hypothesis that the variant is significantly better than the control, not that it’s not equal, and that’s what a one-tailed test does. If you use two-tailed tests, it’ll be harder to get significant results without any real benefits.</p>
+<blockquote class="blockquote">
+<p>Yet another consideration is how the statistical test was actually conducted. For instance, if you use a Chi-square test with Yates’s continuity correction (the default in R, although a little controversial among statisticians), you’ll end up with higher (more conservative) p-values than if you don’t correct, which is why the p-value I just reported is higher than the one you’d get from most online calculators that don’t use the correction.</p>
+</blockquote>
+<p>Finally, and most importantly, is that the mechanics of running the test actually affect the chance that you are reporting a false positive result. For example, if you were to run the test described in the past few posts and calculate the p-values every time a new user visited the page and call the test for the variant the first time it were significant, you’d have just blown up the chances of a false positive result.</p>
+</section>
+<section id="a-common-mistake" class="level2">
+<h2 class="anchored" data-anchor-id="a-common-mistake">A Common Mistake</h2>
+<p>The most common mistake I see that’s made by people running A/B tests is using the “call it when it’s significant” heuristic. As I mentioned before, checking in on your test often and calling it for the variant the first time you get a significant p-value is a huge problem because the false positive rate of your test compounds the more you check on it. The reason for this is a statistical concept called <a href="https://en.wikipedia.org/wiki/Multiple_comparisons_problem">multiple testing</a>, and there’s <a href="https://xkcd.com/882/">an XKCD comic</a> about it!</p>
+<p>So we want to avoid checking the test all the time, but this raises another problem: If we can’t check our test all the time, how do we know when to call it? And this is where test planning comes in. There are a number of online test planners (which generally make shoddy assumptions, like that you’re running a two-tailed test when you should be running a one-tailed one instead) like <a href="https://www.evanmiller.org/ab-testing/sample-size.html">this one</a> that take a few parameters and tell you how long to run your test for. And these planners are great! The idea is that if you can plan your test in advance, given that you know your baseline conversion rate and can specify how big of a lift you’re shooting for, then all you have to do is wait until you hit the sample size number that the calculator gives you back. Once you hit it, you check in on your test, run your p-value calculation, and call the test.</p>
+<p>So, problem solved, right? Well, not quite. Because while we’ve solved the multiple testing problem where we blow up our false positive rate by checking the test all the time, now we have a new issue: We have to wait until we hit some (potentially big) sample size before we can call our test, and that’s problematic for teams that want to iterate quickly.</p>
+<p>The next post in this series is the punch line. It’ll discuss sequential testing, which is the methodology that makes up the guts of how we run A/B tests at CollegeVine. Sequential testing solves the problem of needing to wait until you hit a final sample size to call your test without making any sacrifices on the rigor front, which means you can call your tests quickly and reliably.</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const disableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'prefetch';
+    }
+  }
+  const enableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'stylesheet';
+    }
+  }
+  const manageTransitions = (selector, allowTransitions) => {
+    const els = window.document.querySelectorAll(selector);
+    for (let i=0; i < els.length; i++) {
+      const el = els[i];
+      if (allowTransitions) {
+        el.classList.remove('notransition');
+      } else {
+        el.classList.add('notransition');
+      }
+    }
+  }
+  const toggleColorMode = (alternate) => {
+    // Switch the stylesheets
+    const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+    manageTransitions('#quarto-margin-sidebar .nav-link', false);
+    if (alternate) {
+      enableStylesheet(alternateStylesheets);
+      for (const sheetNode of alternateStylesheets) {
+        if (sheetNode.id === "quarto-bootstrap") {
+          toggleBodyColorMode(sheetNode);
+        }
+      }
+    } else {
+      disableStylesheet(alternateStylesheets);
+      toggleBodyColorPrimary();
+    }
+    manageTransitions('#quarto-margin-sidebar .nav-link', true);
+    // Switch the toggles
+    const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+    for (let i=0; i < toggles.length; i++) {
+      const toggle = toggles[i];
+      if (toggle) {
+        if (alternate) {
+          toggle.classList.add("alternate");     
+        } else {
+          toggle.classList.remove("alternate");
+        }
+      }
+    }
+    // Hack to workaround the fact that safari doesn't
+    // properly recolor the scrollbar when toggling (#1455)
+    if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+      manageTransitions("body", false);
+      window.scrollTo(0, 1);
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+        manageTransitions("body", true);
+      }, 40);  
+    }
+  }
+  const isFileUrl = () => { 
+    return window.location.protocol === 'file:';
+  }
+  const hasAlternateSentinel = () => {  
+    let styleSentinel = getColorSchemeSentinel();
+    if (styleSentinel !== null) {
+      return styleSentinel === "alternate";
+    } else {
+      return false;
+    }
+  }
+  const setStyleSentinel = (alternate) => {
+    const value = alternate ? "alternate" : "default";
+    if (!isFileUrl()) {
+      window.localStorage.setItem("quarto-color-scheme", value);
+    } else {
+      localAlternateSentinel = value;
+    }
+  }
+  const getColorSchemeSentinel = () => {
+    if (!isFileUrl()) {
+      const storageValue = window.localStorage.getItem("quarto-color-scheme");
+      return storageValue != null ? storageValue : localAlternateSentinel;
+    } else {
+      return localAlternateSentinel;
+    }
+  }
+  let localAlternateSentinel = 'default';
+  // Dark / light mode switch
+  window.quartoToggleColorScheme = () => {
+    // Read the current dark / light value 
+    let toAlternate = !hasAlternateSentinel();
+    toggleColorMode(toAlternate);
+    setStyleSentinel(toAlternate);
+  };
+  // Ensure there is a toggle, if there isn't float one in the top right
+  if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+    const a = window.document.createElement('a');
+    a.classList.add('top-right');
+    a.classList.add('quarto-color-scheme-toggle');
+    a.href = "";
+    a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+    const i = window.document.createElement("i");
+    i.classList.add('bi');
+    a.appendChild(i);
+    window.document.body.appendChild(a);
+  }
+  // Switch to dark mode if need be
+  if (hasAlternateSentinel()) {
+    toggleColorMode(true);
+  } else {
+    toggleColorMode(false);
+  }
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<script src="https://utteranc.es/client.js" repo="mrkaye97/mrkaye97.github.io" issue-term="pathname" theme="github-light" crossorigin="anonymous" async="">
+</script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left"> Matt Kaye, 2023<br> All content licensed under <a href="http://creativecommons.org/licenses/by-nc-sa/4.0/">(CC BY-NC-SA 4.0)</a></div>   
+    <div class="nav-footer-right">Made with and <a href="https://quarto.org/">Quarto</a><br> <a href="https://github.com/mrkaye97/mrkaye97.github.io">Source at GitHub</a></div>
+  </div>
+</footer>
+
+
+
+</body></html>

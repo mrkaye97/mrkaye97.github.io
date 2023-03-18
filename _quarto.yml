@@ -1,0 +1,58 @@
+project:
+  type: website
+  resources:
+    - "resources/"
+  output-dir: docs
+  preview:
+    port: 4321
+    browser: true
+
+execute:
+  freeze: auto
+
+description-meta: "Matt Kaye's personal website."
+
+website:
+  title: "Matt Kaye"
+  site-url: "https://www.matthewrkaye.com"
+  repo-url: https://github.com/mrkaye97/mrkaye97.github.io
+  description: "Matt Kaye"
+  google-analytics: "UA-69391421-1"
+  cookie-consent: false
+  search: true
+  navbar:
+    background: "#99ccff"
+    left:
+      - text: "Blog"
+        file: posts.qmd
+      - text: "Projects"
+        file: projects.qmd
+      - text: Resume
+        file: "resume/Matthew_Kaye_resume.pdf"
+      - text: "More"
+        menu:
+          - text: "My three favorite"
+            file: my-three-favorite.md
+          - text: "Statistics in the wild"
+            file: stats-in-the-wild.md
+
+  page-footer:
+    left: |
+      {{< fa regular copyright >}} Matt Kaye, 2023<br>
+      All content licensed under {{< fa brands creative-commons >}}
+      {{< fa brands creative-commons-by >}} {{< fa brands creative-commons-sa >}} {{< fa brands creative-commons-nc >}} [(CC BY-NC-SA 4.0)](http://creativecommons.org/licenses/by-nc-sa/4.0/)
+
+    right: |
+      Made with {{< fa brands r-project >}} and [Quarto](https://quarto.org/)<br>
+      [Source at {{< fa brands github >}} GitHub](https://github.com/mrkaye97/mrkaye97.github.io)
+
+format:
+  html:
+    theme:
+      light: [cosmo, theme-light.scss]
+      dark: [darkly, theme-dark.scss]
+    css: styles.css
+    toc: true
+
+editor:
+  mode: source
