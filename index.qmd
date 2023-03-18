@@ -1,0 +1,27 @@
+---
+about:
+  template: jolla
+  image: resources/headshot.jpg
+  links:
+    - icon: github
+      text: Github
+      href: https://github.com/mrkaye97
+    - icon: strava
+      text: Strava
+      href: https://www.strava.com/athletes/16125633
+    - icon: envelope
+      text: Email
+      href: mailto:mrkaye97@gmail.com
+    - icon: book
+      text: StoryGraph
+      href: https://app.thestorygraph.com/profile/mrkaye97
+    - icon: droplet
+      text: Untappd
+      href: https://untappd.com/user/mrkaye97
+---
+
+# Hi! I'm <strong>Matt</strong>
+
+### I'm a data scientist at <a href="https://www.collegevine.com">CollegeVine</a>
+
+### We're bringing free, data-driven college guidance to families

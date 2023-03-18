@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.2.335">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="description" content="Matt Kaye’s personal website.">
+
+<title>Matt Kaye – stats-in-the-wild</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+
+<script type="text/javascript">
+
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+ga('create', 'UA-69391421-1', 'auto');
+
+ga('send', {
+  hitType: 'pageview',
+  'anonymizeIp': true,
+});
+</script>
+
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-fixed fullcontent">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">Matt Kaye</span>
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="./posts.html">
+ <span class="menu-text">Blog</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./projects.html">
+ <span class="menu-text">Projects</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./resume/Matthew_Kaye_resume.pdf">
+ <span class="menu-text">Resume</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-more" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">More</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-more">    
+        <li>
+    <a class="dropdown-item" href="./my-three-favorite.html">
+ <span class="dropdown-text">My three favorite</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./stats-in-the-wild.html">
+ <span class="dropdown-text">Statistics in the wild</span></a>
+  </li>  
+    </ul>
+  </li>
+</ul>
+              <div class="quarto-toggle-container">
+                  <a href="" class="quarto-color-scheme-toggle nav-link" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+              </div>
+              <div id="quarto-search" class="" title="Search"></div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+
+
+<section id="since-92.4-of-statistics-are-made-up" class="level2">
+<h2 class="anchored" data-anchor-id="since-92.4-of-statistics-are-made-up">Since 92.4% of statistics are made up:</h2>
+<p><em><strong>Disclaimer:</strong> This is a rolling compilation of a number of uses of statistics by the media, on TV broadcasts, and from other sources, mainly having to do with sports and politics. Some are good, some are bad, and some are laughable. Decisions about which belong in each category are left to the reader. Kindly excuse any slight misquotes, and enjoy!</em></p>
+<p><br></p>
+<ul>
+<li><p><strong>All-time Stat:</strong> Oakland Athletics outfielder Khris Davis hit .247 for four years in a row.</p></li>
+<li><p><strong>February 2021 - Sanofi &amp; GSK:</strong> “100% Efficacy”</p>
+<center>
+<p><img src="./photos/nyt-covid-vaccine.jpg" alt="Efficacy" width="600" title="Employee Data title"></p>
+</center></li>
+<li><p><strong>December 2021 - LinkedIn:</strong> “Correlation sometimes equals causation”</p>
+<center>
+<p><img src="./photos/linkedin-correlation-causation.png" alt="Correlation Causation" width="600" title="Employee Data title"></p>
+</center></li>
+<li><p><strong>March-April 2021 - NYTimes:</strong> Linear extrapolation to “project” the proportion of the U.S. population that will be vaccinated by future dates.</p>
+<center>
+<p><img src="./photos/nyt_vaccine_projection.png" alt="NYT Vaccine Projection" width="600" title="Employee Data title"></p>
+</center></li>
+<li><p><strong>March-November 2020 - Everyone:</strong> A 20% false negative rate on COVID-19 rapid tests means that when a test says you’re negative, there’s a 20% chance you’re positive.</p></li>
+<li><p><strong>11/7/20 - <del><span class="citation" data-cites="realDonaldTrump">@realDonaldTrump</span></del> A soon-to-be quarantined Twitter account:</strong></p>
+<p></p><div id="tweet-49783"></div><script>tweet={"url":"https:\/\/twitter.com\/realDonaldTrump\/status\/1325099845045071873","author_name":"Donald J. Trump","author_url":"https:\/\/twitter.com\/realDonaldTrump","html":"\u003Cblockquote class=\"twitter-tweet\" align=\"center\"\u003E\u003Cp lang=\"en\" dir=\"ltr\"\u003EI WON THIS ELECTION, BY A LOT!\u003C\/p\u003E&mdash; Donald J. Trump (@realDonaldTrump) \u003Ca href=\"https:\/\/twitter.com\/realDonaldTrump\/status\/1325099845045071873?ref_src=twsrc%5Etfw\"\u003ENovember 7, 2020\u003C\/a\u003E\u003C\/blockquote\u003E\n\u003Cscript async src=\"https:\/\/platform.twitter.com\/widgets.js\" charset=\"utf-8\"\u003E\u003C\/script\u003E\n","width":550,"height":null,"type":"rich","cache_age":"3153600000","provider_name":"Twitter","provider_url":"https:\/\/twitter.com","version":"1.0"};document.getElementById("tweet-49783").innerHTML = tweet["html"];</script><p></p></li>
+<li><p><strong>10/3/20 - Twitter:</strong></p>
+<p></p><div id="tweet-23395"></div><script>tweet={"url":"https:\/\/twitter.com\/RickGosselin9\/status\/1312368088499838976","author_name":"Rick Gosselin","author_url":"https:\/\/twitter.com\/RickGosselin9","html":"\u003Cblockquote class=\"twitter-tweet\" align=\"center\"\u003E\u003Cp lang=\"en\" dir=\"ltr\"\u003EThe most incredible stat about the late Bob Gibson is that he pitched more complete games (255) than he had wins (251). The man was his own bullpen. RIP.\u003C\/p\u003E&mdash; Rick Gosselin (@RickGosselin9) \u003Ca href=\"https:\/\/twitter.com\/RickGosselin9\/status\/1312368088499838976?ref_src=twsrc%5Etfw\"\u003EOctober 3, 2020\u003C\/a\u003E\u003C\/blockquote\u003E\n\u003Cscript async src=\"https:\/\/platform.twitter.com\/widgets.js\" charset=\"utf-8\"\u003E\u003C\/script\u003E\n","width":550,"height":null,"type":"rich","cache_age":"3153600000","provider_name":"Twitter","provider_url":"https:\/\/twitter.com","version":"1.0"};document.getElementById("tweet-23395").innerHTML = tweet["html"];</script><p></p></li>
+<li><p><strong>9/30/20:</strong> As of today, the Minnesota Twins have lost 18 consecutive playoff games.</p></li>
+<li><p><strong>9/28/20 - FanGraphs:</strong> Fernando Tatis Jr.’s BABIP and wRC+ by month in 2020.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="./photos/tatis_babip.png" class="img-fluid figure-img"></p>
+<p></p><figcaption class="figure-caption">Fernando Tatis BABIP</figcaption><p></p>
+</figure>
+</div></li>
+<li><p><strong>9/28/2020:</strong> Shane Bieber’s 2020 K/9 rate was 14.20. Although the season was shortened, if he had kept up that pace it would have been the highest K/9 rate for a starting pitcher of all time.</p></li>
+<li><p><strong>9/26/2020 - NY Times, paraphrased:</strong> A majority of voters favor the open Supreme Court seat being filled after the election, our poll found.</p></li>
+<li><p><strong>9/15/20 - Twitter:</strong></p>
+<p></p><div id="tweet-14958"></div><script>tweet={"url":"https:\/\/twitter.com\/MLBRandomStats\/status\/1305912658554740736","author_name":"Jeremy Frank","author_url":"https:\/\/twitter.com\/MLBRandomStats","html":"\u003Cblockquote class=\"twitter-tweet\" align=\"center\"\u003E\u003Cp lang=\"en\" dir=\"ltr\"\u003EMike Trout is hitting .294\/.385\/.647.... in plate appearances where he falls down 0-2 in the count\u003C\/p\u003E&mdash; Jeremy Frank (@MLBRandomStats) \u003Ca href=\"https:\/\/twitter.com\/MLBRandomStats\/status\/1305912658554740736?ref_src=twsrc%5Etfw\"\u003ESeptember 15, 2020\u003C\/a\u003E\u003C\/blockquote\u003E\n\u003Cscript async src=\"https:\/\/platform.twitter.com\/widgets.js\" charset=\"utf-8\"\u003E\u003C\/script\u003E\n","width":550,"height":null,"type":"rich","cache_age":"3153600000","provider_name":"Twitter","provider_url":"https:\/\/twitter.com","version":"1.0"};document.getElementById("tweet-14958").innerHTML = tweet["html"];</script><p></p></li>
+<li><p><strong>9/12/20 - Lakers vs.&nbsp;Rockets Broadcast on ESPN:</strong> The Lakers are 31-1 in series once they go up 3-1.</p></li>
+<li><p><strong>9/6/20:</strong> As of the end of the Orioles game on 9/5/2020, DJ Stewart had a batting average of .105 and a slugging percentage of .421.</p></li>
+<li><p><strong>8/8/20 - Nate Silver:</strong> The whole conversation between Silver and Morris.</p>
+<p></p><div id="tweet-47572"></div><script>tweet={"url":"https:\/\/twitter.com\/NateSilver538\/status\/1292287935405010947","author_name":"Nate Silver","author_url":"https:\/\/twitter.com\/NateSilver538","html":"\u003Cblockquote class=\"twitter-tweet\" align=\"center\"\u003E\u003Cp lang=\"en\" dir=\"ltr\"\u003ETo put it another way, the easy part of forecasting is fitting a model and the hard part is knowing when the best fit on past data will yield a worse forecast on unknown data.\u003C\/p\u003E&mdash; Nate Silver (@NateSilver538) \u003Ca href=\"https:\/\/twitter.com\/NateSilver538\/status\/1292287935405010947?ref_src=twsrc%5Etfw\"\u003EAugust 9, 2020\u003C\/a\u003E\u003C\/blockquote\u003E\n\u003Cscript async src=\"https:\/\/platform.twitter.com\/widgets.js\" charset=\"utf-8\"\u003E\u003C\/script\u003E\n","width":550,"height":null,"type":"rich","cache_age":"3153600000","provider_name":"Twitter","provider_url":"https:\/\/twitter.com","version":"1.0"};document.getElementById("tweet-47572").innerHTML = tweet["html"];</script><p></p></li>
+<li><p><strong>7/30/20 - NY Times, paraphrased:</strong> U.S. economic output fell by 9% last quarter. That translates to a 36% annual rate of decline.</p></li>
+<li><p><strong>7/23/20 - ESPN Opening Day Broadcast of Yankees-Nationals:</strong> Max Scherzer is the first pitcher since 1893 to strike out ten or more batters in three consecutive opening day starts.</p></li>
+<li><p><strong>7/13/20 - The Economist:</strong> As of today, July 13, 2020, The Economist’s presidential prediction (co-signed by Gelman) gives Biden a 91% chance of winning the election.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="./photos/economist_prediction.png" class="img-fluid figure-img"></p>
+<p></p><figcaption class="figure-caption">Economist Prediction: Biden 91%, Trump 9%</figcaption><p></p>
+</figure>
+</div></li>
+<li><p><strong>7/9/20 - <a href="https://bmjopensem.bmj.com/content/6/1/e000850">This paper</a></strong> on activity and social distancing / quarantine (Hint: look at the N sizes).</p></li>
+<li><p><strong>6/11/20 - <a href="https://reddit.com/r/dataisbeautiful">r/DataIsBeautiful</a>:</strong></p>
+<blockquote class="reddit-embed-bq blockquote" data-embed-height="527">
+<p><a href="https://www.reddit.com/r/dataisbeautiful/comments/h78j5k/adult_obesity_rate_in_america_20_oc/">Adult Obesity Rate in America 2.0 [OC]</a><br> by <a href="https://www.reddit.com/user/isu_asenjo">u/isu_asenjo</a> in <a href="https://www.reddit.com/r/dataisbeautiful/">dataisbeautiful</a></p>
+</blockquote>
+<script async="" src="https://embed.reddit.com/widgets.js" charset="UTF-8"></script></li>
+<li><p><strong>6/11/20 - NPR Up First Podcast:</strong> “Joe Biden has substantial leads in a wave of new polls, and many of them are ten point leads. And as to the ‘What about 2016?’ response that I can already hear listeners saying into my ears, here’s the big difference: Joe Biden is over 50% in a lot of those polls, and that is a mark that Hillary Clinton very rarely got to, that makes the lead a lot more durable.”</p>
+<p>The “What about 2016” critique being referenced is the fact that many news outlets (Huffington Post, NY Times, etc.) gave Clinton greater than a 95% chance of winning the election (FiveThirtyEight gave her around a 65-70% chance, at best). Obviously, she ended up losing, sparking outrage towards and confusion over those seemingly overly-optimistic projections. As of today, June 11th, 2020, <a href="https://www.predictit.org/markets/detail/3698">PredictIt</a> gives Biden <em>roughly</em> a 55% chance of winning.</p></li>
+<li><p><strong>6/6/20 - CNBC:</strong> A V-shaped recovery!</p>
+<p></p><div id="tweet-54642"></div><script>tweet={"url":"https:\/\/twitter.com\/CNBC\/status\/1268927124452380672","author_name":"CNBC","author_url":"https:\/\/twitter.com\/CNBC","html":"\u003Cblockquote class=\"twitter-tweet\" align=\"center\"\u003E\u003Cp lang=\"en\" dir=\"ltr\"\u003EThe better-than-expected jobs report follows a series of other recent data that points to a V-shaped recovery. Take a look at these charts: \u003Ca href=\"https:\/\/t.co\/npQxnfQ6mh\"\u003Ehttps:\/\/t.co\/npQxnfQ6mh\u003C\/a\u003E \u003Ca href=\"https:\/\/t.co\/VFfZjVMaUz\"\u003Epic.twitter.com\/VFfZjVMaUz\u003C\/a\u003E\u003C\/p\u003E&mdash; CNBC (@CNBC) \u003Ca href=\"https:\/\/twitter.com\/CNBC\/status\/1268927124452380672?ref_src=twsrc%5Etfw\"\u003EJune 5, 2020\u003C\/a\u003E\u003C\/blockquote\u003E\n\u003Cscript async src=\"https:\/\/platform.twitter.com\/widgets.js\" charset=\"utf-8\"\u003E\u003C\/script\u003E\n","width":550,"height":null,"type":"rich","cache_age":"3153600000","provider_name":"Twitter","provider_url":"https:\/\/twitter.com","version":"1.0"};document.getElementById("tweet-54642").innerHTML = tweet["html"];</script><p></p></li>
+<li><p><strong>5/14/20 - FiveThirtyEight Politics Podcast:</strong> When asked who they voted for in an election, a larger share of people respond that they had voted for the winning candidate than the share that actually voted for said candidate.</p></li>
+<li><p><strong>5/5/20 - CEA:</strong> (oh my god, people are going to die because of this)</p>
+<p></p><div id="tweet-90970"></div><script>tweet={"url":"https:\/\/twitter.com\/WhiteHouseCEA45\/status\/1257680258364555264","author_name":"CEA45 Archived","author_url":"https:\/\/twitter.com\/WhiteHouseCEA45","html":"\u003Cblockquote class=\"twitter-tweet\" align=\"center\"\u003E\u003Cp lang=\"en\" dir=\"ltr\"\u003ETo better visualize observed data, we also continually update a curve-fitting exercise to summarize COVID-19&#39;s observed trajectory. Particularly with irregular data, curve fitting can improve data visualization. As shown, IHME&#39;s mortality curves have matched the data fairly well. \u003Ca href=\"https:\/\/t.co\/NtJcOdA98R\"\u003Epic.twitter.com\/NtJcOdA98R\u003C\/a\u003E\u003C\/p\u003E&mdash; CEA45 Archived (@WhiteHouseCEA45) \u003Ca href=\"https:\/\/twitter.com\/WhiteHouseCEA45\/status\/1257680258364555264?ref_src=twsrc%5Etfw\"\u003EMay 5, 2020\u003C\/a\u003E\u003C\/blockquote\u003E\n\u003Cscript async src=\"https:\/\/platform.twitter.com\/widgets.js\" charset=\"utf-8\"\u003E\u003C\/script\u003E\n","width":550,"height":null,"type":"rich","cache_age":"3153600000","provider_name":"Twitter","provider_url":"https:\/\/twitter.com","version":"1.0"};document.getElementById("tweet-90970").innerHTML = tweet["html"];</script><p></p></li>
+<li><p><strong>4/2/20 - FiveThirtyEight:</strong> <a href="https://fivethirtyeight.com/features/best-case-and-worst-case-coronavirus-forecasts-are-very-far-apart/">This FiveThirtyEight article.</a></p></li>
+<li><p><strong>4/2/20 - The New York Times:</strong> <a href="https://www.nytimes.com/interactive/2020/04/02/us/coronavirus-social-distancing.html">These maps.</a></p></li>
+<li><p><strong>3/15/20 - FiveThirtyEight:</strong> Teams with Cristiano Ronaldo on them are 5-0 against Atletico Madrid in Champions League knockout stage games in the last 10 years. Everyone else is 0-9.</p></li>
+<li><p><strong>1/13/20 - CBS Broadcast of Titans - Chiefs:</strong> <em>Right before the Chiefs are about to go for it on 4th and 2 from the Titans’ 27…</em> Other teams have gone for it on fourth down five times against the Titans defense this postseason. All five have been stops. <em>Side note: the Chiefs got the first.</em></p></li>
+<li><p><strong>1/13/20 - ESPN Broadcast of LSU - Clemson:</strong> Travis Etienne has never scored a touchdown in a dome.</p></li>
+<li><p><strong>1/13/20 - ESPN Broadcast of LSU - Clemson:</strong> Clemson has won 50 straight games when scoring first.</p></li>
+<li><p><strong>1/13/20 - ESPN Broadcast of LSU - Clemson:</strong> [Sophomore] Trevor Lawrence has never thrown an interception in a postseason game.</p></li>
+<li><p><strong>12/28/19 - ESPN Broadcast of LSU - Oklahoma:</strong> Joe Burrow gets first downs on 47% of his rushing attempts.</p></li>
+<li><p><strong>12/16/19 - FiveThirtyEight:</strong> The Lakers average 112.9 points per 100 possessions with both LeBron and Anthony Davis on the floor. They average 114.8 with only LeBron.</p></li>
+<li><p><strong>8/13/19 - MLB Network:</strong> <em>Discussing Gleyber Torres’s immense success against Orioles pitching…</em> “If it were up to Gleyber Torres, the Yankees would play the Orioles every day of the week and twice on Sunday.”</p></li>
+<li><p><strong>7/15/19 - MLB Network:</strong> <em>The night before, the Rays had a team no-hitter broken up by a single through the shift in the 9th inning. The hit went to where the second baseman would normally be positioned.</em> A misquote, but the general gist… “The craziest part about this single was that its hit probability was only 16%.”</p></li>
+<li><p><strong>7/12/19 - MLB Network:</strong> Only one team in the Majors has not intentionally walked anyone during the 2019 season. Houston.</p></li>
+<li><p><strong>7/9/19 - MLB Network:</strong> “Gleyber Torres is only the third ever Yankee to make two All Star games before the age of 23. The other two are Mickey Mantle and Joe DiMaggio.”</p></li>
+<li><p><strong>Early 2019 - Effectively Wild Podcast, paraphrased:</strong> Mike Trout has amassed about 65 WAR throughout his career, and is projected to have another 70 or so over the next ten seasons. Essentially, this means he has already had one Hall of Fame career, and is about to have another.</p></li>
+<li><p><strong>Pre-2019 Season:</strong> Only 10 players have ever had 5+ seasons of 9+ WAR. They are: Babe Ruth, Rogers Hornsby, Barry Bonds, Willie Mays, Alex Rodriguez, Ty Cobb, Lou Gehrig, Honus Wagner, Ted Williams, and Mike Trout.</p></li>
+</ul>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const disableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'prefetch';
+    }
+  }
+  const enableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'stylesheet';
+    }
+  }
+  const manageTransitions = (selector, allowTransitions) => {
+    const els = window.document.querySelectorAll(selector);
+    for (let i=0; i < els.length; i++) {
+      const el = els[i];
+      if (allowTransitions) {
+        el.classList.remove('notransition');
+      } else {
+        el.classList.add('notransition');
+      }
+    }
+  }
+  const toggleColorMode = (alternate) => {
+    // Switch the stylesheets
+    const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+    manageTransitions('#quarto-margin-sidebar .nav-link', false);
+    if (alternate) {
+      enableStylesheet(alternateStylesheets);
+      for (const sheetNode of alternateStylesheets) {
+        if (sheetNode.id === "quarto-bootstrap") {
+          toggleBodyColorMode(sheetNode);
+        }
+      }
+    } else {
+      disableStylesheet(alternateStylesheets);
+      toggleBodyColorPrimary();
+    }
+    manageTransitions('#quarto-margin-sidebar .nav-link', true);
+    // Switch the toggles
+    const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+    for (let i=0; i < toggles.length; i++) {
+      const toggle = toggles[i];
+      if (toggle) {
+        if (alternate) {
+          toggle.classList.add("alternate");     
+        } else {
+          toggle.classList.remove("alternate");
+        }
+      }
+    }
+    // Hack to workaround the fact that safari doesn't
+    // properly recolor the scrollbar when toggling (#1455)
+    if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+      manageTransitions("body", false);
+      window.scrollTo(0, 1);
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+        manageTransitions("body", true);
+      }, 40);  
+    }
+  }
+  const isFileUrl = () => { 
+    return window.location.protocol === 'file:';
+  }
+  const hasAlternateSentinel = () => {  
+    let styleSentinel = getColorSchemeSentinel();
+    if (styleSentinel !== null) {
+      return styleSentinel === "alternate";
+    } else {
+      return false;
+    }
+  }
+  const setStyleSentinel = (alternate) => {
+    const value = alternate ? "alternate" : "default";
+    if (!isFileUrl()) {
+      window.localStorage.setItem("quarto-color-scheme", value);
+    } else {
+      localAlternateSentinel = value;
+    }
+  }
+  const getColorSchemeSentinel = () => {
+    if (!isFileUrl()) {
+      const storageValue = window.localStorage.getItem("quarto-color-scheme");
+      return storageValue != null ? storageValue : localAlternateSentinel;
+    } else {
+      return localAlternateSentinel;
+    }
+  }
+  let localAlternateSentinel = 'default';
+  // Dark / light mode switch
+  window.quartoToggleColorScheme = () => {
+    // Read the current dark / light value 
+    let toAlternate = !hasAlternateSentinel();
+    toggleColorMode(toAlternate);
+    setStyleSentinel(toAlternate);
+  };
+  // Ensure there is a toggle, if there isn't float one in the top right
+  if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+    const a = window.document.createElement('a');
+    a.classList.add('top-right');
+    a.classList.add('quarto-color-scheme-toggle');
+    a.href = "";
+    a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+    const i = window.document.createElement("i");
+    i.classList.add('bi');
+    a.appendChild(i);
+    window.document.body.appendChild(a);
+  }
+  // Switch to dark mode if need be
+  if (hasAlternateSentinel()) {
+    toggleColorMode(true);
+  } else {
+    toggleColorMode(false);
+  }
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left"> Matt Kaye, 2023<br> All content licensed under <a href="http://creativecommons.org/licenses/by-nc-sa/4.0/">(CC BY-NC-SA 4.0)</a></div>   
+    <div class="nav-footer-right">Made with and <a href="https://quarto.org/">Quarto</a><br> <a href="https://github.com/mrkaye97/mrkaye97.github.io">Source at GitHub</a></div>
+  </div>
+</footer>
+
+
+
+<script src="https://platform.twitter.com/widgets.js"></script>
+</body></html>
