@@ -13,17 +13,21 @@ _**Disclaimer:** This is a rolling compilation of a number of uses of statistics
 - **3/18/2023 - CBS Broadcast of Kansas vs. Arkansas:** Kansas is 47-0 all time when up by 8+ points at half.
 - **February 2021 - Sanofi & GSK:** "100% Efficacy"  
 
-
-<center><img src="/photos/nyt-covid-vaccine.jpg" alt="Efficacy" width="600" title="Employee Data title"></center>
+<p align="center">
+![](/photos/nyt-covid-vaccine.jpg){width=75%}
+</p>
 
 - **December 2021 - LinkedIn:** "Correlation sometimes equals causation"  
 
-
-<center><img src="/photos/linkedin-correlation-causation.png" alt="Correlation Causation" width="600" title="Employee Data title"></center>
+<p align="center">
+![](/photos/linkedin-correlation-causation.png){width=75%}
+</p>
 
 - **March-April 2021 - NYTimes:** Linear extrapolation to "project" the proportion of the U.S. population that will be vaccinated by future dates.
 
-<center><img src="/photos/nyt_vaccine_projection.png" alt="NYT Vaccine Projection" width="600" title="Employee Data title"></center>
+<p align="center">
+![](/photos/nyt_vaccine_projection.png){width=75%}
+</p>
 
 - **March-November 2020 - Everyone:** A 20% false negative rate on COVID-19 rapid tests means that when a test says you're negative, there's a 20% chance you're positive.
 - **11/7/20 - ~~@realDonaldTrump~~ A soon-to-be quarantined Twitter account:**
@@ -37,8 +41,9 @@ _**Disclaimer:** This is a rolling compilation of a number of uses of statistics
 - **9/30/20:** As of today, the Minnesota Twins have lost 18 consecutive playoff games.
 - **9/28/20 - FanGraphs:** Fernando Tatis Jr.'s BABIP and wRC+ by month in 2020.  
 
-
-![Fernando Tatis BABIP](/photos/tatis_babip.png)
+<p align="center">
+![](/photos/tatis_babip.png){width=75%}
+</p>
 
 - **9/28/2020:** Shane Bieber's 2020 K/9 rate was 14.20. Although the season was shortened, if he had kept up that pace it would have been the highest K/9 rate for a starting pitcher of all time.
 - **9/26/2020 - NY Times, paraphrased:** A majority of voters favor the open Supreme Court seat being filled after the election, our poll found.
@@ -55,7 +60,11 @@ _**Disclaimer:** This is a rolling compilation of a number of uses of statistics
 - **7/30/20 - NY Times, paraphrased:** U.S. economic output fell by 9% last quarter. That translates to a 36% annual rate of decline.
 - **7/23/20 - ESPN Opening Day Broadcast of Yankees-Nationals:** Max Scherzer is the first pitcher since 1893 to strike out ten or more batters in three consecutive opening day starts.
 - **7/13/20 - The Economist:** As of today, July 13, 2020, The Economist's presidential prediction (co-signed by Gelman) gives Biden a 91% chance of winning the election.
-  ![Economist Prediction: Biden 91%, Trump 9%](/photos/economist_prediction.png)
+
+  <p align="center">
+  ![](/photos/economist_prediction.png){width=75%}
+  </p>
+  
 - **7/9/20 - [This paper](https://bmjopensem.bmj.com/content/6/1/e000850)** on activity and social distancing / quarantine (Hint: look at the N sizes).
 - **6/11/20 - [r/DataIsBeautiful](https://reddit.com/r/dataisbeautiful):**
     <blockquote class="reddit-embed-bq" data-embed-height="527">      <a href="https://www.reddit.com/r/dataisbeautiful/comments/h78j5k/adult_obesity_rate_in_america_20_oc/">Adult Obesity Rate in America 2.0 [OC]</a><br> by      <a href="https://www.reddit.com/user/isu_asenjo">u/isu_asenjo</a> in      <a href="https://www.reddit.com/r/dataisbeautiful/">dataisbeautiful</a>    </blockquote><script async="" src="https://embed.reddit.com/widgets.js" charset="UTF-8"></script>
