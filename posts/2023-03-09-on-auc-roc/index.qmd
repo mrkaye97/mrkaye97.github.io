@@ -34,7 +34,13 @@ For more on this, I'd refer everyone to [this fantastic blog post](https://devel
 
 The easiest way to convey this idea might be to show a simple implementation of AUC. Below is some R code.
 
-First, let's start by writing a function to do exactly what's described above. Again, here's the algorithm given some evaluation data: 1. Choose a random item from the `true` class. 2. Choose a random item from the `false` class. 3. Make a prediction on each of the two items. 4. If the predicted probability for the actually true item is greater than the predicted probability for the actually false item, return true. Otherwise, return false. If they're equal, flip a coin. 5. Repeat 1-4 many times, and calculate the proportion of the time your model guessed correctly. This is your AUC.
+First, let's start by writing a function to do exactly what's described above. Again, here's the algorithm given some evaluation data: 
+
+1. Choose a random item from the `true` class. 
+2. Choose a random item from the `false` class. 
+3. Make a prediction on each of the two items. 
+4. If the predicted probability for the actually true item is greater than the predicted probability for the actually false item, return true. Otherwise, return false. If they're equal, flip a coin. 
+5. Repeat 1-4 many times, and calculate the proportion of the time your model guessed correctly. This is your AUC.
 
 Now, let's write this in R with a little help from some vectorization.
 
@@ -152,4 +158,7 @@ Fortunately, there's an easy fix for this problem. AUCs are a point estimate, bu
 
 ## Wrapping Up
 
-Hopefully this post helped give a better intuition for what AUC actually is! A couple of major takeaways: 1. AUC doesn't need to be this super complicated thing about trading off between false positives and negatives and trying many different classification thresholds and such. In my opinion, it's much simpler to just think about it as the likelihood of a guess that your model makes between two choices being correct. 2. AUC isn't affected by class imbalances.
+Hopefully this post helped give a better intuition for what AUC actually is! A couple of major takeaways: 
+
+1. AUC doesn't need to be this super complicated thing about trading off between false positives and negatives and trying many different classification thresholds and such. In my opinion, it's much simpler to just think about it as the likelihood of a guess that your model makes between two choices being correct. 
+2. AUC isn't affected by class imbalances.

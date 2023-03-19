@@ -190,6 +190,10 @@ ga('send', {
     <a class="dropdown-item" href="../../stats-in-the-wild.html">
  <span class="dropdown-text">Statistics in the wild</span></a>
   </li>  
+        <li>
+    <a class="dropdown-item" href="../../travel.html">
+ <span class="dropdown-text">Going places</span></a>
+  </li>  
     </ul>
   </li>
 </ul>
@@ -267,7 +271,14 @@ ga('send', {
 <section id="a-simple-implementation" class="level2">
 <h2 class="anchored" data-anchor-id="a-simple-implementation">A Simple Implementation</h2>
 <p>The easiest way to convey this idea might be to show a simple implementation of AUC. Below is some R code.</p>
-<p>First, let’s start by writing a function to do exactly what’s described above. Again, here’s the algorithm given some evaluation data: 1. Choose a random item from the <code>true</code> class. 2. Choose a random item from the <code>false</code> class. 3. Make a prediction on each of the two items. 4. If the predicted probability for the actually true item is greater than the predicted probability for the actually false item, return true. Otherwise, return false. If they’re equal, flip a coin. 5. Repeat 1-4 many times, and calculate the proportion of the time your model guessed correctly. This is your AUC.</p>
+<p>First, let’s start by writing a function to do exactly what’s described above. Again, here’s the algorithm given some evaluation data:</p>
+<ol type="1">
+<li>Choose a random item from the <code>true</code> class.</li>
+<li>Choose a random item from the <code>false</code> class.</li>
+<li>Make a prediction on each of the two items.</li>
+<li>If the predicted probability for the actually true item is greater than the predicted probability for the actually false item, return true. Otherwise, return false. If they’re equal, flip a coin.</li>
+<li>Repeat 1-4 many times, and calculate the proportion of the time your model guessed correctly. This is your AUC.</li>
+</ol>
 <p>Now, let’s write this in R with a little help from some vectorization.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rlang)</span>
@@ -337,18 +348,13 @@ ga('send', {
  </thead>
 <tbody>
   <tr>
-   <td style="text-align:left;"> 1 </td>
-   <td style="text-align:right;"> 22.8 </td>
-   <td style="text-align:right;"> 4 </td>
+   <td style="text-align:left;"> 0 </td>
+   <td style="text-align:right;"> 19.7 </td>
+   <td style="text-align:right;"> 6 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> 0 </td>
-   <td style="text-align:right;"> 15.8 </td>
-   <td style="text-align:right;"> 8 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> 0 </td>
-   <td style="text-align:right;"> 15.2 </td>
+   <td style="text-align:right;"> 15.0 </td>
    <td style="text-align:right;"> 8 </td>
   </tr>
   <tr>
@@ -357,14 +363,19 @@ ga('send', {
    <td style="text-align:right;"> 4 </td>
   </tr>
   <tr>
-   <td style="text-align:left;"> 0 </td>
-   <td style="text-align:right;"> 14.3 </td>
-   <td style="text-align:right;"> 8 </td>
+   <td style="text-align:left;"> 1 </td>
+   <td style="text-align:right;"> 19.2 </td>
+   <td style="text-align:right;"> 6 </td>
   </tr>
   <tr>
-   <td style="text-align:left;"> 0 </td>
-   <td style="text-align:right;"> 15.2 </td>
-   <td style="text-align:right;"> 8 </td>
+   <td style="text-align:left;"> 1 </td>
+   <td style="text-align:right;"> 17.8 </td>
+   <td style="text-align:right;"> 6 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 1 </td>
+   <td style="text-align:right;"> 27.3 </td>
+   <td style="text-align:right;"> 4 </td>
   </tr>
 </tbody>
 </table>
@@ -451,7 +462,11 @@ ga('send', {
 </section>
 <section id="wrapping-up" class="level2">
 <h2 class="anchored" data-anchor-id="wrapping-up">Wrapping Up</h2>
-<p>Hopefully this post helped give a better intuition for what AUC actually is! A couple of major takeaways: 1. AUC doesn’t need to be this super complicated thing about trading off between false positives and negatives and trying many different classification thresholds and such. In my opinion, it’s much simpler to just think about it as the likelihood of a guess that your model makes between two choices being correct. 2. AUC isn’t affected by class imbalances.</p>
+<p>Hopefully this post helped give a better intuition for what AUC actually is! A couple of major takeaways:</p>
+<ol type="1">
+<li>AUC doesn’t need to be this super complicated thing about trading off between false positives and negatives and trying many different classification thresholds and such. In my opinion, it’s much simpler to just think about it as the likelihood of a guess that your model makes between two choices being correct.</li>
+<li>AUC isn’t affected by class imbalances.</li>
+</ol>
 
 
 </section>
