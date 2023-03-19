@@ -1,0 +1,11 @@
+---
+toc: false
+---
+
+I like to contribute to open-source projects when I get the chance. Below are some recent contributions I've made.
+
+-------------------------------------
+
+* [Adding JSON schema validation to MLFlow](https://github.com/mlflow/mlflow/pull/5458)
+* [Adding a MAP@K implementation to `recmetrics`](https://github.com/statisticianinstilettos/recmetrics/pull/50)
+* [Adding a minimal CI/CD process to `recmetrics`](https://github.com/statisticianinstilettos/recmetrics/pull/52)

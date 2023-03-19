@@ -1,0 +1,28 @@
+---
+toc: false
+---
+
+<center>
+I like writing code for fun, to explore questions and problems I'm interested in, and to improve the tools I use. 
+
+Broadly speaking, I'd break down this work into three buckets: R packages I author or maintain, contributions to open-source libraries, and other side projects.
+</center>
+
+R Packages
+-------------------------------------
+
+* **[slackr](https://matthewrkaye.com/slackr/)** is an R wrapper of the Slack API
+* **[fitbitr](https://matthewrkaye.com/fitbitr/)** is an R wrapper of the Fitbit API
+* **[lightMLFlow](https://github.com/collegevine/lightMLFlow)** is an opinionated R wrapper of the MLFlow REST API
+
+Open-Source Contributions
+-------------------------------------
+* [Adding JSON schema validation to MLFlow](https://github.com/mlflow/mlflow/pull/5458)
+* [Adding a MAP@K implementation to `recmetrics`](https://github.com/statisticianinstilettos/recmetrics/pull/50)
+* [Adding a minimal CI/CD process to `recmetrics`](https://github.com/statisticianinstilettos/recmetrics/pull/52)
+
+Miscellaneous Side Projects
+-------------------------------------
+* **[bdb2021](https://hjmbigdatabowl.github.io/bdb2021/articles/submission.html)** is my team's submission to the 2021 NFL Big Data Bowl
+* **[ugly-kmeans](https://github.com/mrkaye97/ugly-kmeans)** is an over-the-top (yet imperfect) R solution to one of our data science technical interview questions: (roughly) implement K-Means
+* **[espn-cfb-win-prob](https://github.com/mrkaye97/espn-cfb-win-prob)** runs diagnostics on ESPN's college football win probability model
