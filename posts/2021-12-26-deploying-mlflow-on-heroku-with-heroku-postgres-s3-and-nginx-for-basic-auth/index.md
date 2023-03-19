@@ -2,14 +2,7 @@
 title: Deploying MLFlow on Heroku (with Heroku Postgres, S3, and nginx for basic auth)
 author: Matt Kaye
 date: '2021-12-26'
-categories:
-  - mlops
-tags:
-  - data-engineering
-  - mlflow
-  - mlops
-  - ml-engineering
-lastmod: '2021-12-26T14:29:10-05:00'
+categories: [mlops]
 toc: true
 ---
 

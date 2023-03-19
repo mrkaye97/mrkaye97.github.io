@@ -2,12 +2,7 @@
 title: Calling A/B Tests
 author: Matt Kaye
 date: '2022-04-10'
-categories:
-  - data-science
-  - statistics
-tags:
-  - ab-testing
-lastmod: '2022-04-10T16:03:34-04:00'
+categories: [data science, statistics, a/b testing]
 toc: true
 ---
 

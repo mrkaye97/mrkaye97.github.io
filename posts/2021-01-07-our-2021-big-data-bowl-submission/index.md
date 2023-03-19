@@ -3,7 +3,6 @@ title: Our 2021 Big Data Bowl Submission
 author: Matt Kaye
 date: '2021-01-07'
 categories: ['data science', 'sports analytics']
-tags: ['data science']
 toc: true
 ---
 

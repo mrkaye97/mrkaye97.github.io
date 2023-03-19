@@ -4,11 +4,6 @@ author: Matt Kaye
 date: '2021-01-13'
 categories:
   - data science
-tags:
-  - data science
-  - statistics
-  - bayesian
-  - algorithms
 lastmod: '2021-01-13T18:53:40-07:00'
 toc: true
 ---

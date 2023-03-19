@@ -2,11 +2,7 @@
 title: 'A/B Testing: A Primer'
 author: Matt Kaye
 date: '2022-03-25'
-categories:
-  - data-science
-  - statistics
-tags:
-  - ab-testing
+categories: [data science, statistics, a/b testing]
 lastmod: '2022-03-25T19:21:56-04:00'
 toc: true
 ---

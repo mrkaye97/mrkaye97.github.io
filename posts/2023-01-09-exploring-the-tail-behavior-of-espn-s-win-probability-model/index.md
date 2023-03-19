@@ -2,15 +2,7 @@
 title: Exploring the Tail Behavior of ESPN's Win Probability Model
 author: Matt Kaye
 date: '2023-01-09'
-categories:
-  - data-science
-  - statistics
-  - sports-analytics
-tags:
-  - data-science
-  - r
-  - cfb
-lastmod: '2023-01-09T22:06:38-05:00'
+categories: [data science, statistics, sports analytics]
 toc: true
 ---
 

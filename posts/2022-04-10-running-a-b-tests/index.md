@@ -2,12 +2,7 @@
 title: Running A/B Tests
 author: Matt Kaye
 date: '2022-04-09'
-categories:
-  - data-science
-  - statistics
-tags:
-  - ab-testing
-lastmod: '2022-04-09T15:19:57-04:00'
+categories: [data science, statistics, a/b testing]
 toc: true
 ---
 

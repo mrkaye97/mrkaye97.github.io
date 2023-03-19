@@ -2,7 +2,7 @@
 title: Sequential Testing
 author: Matt Kaye
 date: '2022-04-17'
-categories: [data-science, statistics]
+categories: [data science, statistics]
 toc: true
 ---
 

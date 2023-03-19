@@ -2,9 +2,7 @@
 title: Notes on Hiring Data Analysts + Scientists
 author: Matt Kaye
 date: '2021-12-22'
-categories: [data-science, hiring]
-tags: [data-science, data-analysis, hiring, interviewing, statistics, machine-learning]
-description: ''
+categories: [data science, hiring]
 toc: true
 ---
 

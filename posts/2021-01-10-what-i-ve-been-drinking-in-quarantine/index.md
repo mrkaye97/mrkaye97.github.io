@@ -5,11 +5,6 @@ date: '2021-01-10'
 slug: []
 categories:
   - food + bev
-tags:
-  - cocktails
-  - beer
-  - liquor
-  - amaro
 toc: true
 ---
 

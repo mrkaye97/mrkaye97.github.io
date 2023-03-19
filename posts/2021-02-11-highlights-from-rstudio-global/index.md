@@ -2,13 +2,7 @@
 title: Highlights From rstudio::global
 author: Matt Kaye
 date: '2021-02-11'
-slug: []
-categories:
-  - data science
-tags:
-  - data science
-  - R
-lastmod: '2021-02-11T16:37:34-07:00'
+categories: [R, data science]
 toc: true
 ---
 

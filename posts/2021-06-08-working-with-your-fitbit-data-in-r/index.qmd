@@ -2,11 +2,7 @@
 title: Working With Your Fitbit Data in R
 author: Matt Kaye
 date: '2021-06-08'
-categories:
-  - data science
-tags:
-  - R
-  - data science
+categories: [R, data science]
 lastmod: '2021-06-08T21:26:23-04:00'
 toc: true
 ---
