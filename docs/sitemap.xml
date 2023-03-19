@@ -2,14 +2,22 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://www.matthewrkaye.com/index.html</loc>
-    <lastmod>2023-03-19T03:08:54.272Z</lastmod>
+    <lastmod>2023-03-19T03:15:37.859Z</lastmod>
   </url>
   <url>
     <loc>https://www.matthewrkaye.com/posts/2023-01-09-exploring-the-tail-behavior-of-espn-s-win-probability-model/index.html</loc>
-    <lastmod>2023-03-19T03:10:19.223Z</lastmod>
+    <lastmod>2023-03-19T03:17:40.537Z</lastmod>
   </url>
   <url>
     <loc>https://www.matthewrkaye.com/posts.html</loc>
-    <lastmod>2023-03-19T03:10:18.294Z</lastmod>
+    <lastmod>2023-03-19T03:19:15.191Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.matthewrkaye.com/posts/2023-03-09-on-auc-roc/index.html</loc>
+    <lastmod>2023-03-19T03:15:47.751Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.matthewrkaye.com/posts/2022-04-17-sequential-testing/index.html</loc>
+    <lastmod>2023-03-19T03:19:24.170Z</lastmod>
   </url>
 </urlset>
