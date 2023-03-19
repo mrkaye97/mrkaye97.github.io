@@ -19,7 +19,7 @@ Every other Friday at work we have a meeting called All Hands. During the first 
 
 # Markov Chains
 
-First, what is a Markov Chain? It's easiest to break it down into it's component parts. A **Markov Chain** is a *chain*, or sequence of events, that follow the Markov Property. And the Markov Property is pretty intuitive: The **Markov Property** says that the next state in a sequence (chain) is only dependent on the current state. Statisticians would call this "memorylessness," and we can write out the property in its true mathematical form below, where \$ X \$ is a random variable and \$ x\_{t} \$ is the probability distribution that \$ X \$ takes on at time \$ t \$.
+First, what is a Markov Chain? It's easiest to break it down into it's component parts. A **Markov Chain** is a *chain*, or sequence of events, that follow the Markov Property. And the Markov Property is pretty intuitive: The **Markov Property** says that the next state in a sequence (chain) is only dependent on the current state. Statisticians would call this "memorylessness," and we can write out the property in its true mathematical form below, where $X$ is a random variable and $x\_{t}$ is the probability distribution that $X$ takes on at time $t$.
 
 $$
 p(x_{t+1} | x_{t}, x_{t-1}, x_{t-2}, .. x_{0}) = p(x_{t+1} | x_{t})
@@ -60,7 +60,7 @@ random_walk %>%
   theme_minimal()
 ```
 
-Cool! The walk starts at \$ 0 \$, and then jumps around randomly a bunch until \$ t=100 \$. It'll be more interesting once we simulate 20 random walks.
+Cool! The walk starts at 0, and then jumps around randomly a bunch until $t=100$. It'll be more interesting once we simulate 20 random walks.
 
 ```{r}
 n_steps <- 500
@@ -87,9 +87,9 @@ twenty_walks %>%
   theme(legend.position = 'none')
 ```
 
-So, what's going on here? It basically looks how we'd expect. At any given time point, the mean position of the \$ 20 \$ is about zero, but the standard deviation of those positions goes up over time. Specifically, at any given time \$ t \$, the standard deviation of the positions should be roughly equal to \$ \sqrt t \$, because of how the variance is compounding. Remember, these random walks are Markov Chains because at every time \$ t\$, I defined the position \$ y\_{t+1} \$ to be \$ y\_{t} + \mathcal{N}(0, 1) \$, or the the next position is the current position plus a standard normal noise (i.e. zero-centered with unit variance).
+So, what's going on here? It basically looks how we'd expect. At any given time point, the mean position of the 20 is about zero, but the standard deviation of those positions goes up over time. Specifically, at any given time $t$, the standard deviation of the positions should be roughly equal to $\sqrt t$, because of how the variance is compounding. Remember, these random walks are Markov Chains because at every time $t$, I defined the position $y\_{t+1}$ to be $y\_{t} + \mathcal{N}(0, 1)$, or the the next position is the current position plus a standard normal noise (i.e. zero-centered with unit variance).
 
-Cool, so now we have an idea of what a Markov Chain is and how a random walk is an example of one. Now, why do we care? What kinds of problems can we solve with Markov Chains? It turns out that one thing we can use them to do is to calculate intractable integrals. What does this mean? Well, remembering back to a calculus class once upon a time, we know if we have some function \$ f(x) = 2x \$, we can integrate that function by following a one of a couple of rules. In this case, that rule is to raise the coefficient in front of the \$ x \$ to turn it into a power, such that the new exponent equals the old one plus one, and the new coefficient equals the old one divided by the new exponent. For \$ f(x) \$, we find \$ F(x) = \int f(x) = x\^{2} + c \$, where \$ c \$ is a constant. However, in many applications, such as Bayesian statistics, we run into functions of hundreds or thousands of parameters that are intractable to integrate. In other words, even really, really powerful calculators can't integrate them: there are just too many parameters. So, we're stuck. How do we integrate a function that even a super powerful calculator can't? In steps Markov Chain Monte Carlo, coming to the rescue.
+Cool, so now we have an idea of what a Markov Chain is and how a random walk is an example of one. Now, why do we care? What kinds of problems can we solve with Markov Chains? It turns out that one thing we can use them to do is to calculate intractable integrals. What does this mean? Well, remembering back to a calculus class once upon a time, we know if we have some function $f(x) = 2x$, we can integrate that function by following a one of a couple of rules. In this case, that rule is to raise the coefficient in front of the $x$ to turn it into a power, such that the new exponent equals the old one plus one, and the new coefficient equals the old one divided by the new exponent. For $f(x)$, we find $F(x) = \int f(x) = x^{2} + c$, where $c$ is a constant. However, in many applications, such as Bayesian statistics, we run into functions of hundreds or thousands of parameters that are intractable to integrate. In other words, even really, really powerful calculators can't integrate them: there are just too many parameters. So, we're stuck. How do we integrate a function that even a super powerful calculator can't? In steps Markov Chain Monte Carlo, coming to the rescue.
 
 # Markov Chain Monte Carlo
 
@@ -149,7 +149,7 @@ run_rwmh(n_iters = 10) %>%
   mutate(day_proportion = days_spent / sum(days_spent))
 ```
 
-Unsurprisingly, with only \$ 10 \$ iterations the algorithm does not perform particularly well. But what about if we give it a lot more time? Let's try \$ 10,000 \$ iterations.
+Unsurprisingly, with only 10 iterations the algorithm does not perform particularly well. But what about if we give it a lot more time? Let's try 10,000 iterations.
 
 ```{r}
 some_islands <- run_rwmh(n_iters = 10000) %>%
@@ -164,7 +164,7 @@ sd_error_margin <- sd(some_islands$error_margin)
 some_islands
 ```
 
-Much better! After \$ 10,000 \$ iterations, we're spending almost the exact proportion of time on each island that we want to be, as evidenced by the tiny error margins. In addition, the standard deviation of the error margins is `r round(sd_error_margin, 5)`, which is tiny. That's awesome! But what about if the system is more complex? Like, what if we had 100 islands?
+Much better! After 10,000 iterations, we're spending almost the exact proportion of time on each island that we want to be, as evidenced by the tiny error margins. In addition, the standard deviation of the error margins is `r round(sd_error_margin, 5)`, which is tiny. That's awesome! But what about if the system is more complex? Like, what if we had 100 islands?
 
 ```{r}
 more_islands <- run_rwmh(n_iters = 10000, island_populations = 1:100) %>%

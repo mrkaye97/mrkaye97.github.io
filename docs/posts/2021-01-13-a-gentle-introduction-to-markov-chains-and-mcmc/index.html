@@ -255,7 +255,7 @@ ga('send', {
 </section>
 <section id="markov-chains" class="level1">
 <h1>Markov Chains</h1>
-<p>First, what is a Markov Chain? It’s easiest to break it down into it’s component parts. A <strong>Markov Chain</strong> is a <em>chain</em>, or sequence of events, that follow the Markov Property. And the Markov Property is pretty intuitive: The <strong>Markov Property</strong> says that the next state in a sequence (chain) is only dependent on the current state. Statisticians would call this “memorylessness,” and we can write out the property in its true mathematical form below, where $ X $ is a random variable and $ x_{t} $ is the probability distribution that $ X $ takes on at time $ t $.</p>
+<p>First, what is a Markov Chain? It’s easiest to break it down into it’s component parts. A <strong>Markov Chain</strong> is a <em>chain</em>, or sequence of events, that follow the Markov Property. And the Markov Property is pretty intuitive: The <strong>Markov Property</strong> says that the next state in a sequence (chain) is only dependent on the current state. Statisticians would call this “memorylessness,” and we can write out the property in its true mathematical form below, where <span class="math inline">\(X\)</span> is a random variable and <span class="math inline">\(x\_{t}\)</span> is the probability distribution that <span class="math inline">\(X\)</span> takes on at time <span class="math inline">\(t\)</span>.</p>
 <p><span class="math display">\[
 p(x_{t+1} | x_{t}, x_{t-1}, x_{t-2}, .. x_{0}) = p(x_{t+1} | x_{t})
 \]</span></p>
@@ -283,16 +283,16 @@ p(x_{t+1} | x_{t}, x_{t-1}, x_{t-2}, .. x_{0}) = p(x_{t+1} | x_{t})
 <pre><code># A tibble: 100 × 1
    position
       &lt;dbl&gt;
- 1   0     
- 2  -0.420 
- 3   0.520 
- 4  -0.414 
- 5   0.0104
- 6  -2.16  
- 7  -0.695 
- 8  -2.04  
- 9  -0.607 
-10   0.717 
+ 1    0    
+ 2   -0.372
+ 3    0.394
+ 4   -0.237
+ 5    0.849
+ 6   -0.446
+ 7    0.660
+ 8   -0.321
+ 9   -1.74 
+10   -2.70 
 # … with 90 more rows</code></pre>
 </div>
 </div>
@@ -307,12 +307,12 @@ p(x_{t+1} | x_{t}, x_{t-1}, x_{t-2}, .. x_{0}) = p(x_{t+1} | x_{t})
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="static/rmarkdown-libsunnamed-chunk-6-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="static/rmarkdown-libsunnamed-chunk-3-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 </div>
-<p>Cool! The walk starts at $ 0 $, and then jumps around randomly a bunch until $ t=100 $. It’ll be more interesting once we simulate 20 random walks.</p>
+<p>Cool! The walk starts at 0, and then jumps around randomly a bunch until <span class="math inline">\(t=100\)</span>. It’ll be more interesting once we simulate 20 random walks.</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>n_steps <span class="ot">&lt;-</span> <span class="dv">500</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>n_chains <span class="ot">&lt;-</span> <span class="dv">20</span></span>
@@ -339,13 +339,13 @@ p(x_{t+1} | x_{t}, x_{t-1}, x_{t-2}, .. x_{0}) = p(x_{t+1} | x_{t})
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="static/rmarkdown-libsunnamed-chunk-8-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="static/rmarkdown-libsunnamed-chunk-4-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 </div>
-<p>So, what’s going on here? It basically looks how we’d expect. At any given time point, the mean position of the $ 20 $ is about zero, but the standard deviation of those positions goes up over time. Specifically, at any given time $ t $, the standard deviation of the positions should be roughly equal to $ t $, because of how the variance is compounding. Remember, these random walks are Markov Chains because at every time $ t$, I defined the position $ y_{t+1} $ to be $ y_{t} + (0, 1) $, or the the next position is the current position plus a standard normal noise (i.e.&nbsp;zero-centered with unit variance).</p>
-<p>Cool, so now we have an idea of what a Markov Chain is and how a random walk is an example of one. Now, why do we care? What kinds of problems can we solve with Markov Chains? It turns out that one thing we can use them to do is to calculate intractable integrals. What does this mean? Well, remembering back to a calculus class once upon a time, we know if we have some function $ f(x) = 2x $, we can integrate that function by following a one of a couple of rules. In this case, that rule is to raise the coefficient in front of the $ x $ to turn it into a power, such that the new exponent equals the old one plus one, and the new coefficient equals the old one divided by the new exponent. For $ f(x) $, we find $ F(x) = f(x) = x^{2} + c $, where $ c $ is a constant. However, in many applications, such as Bayesian statistics, we run into functions of hundreds or thousands of parameters that are intractable to integrate. In other words, even really, really powerful calculators can’t integrate them: there are just too many parameters. So, we’re stuck. How do we integrate a function that even a super powerful calculator can’t? In steps Markov Chain Monte Carlo, coming to the rescue.</p>
+<p>So, what’s going on here? It basically looks how we’d expect. At any given time point, the mean position of the 20 is about zero, but the standard deviation of those positions goes up over time. Specifically, at any given time <span class="math inline">\(t\)</span>, the standard deviation of the positions should be roughly equal to <span class="math inline">\(\sqrt t\)</span>, because of how the variance is compounding. Remember, these random walks are Markov Chains because at every time <span class="math inline">\(t\)</span>, I defined the position <span class="math inline">\(y\_{t+1}\)</span> to be <span class="math inline">\(y\_{t} + \mathcal{N}(0, 1)\)</span>, or the the next position is the current position plus a standard normal noise (i.e.&nbsp;zero-centered with unit variance).</p>
+<p>Cool, so now we have an idea of what a Markov Chain is and how a random walk is an example of one. Now, why do we care? What kinds of problems can we solve with Markov Chains? It turns out that one thing we can use them to do is to calculate intractable integrals. What does this mean? Well, remembering back to a calculus class once upon a time, we know if we have some function <span class="math inline">\(f(x) = 2x\)</span>, we can integrate that function by following a one of a couple of rules. In this case, that rule is to raise the coefficient in front of the <span class="math inline">\(x\)</span> to turn it into a power, such that the new exponent equals the old one plus one, and the new coefficient equals the old one divided by the new exponent. For <span class="math inline">\(f(x)\)</span>, we find <span class="math inline">\(F(x) = \int f(x) = x^{2} + c\)</span>, where <span class="math inline">\(c\)</span> is a constant. However, in many applications, such as Bayesian statistics, we run into functions of hundreds or thousands of parameters that are intractable to integrate. In other words, even really, really powerful calculators can’t integrate them: there are just too many parameters. So, we’re stuck. How do we integrate a function that even a super powerful calculator can’t? In steps Markov Chain Monte Carlo, coming to the rescue.</p>
 </section>
 <section id="markov-chain-monte-carlo" class="level1">
 <h1>Markov Chain Monte Carlo</h1>
@@ -405,12 +405,12 @@ p(x_{t+1} | x_{t}, x_{t-1}, x_{t-2}, .. x_{0}) = p(x_{t+1} | x_{t})
   island days_spent day_proportion
    &lt;dbl&gt;      &lt;int&gt;          &lt;dbl&gt;
 1      1          1            0.1
-2      2          2            0.2
-3      3          3            0.3
-4      4          4            0.4</code></pre>
+2      2          1            0.1
+3      3          2            0.2
+4      4          6            0.6</code></pre>
 </div>
 </div>
-<p>Unsurprisingly, with only $ 10 $ iterations the algorithm does not perform particularly well. But what about if we give it a lot more time? Let’s try $ 10,000 $ iterations.</p>
+<p>Unsurprisingly, with only 10 iterations the algorithm does not perform particularly well. But what about if we give it a lot more time? Let’s try 10,000 iterations.</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>some_islands <span class="ot">&lt;-</span> <span class="fu">run_rwmh</span>(<span class="at">n_iters =</span> <span class="dv">10000</span>) <span class="sc">%&gt;%</span></span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tibble</span>(<span class="at">island =</span> .) <span class="sc">%&gt;%</span></span>
@@ -426,13 +426,13 @@ p(x_{t+1} | x_{t}, x_{t-1}, x_{t-2}, .. x_{0}) = p(x_{t+1} | x_{t})
 <pre><code># A tibble: 4 × 4
   island days_spent day_proportion error_margin
    &lt;dbl&gt;      &lt;int&gt;          &lt;dbl&gt;        &lt;dbl&gt;
-1      1        980          0.098    -0.0200  
-2      2       2009          0.201     0.00450 
-3      3       2999          0.300    -0.000333
-4      4       4012          0.401     0.00300 </code></pre>
+1      1       1011          0.101       0.0110
+2      2       1954          0.195      -0.0230
+3      3       2964          0.296      -0.0120
+4      4       4071          0.407       0.0177</code></pre>
 </div>
 </div>
-<p>Much better! After $ 10,000 $ iterations, we’re spending almost the exact proportion of time on each island that we want to be, as evidenced by the tiny error margins. In addition, the standard deviation of the error margins is 0.01138, which is tiny. That’s awesome! But what about if the system is more complex? Like, what if we had 100 islands?</p>
+<p>Much better! After 10,000 iterations, we’re spending almost the exact proportion of time on each island that we want to be, as evidenced by the tiny error margins. In addition, the standard deviation of the error margins is 0.01914, which is tiny. That’s awesome! But what about if the system is more complex? Like, what if we had 100 islands?</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>more_islands <span class="ot">&lt;-</span> <span class="fu">run_rwmh</span>(<span class="at">n_iters =</span> <span class="dv">10000</span>, <span class="at">island_populations =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">100</span>) <span class="sc">%&gt;%</span></span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tibble</span>(<span class="at">island =</span> .) <span class="sc">%&gt;%</span></span>
@@ -448,20 +448,20 @@ p(x_{t+1} | x_{t}, x_{t-1}, x_{t-2}, .. x_{0}) = p(x_{t+1} | x_{t})
 <pre><code># A tibble: 100 × 4
    island days_spent day_proportion error_margin
     &lt;dbl&gt;      &lt;int&gt;          &lt;dbl&gt;        &lt;dbl&gt;
- 1      1          2         0.0002       0.0100
- 2      2          3         0.0003      -0.243 
+ 1      1          1         0.0001      -0.495 
+ 2      2          6         0.0006       0.515 
  3      3          5         0.0005      -0.158 
- 4      4         10         0.001        0.262 
- 5      5         12         0.0012       0.212 
- 6      6         11         0.0011      -0.0742
- 7      7         16         0.0016       0.154 
- 8      8         18         0.0018       0.136 
- 9      9         12         0.0012      -0.327 
-10     10         13         0.0013      -0.344 
+ 4      4          4         0.0004      -0.495 
+ 5      5         14         0.0014       0.414 
+ 6      6         14         0.0014       0.178 
+ 7      7         21         0.0021       0.515 
+ 8      8         19         0.0019       0.199 
+ 9      9         16         0.0016      -0.102 
+10     10         19         0.0019      -0.0405
 # … with 90 more rows</code></pre>
 </div>
 </div>
-<p>No problem! Even with the extra islands, the mean error margin is still zero, and the standard deviation of the error margins is 0.14674, which is also small, but not as small as the simpler system. It’s true that a more complex system (i.e.&nbsp;more islands) would mean that we need more iterations to converge in probability to the proportions we’re shooting for, but the algorithm will still work with enough time. Let’s try running it one more time on the complex system, but this time with a million iterations.</p>
+<p>No problem! Even with the extra islands, the mean error margin is still zero, and the standard deviation of the error margins is 0.17025, which is also small, but not as small as the simpler system. It’s true that a more complex system (i.e.&nbsp;more islands) would mean that we need more iterations to converge in probability to the proportions we’re shooting for, but the algorithm will still work with enough time. Let’s try running it one more time on the complex system, but this time with a million iterations.</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>more_iters <span class="ot">&lt;-</span> <span class="fu">run_rwmh</span>(<span class="at">n_iters =</span> <span class="dv">1000000</span>, <span class="at">island_populations =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">100</span>) <span class="sc">%&gt;%</span></span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tibble</span>(<span class="at">island =</span> .) <span class="sc">%&gt;%</span></span>
@@ -477,20 +477,20 @@ p(x_{t+1} | x_{t}, x_{t-1}, x_{t-2}, .. x_{0}) = p(x_{t+1} | x_{t})
 <pre><code># A tibble: 100 × 4
    island days_spent day_proportion error_margin
     &lt;dbl&gt;      &lt;int&gt;          &lt;dbl&gt;        &lt;dbl&gt;
- 1      1        196       0.000196     -0.0102 
- 2      2        425       0.000425      0.0731 
- 3      3        625       0.000625      0.0521 
- 4      4        840       0.00084       0.0605 
- 5      5       1041       0.00104       0.0514 
- 6      6       1183       0.00118      -0.00431
- 7      7       1395       0.00140       0.00639
- 8      8       1613       0.00161       0.0182 
- 9      9       1775       0.00178      -0.00403
-10     10       2060       0.00206       0.0403 
+ 1      1        198       0.000198    -0.000100
+ 2      2        406       0.000406     0.0252  
+ 3      3        625       0.000625     0.0521  
+ 4      4        813       0.000813     0.0264  
+ 5      5        996       0.000996     0.00596 
+ 6      6       1149       0.00115     -0.0329  
+ 7      7       1374       0.00137     -0.00876 
+ 8      8       1537       0.00154     -0.0298  
+ 9      9       1783       0.00178      0.000461
+10     10       1978       0.00198     -0.00111 
 # … with 90 more rows</code></pre>
 </div>
 </div>
-<p>Looks like that did the trick! The standard deviation of the error margins fell to 0.01702, just as we expected.</p>
+<p>Looks like that did the trick! The standard deviation of the error margins fell to 0.01407, just as we expected.</p>
 <p>This algorithm is called the Metropolis-Hastings Algorithm, and it’s one of many in the class of Markov Chain Monte Carlo algorithms. Some others are the Gibbs Sampler and Hamiltonian Monte Carlo, both of which are frequently used in Bayesian statistics for estimating the parameters of regression models with hundreds of thousands of parameters. In short, these algorithms allow us to solve problems that were literally impossible to solve only two decades ago or so, which is an amazing feat!</p>
 </section>
 <section id="recap" class="level1">

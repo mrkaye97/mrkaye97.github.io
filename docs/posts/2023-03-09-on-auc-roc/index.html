@@ -144,6 +144,7 @@ ga('send', {
 <script src="../../site_libs/kePrint-0.0.1/kePrint.js"></script>
 <link href="../../site_libs/lightable-0.0.1/lightable.css" rel="stylesheet">
 
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 <link rel="stylesheet" href="../../styles.css">
 </head>
@@ -259,7 +260,7 @@ ga('send', {
 <section id="what-is-auc" class="level2">
 <h2 class="anchored" data-anchor-id="what-is-auc">What is AUC?</h2>
 <p>As I mentioned, it’s usually not helpful to try to explain AUC to someone by telling them that it’s just the area under the ROC curve, or that it’s a metric you can use for predicting <em>probabilities</em> as opposed to predicting <em>classes</em>, or that it’s a metric trying to balance false positives and false negatives. None of those things get to the crux of the problem.</p>
-<p>So what <em>is</em> AUC, then? It’s pretty simple: Let’s imagine a model $ M $ being evaluated on data $ X $ where $ X $ contains some instances of the true class and some instances of the false class. The AUC of $ M $ on $ X $ is the probability that given a random item from $ X $ belonging to the <em>true</em> class ($ T $) and another random item from $ X $ belonging to the <em>false</em> class ($ F $), that the model predicts that the probability of $ T $ being true (belonging to the true class) is higher than the probability of $ F $ being true (belonging to the true class).</p>
+<p>So what <em>is</em> AUC, then? It’s pretty simple: Let’s imagine a model <span class="math inline">\(M\)</span> being evaluated on data <span class="math inline">\(X\)</span> where <span class="math inline">\(X\)</span> contains some instances of the true class and some instances of the false class. The AUC of <span class="math inline">\(M\)</span> on <span class="math inline">\(X\)</span> is the probability that given a random item from <span class="math inline">\(X\)</span> belonging to the <em>true</em> class (<span class="math inline">\(T\)</span>) and another random item from <span class="math inline">\(X\)</span> belonging to the <em>false</em> class (<span class="math inline">\(F\)</span>), that the model predicts that the probability of <span class="math inline">\(T\)</span> being true (belonging to the true class) is higher than the probability of <span class="math inline">\(F\)</span> being true (belonging to the true class).</p>
 <p>Let’s go back to the example about Carleton admissions, and let’s imagine that we have a model that gives a probability of admission to Carleton given some information about a student. If I give the model one random <em>accepted</em> student and one random <em>rejected</em> student, the AUC of the model is the probability that the accepted student had a higher chance of acceptance (as estimated by the model) than the rejected student did.</p>
 <p>For more on this, I’d refer everyone to <a href="https://developers.google.com/machine-learning/crash-course/classification/roc-and-auc">this fantastic blog post</a> by the team at Google, which does a great job at explaining further and/or better.</p>
 </section>
@@ -336,9 +337,14 @@ ga('send', {
  </thead>
 <tbody>
   <tr>
+   <td style="text-align:left;"> 1 </td>
+   <td style="text-align:right;"> 22.8 </td>
+   <td style="text-align:right;"> 4 </td>
+  </tr>
+  <tr>
    <td style="text-align:left;"> 0 </td>
-   <td style="text-align:right;"> 19.7 </td>
-   <td style="text-align:right;"> 6 </td>
+   <td style="text-align:right;"> 15.8 </td>
+   <td style="text-align:right;"> 8 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> 0 </td>
@@ -347,23 +353,18 @@ ga('send', {
   </tr>
   <tr>
    <td style="text-align:left;"> 1 </td>
-   <td style="text-align:right;"> 22.8 </td>
-   <td style="text-align:right;"> 4 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> 1 </td>
-   <td style="text-align:right;"> 33.9 </td>
+   <td style="text-align:right;"> 30.4 </td>
    <td style="text-align:right;"> 4 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> 0 </td>
-   <td style="text-align:right;"> 19.2 </td>
+   <td style="text-align:right;"> 14.3 </td>
    <td style="text-align:right;"> 8 </td>
   </tr>
   <tr>
-   <td style="text-align:left;"> 1 </td>
-   <td style="text-align:right;"> 27.3 </td>
-   <td style="text-align:right;"> 4 </td>
+   <td style="text-align:left;"> 0 </td>
+   <td style="text-align:right;"> 15.2 </td>
+   <td style="text-align:right;"> 8 </td>
   </tr>
 </tbody>
 </table>
