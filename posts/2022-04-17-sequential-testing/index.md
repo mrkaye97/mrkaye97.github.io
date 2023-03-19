@@ -2,16 +2,13 @@
 title: Sequential Testing
 author: Matt Kaye
 date: '2022-04-17'
-categories:
-  - data-science
-  - statistics
-tags:
-  - ab-testing
-lastmod: '2022-04-17T10:18:12-04:00'
+categories: [data-science, statistics]
 toc: true
 ---
 
-The last post proposed a solution to the multiple testing problem that often invalidates A/B test results: test planning. The idea is to calculate the sample sizes you need for your test *in advance*, and then wait for your control and variant groups to hit those sample sizes in order to call the test. This approach is a signifiant methodological improvement from the "call it when it's significant" heuristic: It prevents you from compounding the false positive rate of your test by checking on it all the time.
+## Introduction
+
+The last post proposed a solution to the multiple testing problem that often invalidates A/B test results  test planning. The idea is to calculate the sample sizes you need for your test in advance, and then wait for your control and variant groups to hit those sample sizes in order to call the test. This approach is a significant methodological improvement from the "call it when it's significant" heuristic: It prevents you from compounding the false positive rate of your test by checking on it all the time.
 
 But there's a different issue with planning the test in advance and running it until the end: It's slow. I use "slow" to mean "slower than it needs to be," in the sense that you will likely end up waiting too long to call a test for the variant when you could've made the call earlier. This waiting around is expensive -- the difference between running a test for a day or two and a week or two matters *a lot* for the teams and businesses running the tests. Often, this big of a time difference can have massive effects on metrics, revenue, learnings, etc., so teams benefit from being able to call their tests faster without sacrificing any statistical rigor.
 

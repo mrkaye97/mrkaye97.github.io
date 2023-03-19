@@ -74,7 +74,8 @@ ul.task-list li input[type="checkbox"] {
 
     const options = {
       valueNames: ['listing-date','listing-title','listing-description','listing-reading-time','listing-categories',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
-      
+      page: 10,
+    pagination: { item: "<li class='page-item'><a class='page page-link' href='#'></a></li>" },
       searchColumns: ["listing-date","listing-title","listing-author","listing-image","listing-description","listing-categories"],
     };
 
@@ -289,7 +290,7 @@ Jan 9, 2023
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="2" data-categories="data-science,statistics" data-listing-date-sort="1650168000000" data-listing-file-modified-sort="1679177349936" data-listing-reading-time-sort="4.855">
+<div class="quarto-post image-right" data-index="2" data-categories="data-science,statistics" data-listing-date-sort="1650168000000" data-listing-file-modified-sort="1679196701823" data-listing-reading-time-sort="4.87">
 <div class="body">
 <a href="./posts/2022-04-17-sequential-testing/index.html">
 <h3 class="no-anchor listing-title">
@@ -309,7 +310,7 @@ statistics
 </div>
 <a href="./posts/2022-04-17-sequential-testing/index.html">
 <div class="listing-description">
-The last…<em></em>
+The last post proposed a solution to the multiple testing problem that often invalidates A/B test results test planning. The idea is to calculate the sample sizes you need…
 </div>
 </a>
 </div>
@@ -688,6 +689,9 @@ Jan 7, 2021
 <div class="listing-no-matching d-none">
 No matching items
 </div>
+<nav id="listing-pagination" class="listing-pagination" aria-label="Page Navigation">
+  <ul class="pagination"></ul>
+</nav>
 </div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {

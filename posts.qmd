@@ -9,6 +9,7 @@ listing:
   sort-ui: true
   filter-ui: true
   fields: [date, title, description, reading-time, categories]
+  page-size: 10
 page-layout: full
 title-block-banner: false
 ---
