@@ -10,6 +10,7 @@ _**Disclaimer:** This is a rolling compilation of a number of uses of statistics
 
 - **All-time Stat:** Oakland Athletics outfielder Khris Davis hit .247 for four years in a row.
 
+- **3/19/2023 - CBS Broadcast of Michigan State vs. Marquette:** Tom Izzo is 23-7 when he only has one day to prepare for an NCAA tournament game (so in the Elite 8 or the round of 32).
 - **3/18/2023 - CBS Broadcast of Kansas vs. Arkansas:** Kansas is 47-0 all time when up by 8+ points at half.
 - **February 2021 - Sanofi & GSK:** "100% Efficacy"  
 
