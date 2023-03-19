@@ -5,6 +5,7 @@ date: '2023-01-09'
 categories: [data science, statistics, sports analytics]
 toc: true
 ---
+
 It's College Football Playoff season, which means I've been watching a lot of games lately. And I find myself complaining pretty often about how badly calibrated I think ESPN's win probability model is. In particular, I've noted a bunch of examples -- or at least enough for it to feel like a bunch -- of games where ESPN's model gives a team a win probability that feels way *too* extreme in a situation where they're clearly winning. I'm not talking about giving a team an 80% chance when they should have a 60% chance. The cases I've been curious about are something more like teams getting a 99.7% chance of winning when, at least in my opinion, they should be getting something more like a 98% chance.
 
 ## Introduction
