@@ -35,7 +35,7 @@ First, how well calibrated is the model in general? I usually like to look at ca
 This first plot is the overall calibration of the model at kickoff time. What we're looking for are the points to roughly lie along the dashed line, which is the line `y = x`.
 
 <p align="center">
-<img src="https://raw.githubusercontent.com/mrkaye97/espn-cfb-win-prob/master/plots/calibration/kickoff/all.svg" width="700"/>
+![Calibration](https://raw.githubusercontent.com/mrkaye97/espn-cfb-win-prob/master/plots/calibration/kickoff/all.svg){width=85%}
 </p>
 
 Two main things to notice in that plot: 1. The model, on aggregate, is quite well calibrated. 2. The model looks like it's off by a bit in the lower tail, where it appears to be predicting win probabilities that are too low. That's a sample size issue. For instance, there were 64 games where the model gave the home team a worse than 5% chance to win, and the home team ended up winning 6.25% in those games. But generating a confidence interval for that proportion gives us a range of 1.25%-12%, which is too wide to scold the model for that mistake
@@ -43,7 +43,7 @@ Two main things to notice in that plot: 1. The model, on aggregate, is quite wel
 We can also look at the same plot, broken down by the teams playing. For instance, the following plot is broken down by whether neither team is ranked, one team is, or both teams are:
 
 <p align="center">
-<img src="https://raw.githubusercontent.com/mrkaye97/espn-cfb-win-prob/master/plots/calibration/kickoff/grouped-by-num-ranked.svg" width="700"/>
+![Calibration](https://raw.githubusercontent.com/mrkaye97/espn-cfb-win-prob/master/plots/calibration/kickoff/grouped-by-num-ranked.svg){width=85%}
 </p>
 
 In this case, even with relatively wide error bars, we see that the model seems to perform worse for games where both teams are ranked. And it's pretty clearly the best in games where neither team is ranked.

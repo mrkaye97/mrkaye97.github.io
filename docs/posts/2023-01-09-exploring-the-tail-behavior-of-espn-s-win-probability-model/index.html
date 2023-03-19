@@ -107,7 +107,7 @@ ga('send', {
  <span class="menu-text">Projects</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../../resume/Matthew_Kaye_resume.pdf">
+    <a class="nav-link" href="../../resume/Matthew_Kaye_Resume.pdf">
  <span class="menu-text">Resume</span></a>
   </li>  
   <li class="nav-item dropdown ">
@@ -207,13 +207,23 @@ ga('send', {
 <p>First, how well calibrated is the model in general? I usually like to look at calibration plots to evaluate models, similar to the ones in the FiveThirtyEight post above.</p>
 <p>This first plot is the overall calibration of the model at kickoff time. What we’re looking for are the points to roughly lie along the dashed line, which is the line <code>y = x</code>.</p>
 <p align="center">
-<img src="https://raw.githubusercontent.com/mrkaye97/espn-cfb-win-prob/master/plots/calibration/kickoff/all.svg" width="700">
-</p>
+</p><div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://raw.githubusercontent.com/mrkaye97/espn-cfb-win-prob/master/plots/calibration/kickoff/all.svg" class="img-fluid figure-img" style="width:85.0%"></p>
+<p></p><figcaption class="figure-caption">Calibration</figcaption><p></p>
+</figure>
+</div>
+<p></p>
 <p>Two main things to notice in that plot: 1. The model, on aggregate, is quite well calibrated. 2. The model looks like it’s off by a bit in the lower tail, where it appears to be predicting win probabilities that are too low. That’s a sample size issue. For instance, there were 64 games where the model gave the home team a worse than 5% chance to win, and the home team ended up winning 6.25% in those games. But generating a confidence interval for that proportion gives us a range of 1.25%-12%, which is too wide to scold the model for that mistake</p>
 <p>We can also look at the same plot, broken down by the teams playing. For instance, the following plot is broken down by whether neither team is ranked, one team is, or both teams are:</p>
 <p align="center">
-<img src="https://raw.githubusercontent.com/mrkaye97/espn-cfb-win-prob/master/plots/calibration/kickoff/grouped-by-num-ranked.svg" width="700">
-</p>
+</p><div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://raw.githubusercontent.com/mrkaye97/espn-cfb-win-prob/master/plots/calibration/kickoff/grouped-by-num-ranked.svg" class="img-fluid figure-img" style="width:85.0%"></p>
+<p></p><figcaption class="figure-caption">Calibration</figcaption><p></p>
+</figure>
+</div>
+<p></p>
 <p>In this case, even with relatively wide error bars, we see that the model seems to perform worse for games where both teams are ranked. And it’s pretty clearly the best in games where neither team is ranked.</p>
 </section>
 <section id="edge-cases" class="level2">
@@ -544,8 +554,8 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </div> <!-- /content -->
 <footer class="footer">
   <div class="nav-footer">
-    <div class="nav-footer-left"> Matt Kaye, 2023<br> All content licensed under <a href="http://creativecommons.org/licenses/by-nc-sa/4.0/">(CC BY-NC-SA 4.0)</a></div>   
-    <div class="nav-footer-right">Made with and <a href="https://quarto.org/">Quarto</a><br> <a href="https://github.com/mrkaye97/mrkaye97.github.io">Source at GitHub</a></div>
+    <div class="nav-footer-left"> Matt Kaye, 2023<br></div>   
+    <div class="nav-footer-right">Built in R with ❤ and <a href="https://quarto.org/">Quarto</a><br> <a href="https://github.com/mrkaye97/mrkaye97.github.io">Source at GitHub</a></div>
   </div>
 </footer>
 
