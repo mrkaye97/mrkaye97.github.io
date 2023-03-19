@@ -19,7 +19,9 @@ website:
   description: "Matt Kaye"
   google-analytics: "UA-69391421-1"
   cookie-consent: false
-  search: true
+  search:
+    location: navbar
+    type: textbox
   navbar:
     left:
       - text: "Blog"
