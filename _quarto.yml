@@ -35,6 +35,8 @@ website:
             file: my-three-favorite.md
           - text: "Statistics in the wild"
             file: stats-in-the-wild.md
+          - text: "Going places"
+            file: travel.qmd
 
   page-footer:
     left: |

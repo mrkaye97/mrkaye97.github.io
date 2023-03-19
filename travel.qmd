@@ -1,0 +1,15 @@
+---
+title: "Sometimes I go places.\n When I do, I like taking pictures.\n Here are some of my favorites."
+toc: false
+---
+
+```{r, results = 'asis', echo = FALSE}
+
+purrr::walk(
+  sample(list.files("photos/travel", full.names = TRUE)),
+  ~ {
+    cat(glue::glue("![](<<.x>>){width=100%}", .open = "<<", .close = ">>"))
+    cat("\n\n")
+  } 
+)
+```

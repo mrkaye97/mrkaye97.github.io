@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss  xmlns:atom="http://www.w3.org/2005/Atom" 
+      xmlns:media="http://search.yahoo.com/mrss/" 
+      xmlns:content="http://purl.org/rss/1.0/modules/content/" 
+      xmlns:dc="http://purl.org/dc/elements/1.1/" 
+      version="2.0">
+<channel>
+<title>Matt Kaye</title>
+<link>https://www.matthewrkaye.com/travel.html</link>
+<atom:link href="https://www.matthewrkaye.com/travel.xml" rel="self" type="application/rss+xml"/>
+<description>Matt Kaye</description>
+<generator>quarto-1.2.335</generator>
+<lastBuildDate>Sun, 19 Mar 2023 05:48:19 GMT</lastBuildDate>
+</channel>
+</rss>

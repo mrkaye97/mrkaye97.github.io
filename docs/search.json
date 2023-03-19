@@ -4,7 +4,7 @@
     "href": "index.html",
     "title": "Matt Kaye",
     "section": "",
-    "text": "Hi! I’m Matt\n\nI’m a data scientist at CollegeVine\n\n\nI’m passionate about doing better data science by leaning into domain knowledge and utilizing software engineering best practices"
+    "text": "Hi! I’m Matt\n\nI’m a data scientist at CollegeVine\n\n\nI care about doing better data science by leaning into domain knowledge and utilizing software engineering best practices"
   },
   {
     "objectID": "posts/2021-12-22-notes-on-hiring-data-analysts-scientists/index.html",
@@ -572,5 +572,12 @@
     "title": "Deploying MLFlow on Heroku (with Heroku Postgres, S3, and nginx for basic auth)",
     "section": "Using MLFlow",
     "text": "Using MLFlow\nNow that your instance is deployed, you should have no problem using MLFlow for your whole ML lifecycle. For example, in R you might want to create a new experiment. You could do something like this:\n## install.packages(\"mlflow\")\n\nlibrary(mlflow)\n\n## Set up some environment variables\n## This way, your R session will know where to\n##  look for your MLFlow instance and will have\n##  the proper credentials set up\nSys.setenv(\n  MLFLOW_TRACKING_URI = \"https://my-mlflow-example.herokuapp.com\"\n  MLFLOW_TRACKING_USERNAME = \"YOUR-USERNAME\",\n  MLFLOW_TRACKING_PASSWORD = \"YOUR-PASSWORD\"\n)\n\nmlflow_create_experiment(\"my-first-experiment\")\nAnd with that, you should be able to harness all of the awesome power of MLFlow for all of your ML lifecycle needs!"
+  },
+  {
+    "objectID": "travel.html",
+    "href": "travel.html",
+    "title": "Matt Kaye",
+    "section": "",
+    "text": "Sometimes I go places.When I do, I like taking pictures.Here are some of my favorites."
   }
 ]

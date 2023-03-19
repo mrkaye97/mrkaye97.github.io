@@ -24,4 +24,4 @@ about:
 
 ### I'm a data scientist at <a href="https://www.collegevine.com">CollegeVine</a>
 
-### I'm passionate about doing better data science by leaning into domain knowledge and utilizing software engineering best practices
+### I care about doing better data science by leaning into domain knowledge and utilizing software engineering best practices

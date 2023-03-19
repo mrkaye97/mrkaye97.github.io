@@ -1,0 +1,14 @@
+{
+  "hash": "4bdae26d3f1f753cfe2a125f451e7f2d",
+  "result": {
+    "markdown": "---\ntitle: \"Sometimes I go places.\\n When I do, I like taking pictures.\\n Here are some of my favorites.\"\ntoc: false\n---\n\n![](photos/travel/galapagos.jpg){width=100%}\n\n![](photos/travel/xander.jpg){width=100%}\n\n![](photos/travel/tivoli.jpeg){width=100%}\n\n![](photos/travel/sol-32.jpg){width=100%}\n\n![](photos/travel/chichen-itza.jpg){width=100%}\n\n![](photos/travel/krakow.jpg){width=100%}\n\n![](photos/travel/guell-1.jpg){width=100%}\n\n![](photos/travel/alta.jpg){width=100%}\n\n![](photos/travel/fishermans-bastion.jpg){width=100%}\n\n![](photos/travel/cuba.jpg){width=100%}\n\n![](photos/travel/nyhavn.jpg){width=100%}\n\n![](photos/travel/dubrovnik.jpg){width=100%}\n\n![](photos/travel/costa-rica-waterfall.jpg){width=100%}\n\n![](photos/travel/guell-sunrise.jpg){width=100%}\n\n![](photos/travel/tallinn.jpg){width=100%}\n\n![](photos/travel/blomqvist.jpg){width=100%}\n\n![](photos/travel/christiania.jpg){width=100%}\n\n![](photos/travel/positano.jpg){width=100%}\n\n![](photos/travel/sarajevo-bobsled.jpg){width=100%}\n\n![](photos/travel/copenhagen-bikes.jpg){width=100%}\n\n![](photos/travel/cartagena.jpg){width=100%}\n\n![](photos/travel/salzburg.jpg){width=100%}\n",
+    "supporting": [],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}
