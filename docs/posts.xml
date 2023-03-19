@@ -19,17 +19,17 @@
 
 
 
-<p><strong>AUC</strong> goes by many names: AUC, AUC-ROC, ROC-AUC, the area under the curve, and so on. It’s an extremely important metric for evaluating machine learning models and it’s an uber popular data science interview question. It’s also, at least in my experience, the single most commonly misunderstood metric in data science.</p>
-<p>I’ve heard a number of common misunderstandings or flat-out falsehoods from people in all kinds of roles discussing AUC. The biggest offenses tend to come from overcomplicating the topic. It’s easy to see the <a href="https://en.wikipedia.org/wiki/Receiver_operating_characteristic">Wikipedia page for the ROC curve</a> and be confused, intimidated, or some combination of the two. ROC builds off of other fundamental data science concepts – the true and false positives rates of a classifier – so it’s certainly not a good place to <em>start</em> learning about metrics for evaluating the performance of models.</p>
-<p>The most common cause for confusion about AUC seems to come from the plot of the <em>ROC</em> curve, and nothing particularly special about AUC itself. Generally, I’ll hear AUC explained as being the area under the ROC curve, and that it’s all about testing how well your model balances false positives and false negatives. That’s all well and good, but it doesn’t actually give someone new to AUC any intuition about what AUC <em>actually</em> means in practice. For instance, let’s imagine we’re trying to predict the chance that a student is accepted at Carleton College – a quite common problem at CollegeVine! How does saying “AUC tells me about how my model is balancing false negatives and false positives” tell me anything about how well my model is doing at predicting that student’s chances?</p>
-<p>The main issue I have with this factual-yet-unhelpful explanation of AUC is just that: While it may be true, it doesn’t actually get to the point. And even worse, it’s sometimes used as a crutch: A fallback answer when someone feels stuck when asked how to interpret AUC in real, practical terms.</p>
-<p>So in this post, I’ll focus on just one thing, then: Answering that question above about how to interpret AUC.</p>
+<p><strong>AUC</strong> goes by many names: AUC, AUC-ROC, ROC-AUC, the area under the curve, and so on. It’s an extremely important metric for evaluating machine learning models and it’s an uber-popular data science interview question. It’s also, at least in my experience, the single most commonly misunderstood metric in data science.</p>
+<p>I’ve heard several common misunderstandings or flat-out falsehoods from people in all kinds of roles discussing AUC. The biggest offenses tend to come from overcomplicating the topic. It’s easy to see the <a href="https://en.wikipedia.org/wiki/Receiver_operating_characteristic">Wikipedia page for the ROC curve</a> and be confused, intimidated, or some combination of the two. ROC builds off of other fundamental data science concepts – the true and false positives rates of a classifier – so it’s certainly not a good place to <em>start</em> learning about metrics for evaluating the performance of models.</p>
+<p>The most common cause for confusion about AUC seems to come from the plot of the <em>ROC</em> curve, and nothing particularly special about AUC itself. Generally, I’ll hear AUC explained as being the area under the ROC curve, and that it’s all about testing how well your model balances false positives and false negatives. That’s all well and good, but it doesn’t give someone new to AUC any intuition about what AUC <em>actually</em> means in practice. For instance, let’s imagine we’re trying to predict the chance that a student is accepted at Carleton College – a quite common problem at CollegeVine! How does saying “AUC tells me about how my model is balancing false negatives and false positives” tell me anything about how well my model is doing at predicting that student’s chances?</p>
+<p>The main issue I have with this factual-yet-unhelpful explanation of AUC is just that: While it may be true, it doesn’t get to the point. And even worse, it’s sometimes used as a crutch: A fallback answer when someone feels stuck when asked how to interpret AUC in real, practical terms.</p>
+<p>So in this post, I’ll focus on just one thing, then: Answering the question above about how to interpret AUC.</p>
 <section id="what-is-auc" class="level2">
 <h2 class="anchored" data-anchor-id="what-is-auc">What is AUC?</h2>
-<p>As I mentioned, it’s usually not helpful to try to explain AUC to someone by telling them that it’s just the area under the ROC curve, or that it’s a metric you can use for predicting <em>probabilities</em> as opposed to predicting <em>classes</em>, or that it’s a metric trying to balance false positives and false negatives. None of those things really get at the crux of the problem.</p>
-<p>So what <em>is</em> AUC, then? It’s actually pretty simple: Let’s imagine a model $ M $ being evaluated on data $ X $ where $ X $ contains some instances of the true class and some instances of the false class. The AUC of $ M $ on $ X $ is the probability that given a random item from $ X $ belonging to the <em>true</em> class ($ T $) and another random item from $ X $ belonging to the <em>false</em> class ($ F $), that the model predicts that the probability of $ T $ being true (belonging to the true class) is higher than the probability of $ F $ being true (belonging to the true class).</p>
+<p>As I mentioned, it’s usually not helpful to try to explain AUC to someone by telling them that it’s just the area under the ROC curve, or that it’s a metric you can use for predicting <em>probabilities</em> as opposed to predicting <em>classes</em>, or that it’s a metric trying to balance false positives and false negatives. None of those things get to the crux of the problem.</p>
+<p>So what <em>is</em> AUC, then? It’s pretty simple: Let’s imagine a model $ M $ being evaluated on data $ X $ where $ X $ contains some instances of the true class and some instances of the false class. The AUC of $ M $ on $ X $ is the probability that given a random item from $ X $ belonging to the <em>true</em> class ($ T $) and another random item from $ X $ belonging to the <em>false</em> class ($ F $), that the model predicts that the probability of $ T $ being true (belonging to the true class) is higher than the probability of $ F $ being true (belonging to the true class).</p>
 <p>Let’s go back to the example about Carleton admissions, and let’s imagine that we have a model that gives a probability of admission to Carleton given some information about a student. If I give the model one random <em>accepted</em> student and one random <em>rejected</em> student, the AUC of the model is the probability that the accepted student had a higher chance of acceptance (as estimated by the model) than the rejected student did.</p>
-<p>For more on this, I’d refer everyone to <a href="https://developers.google.com/machine-learning/crash-course/classification/roc-and-auc">this fantastic blog post</a> by the team at Google, which does a great job at explaining further and / or better.</p>
+<p>For more on this, I’d refer everyone to <a href="https://developers.google.com/machine-learning/crash-course/classification/roc-and-auc">this fantastic blog post</a> by the team at Google, which does a great job at explaining further and/or better.</p>
 </section>
 <section id="a-simple-implementation" class="level2">
 <h2 class="anchored" data-anchor-id="a-simple-implementation">A Simple Implementation</h2>
@@ -119,34 +119,34 @@ font-style: italic;">## Doing a little data wrangling</span></span>
  </thead>
 <tbody>
   <tr>
-   <td style="text-align:left;"> 1 </td>
-   <td style="text-align:right;"> 21.4 </td>
-   <td style="text-align:right;"> 4 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> 1 </td>
-   <td style="text-align:right;"> 30.4 </td>
-   <td style="text-align:right;"> 4 </td>
+   <td style="text-align:left;"> 0 </td>
+   <td style="text-align:right;"> 19.7 </td>
+   <td style="text-align:right;"> 6 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> 0 </td>
-   <td style="text-align:right;"> 14.3 </td>
+   <td style="text-align:right;"> 15.2 </td>
    <td style="text-align:right;"> 8 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> 1 </td>
-   <td style="text-align:right;"> 30.4 </td>
+   <td style="text-align:right;"> 22.8 </td>
+   <td style="text-align:right;"> 4 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 1 </td>
+   <td style="text-align:right;"> 33.9 </td>
    <td style="text-align:right;"> 4 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> 0 </td>
-   <td style="text-align:right;"> 21.0 </td>
-   <td style="text-align:right;"> 6 </td>
+   <td style="text-align:right;"> 19.2 </td>
+   <td style="text-align:right;"> 8 </td>
   </tr>
   <tr>
-   <td style="text-align:left;"> 0 </td>
-   <td style="text-align:right;"> 19.7 </td>
-   <td style="text-align:right;"> 6 </td>
+   <td style="text-align:left;"> 1 </td>
+   <td style="text-align:right;"> 27.3 </td>
+   <td style="text-align:right;"> 4 </td>
   </tr>
 </tbody>
 </table>
@@ -228,12 +228,12 @@ font-style: italic;">## For each model, compute AUC with both methods: Yardstick
 </div>
 </div>
 <p>As we’ve seen here, AUC actually shouldn’t be all that much of a cause for confusion! The way I like to frame it is this: The AUC of your model is how good your model is at making even-odds bets. If I give your model two options and ask it to pick which one it thinks is more likely, a “better” model (by AUC standards) will be better at identifying the true class more often.</p>
-<p>In real terms, that’s a meaningful, good thing. If we’re trying to predict the probability of a cancer patient having cancer, it’s important that our model can actually distinguish between people with cancer and people without it when given one person from each class. If it couldn’t - meaning the model were either randomly guessing or doing worse than random - the AUC would be 50% (or below 50%, in the worse-than-random disaster scenario).</p>
+<p>In real terms, that’s a meaningful, good thing. If we’re trying to predict the probability of a cancer patient having cancer, it’s important that our model can distinguish between people with cancer and people without it when given one person from each class. If it couldn’t - meaning the model was either randomly guessing or doing worse than random - the AUC would be 50% (or below 50%, in the worse-than-random disaster scenario).</p>
 </section>
 <section id="additional-thoughts" class="level2">
 <h2 class="anchored" data-anchor-id="additional-thoughts">Additional Thoughts</h2>
 <p>I also often hear the misconception that AUC is sensitive to things like class imbalance. This means that if the true class makes up a disproportionately large (or small) proportion of the evaluation data, that can skew the AUC. But based on the intuition we just built before, that’s of course not true. The key thing to remember is that the model is given one true and one false example. In choosing those, it doesn’t matter if the true class only makes up 0.005% of all of the examples in the evaluation data: AUC is only evaluating the model on its ability to determine <em>which</em> of the two is the true class.</p>
-<p>However, there is one thing related to class imbalance, and just sample size in general, that <em>would</em> affect AUC, which is the raw number of examples of each class in the evaluation data. If, for instance, you had only a single instance of the <code>true</code> class in the evaluation set, then the AUC of the model is entirely determined by how good the predictions of the model are on that single example. For instance, if we have a single <code>true</code> class and the model predicts a 100% probability of it being true, then, assuming the predictions for all of the other examples in the evaluation set are <em>not</em> 100%, the AUC of the model as evaluated on that data is 100%. This isn’t necessarily because the model is “good” in any sense, but just because the model is overindexing to a single good prediction in the evaluation set. In practice though, this AUC estimate wouldn’t generalize. As we got more data, the predictions for all the true classes would certainly not all be 100%, so the AUC of the model would go down over time.</p>
+<p>However, there is one thing related to class imbalance, and just sample size in general, that <em>would</em> affect AUC, which is the raw number of examples of each class in the evaluation data. If, for instance, you had only a single instance of the <code>true</code> class in the evaluation set, then the AUC of the model is entirely determined by how good the predictions of the model are on that single example. For instance, if we have a single <code>true</code> class and the model predicts a 100% probability of it being true, then, assuming the predictions for all of the other examples in the evaluation set are <em>not</em> 100%, the AUC of the model as evaluated on that data is 100%. This isn’t necessarily because the model is “good” in any sense, but just because the model is over-indexing to a single good prediction in the evaluation set. In practice though, this AUC estimate wouldn’t generalize. As we got more data, the predictions for all the true classes would certainly not all be 100%, so the AUC of the model would go down over time.</p>
 <p>Fortunately, there’s an easy fix for this problem. AUCs are a point estimate, but we could also estimate a margin of error or a confidence interval for our AUC. For a situation where we only have a single instance of the true class in the evaluation set, the margin of error for our AUC would be very wide.</p>
 </section>
 <section id="wrapping-up" class="level2">
