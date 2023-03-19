@@ -21,7 +21,6 @@ website:
   cookie-consent: false
   search: true
   navbar:
-    background: "#99ccff"
     left:
       - text: "Blog"
         file: posts.qmd
