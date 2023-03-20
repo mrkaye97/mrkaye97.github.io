@@ -287,7 +287,11 @@ font-style: italic;">## For each model, compute AUC with both methods: Yardstick
 <p align="center">
 <img src="https://www.matthewrkaye.com/posts/2023-01-09-exploring-the-tail-behavior-of-espn-s-win-probability-model/https:/raw.githubusercontent.com/mrkaye97/espn-cfb-win-prob/master/plots/calibration/kickoff/all.svg" class="img-fluid" style="width:85.0%">
 </p>
-<p>Two main things to notice in that plot: 1. The model, on aggregate, is quite well calibrated. 2. The model looks like it’s off by a bit in the lower tail, where it appears to be predicting win probabilities that are too low. That’s a sample size issue. For instance, there were 64 games where the model gave the home team a worse than 5% chance to win, and the home team ended up winning 6.25% in those games. But generating a confidence interval for that proportion gives us a range of 1.25%-12%, which is too wide to scold the model for that mistake</p>
+<p>Two main things to notice in that plot:</p>
+<ol type="1">
+<li>The model, on aggregate, is quite well calibrated.</li>
+<li>The model looks like it’s off by a bit in the lower tail, where it appears to be predicting win probabilities that are too low. That’s a sample size issue. For instance, there were 64 games where the model gave the home team a worse than 5% chance to win, and the home team ended up winning 6.25% in those games. But generating a confidence interval for that proportion gives us a range of 1.25%-12%, which is too wide to scold the model for that mistake</li>
+</ol>
 <p>We can also look at the same plot, broken down by the teams playing. For instance, the following plot is broken down by whether neither team is ranked, one team is, or both teams are:</p>
 <p align="center">
 <img src="https://www.matthewrkaye.com/posts/2023-01-09-exploring-the-tail-behavior-of-espn-s-win-probability-model/https:/raw.githubusercontent.com/mrkaye97/espn-cfb-win-prob/master/plots/calibration/kickoff/grouped-by-num-ranked.svg" class="img-fluid" style="width:85.0%">
@@ -359,7 +363,12 @@ font-style: italic;">## For each model, compute AUC with both methods: Yardstick
 </section>
 <section id="future-work" class="level2">
 <h2 class="anchored" data-anchor-id="future-work">Future Work</h2>
-<p>A couple of other things jump out at me as being worth exploring: 1. How well did the model do vs.&nbsp;my intuitions? In games where I was on the record as thinking the win probabilities given were far too high (or low), how do <em>I</em> perform? 2. How does ESPN’s model perform by other common ML metric standards? For instance, does its AUC outperform (e.g.) Vegas? (Almost certainly not). Or how negative is the model’s Brier Skill Score when using Vegas as a baseline? 3. Does the model perform better or worse for certain teams? Maybe some teams are being consistently overrated or underrated by the model.</p>
+<p>A couple of other things jump out at me as being worth exploring:</p>
+<ol type="1">
+<li>How well did the model do vs.&nbsp;my intuitions? In games where I was on the record as thinking the win probabilities given were far too high (or low), how do <em>I</em> perform?</li>
+<li>How does ESPN’s model perform by other common ML metric standards? For instance, does its AUC outperform (e.g.) Vegas? (Almost certainly not). Or how negative is the model’s Brier Skill Score when using Vegas as a baseline?</li>
+<li>Does the model perform better or worse for certain teams? Maybe some teams are being consistently overrated or underrated by the model.</li>
+</ol>
 </section>
 <section id="appendix" class="level2">
 <h2 class="anchored" data-anchor-id="appendix">Appendix</h2>
@@ -401,7 +410,17 @@ font-style: italic;">## For each model, compute AUC with both methods: Yardstick
 </section>
 <section id="in-practice" class="level2">
 <h2 class="anchored" data-anchor-id="in-practice">In practice</h2>
-<p>So how does this work in practice? We build an internal tool that lets you plan a test given a few inputs: * The alpha level (we generally use 20%, since we’re not particularly afraid of false positives and want to be able to run tests quickly) * The <a href="https://en.wikipedia.org/wiki/Power_of_a_test">power</a> (we generally use 95%, since we don’t want to take on many false negatives) * The <a href="https://support.optimizely.com/hc/en-us/articles/4410288881293-Use-minimum-detectable-effect-MDE-when-designing-an-experiment">minimum detectable effect</a> * The baseline conversion rate * The expected number of users entering the funnel per day * The number of checkpoints to build in * The split of the test (is it 50/50?) * The number of variants (is it a true A/B test? Are there multiple variants being tested?)</p>
+<p>So how does this work in practice? We build an internal tool that lets you plan a test given a few inputs:</p>
+<ul>
+<li>The alpha level (we generally use 20%, since we’re not particularly afraid of false positives and want to be able to run tests quickly)</li>
+<li>The <a href="https://en.wikipedia.org/wiki/Power_of_a_test">power</a> (we generally use 95%, since we don’t want to take on many false negatives)</li>
+<li>The <a href="https://support.optimizely.com/hc/en-us/articles/4410288881293-Use-minimum-detectable-effect-MDE-when-designing-an-experiment">minimum detectable effect</a></li>
+<li>The baseline conversion rate</li>
+<li>The expected number of users entering the funnel per day</li>
+<li>The number of checkpoints to build in</li>
+<li>The split of the test (is it 50/50?)</li>
+<li>The number of variants (is it a true A/B test? Are there multiple variants being tested?)</li>
+</ul>
 <p>With those inputs, we generate a test plan which you can save, tie to a JIRA card, and send to Slack. Then all you need to do is turn on your test and wait for it to hit the first checkpoint. Once it does, you evaluate the test to get a p-value, compare it to the p-value threshold that the test plan provided at the first checkpoint, and call the test if it’s significant. If it’s not, you keep running the test up to the next checkpoint and do the same thing, and so on.</p>
 </section>
 <section id="the-bottom-line" class="level2">

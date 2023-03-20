@@ -26,7 +26,16 @@ This gives us the best of both worlds: We have a setup where we can call the tes
 
 ## In practice
 
-So how does this work in practice? We build an internal tool that lets you plan a test given a few inputs: \* The alpha level (we generally use 20%, since we're not particularly afraid of false positives and want to be able to run tests quickly) \* The [power](https://en.wikipedia.org/wiki/Power_of_a_test) (we generally use 95%, since we don't want to take on many false negatives) \* The [minimum detectable effect](https://support.optimizely.com/hc/en-us/articles/4410288881293-Use-minimum-detectable-effect-MDE-when-designing-an-experiment) \* The baseline conversion rate \* The expected number of users entering the funnel per day \* The number of checkpoints to build in \* The split of the test (is it 50/50?) \* The number of variants (is it a true A/B test? Are there multiple variants being tested?)
+So how does this work in practice? We build an internal tool that lets you plan a test given a few inputs: 
+
+* The alpha level (we generally use 20%, since we're not particularly afraid of false positives and want to be able to run tests quickly) 
+* The [power](https://en.wikipedia.org/wiki/Power_of_a_test) (we generally use 95%, since we don't want to take on many false negatives) 
+* The [minimum detectable effect](https://support.optimizely.com/hc/en-us/articles/4410288881293-Use-minimum-detectable-effect-MDE-when-designing-an-experiment) 
+* The baseline conversion rate 
+* The expected number of users entering the funnel per day 
+* The number of checkpoints to build in 
+* The split of the test (is it 50/50?) 
+* The number of variants (is it a true A/B test? Are there multiple variants being tested?)
 
 With those inputs, we generate a test plan which you can save, tie to a JIRA card, and send to Slack. Then all you need to do is turn on your test and wait for it to hit the first checkpoint. Once it does, you evaluate the test to get a p-value, compare it to the p-value threshold that the test plan provided at the first checkpoint, and call the test if it's significant. If it's not, you keep running the test up to the next checkpoint and do the same thing, and so on.
 
