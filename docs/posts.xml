@@ -614,34 +614,34 @@ font-style: italic;">## For each model, compute AUC with both methods: Yardstick
 <section id="the-dockerfile" class="level3">
 <h3 class="anchored" data-anchor-id="the-dockerfile">The <code>Dockerfile</code></h3>
 <p>The <a href="https://www.docker.com/">Dockerfile</a> will contain all of the library installs and files you need to run your MLFlow instance. The Dockerfile you’ll need to write for MLFlow should look something like this:</p>
-<pre class="docker"><code>FROM continuumio/miniconda3
-
-## Copy files into the image
-COPY run.sh run.sh
-COPY requirements.txt requirements.txt
-COPY nginx.conf_template /etc/nginx/sites-available/default/nginx.conf_template
-
-## Install Postgres
-RUN apt-get -y update &amp;&amp; \
-  apt-get -y upgrade &amp;&amp; \
-  apt-get install -y postgresql
-
-## Install nginx and dependencies
-RUN apt-get -y update &amp;&amp; \
-  apt-get install -y make vim \
-  automake gcc g++ subversion \
-  musl-dev nginx gettext apache2-utils
-
-## Install pip and dependencies
-RUN conda install -c anaconda pip &amp;&amp; \
-  pip install --upgrade pip &amp;&amp; \
-  pip install -r requirements.txt &amp;&amp; \
-  conda update -n base -c defaults conda &amp;&amp; \
-  conda env list &amp;&amp; \
-  pip freeze list
-
-## Run your `run.sh` script on container boot
-CMD ./run.sh</code></pre>
+<div class="sourceCode" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><span class="ex" style="color: null;">FROM</span> continuumio/miniconda3</span>
+<span id="cb8-2"></span>
+<span id="cb8-3"><span class="co" style="color: #5E5E5E;">## Copy files into the image</span></span>
+<span id="cb8-4"><span class="ex" style="color: null;">COPY</span> run.sh run.sh</span>
+<span id="cb8-5"><span class="ex" style="color: null;">COPY</span> requirements.txt requirements.txt</span>
+<span id="cb8-6"><span class="ex" style="color: null;">COPY</span> nginx.conf_template /etc/nginx/sites-available/default/nginx.conf_template</span>
+<span id="cb8-7"></span>
+<span id="cb8-8"><span class="co" style="color: #5E5E5E;">## Install Postgres</span></span>
+<span id="cb8-9"><span class="ex" style="color: null;">RUN</span> apt-get <span class="at" style="color: #657422;">-y</span> update <span class="kw" style="color: #003B4F;">&amp;&amp;</span> <span class="dt" style="color: #AD0000;">\</span></span>
+<span id="cb8-10">  <span class="ex" style="color: null;">apt-get</span> <span class="at" style="color: #657422;">-y</span> upgrade <span class="kw" style="color: #003B4F;">&amp;&amp;</span> <span class="dt" style="color: #AD0000;">\</span></span>
+<span id="cb8-11">  <span class="ex" style="color: null;">apt-get</span> install <span class="at" style="color: #657422;">-y</span> postgresql</span>
+<span id="cb8-12"></span>
+<span id="cb8-13"><span class="co" style="color: #5E5E5E;">## Install nginx and dependencies</span></span>
+<span id="cb8-14"><span class="ex" style="color: null;">RUN</span> apt-get <span class="at" style="color: #657422;">-y</span> update <span class="kw" style="color: #003B4F;">&amp;&amp;</span> <span class="dt" style="color: #AD0000;">\</span></span>
+<span id="cb8-15">  <span class="ex" style="color: null;">apt-get</span> install <span class="at" style="color: #657422;">-y</span> make vim <span class="dt" style="color: #AD0000;">\</span></span>
+<span id="cb8-16">  automake gcc g++ subversion <span class="dt" style="color: #AD0000;">\</span></span>
+<span id="cb8-17">  musl-dev nginx gettext apache2-utils</span>
+<span id="cb8-18"></span>
+<span id="cb8-19"><span class="co" style="color: #5E5E5E;">## Install pip and dependencies</span></span>
+<span id="cb8-20"><span class="ex" style="color: null;">RUN</span> conda install <span class="at" style="color: #657422;">-c</span> anaconda pip <span class="kw" style="color: #003B4F;">&amp;&amp;</span> <span class="dt" style="color: #AD0000;">\</span></span>
+<span id="cb8-21">  <span class="ex" style="color: null;">pip</span> install <span class="at" style="color: #657422;">--upgrade</span> pip <span class="kw" style="color: #003B4F;">&amp;&amp;</span> <span class="dt" style="color: #AD0000;">\</span></span>
+<span id="cb8-22">  <span class="ex" style="color: null;">pip</span> install <span class="at" style="color: #657422;">-r</span> requirements.txt <span class="kw" style="color: #003B4F;">&amp;&amp;</span> <span class="dt" style="color: #AD0000;">\</span></span>
+<span id="cb8-23">  <span class="ex" style="color: null;">conda</span> update <span class="at" style="color: #657422;">-n</span> base <span class="at" style="color: #657422;">-c</span> defaults conda <span class="kw" style="color: #003B4F;">&amp;&amp;</span> <span class="dt" style="color: #AD0000;">\</span></span>
+<span id="cb8-24">  <span class="ex" style="color: null;">conda</span> env list <span class="kw" style="color: #003B4F;">&amp;&amp;</span> <span class="dt" style="color: #AD0000;">\</span></span>
+<span id="cb8-25">  <span class="ex" style="color: null;">pip</span> freeze list</span>
+<span id="cb8-26"></span>
+<span id="cb8-27"><span class="co" style="color: #5E5E5E;">## Run your `run.sh` script on container boot</span></span>
+<span id="cb8-28"><span class="ex" style="color: null;">CMD</span> ./run.sh</span></code></pre></div>
 </section>
 <section id="the-requirements.txt-file" class="level3">
 <h3 class="anchored" data-anchor-id="the-requirements.txt-file">The <code>requirements.txt</code> File</h3>

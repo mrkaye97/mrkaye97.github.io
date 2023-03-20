@@ -85,7 +85,7 @@ Great, now we've to all the files we'll need to deploy our MLFlow instance!
 
 The [Dockerfile](https://www.docker.com/) will contain all of the library installs and files you need to run your MLFlow instance. The Dockerfile you'll need to write for MLFlow should look something like this:
 
-``` docker
+```bash
 FROM continuumio/miniconda3
 
 ## Copy files into the image
@@ -134,7 +134,7 @@ Next, we'll create a template for the `nginx.conf` file that we'll eventually us
 
 Your `nginx.conf_template` should look like this:
 
-``` nginx
+```bash
 events {}
 http {
   server {
@@ -160,7 +160,7 @@ http {
 
 Finally, let's create a script, `run.sh`, which will run when the Heroku dyno starts.
 
-``` bash
+```bash
 export HEROKU_PORT=$(echo "$PORT")
 export MLFLOW_PORT=5000
 

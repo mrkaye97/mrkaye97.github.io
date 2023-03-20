@@ -302,34 +302,34 @@ ga('send', {
 <section id="the-dockerfile" class="level3">
 <h3 class="anchored" data-anchor-id="the-dockerfile">The <code>Dockerfile</code></h3>
 <p>The <a href="https://www.docker.com/">Dockerfile</a> will contain all of the library installs and files you need to run your MLFlow instance. The Dockerfile you’ll need to write for MLFlow should look something like this:</p>
-<pre class="docker"><code>FROM continuumio/miniconda3
-
-## Copy files into the image
-COPY run.sh run.sh
-COPY requirements.txt requirements.txt
-COPY nginx.conf_template /etc/nginx/sites-available/default/nginx.conf_template
-
-## Install Postgres
-RUN apt-get -y update &amp;&amp; \
-  apt-get -y upgrade &amp;&amp; \
-  apt-get install -y postgresql
-
-## Install nginx and dependencies
-RUN apt-get -y update &amp;&amp; \
-  apt-get install -y make vim \
-  automake gcc g++ subversion \
-  musl-dev nginx gettext apache2-utils
-
-## Install pip and dependencies
-RUN conda install -c anaconda pip &amp;&amp; \
-  pip install --upgrade pip &amp;&amp; \
-  pip install -r requirements.txt &amp;&amp; \
-  conda update -n base -c defaults conda &amp;&amp; \
-  conda env list &amp;&amp; \
-  pip freeze list
-
-## Run your `run.sh` script on container boot
-CMD ./run.sh</code></pre>
+<div class="sourceCode" id="cb8"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="ex">FROM</span> continuumio/miniconda3</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="co">## Copy files into the image</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="ex">COPY</span> run.sh run.sh</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="ex">COPY</span> requirements.txt requirements.txt</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="ex">COPY</span> nginx.conf_template /etc/nginx/sites-available/default/nginx.conf_template</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="co">## Install Postgres</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a><span class="ex">RUN</span> apt-get <span class="at">-y</span> update <span class="kw">&amp;&amp;</span> <span class="dt">\</span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>  <span class="ex">apt-get</span> <span class="at">-y</span> upgrade <span class="kw">&amp;&amp;</span> <span class="dt">\</span></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>  <span class="ex">apt-get</span> install <span class="at">-y</span> postgresql</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a><span class="co">## Install nginx and dependencies</span></span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a><span class="ex">RUN</span> apt-get <span class="at">-y</span> update <span class="kw">&amp;&amp;</span> <span class="dt">\</span></span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>  <span class="ex">apt-get</span> install <span class="at">-y</span> make vim <span class="dt">\</span></span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>  automake gcc g++ subversion <span class="dt">\</span></span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>  musl-dev nginx gettext apache2-utils</span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a><span class="co">## Install pip and dependencies</span></span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a><span class="ex">RUN</span> conda install <span class="at">-c</span> anaconda pip <span class="kw">&amp;&amp;</span> <span class="dt">\</span></span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>  <span class="ex">pip</span> install <span class="at">--upgrade</span> pip <span class="kw">&amp;&amp;</span> <span class="dt">\</span></span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>  <span class="ex">pip</span> install <span class="at">-r</span> requirements.txt <span class="kw">&amp;&amp;</span> <span class="dt">\</span></span>
+<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a>  <span class="ex">conda</span> update <span class="at">-n</span> base <span class="at">-c</span> defaults conda <span class="kw">&amp;&amp;</span> <span class="dt">\</span></span>
+<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a>  <span class="ex">conda</span> env list <span class="kw">&amp;&amp;</span> <span class="dt">\</span></span>
+<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a>  <span class="ex">pip</span> freeze list</span>
+<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a><span class="co">## Run your `run.sh` script on container boot</span></span>
+<span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a><span class="ex">CMD</span> ./run.sh</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 <section id="the-requirements.txt-file" class="level3">
 <h3 class="anchored" data-anchor-id="the-requirements.txt-file">The <code>requirements.txt</code> File</h3>
@@ -343,25 +343,25 @@ CMD ./run.sh</code></pre>
 <h3 class="anchored" data-anchor-id="the-nginx-template">The <code>nginx</code> Template</h3>
 <p>Next, we’ll create a template for the <code>nginx.conf</code> file that we’ll eventually use in the container for basic auth. One important issue here: This file is a <strong><em>template</em></strong> because Heroku randomly assigns a port on dyno start, which means we can’t hard code any ports for <code>nginx</code> (since we don’t know them ahead of time). Instead of hard-coding, we specify a couple of placeholders: <code>$HEROKU_PORT</code> and <code>$MLFLOW_PORT</code>. We’ll replace these with the proper ports on container startup.</p>
 <p>Your <code>nginx.conf_template</code> should look like this:</p>
-<pre class="nginx"><code>events {}
-http {
-  server {
-        listen $HEROKU_PORT;
-
-        access_log /var/log/nginx/reverse-access.log;
-        error_log /var/log/nginx/reverse-error.log;
-
-        location / {
-            auth_basic "Restricted Content";
-            auth_basic_user_file /etc/nginx/.htpasswd;
-
-            proxy_pass                          http://127.0.0.1:$MLFLOW_PORT/;
-            proxy_set_header Host               $host;
-            proxy_set_header X-Real-IP          $remote_addr;
-            proxy_set_header X-Forwarded-For    $proxy_add_x_forwarded_for;
-        }
-    }
-}</code></pre>
+<div class="sourceCode" id="cb10"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="ex">events</span> {}</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="ex">http</span> {</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="ex">server</span> {</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>        <span class="ex">listen</span> <span class="va">$HEROKU_PORT</span><span class="kw">;</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>        <span class="ex">access_log</span> /var/log/nginx/reverse-access.log<span class="kw">;</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>        <span class="ex">error_log</span> /var/log/nginx/reverse-error.log<span class="kw">;</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>        <span class="ex">location</span> / {</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>            <span class="ex">auth_basic</span> <span class="st">"Restricted Content"</span><span class="kw">;</span></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>            <span class="ex">auth_basic_user_file</span> /etc/nginx/.htpasswd<span class="kw">;</span></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>            <span class="ex">proxy_pass</span>                          http://127.0.0.1:<span class="va">$MLFLOW_PORT</span>/<span class="kw">;</span></span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>            <span class="ex">proxy_set_header</span> Host               <span class="va">$host</span><span class="kw">;</span></span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>            <span class="ex">proxy_set_header</span> X-Real-IP          <span class="va">$remote_addr</span><span class="kw">;</span></span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>            <span class="ex">proxy_set_header</span> X-Forwarded-For    <span class="va">$proxy_add_x_forwarded_for</span><span class="kw">;</span></span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>        <span class="er">}</span></span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>    <span class="er">}</span></span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a><span class="er">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 <section id="run-script" class="level3">
 <h3 class="anchored" data-anchor-id="run-script">Run Script</h3>
