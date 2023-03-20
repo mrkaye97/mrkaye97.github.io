@@ -12,4 +12,9 @@ listing:
   page-size: 10
 page-layout: full
 title-block-banner: false
+aliases:
+  - blog.html
+  - post.html
+  - blog
+  - post
 ---
