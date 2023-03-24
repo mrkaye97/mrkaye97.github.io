@@ -39,7 +39,7 @@
 <h2 class="anchored" data-anchor-id="predicting-probabilities">Predicting Probabilities</h2>
 <p>You might be reading this thinking about how this is all about predicting classes, but very often we care about predicting probabilities. For instance, at CollegeVine we make predictions about each student’s chances of getting into their favorite colleges and universities. It’s not useful for students if we predict an acceptance or a rejection. After all, they want to know their <em>chance</em>, and to make a class prediction would mean that we determine a cutoff point at which we decide that if someone’s chance is above that threshold, they’ll get in. And if not, they won’t.</p>
 <p>The problem is that there is no such threshold. More likely, college admissions is a bit of a game of chance: If five students each have a 20% chance of getting in to Carleton, for instance, I’d expect that about one of the five would get in on average. But it’d be disingenuous to make a class prediction, and I’m not sure how we’d even do that. For five students with an exactly 20% chance of acceptance, we’d expect one to get in but if we were predicting classes we’d either predict all five to be accepted or all five to be rejected, and neither of those is the most likely scenario.</p>
-<p>// But doing that sacrifices calibration, which is the most important metric.</p>
+<p>With all of that in mind, what metrics do we use instead? There are three metrics (really two and a half) that we look at when we’re evaluating our models.</p>
 
 
 </section>

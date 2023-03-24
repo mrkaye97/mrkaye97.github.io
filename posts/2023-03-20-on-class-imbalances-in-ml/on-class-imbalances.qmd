@@ -5,6 +5,7 @@ author: Matt Kaye
 date: '2023-03-20'
 categories: ['data science']
 toc: true
+draft: true
 ---
 
 ## Introduction
@@ -32,4 +33,4 @@ You might be reading this thinking about how this is all about predicting classe
 
 The problem is that there is no such threshold. More likely, college admissions is a bit of a game of chance: If five students each have a 20% chance of getting in to Carleton, for instance, I'd expect that about one of the five would get in on average. But it'd be disingenuous to make a class prediction, and I'm not sure how we'd even do that. For five students with an exactly 20% chance of acceptance, we'd expect one to get in but if we were predicting classes we'd either predict all five to be accepted or all five to be rejected, and neither of those is the most likely scenario.
 
-// But doing that sacrifices calibration, which is the most important metric. 
+With all of that in mind, what metrics do we use instead? There are three metrics (really two and a half) that we look at when we're evaluating our models. 
