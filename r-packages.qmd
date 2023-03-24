@@ -1,9 +1,0 @@
----
-toc: false
----
-
-I'm an author / maintainer of a handful of R packages
-
-* **[slackr](https://matthewrkaye.com/slackr/)** is a wrapper of the Slack API in R.
-* **[fitbitr](https://matthewrkaye.com/fitbitr/)** is a wrapper of the Fitbit API in R.
-* **[lightMLFlow](https://github.com/collegevine/lightMLFlow)** is an opinionated R wrapper of the MLFlow REST API.
