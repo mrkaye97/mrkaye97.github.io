@@ -33,9 +33,6 @@ website:
             file: stats-in-the-wild.md
           - text: "Going places"
             file: travel.qmd
-    right:
-      - icon: rss
-        href: posts.xml
 
   page-footer:
     left: |
