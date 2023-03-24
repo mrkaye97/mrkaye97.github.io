@@ -10,45 +10,7 @@
 <atom:link href="https://www.matthewrkaye.com/posts.xml" rel="self" type="application/rss+xml"/>
 <description>Matt Kaye&#39;s personal website</description>
 <generator>quarto-1.2.335</generator>
-<lastBuildDate>Mon, 20 Mar 2023 04:00:00 GMT</lastBuildDate>
-<item>
-  <title>On Calibration</title>
-  <dc:creator>Matt Kaye</dc:creator>
-  <link>https://www.matthewrkaye.com/posts/2023-03-20-on-class-imbalances-in-ml/on-class-imbalances.html</link>
-  <description><![CDATA[ 
-
-
-
-<section id="introduction" class="level2">
-<h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
-<p>There’s something of a complexity trajectory in evaluating classification models that I’ve observed over the past few years. It starts with accuracy. But soon after learning about accuracy, data scientists are taught that accuracy is problematic for two reasons:</p>
-<ol type="1">
-<li>It doesn’t work well with unbalanced classes. This is the “if 95% of people don’t have cancer and you always predict ‘no cancer’, your model isn’t actually good” argument.</li>
-<li>It doesn’t make any distinction between types of errors. In particular, it weighs false positives and false negatives equally, which may not be appropriate for the problem being solved.</li>
-</ol>
-<p>These are both perfectly valid drawbacks of using accuracy as a metric. So then we move on. Next stop: precision and recall.</p>
-</section>
-<section id="precision-and-recall" class="level2">
-<h2 class="anchored" data-anchor-id="precision-and-recall">Precision and Recall</h2>
-<p>Precision and recall are the two <em>next</em> most common classification metrics I’ve seen. <em>Precision</em> is the percentage of the time that your model is correct when it labels something as <em>true</em>. Recall is the percentage of the actual <em>true</em> examples that your model labels as true. These metrics are important for different reasons.</p>
-<p>A very precise model doesn’t make very many Type I errors. For instance, if you’re predicting whether or not someone has cancer, a very precise model is “trustworthy” in the sense that if it tells you that they do have cancer, they most likely do. You might think about precision as a metric in hiring: You probably want your hiring process to be very good at evaluating good candidates. A high-precision hiring process would mean that when you think you’ve found a person who would be a great fit on your team, you’re very likely correct.</p>
-<p>Recall is a bit different: It’s the percentage of the true labels that your model finds. A high-recall model suffers few false <em>negatives</em>: When something actually belongs to the true class, your model very often predicts it as such. You might think about this in the context of our cancer example from before. A higher recall model would mean that your model catches more of the cancer cases.</p>
-<p>Depending on your use case, you might optimize for one of these or the other. Or you could use a blend of the two, the most common of which is the <em>F1 score</em>, which is the harmonic mean of precision and recall. The idea of the F1 score is to optimize for a balance of both precision and recall, as opposed to optimizing for one at the cost of the other.</p>
-</section>
-<section id="predicting-probabilities" class="level2">
-<h2 class="anchored" data-anchor-id="predicting-probabilities">Predicting Probabilities</h2>
-<p>You might be reading this thinking about how this is all about predicting classes, but very often we care about predicting probabilities. For instance, at CollegeVine we make predictions about each student’s chances of getting into their favorite colleges and universities. It’s not useful for students if we predict an acceptance or a rejection. After all, they want to know their <em>chance</em>, and to make a class prediction would mean that we determine a cutoff point at which we decide that if someone’s chance is above that threshold, they’ll get in. And if not, they won’t.</p>
-<p>The problem is that there is no such threshold. More likely, college admissions is a bit of a game of chance: If five students each have a 20% chance of getting in to Carleton, for instance, I’d expect that about one of the five would get in on average. But it’d be disingenuous to make a class prediction, and I’m not sure how we’d even do that. For five students with an exactly 20% chance of acceptance, we’d expect one to get in but if we were predicting classes we’d either predict all five to be accepted or all five to be rejected, and neither of those is the most likely scenario.</p>
-<p>With all of that in mind, what metrics do we use instead? There are three metrics (really two and a half) that we look at when we’re evaluating our models.</p>
-
-
-</section>
-
- ]]></description>
-  <category>data science</category>
-  <guid>https://www.matthewrkaye.com/posts/2023-03-20-on-class-imbalances-in-ml/on-class-imbalances.html</guid>
-  <pubDate>Mon, 20 Mar 2023 04:00:00 GMT</pubDate>
-</item>
+<lastBuildDate>Thu, 09 Mar 2023 05:00:00 GMT</lastBuildDate>
 <item>
   <title>On AUC-ROC</title>
   <dc:creator>Matt Kaye</dc:creator>
@@ -164,33 +126,33 @@ font-style: italic;">## Doing a little data wrangling</span></span>
  </thead>
 <tbody>
   <tr>
-   <td style="text-align:left;"> 0 </td>
-   <td style="text-align:right;"> 19.7 </td>
-   <td style="text-align:right;"> 6 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> 0 </td>
-   <td style="text-align:right;"> 15.0 </td>
-   <td style="text-align:right;"> 8 </td>
-  </tr>
-  <tr>
    <td style="text-align:left;"> 1 </td>
    <td style="text-align:right;"> 30.4 </td>
    <td style="text-align:right;"> 4 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> 1 </td>
-   <td style="text-align:right;"> 19.2 </td>
+   <td style="text-align:right;"> 18.1 </td>
    <td style="text-align:right;"> 6 </td>
   </tr>
   <tr>
-   <td style="text-align:left;"> 1 </td>
-   <td style="text-align:right;"> 17.8 </td>
+   <td style="text-align:left;"> 0 </td>
+   <td style="text-align:right;"> 19.7 </td>
    <td style="text-align:right;"> 6 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> 1 </td>
    <td style="text-align:right;"> 27.3 </td>
+   <td style="text-align:right;"> 4 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 0 </td>
+   <td style="text-align:right;"> 10.4 </td>
+   <td style="text-align:right;"> 8 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 1 </td>
+   <td style="text-align:right;"> 30.4 </td>
    <td style="text-align:right;"> 4 </td>
   </tr>
 </tbody>
@@ -1302,16 +1264,16 @@ font-style: italic;">## library(ggplot2)</span></span>
 <pre><code># A tibble: 100 × 1
    position
       &lt;dbl&gt;
- 1    0    
- 2   -0.372
- 3    0.394
- 4   -0.237
- 5    0.849
- 6   -0.446
- 7    0.660
- 8   -0.321
- 9   -1.74 
-10   -2.70 
+ 1   0     
+ 2   0.0434
+ 3   0.615 
+ 4   0.707 
+ 5   2.09  
+ 6   1.99  
+ 7   2.49  
+ 8   2.68  
+ 9   2.99  
+10   2.95  
 # … with 90 more rows</code></pre>
 </div>
 </div>
@@ -1429,10 +1391,10 @@ font-style: italic;">##   decide whether to go or stay</span></span>
 <pre><code># A tibble: 4 × 3
   island days_spent day_proportion
    &lt;dbl&gt;      &lt;int&gt;          &lt;dbl&gt;
-1      1          1            0.1
-2      2          1            0.1
-3      3          2            0.2
-4      4          6            0.6</code></pre>
+1      1          2            0.2
+2      2          3            0.3
+3      3          3            0.3
+4      4          2            0.2</code></pre>
 </div>
 </div>
 <p>Unsurprisingly, with only 10 iterations the algorithm does not perform particularly well. But what about if we give it a lot more time? Let’s try 10,000 iterations.</p>
@@ -1451,13 +1413,13 @@ font-style: italic;">##   decide whether to go or stay</span></span>
 <pre><code># A tibble: 4 × 4
   island days_spent day_proportion error_margin
    &lt;dbl&gt;      &lt;int&gt;          &lt;dbl&gt;        &lt;dbl&gt;
-1      1       1011          0.101       0.0110
-2      2       1954          0.195      -0.0230
-3      3       2964          0.296      -0.0120
-4      4       4071          0.407       0.0177</code></pre>
+1      1       1022          0.102      0.0220 
+2      2       2042          0.204      0.0210 
+3      3       2985          0.298     -0.00500
+4      4       3951          0.395     -0.0122 </code></pre>
 </div>
 </div>
-<p>Much better! After 10,000 iterations, we’re spending almost the exact proportion of time on each island that we want to be, as evidenced by the tiny error margins. In addition, the standard deviation of the error margins is 0.01914, which is tiny. That’s awesome! But what about if the system is more complex? Like, what if we had 100 islands?</p>
+<p>Much better! After 10,000 iterations, we’re spending almost the exact proportion of time on each island that we want to be, as evidenced by the tiny error margins. In addition, the standard deviation of the error margins is 0.01765, which is tiny. That’s awesome! But what about if the system is more complex? Like, what if we had 100 islands?</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1">more_islands <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">run_rwmh</span>(<span class="at" style="color: #657422;">n_iters =</span> <span class="dv" style="color: #AD0000;">10000</span>, <span class="at" style="color: #657422;">island_populations =</span> <span class="dv" style="color: #AD0000;">1</span><span class="sc" style="color: #5E5E5E;">:</span><span class="dv" style="color: #AD0000;">100</span>) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
 <span id="cb10-2">  <span class="fu" style="color: #4758AB;">tibble</span>(<span class="at" style="color: #657422;">island =</span> .) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
@@ -1474,19 +1436,19 @@ font-style: italic;">##   decide whether to go or stay</span></span>
    island days_spent day_proportion error_margin
     &lt;dbl&gt;      &lt;int&gt;          &lt;dbl&gt;        &lt;dbl&gt;
  1      1          1         0.0001      -0.495 
- 2      2          6         0.0006       0.515 
- 3      3          5         0.0005      -0.158 
- 4      4          4         0.0004      -0.495 
- 5      5         14         0.0014       0.414 
- 6      6         14         0.0014       0.178 
- 7      7         21         0.0021       0.515 
- 8      8         19         0.0019       0.199 
- 9      9         16         0.0016      -0.102 
-10     10         19         0.0019      -0.0405
+ 2      2          3         0.0003      -0.243 
+ 3      3          6         0.0006       0.0100
+ 4      4         11         0.0011       0.389 
+ 5      5         11         0.0011       0.111 
+ 6      6         17         0.0017       0.431 
+ 7      7         15         0.0015       0.0821
+ 8      8         17         0.0017       0.0731
+ 9      9         19         0.0019       0.0661
+10     10         14         0.0014      -0.293 
 # … with 90 more rows</code></pre>
 </div>
 </div>
-<p>No problem! Even with the extra islands, the mean error margin is still zero, and the standard deviation of the error margins is 0.17025, which is also small, but not as small as the simpler system. It’s true that a more complex system (i.e.&nbsp;more islands) would mean that we need more iterations to converge in probability to the proportions we’re shooting for, but the algorithm will still work with enough time. Let’s try running it one more time on the complex system, but this time with a million iterations.</p>
+<p>No problem! Even with the extra islands, the mean error margin is still zero, and the standard deviation of the error margins is 0.15951, which is also small, but not as small as the simpler system. It’s true that a more complex system (i.e.&nbsp;more islands) would mean that we need more iterations to converge in probability to the proportions we’re shooting for, but the algorithm will still work with enough time. Let’s try running it one more time on the complex system, but this time with a million iterations.</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1">more_iters <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">run_rwmh</span>(<span class="at" style="color: #657422;">n_iters =</span> <span class="dv" style="color: #AD0000;">1000000</span>, <span class="at" style="color: #657422;">island_populations =</span> <span class="dv" style="color: #AD0000;">1</span><span class="sc" style="color: #5E5E5E;">:</span><span class="dv" style="color: #AD0000;">100</span>) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
 <span id="cb12-2">  <span class="fu" style="color: #4758AB;">tibble</span>(<span class="at" style="color: #657422;">island =</span> .) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
@@ -1502,20 +1464,20 @@ font-style: italic;">##   decide whether to go or stay</span></span>
 <pre><code># A tibble: 100 × 4
    island days_spent day_proportion error_margin
     &lt;dbl&gt;      &lt;int&gt;          &lt;dbl&gt;        &lt;dbl&gt;
- 1      1        198       0.000198    -0.000100
- 2      2        406       0.000406     0.0252  
- 3      3        625       0.000625     0.0521  
- 4      4        813       0.000813     0.0264  
- 5      5        996       0.000996     0.00596 
- 6      6       1149       0.00115     -0.0329  
- 7      7       1374       0.00137     -0.00876 
- 8      8       1537       0.00154     -0.0298  
- 9      9       1783       0.00178      0.000461
-10     10       1978       0.00198     -0.00111 
+ 1      1        229       0.000229      0.156  
+ 2      2        404       0.000404      0.0201 
+ 3      3        576       0.000576     -0.0304 
+ 4      4        779       0.000779     -0.0165 
+ 5      5       1009       0.00101       0.0191 
+ 6      6       1207       0.00121       0.0159 
+ 7      7       1336       0.00134      -0.0362 
+ 8      8       1576       0.00158      -0.00515
+ 9      9       1740       0.00174      -0.0237 
+10     10       1974       0.00197      -0.00313
 # … with 90 more rows</code></pre>
 </div>
 </div>
-<p>Looks like that did the trick! The standard deviation of the error margins fell to 0.01407, just as we expected.</p>
+<p>Looks like that did the trick! The standard deviation of the error margins fell to 0.02297, just as we expected.</p>
 <p>This algorithm is called the Metropolis-Hastings Algorithm, and it’s one of many in the class of Markov Chain Monte Carlo algorithms. Some others are the Gibbs Sampler and Hamiltonian Monte Carlo, both of which are frequently used in Bayesian statistics for estimating the parameters of regression models with hundreds of thousands of parameters. In short, these algorithms allow us to solve problems that were literally impossible to solve only two decades ago or so, which is an amazing feat!</p>
 </section>
 <section id="recap" class="level1">
