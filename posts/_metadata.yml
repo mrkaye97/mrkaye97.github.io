@@ -1,3 +1,7 @@
 comments:
   utterances:
     repo:  mrkaye97/mrkaye97.github.io
+
+format:
+  html:
+    include-after-body: ../subscribe.html

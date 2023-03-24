@@ -8,9 +8,47 @@
 <title>Matt Kaye</title>
 <link>https://www.matthewrkaye.com/posts.html</link>
 <atom:link href="https://www.matthewrkaye.com/posts.xml" rel="self" type="application/rss+xml"/>
-<description>Matt Kaye</description>
+<description>Matt Kaye&#39;s personal website</description>
 <generator>quarto-1.2.335</generator>
-<lastBuildDate>Thu, 09 Mar 2023 05:00:00 GMT</lastBuildDate>
+<lastBuildDate>Mon, 20 Mar 2023 04:00:00 GMT</lastBuildDate>
+<item>
+  <title>On Calibration</title>
+  <dc:creator>Matt Kaye</dc:creator>
+  <link>https://www.matthewrkaye.com/posts/2023-03-20-on-class-imbalances-in-ml/on-class-imbalances.html</link>
+  <description><![CDATA[ 
+
+
+
+<section id="introduction" class="level2">
+<h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
+<p>There’s something of a complexity trajectory in evaluating classification models that I’ve observed over the past few years. It starts with accuracy. But soon after learning about accuracy, data scientists are taught that accuracy is problematic for two reasons:</p>
+<ol type="1">
+<li>It doesn’t work well with unbalanced classes. This is the “if 95% of people don’t have cancer and you always predict ‘no cancer’, your model isn’t actually good” argument.</li>
+<li>It doesn’t make any distinction between types of errors. In particular, it weighs false positives and false negatives equally, which may not be appropriate for the problem being solved.</li>
+</ol>
+<p>These are both perfectly valid drawbacks of using accuracy as a metric. So then we move on. Next stop: precision and recall.</p>
+</section>
+<section id="precision-and-recall" class="level2">
+<h2 class="anchored" data-anchor-id="precision-and-recall">Precision and Recall</h2>
+<p>Precision and recall are the two <em>next</em> most common classification metrics I’ve seen. <em>Precision</em> is the percentage of the time that your model is correct when it labels something as <em>true</em>. Recall is the percentage of the actual <em>true</em> examples that your model labels as true. These metrics are important for different reasons.</p>
+<p>A very precise model doesn’t make very many Type I errors. For instance, if you’re predicting whether or not someone has cancer, a very precise model is “trustworthy” in the sense that if it tells you that they do have cancer, they most likely do. You might think about precision as a metric in hiring: You probably want your hiring process to be very good at evaluating good candidates. A high-precision hiring process would mean that when you think you’ve found a person who would be a great fit on your team, you’re very likely correct.</p>
+<p>Recall is a bit different: It’s the percentage of the true labels that your model finds. A high-recall model suffers few false <em>negatives</em>: When something actually belongs to the true class, your model very often predicts it as such. You might think about this in the context of our cancer example from before. A higher recall model would mean that your model catches more of the cancer cases.</p>
+<p>Depending on your use case, you might optimize for one of these or the other. Or you could use a blend of the two, the most common of which is the <em>F1 score</em>, which is the harmonic mean of precision and recall. The idea of the F1 score is to optimize for a balance of both precision and recall, as opposed to optimizing for one at the cost of the other.</p>
+</section>
+<section id="predicting-probabilities" class="level2">
+<h2 class="anchored" data-anchor-id="predicting-probabilities">Predicting Probabilities</h2>
+<p>You might be reading this thinking about how this is all about predicting classes, but very often we care about predicting probabilities. For instance, at CollegeVine we make predictions about each student’s chances of getting into their favorite colleges and universities. It’s not useful for students if we predict an acceptance or a rejection. After all, they want to know their <em>chance</em>, and to make a class prediction would mean that we determine a cutoff point at which we decide that if someone’s chance is above that threshold, they’ll get in. And if not, they won’t.</p>
+<p>The problem is that there is no such threshold. More likely, college admissions is a bit of a game of chance: If five students each have a 20% chance of getting in to Carleton, for instance, I’d expect that about one of the five would get in on average. But it’d be disingenuous to make a class prediction, and I’m not sure how we’d even do that. For five students with an exactly 20% chance of acceptance, we’d expect one to get in but if we were predicting classes we’d either predict all five to be accepted or all five to be rejected, and neither of those is the most likely scenario.</p>
+<p>// But doing that sacrifices calibration, which is the most important metric.</p>
+
+
+</section>
+
+ ]]></description>
+  <category>data science</category>
+  <guid>https://www.matthewrkaye.com/posts/2023-03-20-on-class-imbalances-in-ml/on-class-imbalances.html</guid>
+  <pubDate>Mon, 20 Mar 2023 04:00:00 GMT</pubDate>
+</item>
 <item>
   <title>On AUC-ROC</title>
   <dc:creator>Matt Kaye</dc:creator>
@@ -655,25 +693,25 @@ font-style: italic;">## For each model, compute AUC with both methods: Yardstick
 <h3 class="anchored" data-anchor-id="the-nginx-template">The <code>nginx</code> Template</h3>
 <p>Next, we’ll create a template for the <code>nginx.conf</code> file that we’ll eventually use in the container for basic auth. One important issue here: This file is a <strong><em>template</em></strong> because Heroku randomly assigns a port on dyno start, which means we can’t hard code any ports for <code>nginx</code> (since we don’t know them ahead of time). Instead of hard-coding, we specify a couple of placeholders: <code>$HEROKU_PORT</code> and <code>$MLFLOW_PORT</code>. We’ll replace these with the proper ports on container startup.</p>
 <p>Your <code>nginx.conf_template</code> should look like this:</p>
-<pre class="nginx"><code>events {}
-http {
-  server {
-        listen $HEROKU_PORT;
-
-        access_log /var/log/nginx/reverse-access.log;
-        error_log /var/log/nginx/reverse-error.log;
-
-        location / {
-            auth_basic "Restricted Content";
-            auth_basic_user_file /etc/nginx/.htpasswd;
-
-            proxy_pass                          http://127.0.0.1:$MLFLOW_PORT/;
-            proxy_set_header Host               $host;
-            proxy_set_header X-Real-IP          $remote_addr;
-            proxy_set_header X-Forwarded-For    $proxy_add_x_forwarded_for;
-        }
-    }
-}</code></pre>
+<div class="sourceCode" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb10-1"><span class="ex" style="color: null;">events</span> {}</span>
+<span id="cb10-2"><span class="ex" style="color: null;">http</span> {</span>
+<span id="cb10-3">  <span class="ex" style="color: null;">server</span> {</span>
+<span id="cb10-4">        <span class="ex" style="color: null;">listen</span> <span class="va" style="color: #111111;">$HEROKU_PORT</span><span class="kw" style="color: #003B4F;">;</span></span>
+<span id="cb10-5"></span>
+<span id="cb10-6">        <span class="ex" style="color: null;">access_log</span> /var/log/nginx/reverse-access.log<span class="kw" style="color: #003B4F;">;</span></span>
+<span id="cb10-7">        <span class="ex" style="color: null;">error_log</span> /var/log/nginx/reverse-error.log<span class="kw" style="color: #003B4F;">;</span></span>
+<span id="cb10-8"></span>
+<span id="cb10-9">        <span class="ex" style="color: null;">location</span> / {</span>
+<span id="cb10-10">            <span class="ex" style="color: null;">auth_basic</span> <span class="st" style="color: #20794D;">"Restricted Content"</span><span class="kw" style="color: #003B4F;">;</span></span>
+<span id="cb10-11">            <span class="ex" style="color: null;">auth_basic_user_file</span> /etc/nginx/.htpasswd<span class="kw" style="color: #003B4F;">;</span></span>
+<span id="cb10-12"></span>
+<span id="cb10-13">            <span class="ex" style="color: null;">proxy_pass</span>                          http://127.0.0.1:<span class="va" style="color: #111111;">$MLFLOW_PORT</span>/<span class="kw" style="color: #003B4F;">;</span></span>
+<span id="cb10-14">            <span class="ex" style="color: null;">proxy_set_header</span> Host               <span class="va" style="color: #111111;">$host</span><span class="kw" style="color: #003B4F;">;</span></span>
+<span id="cb10-15">            <span class="ex" style="color: null;">proxy_set_header</span> X-Real-IP          <span class="va" style="color: #111111;">$remote_addr</span><span class="kw" style="color: #003B4F;">;</span></span>
+<span id="cb10-16">            <span class="ex" style="color: null;">proxy_set_header</span> X-Forwarded-For    <span class="va" style="color: #111111;">$proxy_add_x_forwarded_for</span><span class="kw" style="color: #003B4F;">;</span></span>
+<span id="cb10-17">        <span class="er" style="color: #AD0000;">}</span></span>
+<span id="cb10-18">    <span class="er" style="color: #AD0000;">}</span></span>
+<span id="cb10-19"><span class="er" style="color: #AD0000;">}</span></span></code></pre></div>
 </section>
 <section id="run-script" class="level3">
 <h3 class="anchored" data-anchor-id="run-script">Run Script</h3>

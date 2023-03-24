@@ -1,0 +1,35 @@
+---
+title: On Calibration
+subtitle: Metrics for Probability Predictions
+author: Matt Kaye
+date: '2023-03-20'
+categories: ['data science']
+toc: true
+---
+
+## Introduction
+
+There's something of a complexity trajectory in evaluating classification models that I've observed over the past few years. It starts with accuracy. But soon after learning about accuracy, data scientists are taught that accuracy is problematic for two reasons:
+
+1. It doesn't work well with unbalanced classes. This is the "if 95% of people don't have cancer and you always predict 'no cancer', your model isn't actually good" argument.
+2. It doesn't make any distinction between types of errors. In particular, it weighs false positives and false negatives equally, which may not be appropriate for the problem being solved.
+
+These are both perfectly valid drawbacks of using accuracy as a metric. So then we move on. Next stop: precision and recall.
+
+## Precision and Recall
+
+Precision and recall are the two _next_ most common classification metrics I've seen. *Precision* is the percentage of the time that your model is correct when it labels something as *true*. Recall is the percentage of the actual *true* examples that your model labels as true. These metrics are important for different reasons.
+
+A very precise model doesn't make very many Type I errors. For instance, if you're predicting whether or not someone has cancer, a very precise model is "trustworthy" in the sense that if it tells you that they do have cancer, they most likely do. You might think about precision as a metric in hiring: You probably want your hiring process to be very good at evaluating good candidates. A high-precision hiring process would mean that when you think you've found a person who would be a great fit on your team, you're very likely correct.
+
+Recall is a bit different: It's the percentage of the true labels that your model finds. A high-recall model suffers few false _negatives_: When something actually belongs to the true class, your model very often predicts it as such. You might think about this in the context of our cancer example from before. A higher recall model would mean that your model catches more of the cancer cases.
+
+Depending on your use case, you might optimize for one of these or the other. Or you could use a blend of the two, the most common of which is the *F1 score*, which is the harmonic mean of precision and recall. The idea of the F1 score is to optimize for a balance of both precision and recall, as opposed to optimizing for one at the cost of the other.
+
+## Predicting Probabilities
+
+You might be reading this thinking about how this is all about predicting classes, but very often we care about predicting probabilities. For instance, at CollegeVine we make predictions about each student's chances of getting into their favorite colleges and universities. It's not useful for students if we predict an acceptance or a rejection. After all, they want to know their _chance_, and to make a class prediction would mean that we determine a cutoff point at which we decide that if someone's chance is above that threshold, they'll get in. And if not, they won't. 
+
+The problem is that there is no such threshold. More likely, college admissions is a bit of a game of chance: If five students each have a 20% chance of getting in to Carleton, for instance, I'd expect that about one of the five would get in on average. But it'd be disingenuous to make a class prediction, and I'm not sure how we'd even do that. For five students with an exactly 20% chance of acceptance, we'd expect one to get in but if we were predicting classes we'd either predict all five to be accepted or all five to be rejected, and neither of those is the most likely scenario.
+
+// But doing that sacrifices calibration, which is the most important metric. 

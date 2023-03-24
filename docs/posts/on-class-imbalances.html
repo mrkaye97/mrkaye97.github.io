@@ -6,9 +6,11 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="Matt Kaye">
+<meta name="dcterms.date" content="2023-03-20">
 <meta name="description" content="Matt Kaye’s personal website.">
 
-<title>Matt Kaye - Sometimes I go places. When I do, I like taking pictures. Here are some of my favorites.</title>
+<title>Matt Kaye - On class imbalances</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -24,22 +26,22 @@ ul.task-list li input[type="checkbox"] {
 </style>
 
 
-<script src="site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="site_libs/quarto-nav/headroom.min.js"></script>
-<script src="site_libs/clipboard/clipboard.min.js"></script>
-<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="site_libs/quarto-search/fuse.min.js"></script>
-<script src="site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="./">
-<script src="site_libs/quarto-html/quarto.js"></script>
-<script src="site_libs/quarto-html/popper.min.js"></script>
-<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="site_libs/quarto-html/anchor.min.js"></script>
-<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -59,28 +61,33 @@ ul.task-list li input[type="checkbox"] {
     "search-submit-button-title": "Submit"
   }
 }</script>
-<script async="" src="https://www.googletagmanager.com/gtag/js?id=358809638"></script>
 
 <script type="text/javascript">
 
-window.dataLayer = window.dataLayer || [];
-function gtag(){dataLayer.push(arguments);}
-gtag('js', new Date());
-gtag('config', '358809638', { 'anonymize_ip': true});
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+ga('create', 'UA-69391421-1', 'auto');
+
+ga('send', {
+  hitType: 'pageview',
+  'anonymizeIp': true,
+});
 </script>
 
 
-<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="../styles.css">
 </head>
 
-<body class="nav-fixed fullcontent">
+<body class="nav-fixed">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
     <nav class="navbar navbar-expand-lg navbar-dark ">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container">
-    <a class="navbar-brand" href="./index.html">
+    <a class="navbar-brand" href="../index.html">
     <span class="navbar-title">Matt Kaye</span>
     </a>
   </div>
@@ -90,15 +97,15 @@ gtag('config', '358809638', { 'anonymize_ip': true});
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link" href="./posts.html">
+    <a class="nav-link" href="../posts.html">
  <span class="menu-text">Blog</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./code.html">
+    <a class="nav-link" href="../code.html">
  <span class="menu-text">Code</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./resume/Matthew_Kaye_Resume.pdf">
+    <a class="nav-link" href="../resume/Matthew_Kaye_Resume.pdf">
  <span class="menu-text">Resume</span></a>
   </li>  
   <li class="nav-item dropdown ">
@@ -107,15 +114,15 @@ gtag('config', '358809638', { 'anonymize_ip': true});
     </a>
     <ul class="dropdown-menu" aria-labelledby="nav-menu-more">    
         <li>
-    <a class="dropdown-item" href="./my-three-favorite.html">
+    <a class="dropdown-item" href="../my-three-favorite.html">
  <span class="dropdown-text">My three favorite</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="./stats-in-the-wild.html">
+    <a class="dropdown-item" href="../stats-in-the-wild.html">
  <span class="dropdown-text">Statistics in the wild</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="./travel.html">
+    <a class="dropdown-item" href="../travel.html">
  <span class="dropdown-text">Going places</span></a>
   </li>  
     </ul>
@@ -130,20 +137,38 @@ gtag('config', '358809638', { 'anonymize_ip': true});
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        
+    </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Sometimes I go places. When I do, I like taking pictures. Here are some of my favorites.</h1>
-</div>
+<h1 class="title">On class imbalances</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">data science</div>
+    <div class="quarto-category">sports analytics</div>
+  </div>
+  </div>
 
 
 
 <div class="quarto-title-meta">
 
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Matt Kaye </p>
+          </div>
+  </div>
     
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">March 20, 2023</p>
+    </div>
+  </div>
   
     
   </div>
@@ -151,40 +176,7 @@ gtag('config', '358809638', { 'anonymize_ip': true});
 
 </header>
 
-<p><img src="photos/travel/alta.jpg" class="img-fluid" style="width:100.0%"></p>
-<p><img src="photos/travel/sthlm.jpg" class="img-fluid" style="width:100.0%"></p>
-<p><img src="photos/travel/tivoli.jpeg" class="img-fluid" style="width:100.0%"></p>
-<p><img src="photos/travel/zagreb.jpg" class="img-fluid" style="width:100.0%"></p>
-<p><img src="photos/travel/christiania.jpg" class="img-fluid" style="width:100.0%"></p>
-<p><img src="photos/travel/tallinn.jpg" class="img-fluid" style="width:100.0%"></p>
-<p><img src="photos/travel/dumbo-covid.jpg" class="img-fluid" style="width:100.0%"></p>
-<p><img src="photos/travel/plitvice.jpg" class="img-fluid" style="width:100.0%"></p>
-<p><img src="photos/travel/cartagena.jpg" class="img-fluid" style="width:100.0%"></p>
-<p><img src="photos/travel/hungarian-parliament.jpg" class="img-fluid" style="width:100.0%"></p>
-<p><img src="photos/travel/copenhagen-bikes.jpg" class="img-fluid" style="width:100.0%"></p>
-<p><img src="photos/travel/chichen-itza.jpg" class="img-fluid" style="width:100.0%"></p>
-<p><img src="photos/travel/blomqvist.jpg" class="img-fluid" style="width:100.0%"></p>
-<p><img src="photos/travel/times-square-covid.jpg" class="img-fluid" style="width:100.0%"></p>
-<p><img src="photos/travel/salzburg.jpg" class="img-fluid" style="width:100.0%"></p>
-<p><img src="photos/travel/rural-croatia.jpg" class="img-fluid" style="width:100.0%"></p>
-<p><img src="photos/travel/sarajevo-bobsled.jpg" class="img-fluid" style="width:100.0%"></p>
-<p><img src="photos/travel/split.jpg" class="img-fluid" style="width:100.0%"></p>
-<p><img src="photos/travel/nyhavn.jpg" class="img-fluid" style="width:100.0%"></p>
-<p><img src="photos/travel/sol-32.jpg" class="img-fluid" style="width:100.0%"></p>
-<p><img src="photos/travel/fishermans-bastion.jpg" class="img-fluid" style="width:100.0%"></p>
-<p><img src="photos/travel/cuba.jpg" class="img-fluid" style="width:100.0%"></p>
-<p><img src="photos/travel/san-gimingano.jpg" class="img-fluid" style="width:100.0%"></p>
-<p><img src="photos/travel/guell-sunrise.jpg" class="img-fluid" style="width:100.0%"></p>
-<p><img src="photos/travel/costa-rica-waterfall.jpg" class="img-fluid" style="width:100.0%"></p>
-<p><img src="photos/travel/krakow.jpg" class="img-fluid" style="width:100.0%"></p>
-<p><img src="photos/travel/dubrovnik.jpg" class="img-fluid" style="width:100.0%"></p>
-<p><img src="photos/travel/galapagos.jpg" class="img-fluid" style="width:100.0%"></p>
-<p><img src="photos/travel/guell-1.jpg" class="img-fluid" style="width:100.0%"></p>
-<p><img src="photos/travel/positano.jpg" class="img-fluid" style="width:100.0%"></p>
-<p><img src="photos/travel/costa-rica-selva.jpg" class="img-fluid" style="width:100.0%"></p>
-<p><img src="photos/travel/arbeit-macht-frei.jpg" class="img-fluid" style="width:100.0%"></p>
-<p><img src="photos/travel/brooklyn-bridge-park-covid.jpg" class="img-fluid" style="width:100.0%"></p>
-<p><img src="photos/travel/xander.jpg" class="img-fluid" style="width:100.0%"></p>
+<p>Foo bar baz</p>
 
 
 
@@ -321,6 +313,8 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
   }
 });
+</script>
+<script src="https://utteranc.es/client.js" repo="mrkaye97/mrkaye97.github.io" issue-term="pathname" theme="github-light" crossorigin="anonymous" async="">
 </script>
 </div> <!-- /content -->
 <footer class="footer">

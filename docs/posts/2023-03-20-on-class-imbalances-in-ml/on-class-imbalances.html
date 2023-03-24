@@ -7,10 +7,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Matt Kaye">
-<meta name="dcterms.date" content="2021-02-11">
+<meta name="dcterms.date" content="2023-03-20">
 <meta name="description" content="Matt Kaye’s personal website.">
 
-<title>Matt Kaye - Highlights From rstudio::global</title>
+<title>Matt Kaye - On Calibration</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -137,9 +137,9 @@ gtag('config', '358809638', { 'anonymize_ip': true});
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#talks" id="toc-talks" class="nav-link active" data-scroll-target="#talks">Talks</a></li>
-  <li><a href="#cool-new-things" id="toc-cool-new-things" class="nav-link" data-scroll-target="#cool-new-things">Cool New Things</a></li>
-  <li><a href="#other-highlights" id="toc-other-highlights" class="nav-link" data-scroll-target="#other-highlights">Other Highlights</a></li>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
+  <li><a href="#precision-and-recall" id="toc-precision-and-recall" class="nav-link" data-scroll-target="#precision-and-recall">Precision and Recall</a></li>
+  <li><a href="#predicting-probabilities" id="toc-predicting-probabilities" class="nav-link" data-scroll-target="#predicting-probabilities">Predicting Probabilities</a></li>
   </ul>
 </nav>
     </div>
@@ -148,9 +148,9 @@ gtag('config', '358809638', { 'anonymize_ip': true});
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Highlights From rstudio::global</h1>
+<h1 class="title">On Calibration</h1>
+<p class="subtitle lead">Metrics for Probability Predictions</p>
   <div class="quarto-categories">
-    <div class="quarto-category">R</div>
     <div class="quarto-category">data science</div>
   </div>
   </div>
@@ -169,7 +169,7 @@ gtag('config', '358809638', { 'anonymize_ip': true});
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">February 11, 2021</p>
+      <p class="date">March 20, 2023</p>
     </div>
   </div>
   
@@ -179,29 +179,27 @@ gtag('config', '358809638', { 'anonymize_ip': true});
 
 </header>
 
-<p><code>rstudio::global</code>, this year’s iteration of the annual RStudio conference, was a few weeks ago. Here were some highlights:</p>
-<section id="talks" class="level2">
-<h2 class="anchored" data-anchor-id="talks">Talks</h2>
-<p>There were a few talks I really loved:</p>
-<ul>
-<li><a href="https://rstudio.com/resources/rstudioglobal-2021/using-r-to-up-your-experimentation-game/">Using R to Up Your Experimentation Game</a>, by Shirbi Ish-Shalom. On experimentation, sequential testing, taking big swings, and being statistically rigorous</li>
-<li><a href="https://rstudio.com/resources/rstudioglobal-2021/maintaining-the-house-the-tidyverse-built/">Maintaining the House the Tidyverse Built</a>, by Hadley Wickham. On building and maintaining the Tidyverse, and what package maintenance in the real world is like when you have millions of downloads.</li>
-<li><a href="https://rstudio.com/resources/rstudioglobal-2021/organization-how-to-make-internal-r-packages-part-of-your-team/">oRganization: How to Make Internal R Packages Part of Your Team</a>, by Emily Riederer. On how using internal packages (like <code>collegeviner</code> at CollegeVine!) can improve your R workflow and make teamwork in R dramatically easier, smoother, and more efficient.</li>
-<li><a href="https://rstudio.com/resources/rstudioglobal-2021/fairness-and-data-science-failures-factors-and-futures/">Fairness and Data Science: Failures, Factors, and Futures</a>, by Grant Fleming. On model fairness, bias, and evaluation techniques, and why they’re important to get right.</li>
-</ul>
+<section id="introduction" class="level2">
+<h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
+<p>There’s something of a complexity trajectory in evaluating classification models that I’ve observed over the past few years. It starts with accuracy. But soon after learning about accuracy, data scientists are taught that accuracy is problematic for two reasons:</p>
+<ol type="1">
+<li>It doesn’t work well with unbalanced classes. This is the “if 95% of people don’t have cancer and you always predict ‘no cancer’, your model isn’t actually good” argument.</li>
+<li>It doesn’t make any distinction between types of errors. In particular, it weighs false positives and false negatives equally, which may not be appropriate for the problem being solved.</li>
+</ol>
+<p>These are both perfectly valid drawbacks of using accuracy as a metric. So then we move on. Next stop: precision and recall.</p>
 </section>
-<section id="cool-new-things" class="level2">
-<h2 class="anchored" data-anchor-id="cool-new-things">Cool New Things</h2>
-<ul>
-<li><code>finetune</code>, Max Kuhn’s new <code>tune</code>-adjacent package, is live (albeit a little buggy)! It has some cool new model tuning algorithms, including racing methods with <code>tune_race_anova()</code> and <code>tune_race_win_loss()</code>, in addition to my personal favorite: <code>tune_sim_anneal()</code> for Simulated Annealing! <a href="https://rstudio.com/resources/rstudioglobal-2021/whats-new-in-tidymodels/">Link to the talk</a></li>
-<li>Major improvements to <code>shiny</code>, including some serious caching upgrades that’ll improve performance dramatically! <a href="https://rstudio.com/resources/rstudioglobal-2021/making-shiny-apps-faster-with-caching/">Link to the talk</a></li>
-</ul>
+<section id="precision-and-recall" class="level2">
+<h2 class="anchored" data-anchor-id="precision-and-recall">Precision and Recall</h2>
+<p>Precision and recall are the two <em>next</em> most common classification metrics I’ve seen. <em>Precision</em> is the percentage of the time that your model is correct when it labels something as <em>true</em>. Recall is the percentage of the actual <em>true</em> examples that your model labels as true. These metrics are important for different reasons.</p>
+<p>A very precise model doesn’t make very many Type I errors. For instance, if you’re predicting whether or not someone has cancer, a very precise model is “trustworthy” in the sense that if it tells you that they do have cancer, they most likely do. You might think about precision as a metric in hiring: You probably want your hiring process to be very good at evaluating good candidates. A high-precision hiring process would mean that when you think you’ve found a person who would be a great fit on your team, you’re very likely correct.</p>
+<p>Recall is a bit different: It’s the percentage of the true labels that your model finds. A high-recall model suffers few false <em>negatives</em>: When something actually belongs to the true class, your model very often predicts it as such. You might think about this in the context of our cancer example from before. A higher recall model would mean that your model catches more of the cancer cases.</p>
+<p>Depending on your use case, you might optimize for one of these or the other. Or you could use a blend of the two, the most common of which is the <em>F1 score</em>, which is the harmonic mean of precision and recall. The idea of the F1 score is to optimize for a balance of both precision and recall, as opposed to optimizing for one at the cost of the other.</p>
 </section>
-<section id="other-highlights" class="level2">
-<h2 class="anchored" data-anchor-id="other-highlights">Other Highlights</h2>
-<ul>
-<li>Meeting a bunch of people in the breakout sessions! This year, there were virtual “tables” where you could drag your avatar to “sit down”, and once you were close enough to a table you could hear all of its conversation.</li>
-</ul>
+<section id="predicting-probabilities" class="level2">
+<h2 class="anchored" data-anchor-id="predicting-probabilities">Predicting Probabilities</h2>
+<p>You might be reading this thinking about how this is all about predicting classes, but very often we care about predicting probabilities. For instance, at CollegeVine we make predictions about each student’s chances of getting into their favorite colleges and universities. It’s not useful for students if we predict an acceptance or a rejection. After all, they want to know their <em>chance</em>, and to make a class prediction would mean that we determine a cutoff point at which we decide that if someone’s chance is above that threshold, they’ll get in. And if not, they won’t.</p>
+<p>The problem is that there is no such threshold. More likely, college admissions is a bit of a game of chance: If five students each have a 20% chance of getting in to Carleton, for instance, I’d expect that about one of the five would get in on average. But it’d be disingenuous to make a class prediction, and I’m not sure how we’d even do that. For five students with an exactly 20% chance of acceptance, we’d expect one to get in but if we were predicting classes we’d either predict all five to be accepted or all five to be rejected, and neither of those is the most likely scenario.</p>
+<p>// But doing that sacrifices calibration, which is the most important metric.</p>
 
 
 </section>
@@ -210,7 +208,7 @@ gtag('config', '358809638', { 'anonymize_ip': true});
 <!-- Begin Mailchimp Signup Form -->
 <link href="//cdn-images.mailchimp.com/embedcode/classic-071822.css" rel="stylesheet" type="text/css">
 <style type="text/css">
-	#mc_embed_signup{background:#fff; clear:left; font:14px Helvetica,Arial,sans-serif;  width:250px;}
+	#mc_embed_signup{background:#fff; clear:left; font:14px Helvetica,Arial,sans-serif;  width:650px;}
 	/* Add your own Mailchimp form style overrides in your site stylesheet or in this style block.
 	   We recommend moving this block and the preceding CSS link to the HEAD of your HTML file. */
 </style>
