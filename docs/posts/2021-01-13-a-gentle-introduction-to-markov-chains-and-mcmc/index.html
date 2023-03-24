@@ -312,15 +312,15 @@ p(x_{t+1} | x_{t}, x_{t-1}, x_{t-2}, .. x_{0}) = p(x_{t+1} | x_{t})
    position
       &lt;dbl&gt;
  1   0     
- 2   0.0434
- 3   0.615 
- 4   0.707 
- 5   2.09  
- 6   1.99  
- 7   2.49  
- 8   2.68  
- 9   2.99  
-10   2.95  
+ 2   0.546 
+ 3   0.0744
+ 4  -0.257 
+ 5   0.905 
+ 6   2.33  
+ 7   1.95  
+ 8   1.44  
+ 9   1.12  
+10   1.83  
 # … with 90 more rows</code></pre>
 </div>
 </div>
@@ -454,13 +454,13 @@ p(x_{t+1} | x_{t}, x_{t-1}, x_{t-2}, .. x_{0}) = p(x_{t+1} | x_{t})
 <pre><code># A tibble: 4 × 4
   island days_spent day_proportion error_margin
    &lt;dbl&gt;      &lt;int&gt;          &lt;dbl&gt;        &lt;dbl&gt;
-1      1       1022          0.102      0.0220 
-2      2       2042          0.204      0.0210 
-3      3       2985          0.298     -0.00500
-4      4       3951          0.395     -0.0122 </code></pre>
+1      1       1002          0.100      0.00200
+2      2       1940          0.194     -0.0300 
+3      3       3023          0.302      0.00767
+4      4       4035          0.404      0.00875</code></pre>
 </div>
 </div>
-<p>Much better! After 10,000 iterations, we’re spending almost the exact proportion of time on each island that we want to be, as evidenced by the tiny error margins. In addition, the standard deviation of the error margins is 0.01765, which is tiny. That’s awesome! But what about if the system is more complex? Like, what if we had 100 islands?</p>
+<p>Much better! After 10,000 iterations, we’re spending almost the exact proportion of time on each island that we want to be, as evidenced by the tiny error margins. In addition, the standard deviation of the error margins is 0.01831, which is tiny. That’s awesome! But what about if the system is more complex? Like, what if we had 100 islands?</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>more_islands <span class="ot">&lt;-</span> <span class="fu">run_rwmh</span>(<span class="at">n_iters =</span> <span class="dv">10000</span>, <span class="at">island_populations =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">100</span>) <span class="sc">%&gt;%</span></span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tibble</span>(<span class="at">island =</span> .) <span class="sc">%&gt;%</span></span>
@@ -476,20 +476,20 @@ p(x_{t+1} | x_{t}, x_{t-1}, x_{t-2}, .. x_{0}) = p(x_{t+1} | x_{t})
 <pre><code># A tibble: 100 × 4
    island days_spent day_proportion error_margin
     &lt;dbl&gt;      &lt;int&gt;          &lt;dbl&gt;        &lt;dbl&gt;
- 1      1          1         0.0001      -0.495 
- 2      2          3         0.0003      -0.243 
- 3      3          6         0.0006       0.0100
- 4      4         11         0.0011       0.389 
- 5      5         11         0.0011       0.111 
- 6      6         17         0.0017       0.431 
- 7      7         15         0.0015       0.0821
- 8      8         17         0.0017       0.0731
- 9      9         19         0.0019       0.0661
-10     10         14         0.0014      -0.293 
+ 1      1          2         0.0002       0.0100
+ 2      2          8         0.0008       1.02  
+ 3      3          4         0.0004      -0.327 
+ 4      4          6         0.0006      -0.243 
+ 5      5          8         0.0008      -0.192 
+ 6      6         13         0.0013       0.0942
+ 7      7         22         0.0022       0.587 
+ 8      8         14         0.0014      -0.116 
+ 9      9         11         0.0011      -0.383 
+10     10         16         0.0016      -0.192 
 # … with 90 more rows</code></pre>
 </div>
 </div>
-<p>No problem! Even with the extra islands, the mean error margin is still zero, and the standard deviation of the error margins is 0.15951, which is also small, but not as small as the simpler system. It’s true that a more complex system (i.e.&nbsp;more islands) would mean that we need more iterations to converge in probability to the proportions we’re shooting for, but the algorithm will still work with enough time. Let’s try running it one more time on the complex system, but this time with a million iterations.</p>
+<p>No problem! Even with the extra islands, the mean error margin is still zero, and the standard deviation of the error margins is 0.18309, which is also small, but not as small as the simpler system. It’s true that a more complex system (i.e.&nbsp;more islands) would mean that we need more iterations to converge in probability to the proportions we’re shooting for, but the algorithm will still work with enough time. Let’s try running it one more time on the complex system, but this time with a million iterations.</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>more_iters <span class="ot">&lt;-</span> <span class="fu">run_rwmh</span>(<span class="at">n_iters =</span> <span class="dv">1000000</span>, <span class="at">island_populations =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">100</span>) <span class="sc">%&gt;%</span></span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tibble</span>(<span class="at">island =</span> .) <span class="sc">%&gt;%</span></span>
@@ -505,20 +505,20 @@ p(x_{t+1} | x_{t}, x_{t-1}, x_{t-2}, .. x_{0}) = p(x_{t+1} | x_{t})
 <pre><code># A tibble: 100 × 4
    island days_spent day_proportion error_margin
     &lt;dbl&gt;      &lt;int&gt;          &lt;dbl&gt;        &lt;dbl&gt;
- 1      1        229       0.000229      0.156  
- 2      2        404       0.000404      0.0201 
- 3      3        576       0.000576     -0.0304 
- 4      4        779       0.000779     -0.0165 
- 5      5       1009       0.00101       0.0191 
- 6      6       1207       0.00121       0.0159 
- 7      7       1336       0.00134      -0.0362 
- 8      8       1576       0.00158      -0.00515
- 9      9       1740       0.00174      -0.0237 
-10     10       1974       0.00197      -0.00313
+ 1      1        210       0.00021       0.0605 
+ 2      2        388       0.000388     -0.0203 
+ 3      3        624       0.000624      0.0504 
+ 4      4        808       0.000808      0.0201 
+ 5      5       1013       0.00101       0.0231 
+ 6      6       1218       0.00122       0.0252 
+ 7      7       1378       0.00138      -0.00587
+ 8      8       1579       0.00158      -0.00326
+ 9      9       1846       0.00185       0.0358 
+10     10       1934       0.00193      -0.0233 
 # … with 90 more rows</code></pre>
 </div>
 </div>
-<p>Looks like that did the trick! The standard deviation of the error margins fell to 0.02297, just as we expected.</p>
+<p>Looks like that did the trick! The standard deviation of the error margins fell to 0.01698, just as we expected.</p>
 <p>This algorithm is called the Metropolis-Hastings Algorithm, and it’s one of many in the class of Markov Chain Monte Carlo algorithms. Some others are the Gibbs Sampler and Hamiltonian Monte Carlo, both of which are frequently used in Bayesian statistics for estimating the parameters of regression models with hundreds of thousands of parameters. In short, these algorithms allow us to solve problems that were literally impossible to solve only two decades ago or so, which is an amazing feat!</p>
 </section>
 <section id="recap" class="level1">
