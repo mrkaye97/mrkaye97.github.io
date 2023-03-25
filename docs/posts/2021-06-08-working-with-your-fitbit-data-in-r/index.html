@@ -134,6 +134,9 @@ gtag('js', new Date());
 gtag('config', '358809638', { 'anonymize_ip': true});
 </script>
 
+<script src="../../site_libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="../../site_libs/lightable-0.0.1/lightable.css" rel="stylesheet">
+
 
 <link rel="stylesheet" href="../../styles.css">
 </head>
@@ -186,6 +189,13 @@ gtag('config', '358809638', { 'anonymize_ip': true});
     </ul>
   </li>
 </ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="../../posts.xml"><i class="bi bi-rss" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+</ul>
               <div id="quarto-search" class="" title="Search"></div>
           </div> <!-- /navcollapse -->
       </div> <!-- /container-fluid -->
@@ -195,12 +205,39 @@ gtag('config', '358809638', { 'anonymize_ip': true});
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar"><div class="quarto-margin-header"><div class="margin-header-item">
+<style type="text/css">
+    #mc_embed_signup{background:#fff; clear:left; font:14px Helvetica,Arial,sans-serif;  width:100%;}
+</style>
+<div id="mc_embed_signup">
+    <form action="https://matthewrkaye.us18.list-manage.com/subscribe/post?u=ec09e4d843f1bd163969cd497&amp;id=57e1f0d88d&amp;f_id=00a914e7f0" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_self">
+        <div id="mc_embed_signup_scroll" {margin:0px;="" padding:0px;="" display:inline;}="">
+        <h2>Subscribe</h2>
+<div class="mc-field-group">
+
+    <input type="email" value="" name="EMAIL" class="required email" id="mce-EMAIL" placeholder="email address" required="">
+    <span id="mce-EMAIL-HELPERTEXT" class="helper_text"></span>
+</div>
+    <div id="mce-responses" class="clear foot">
+        <div class="response" id="mce-error-response" style="display:none"></div>
+        <div class="response" id="mce-success-response" style="display:none"></div>
+    </div>    <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+    <div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_ec09e4d843f1bd163969cd497_57e1f0d88d" tabindex="-1" value=""></div>
+        <div class="optionalParent">
+            <div class="clear foot">
+                <input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="button">
+            </div>
+        </div>
+    </div>
+</form>
+</div>
+</div></div>
         <nav id="TOC" role="doc-toc" class="toc-active">
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
+  <li><a href="#note-this-post-was-updated-as-of-3252023-for-fitbitr-v0.3.0" id="toc-note-this-post-was-updated-as-of-3252023-for-fitbitr-v0.3.0" class="nav-link active" data-scroll-target="#note-this-post-was-updated-as-of-3252023-for-fitbitr-v0.3.0">Note: This post was updated as of 3/25/2023 for <code>fitbitr v0.3.0</code></a></li>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link" data-scroll-target="#introduction">Introduction</a></li>
   <li><a href="#sleep" id="toc-sleep" class="nav-link" data-scroll-target="#sleep">Sleep</a></li>
   <li><a href="#heart-rate-and-steps" id="toc-heart-rate-and-steps" class="nav-link" data-scroll-target="#heart-rate-and-steps">Heart Rate and Steps</a></li>
   <li><a href="#wrapping-up" id="toc-wrapping-up" class="nav-link" data-scroll-target="#wrapping-up">Wrapping Up</a></li>
@@ -243,6 +280,9 @@ gtag('config', '358809638', { 'anonymize_ip': true});
 
 </header>
 
+<section id="note-this-post-was-updated-as-of-3252023-for-fitbitr-v0.3.0" class="level3">
+<h3 class="anchored" data-anchor-id="note-this-post-was-updated-as-of-3252023-for-fitbitr-v0.3.0">Note: This post was updated as of 3/25/2023 for <code>fitbitr v0.3.0</code></h3>
+</section>
 <section id="introduction" class="level2">
 <h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
 <p><code>fitbitr 0.1.0</code> is now available on CRAN! You can install it with</p>
@@ -265,71 +305,158 @@ gtag('config', '358809638', { 'anonymize_ip': true});
 <span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>start <span class="ot">&lt;-</span> <span class="fu">as_date</span>(<span class="st">"2020-01-01"</span>)</span>
 <span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>end <span class="ot">&lt;-</span> <span class="fu">as_date</span>(<span class="st">"2021-10-18"</span>)</span>
 <span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="co"># load_cached_token(".httr-oauth")</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="fu">generate_fitbitr_token</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>And then you can start pulling your data!</p>
-<div class="cell" data-layout-align="center" data-hash="index_cache/html/unnamed-chunk-4_d869f5e763a1b9067febc3686cee8cec">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>sleep <span class="ot">&lt;-</span> <span class="fu">sleep_summary</span>(</span>
+<div class="cell" data-layout-align="center" data-hash="index_cache/html/unnamed-chunk-4_2f14a0443cc6b122ece6398ada43397c">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>sleep <span class="ot">&lt;-</span> <span class="fu">get_sleep_summary</span>(</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">start_date =</span> end <span class="sc">-</span> <span class="fu">months</span>(<span class="dv">3</span>),</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">end_date =</span> end</span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>sleep <span class="sc">%&gt;%</span> </span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 6 × 11
-       log_id date       start_time          end_time            durat…¹ effic…²
-        &lt;dbl&gt; &lt;date&gt;     &lt;dttm&gt;              &lt;dttm&gt;                &lt;int&gt;   &lt;int&gt;
-1 33020894524 2021-07-18 2021-07-17 23:39:00 2021-07-18 07:58:00  2.99e7      98
-2 33033378227 2021-07-19 2021-07-18 22:17:30 2021-07-19 07:43:30  3.40e7      95
-3 33043882288 2021-07-20 2021-07-19 22:57:00 2021-07-20 06:38:30  2.77e7      96
-4 33060458937 2021-07-21 2021-07-20 23:24:30 2021-07-21 06:34:00  2.57e7      97
-5 33075070785 2021-07-22 2021-07-21 22:21:00 2021-07-22 06:55:30  3.08e7      90
-6 33087900074 2021-07-23 2021-07-22 23:36:30 2021-07-23 07:08:30  2.71e7      95
-# … with 5 more variables: minutes_to_fall_asleep &lt;int&gt;, minutes_asleep &lt;int&gt;,
-#   minutes_awake &lt;int&gt;, minutes_after_wakeup &lt;int&gt;, time_in_bed &lt;int&gt;, and
-#   abbreviated variable names ¹​duration, ²​efficiency</code></pre>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(sleep)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<table class="table" style="margin-left: auto; margin-right: auto;">
+ <thead>
+  <tr>
+   <th style="text-align:right;"> log_id </th>
+   <th style="text-align:left;"> date </th>
+   <th style="text-align:left;"> start_time </th>
+   <th style="text-align:left;"> end_time </th>
+   <th style="text-align:right;"> duration </th>
+   <th style="text-align:right;"> efficiency </th>
+   <th style="text-align:right;"> minutes_to_fall_asleep </th>
+   <th style="text-align:right;"> minutes_asleep </th>
+   <th style="text-align:right;"> minutes_awake </th>
+   <th style="text-align:right;"> minutes_after_wakeup </th>
+   <th style="text-align:right;"> time_in_bed </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:right;"> 34207402675 </td>
+   <td style="text-align:left;"> 2021-10-18 </td>
+   <td style="text-align:left;"> 2021-10-17 23:01:00 </td>
+   <td style="text-align:left;"> 2021-10-18 06:30:00 </td>
+   <td style="text-align:right;"> 26940000 </td>
+   <td style="text-align:right;"> 91 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 391 </td>
+   <td style="text-align:right;"> 58 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 449 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 34193579435 </td>
+   <td style="text-align:left;"> 2021-10-17 </td>
+   <td style="text-align:left;"> 2021-10-16 23:03:30 </td>
+   <td style="text-align:left;"> 2021-10-17 08:11:00 </td>
+   <td style="text-align:right;"> 32820000 </td>
+   <td style="text-align:right;"> 95 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 472 </td>
+   <td style="text-align:right;"> 75 </td>
+   <td style="text-align:right;"> 4 </td>
+   <td style="text-align:right;"> 547 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 34183584553 </td>
+   <td style="text-align:left;"> 2021-10-16 </td>
+   <td style="text-align:left;"> 2021-10-15 22:46:30 </td>
+   <td style="text-align:left;"> 2021-10-16 06:57:30 </td>
+   <td style="text-align:right;"> 29460000 </td>
+   <td style="text-align:right;"> 94 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 424 </td>
+   <td style="text-align:right;"> 67 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 491 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 34174304493 </td>
+   <td style="text-align:left;"> 2021-10-15 </td>
+   <td style="text-align:left;"> 2021-10-14 23:50:00 </td>
+   <td style="text-align:left;"> 2021-10-15 08:20:30 </td>
+   <td style="text-align:right;"> 30600000 </td>
+   <td style="text-align:right;"> 94 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 438 </td>
+   <td style="text-align:right;"> 72 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 510 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 34159751655 </td>
+   <td style="text-align:left;"> 2021-10-14 </td>
+   <td style="text-align:left;"> 2021-10-13 23:34:00 </td>
+   <td style="text-align:left;"> 2021-10-14 09:18:00 </td>
+   <td style="text-align:right;"> 35040000 </td>
+   <td style="text-align:right;"> 98 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 524 </td>
+   <td style="text-align:right;"> 60 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 584 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 34146865838 </td>
+   <td style="text-align:left;"> 2021-10-13 </td>
+   <td style="text-align:left;"> 2021-10-12 23:50:00 </td>
+   <td style="text-align:left;"> 2021-10-13 08:32:30 </td>
+   <td style="text-align:right;"> 31320000 </td>
+   <td style="text-align:right;"> 94 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 461 </td>
+   <td style="text-align:right;"> 61 </td>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 522 </td>
+  </tr>
+</tbody>
+</table>
+
 </div>
 </div>
 <p>Once you’ve loaded some data, you can visualize it!</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(zoo)</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(scales)</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggthemes)</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>sleep <span class="ot">&lt;-</span> sleep <span class="sc">%&gt;%</span></span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>   <span class="at">date =</span> <span class="fu">as_date</span>(date),</span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>   <span class="at">start_time =</span> <span class="fu">as_datetime</span>(start_time),</span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>   <span class="at">end_time =</span> <span class="fu">as_datetime</span>(end_time),</span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>   <span class="at">sh =</span> <span class="fu">ifelse</span>(<span class="fu">hour</span>(start_time) <span class="sc">&lt;</span> <span class="dv">8</span>, <span class="fu">hour</span>(start_time) <span class="sc">+</span> <span class="dv">24</span>, <span class="fu">hour</span>(start_time)), <span class="co">#create numeric times</span></span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>   <span class="at">sm =</span> <span class="fu">minute</span>(start_time),</span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>   <span class="at">st =</span> sh <span class="sc">+</span> sm<span class="sc">/</span><span class="dv">60</span>,</span>
-<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>   <span class="at">eh =</span> <span class="fu">hour</span>(end_time),</span>
-<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>   <span class="at">em =</span> <span class="fu">minute</span>(end_time),</span>
-<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>   <span class="at">et =</span> eh <span class="sc">+</span> em<span class="sc">/</span><span class="dv">60</span>,</span>
-<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>   <span class="at">mst =</span> <span class="fu">rollmean</span>(st, <span class="dv">7</span>, <span class="at">fill =</span> <span class="cn">NA</span>), <span class="co">#create moving averages</span></span>
-<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>   <span class="at">met =</span> <span class="fu">rollmean</span>(et, <span class="dv">7</span>, <span class="at">fill =</span> <span class="cn">NA</span>),</span>
-<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>   <span class="at">year =</span> <span class="fu">year</span>(start_time)</span>
-<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>sleep <span class="sc">%&gt;%</span></span>
-<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> date))<span class="sc">+</span></span>
-<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y =</span> et), <span class="at">color =</span> <span class="st">'coral'</span>, <span class="at">alpha =</span> .<span class="dv">3</span>, <span class="at">na.rm =</span> T)<span class="sc">+</span></span>
-<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y =</span> st), <span class="at">color =</span> <span class="st">'dodgerblue'</span>, <span class="at">alpha =</span> .<span class="dv">3</span>, <span class="at">na.rm =</span> T)<span class="sc">+</span></span>
-<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y =</span> met), <span class="at">color =</span> <span class="st">'coral'</span>, <span class="at">na.rm=</span>T)<span class="sc">+</span></span>
-<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y =</span> mst), <span class="at">color =</span> <span class="st">'dodgerblue'</span>, <span class="at">na.rm=</span>T)<span class="sc">+</span></span>
-<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_y_continuous</span>(<span class="at">breaks =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">30</span>, <span class="dv">2</span>),</span>
-<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a>                       <span class="at">labels =</span> <span class="fu">trans_format</span>(<span class="cf">function</span>(x) <span class="fu">ifelse</span>(x <span class="sc">&gt;</span> <span class="dv">23</span>, x <span class="sc">-</span> <span class="dv">24</span>, x), </span>
-<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a>                                             <span class="at">format =</span> scales<span class="sc">::</span><span class="fu">comma_format</span>(<span class="at">suffix =</span> <span class="st">":00"</span>, <span class="at">accuracy =</span> <span class="dv">1</span>))</span>
-<span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a>    )<span class="sc">+</span></span>
-<span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Date"</span>,</span>
-<span id="cb6-32"><a href="#cb6-32" aria-hidden="true" tabindex="-1"></a>         <span class="at">y =</span> <span class="st">'Time'</span>)<span class="sc">+</span></span>
-<span id="cb6-33"><a href="#cb6-33" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_fivethirtyeight</span>()<span class="sc">+</span></span>
-<span id="cb6-34"><a href="#cb6-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_date</span>(<span class="at">date_breaks =</span> <span class="st">'1 month'</span>, <span class="at">date_labels =</span> <span class="st">'%b'</span>, <span class="at">expand =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>))<span class="sc">+</span></span>
-<span id="cb6-35"><a href="#cb6-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_grid</span>(. <span class="sc">~</span> year, <span class="at">space =</span> <span class="st">'free'</span>, <span class="at">scales =</span> <span class="st">'free_x'</span>, <span class="at">switch =</span> <span class="st">'x'</span>) <span class="sc">+</span></span>
-<span id="cb6-36"><a href="#cb6-36" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">panel.spacing.x =</span> <span class="fu">unit</span>(<span class="dv">0</span>,<span class="st">"line"</span>), </span>
-<span id="cb6-37"><a href="#cb6-37" aria-hidden="true" tabindex="-1"></a>        <span class="at">strip.placement =</span> <span class="st">"outside"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(zoo)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(scales)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggthemes)</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>sleep <span class="ot">&lt;-</span> sleep <span class="sc">%&gt;%</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>   <span class="at">date =</span> <span class="fu">as_date</span>(date),</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>   <span class="at">start_time =</span> <span class="fu">as_datetime</span>(start_time),</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>   <span class="at">end_time =</span> <span class="fu">as_datetime</span>(end_time),</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>   <span class="at">sh =</span> <span class="fu">ifelse</span>(<span class="fu">hour</span>(start_time) <span class="sc">&lt;</span> <span class="dv">8</span>, <span class="fu">hour</span>(start_time) <span class="sc">+</span> <span class="dv">24</span>, <span class="fu">hour</span>(start_time)), <span class="co">#create numeric times</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>   <span class="at">sm =</span> <span class="fu">minute</span>(start_time),</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>   <span class="at">st =</span> sh <span class="sc">+</span> sm<span class="sc">/</span><span class="dv">60</span>,</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>   <span class="at">eh =</span> <span class="fu">hour</span>(end_time),</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>   <span class="at">em =</span> <span class="fu">minute</span>(end_time),</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>   <span class="at">et =</span> eh <span class="sc">+</span> em<span class="sc">/</span><span class="dv">60</span>,</span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>   <span class="at">mst =</span> <span class="fu">rollmean</span>(st, <span class="dv">7</span>, <span class="at">fill =</span> <span class="cn">NA</span>), <span class="co">#create moving averages</span></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>   <span class="at">met =</span> <span class="fu">rollmean</span>(et, <span class="dv">7</span>, <span class="at">fill =</span> <span class="cn">NA</span>),</span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>   <span class="at">year =</span> <span class="fu">year</span>(start_time)</span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>sleep <span class="sc">%&gt;%</span></span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> date)) <span class="sc">+</span></span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y =</span> et), <span class="at">color =</span> <span class="st">'coral'</span>, <span class="at">alpha =</span> .<span class="dv">3</span>, <span class="at">na.rm =</span> T) <span class="sc">+</span></span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y =</span> st), <span class="at">color =</span> <span class="st">'dodgerblue'</span>, <span class="at">alpha =</span> .<span class="dv">3</span>, <span class="at">na.rm =</span> T) <span class="sc">+</span></span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y =</span> met), <span class="at">color =</span> <span class="st">'coral'</span>, <span class="at">na.rm =</span> T) <span class="sc">+</span></span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y =</span> mst), <span class="at">color =</span> <span class="st">'dodgerblue'</span>, <span class="at">na.rm =</span> T) <span class="sc">+</span></span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_y_continuous</span>(</span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>      <span class="at">breaks =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">30</span>, <span class="dv">2</span>),</span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a>      <span class="at">labels =</span> <span class="fu">trans_format</span>(</span>
+<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a>        <span class="cf">function</span>(x) <span class="fu">ifelse</span>(x <span class="sc">&gt;</span> <span class="dv">23</span>, x <span class="sc">-</span> <span class="dv">24</span>, x), </span>
+<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a>        <span class="at">format =</span> scales<span class="sc">::</span><span class="fu">comma_format</span>(<span class="at">suffix =</span> <span class="st">":00"</span>, <span class="at">accuracy =</span> <span class="dv">1</span>)</span>
+<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
+<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Date"</span>, <span class="at">y =</span> <span class="st">'Time'</span>) <span class="sc">+</span></span>
+<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_fivethirtyeight</span>() <span class="sc">+</span></span>
+<span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_x_date</span>(<span class="at">date_breaks =</span> <span class="st">'1 month'</span>, <span class="at">date_labels =</span> <span class="st">'%b'</span>, <span class="at">expand =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>)) <span class="sc">+</span></span>
+<span id="cb5-37"><a href="#cb5-37" aria-hidden="true" tabindex="-1"></a>    <span class="fu">facet_grid</span>(. <span class="sc">~</span> year, <span class="at">space =</span> <span class="st">'free'</span>, <span class="at">scales =</span> <span class="st">'free_x'</span>, <span class="at">switch =</span> <span class="st">'x'</span>) <span class="sc">+</span></span>
+<span id="cb5-38"><a href="#cb5-38" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">panel.spacing.x =</span> <span class="fu">unit</span>(<span class="dv">0</span>,<span class="st">"line"</span>), <span class="at">strip.placement =</span> <span class="st">"outside"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -340,51 +467,52 @@ gtag('config', '358809638', { 'anonymize_ip': true});
 </div>
 <p>This bit of code makes a nicely formatted plot of the times you went to sleep and woke up over the past three months. You can also use <code>fitbitr</code> to expand the time window with a little help from <code>purrr</code> (the Fitbit API rate limits you, so you can’t request data for infinitely long windows in a single request).</p>
 <div class="cell" data-layout-align="center" data-hash="index_cache/html/unnamed-chunk-6_af35efd52163eeefe06857cbd3a33893">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Pull three months of data</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>sleep <span class="ot">&lt;-</span> <span class="fu">map_dfr</span>(</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="dv">3</span><span class="sc">:</span><span class="dv">0</span>,</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="sc">~</span> <span class="fu">sleep_summary</span>(</span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    end <span class="sc">-</span> <span class="fu">months</span>(.x), </span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    end <span class="sc">-</span> <span class="fu">months</span>(.x) <span class="sc">+</span> <span class="fu">months</span>(<span class="dv">1</span>)</span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Pull three months of data</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>sleep <span class="ot">&lt;-</span> <span class="fu">map_dfr</span>(</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="dv">3</span><span class="sc">:</span><span class="dv">0</span>,</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="sc">~</span> <span class="fu">sleep_summary</span>(</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    end <span class="sc">-</span> <span class="fu">months</span>(.x), </span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    end <span class="sc">-</span> <span class="fu">months</span>(.x) <span class="sc">+</span> <span class="fu">months</span>(<span class="dv">1</span>)</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>After pulling the data, we can use the same code again to visualize it.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>sleep <span class="ot">&lt;-</span> sleep <span class="sc">%&gt;%</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>   <span class="at">date =</span> <span class="fu">as_date</span>(date),</span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>   <span class="at">start_time =</span> <span class="fu">as_datetime</span>(start_time),</span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>   <span class="at">end_time =</span> <span class="fu">as_datetime</span>(end_time),</span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>   <span class="at">sh =</span> <span class="fu">ifelse</span>(<span class="fu">hour</span>(start_time) <span class="sc">&lt;</span> <span class="dv">8</span>, <span class="fu">hour</span>(start_time) <span class="sc">+</span> <span class="dv">24</span>, <span class="fu">hour</span>(start_time)), <span class="co">#create numeric times</span></span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>   <span class="at">sm =</span> <span class="fu">minute</span>(start_time),</span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>   <span class="at">st =</span> sh <span class="sc">+</span> sm<span class="sc">/</span><span class="dv">60</span>,</span>
-<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>   <span class="at">eh =</span> <span class="fu">hour</span>(end_time),</span>
-<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>   <span class="at">em =</span> <span class="fu">minute</span>(end_time),</span>
-<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>   <span class="at">et =</span> eh <span class="sc">+</span> em<span class="sc">/</span><span class="dv">60</span>,</span>
-<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>   <span class="at">mst =</span> <span class="fu">rollmean</span>(st, <span class="dv">7</span>, <span class="at">fill =</span> <span class="cn">NA</span>), <span class="co">#create moving averages</span></span>
-<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>   <span class="at">met =</span> <span class="fu">rollmean</span>(et, <span class="dv">7</span>, <span class="at">fill =</span> <span class="cn">NA</span>),</span>
-<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>   <span class="at">year =</span> <span class="fu">year</span>(start_time)</span>
-<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span></span>
-<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>()</span>
-<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>sleep <span class="sc">%&gt;%</span></span>
-<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> date))<span class="sc">+</span></span>
-<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y =</span> et), <span class="at">color =</span> <span class="st">'coral'</span>, <span class="at">alpha =</span> .<span class="dv">3</span>, <span class="at">na.rm =</span> T)<span class="sc">+</span></span>
-<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y =</span> st), <span class="at">color =</span> <span class="st">'dodgerblue'</span>, <span class="at">alpha =</span> .<span class="dv">3</span>, <span class="at">na.rm =</span> T)<span class="sc">+</span></span>
-<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y =</span> met), <span class="at">color =</span> <span class="st">'coral'</span>, <span class="at">na.rm=</span>T)<span class="sc">+</span></span>
-<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y =</span> mst), <span class="at">color =</span> <span class="st">'dodgerblue'</span>, <span class="at">na.rm=</span>T)<span class="sc">+</span></span>
-<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_y_continuous</span>(<span class="at">breaks =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">30</span>, <span class="dv">2</span>),</span>
-<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a>                       <span class="at">labels =</span> <span class="fu">trans_format</span>(<span class="cf">function</span>(x) <span class="fu">ifelse</span>(x <span class="sc">&gt;</span> <span class="dv">23</span>, x <span class="sc">-</span> <span class="dv">24</span>, x), </span>
-<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a>                                             <span class="at">format =</span> scales<span class="sc">::</span><span class="fu">comma_format</span>(<span class="at">suffix =</span> <span class="st">":00"</span>, <span class="at">accuracy =</span> <span class="dv">1</span>))</span>
-<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a>    )<span class="sc">+</span></span>
-<span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Date"</span>,</span>
-<span id="cb8-29"><a href="#cb8-29" aria-hidden="true" tabindex="-1"></a>         <span class="at">y =</span> <span class="st">'Time'</span>)<span class="sc">+</span></span>
-<span id="cb8-30"><a href="#cb8-30" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_fivethirtyeight</span>()<span class="sc">+</span></span>
-<span id="cb8-31"><a href="#cb8-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_date</span>(<span class="at">date_breaks =</span> <span class="st">'1 month'</span>, <span class="at">date_labels =</span> <span class="st">'%b'</span>, <span class="at">expand =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>))<span class="sc">+</span></span>
-<span id="cb8-32"><a href="#cb8-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_grid</span>(. <span class="sc">~</span> year, <span class="at">space =</span> <span class="st">'free'</span>, <span class="at">scales =</span> <span class="st">'free_x'</span>, <span class="at">switch =</span> <span class="st">'x'</span>) <span class="sc">+</span></span>
-<span id="cb8-33"><a href="#cb8-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">panel.spacing.x =</span> <span class="fu">unit</span>(<span class="dv">0</span>,<span class="st">"line"</span>), </span>
-<span id="cb8-34"><a href="#cb8-34" aria-hidden="true" tabindex="-1"></a>        <span class="at">strip.placement =</span> <span class="st">"outside"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>sleep <span class="ot">&lt;-</span> sleep <span class="sc">%&gt;%</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>   <span class="at">date =</span> <span class="fu">as_date</span>(date),</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>   <span class="at">start_time =</span> <span class="fu">as_datetime</span>(start_time),</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>   <span class="at">end_time =</span> <span class="fu">as_datetime</span>(end_time),</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>   <span class="at">sh =</span> <span class="fu">ifelse</span>(<span class="fu">hour</span>(start_time) <span class="sc">&lt;</span> <span class="dv">8</span>, <span class="fu">hour</span>(start_time) <span class="sc">+</span> <span class="dv">24</span>, <span class="fu">hour</span>(start_time)), <span class="co">#create numeric times</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>   <span class="at">sm =</span> <span class="fu">minute</span>(start_time),</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>   <span class="at">st =</span> sh <span class="sc">+</span> sm<span class="sc">/</span><span class="dv">60</span>,</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>   <span class="at">eh =</span> <span class="fu">hour</span>(end_time),</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>   <span class="at">em =</span> <span class="fu">minute</span>(end_time),</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>   <span class="at">et =</span> eh <span class="sc">+</span> em<span class="sc">/</span><span class="dv">60</span>,</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>   <span class="at">mst =</span> <span class="fu">rollmean</span>(st, <span class="dv">7</span>, <span class="at">fill =</span> <span class="cn">NA</span>), <span class="co">#create moving averages</span></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>   <span class="at">met =</span> <span class="fu">rollmean</span>(et, <span class="dv">7</span>, <span class="at">fill =</span> <span class="cn">NA</span>),</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>   <span class="at">year =</span> <span class="fu">year</span>(start_time)</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span></span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>()</span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>sleep <span class="sc">%&gt;%</span></span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> date)) <span class="sc">+</span></span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y =</span> et), <span class="at">color =</span> <span class="st">'coral'</span>, <span class="at">alpha =</span> .<span class="dv">3</span>, <span class="at">na.rm =</span> T) <span class="sc">+</span></span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y =</span> st), <span class="at">color =</span> <span class="st">'dodgerblue'</span>, <span class="at">alpha =</span> .<span class="dv">3</span>, <span class="at">na.rm =</span> T) <span class="sc">+</span></span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y =</span> met), <span class="at">color =</span> <span class="st">'coral'</span>, <span class="at">na.rm =</span> T) <span class="sc">+</span></span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y =</span> mst), <span class="at">color =</span> <span class="st">'dodgerblue'</span>, <span class="at">na.rm =</span> T) <span class="sc">+</span></span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_y_continuous</span>(</span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a>      <span class="at">breaks =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">30</span>, <span class="dv">2</span>),</span>
+<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a>      <span class="at">labels =</span> <span class="fu">trans_format</span>(</span>
+<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a>        <span class="cf">function</span>(x) <span class="fu">ifelse</span>(x <span class="sc">&gt;</span> <span class="dv">23</span>, x <span class="sc">-</span> <span class="dv">24</span>, x), </span>
+<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a>        <span class="at">format =</span> scales<span class="sc">::</span><span class="fu">comma_format</span>(<span class="at">suffix =</span> <span class="st">":00"</span>, <span class="at">accuracy =</span> <span class="dv">1</span>)</span>
+<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
+<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Date"</span>, <span class="at">y =</span> <span class="st">'Time'</span>) <span class="sc">+</span></span>
+<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_fivethirtyeight</span>() <span class="sc">+</span></span>
+<span id="cb7-33"><a href="#cb7-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_date</span>(<span class="at">date_breaks =</span> <span class="st">'1 month'</span>, <span class="at">date_labels =</span> <span class="st">'%b'</span>, <span class="at">expand =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>)) <span class="sc">+</span></span>
+<span id="cb7-34"><a href="#cb7-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_grid</span>(. <span class="sc">~</span> year, <span class="at">space =</span> <span class="st">'free'</span>, <span class="at">scales =</span> <span class="st">'free_x'</span>, <span class="at">switch =</span> <span class="st">'x'</span>) <span class="sc">+</span></span>
+<span id="cb7-35"><a href="#cb7-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">panel.spacing.x =</span> <span class="fu">unit</span>(<span class="dv">0</span>,<span class="st">"line"</span>), <span class="at">strip.placement =</span> <span class="st">"outside"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -398,73 +526,155 @@ gtag('config', '358809638', { 'anonymize_ip': true});
 <h2 class="anchored" data-anchor-id="heart-rate-and-steps">Heart Rate and Steps</h2>
 <p>You can also pull your heart rate data with <code>fitbitr</code>. Maybe we’re curious about seeing how the number of minutes spent in the “fat burn,” “cardio,” and “peak” zones correlates with the number of steps taken that day. Let’s find out!</p>
 <div class="cell" data-layout-align="center" data-hash="index_cache/html/unnamed-chunk-8_df41135438270860bd7e0fd1091a4efa">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>hr <span class="ot">&lt;-</span> <span class="fu">map_dfr</span>(</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="dv">3</span><span class="sc">:</span><span class="dv">0</span>,</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="sc">~</span> <span class="fu">heart_rate_zones</span>(</span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    end <span class="sc">-</span> <span class="fu">months</span>(.x), </span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    end <span class="sc">-</span> <span class="fu">months</span>(.x) <span class="sc">+</span> <span class="fu">months</span>(<span class="dv">1</span>)</span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>steps <span class="ot">&lt;-</span> <span class="fu">map_dfr</span>(</span>
-<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>  <span class="dv">3</span><span class="sc">:</span><span class="dv">0</span>,</span>
-<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>  <span class="sc">~</span> <span class="fu">steps</span>(</span>
-<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>    end <span class="sc">-</span> <span class="fu">months</span>(.x), </span>
-<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>    end <span class="sc">-</span> <span class="fu">months</span>(.x) <span class="sc">+</span> <span class="fu">months</span>(<span class="dv">1</span>)</span>
-<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>hr <span class="ot">&lt;-</span> <span class="fu">map_dfr</span>(</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="dv">3</span><span class="sc">:</span><span class="dv">0</span>,</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="sc">~</span> <span class="fu">heart_rate_zones</span>(</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    end <span class="sc">-</span> <span class="fu">months</span>(.x), </span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    end <span class="sc">-</span> <span class="fu">months</span>(.x) <span class="sc">+</span> <span class="fu">months</span>(<span class="dv">1</span>)</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>steps <span class="ot">&lt;-</span> <span class="fu">map_dfr</span>(</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>  <span class="dv">3</span><span class="sc">:</span><span class="dv">0</span>,</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>  <span class="sc">~</span> <span class="fu">steps</span>(</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>    end <span class="sc">-</span> <span class="fu">months</span>(.x), </span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>    end <span class="sc">-</span> <span class="fu">months</span>(.x) <span class="sc">+</span> <span class="fu">months</span>(<span class="dv">1</span>)</span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>First, we can examine the heart rate data:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(hr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 6 × 6
-  date       zone         min_hr max_hr minutes_in_zone calories_out
-  &lt;date&gt;     &lt;chr&gt;         &lt;int&gt;  &lt;int&gt;           &lt;int&gt;        &lt;dbl&gt;
-1 2021-07-18 Out of Range     30    113            1440       2530. 
-2 2021-07-18 Fat Burn        113    141               0          0  
-3 2021-07-18 Cardio          141    176               0          0  
-4 2021-07-18 Peak            176    220               0          0  
-5 2021-07-19 Out of Range     30    113            1408       2689. 
-6 2021-07-19 Fat Burn        113    141               9         86.6</code></pre>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(hr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<table class="table" style="margin-left: auto; margin-right: auto;">
+ <thead>
+  <tr>
+   <th style="text-align:left;"> date </th>
+   <th style="text-align:left;"> zone </th>
+   <th style="text-align:right;"> min_hr </th>
+   <th style="text-align:right;"> max_hr </th>
+   <th style="text-align:right;"> minutes_in_zone </th>
+   <th style="text-align:right;"> calories_out </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> 2021-07-18 </td>
+   <td style="text-align:left;"> Out of Range </td>
+   <td style="text-align:right;"> 30 </td>
+   <td style="text-align:right;"> 113 </td>
+   <td style="text-align:right;"> 1440 </td>
+   <td style="text-align:right;"> 2530.16460 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2021-07-18 </td>
+   <td style="text-align:left;"> Fat Burn </td>
+   <td style="text-align:right;"> 113 </td>
+   <td style="text-align:right;"> 141 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 0.00000 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2021-07-18 </td>
+   <td style="text-align:left;"> Cardio </td>
+   <td style="text-align:right;"> 141 </td>
+   <td style="text-align:right;"> 176 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 0.00000 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2021-07-18 </td>
+   <td style="text-align:left;"> Peak </td>
+   <td style="text-align:right;"> 176 </td>
+   <td style="text-align:right;"> 220 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 0.00000 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2021-07-19 </td>
+   <td style="text-align:left;"> Out of Range </td>
+   <td style="text-align:right;"> 30 </td>
+   <td style="text-align:right;"> 113 </td>
+   <td style="text-align:right;"> 1408 </td>
+   <td style="text-align:right;"> 2689.45124 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2021-07-19 </td>
+   <td style="text-align:left;"> Fat Burn </td>
+   <td style="text-align:right;"> 113 </td>
+   <td style="text-align:right;"> 141 </td>
+   <td style="text-align:right;"> 9 </td>
+   <td style="text-align:right;"> 86.59917 </td>
+  </tr>
+</tbody>
+</table>
+
 </div>
 </div>
 <p>and the steps data:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(steps)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 6 × 2
-  date       steps
-  &lt;date&gt;     &lt;dbl&gt;
-1 2021-07-18  5620
-2 2021-07-19  7537
-3 2021-07-20  5513
-4 2021-07-21  9014
-5 2021-07-22 10883
-6 2021-07-23  2975</code></pre>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(steps)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<table class="table" style="margin-left: auto; margin-right: auto;">
+ <thead>
+  <tr>
+   <th style="text-align:left;"> date </th>
+   <th style="text-align:right;"> steps </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> 2021-07-18 </td>
+   <td style="text-align:right;"> 5620 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2021-07-19 </td>
+   <td style="text-align:right;"> 7537 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2021-07-20 </td>
+   <td style="text-align:right;"> 5513 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2021-07-21 </td>
+   <td style="text-align:right;"> 9014 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2021-07-22 </td>
+   <td style="text-align:right;"> 10883 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2021-07-23 </td>
+   <td style="text-align:right;"> 2975 </td>
+  </tr>
+</tbody>
+</table>
+
 </div>
 </div>
 <p>Now, let’s plot them against each other.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> hr <span class="sc">%&gt;%</span></span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(zone <span class="sc">!=</span> <span class="st">"Out of Range"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(date) <span class="sc">%&gt;%</span></span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">total_minutes =</span> <span class="fu">sum</span>(minutes_in_zone), <span class="at">.groups =</span> <span class="st">"drop"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inner_join</span>(steps, <span class="at">by =</span> <span class="st">"date"</span>)</span>
-<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span></span>
-<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">steps =</span> <span class="fu">as.numeric</span>(steps)) <span class="sc">%&gt;%</span></span>
-<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">log</span>(total_minutes) <span class="sc">&gt;</span> <span class="dv">1</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(</span>
-<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(</span>
-<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>      steps,</span>
-<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>      total_minutes</span>
-<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">se =</span> F) <span class="sc">+</span></span>
-<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_log10</span>() <span class="sc">+</span></span>
-<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_log10</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> hr <span class="sc">%&gt;%</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(zone <span class="sc">!=</span> <span class="st">"Out of Range"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(date) <span class="sc">%&gt;%</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">total_minutes =</span> <span class="fu">sum</span>(minutes_in_zone), <span class="at">.groups =</span> <span class="st">"drop"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inner_join</span>(steps, <span class="at">by =</span> <span class="st">"date"</span>)</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">steps =</span> <span class="fu">as.numeric</span>(steps)) <span class="sc">%&gt;%</span></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">log</span>(total_minutes) <span class="sc">&gt;</span> <span class="dv">1</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(</span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(</span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>      steps,</span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>      total_minutes</span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">se =</span> F) <span class="sc">+</span></span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_log10</span>() <span class="sc">+</span></span>
+<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_log10</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -475,17 +685,43 @@ gtag('config', '358809638', { 'anonymize_ip': true});
 </div>
 <p>Or maybe it’d be interesting to predict your zone minutes from your steps:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span></span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">steps =</span> <span class="fu">as.numeric</span>(steps)) <span class="sc">%&gt;%</span></span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">lm</span>(total_minutes <span class="sc">~</span> steps, <span class="at">data =</span> .) <span class="sc">%&gt;%</span></span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  broom<span class="sc">::</span><span class="fu">tidy</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">where</span>(is.numeric), round, <span class="dv">5</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 2 × 5
-  term        estimate std.error statistic p.value
-  &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;
-1 (Intercept) 23.1       5.78         4.00 0.00011
-2 steps        0.00252   0.00056      4.53 0.00001</code></pre>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>predictions <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">steps =</span> <span class="fu">as.numeric</span>(steps)) <span class="sc">%&gt;%</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">lm</span>(total_minutes <span class="sc">~</span> steps, <span class="at">data =</span> .) <span class="sc">%&gt;%</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  broom<span class="sc">::</span><span class="fu">tidy</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">where</span>(is.numeric), round, <span class="dv">5</span>))</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(predictions)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<table class="table" style="margin-left: auto; margin-right: auto;">
+ <thead>
+  <tr>
+   <th style="text-align:left;"> term </th>
+   <th style="text-align:right;"> estimate </th>
+   <th style="text-align:right;"> std.error </th>
+   <th style="text-align:right;"> statistic </th>
+   <th style="text-align:right;"> p.value </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> (Intercept) </td>
+   <td style="text-align:right;"> 23.09761 </td>
+   <td style="text-align:right;"> 5.77502 </td>
+   <td style="text-align:right;"> 3.99957 </td>
+   <td style="text-align:right;"> 0.00011 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> steps </td>
+   <td style="text-align:right;"> 0.00252 </td>
+   <td style="text-align:right;"> 0.00056 </td>
+   <td style="text-align:right;"> 4.52922 </td>
+   <td style="text-align:right;"> 0.00001 </td>
+  </tr>
+</tbody>
+</table>
+
 </div>
 </div>
 </section>

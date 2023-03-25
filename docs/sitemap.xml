@@ -2,98 +2,90 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://www.matthewrkaye.com/my-three-favorite.html</loc>
-    <lastmod>2023-03-24T03:38:35.871Z</lastmod>
+    <lastmod>2023-03-25T17:37:57.075Z</lastmod>
   </url>
   <url>
     <loc>https://www.matthewrkaye.com/posts/2021-12-22-notes-on-hiring-data-analysts-scientists/index.html</loc>
-    <lastmod>2023-03-24T03:38:36.471Z</lastmod>
+    <lastmod>2023-03-25T17:37:57.613Z</lastmod>
   </url>
   <url>
     <loc>https://www.matthewrkaye.com/posts/2021-06-08-working-with-your-fitbit-data-in-r/index.html</loc>
-    <lastmod>2023-03-24T03:38:42.077Z</lastmod>
+    <lastmod>2023-03-25T17:38:49.913Z</lastmod>
   </url>
   <url>
     <loc>https://www.matthewrkaye.com/posts/2023-03-09-on-auc-roc/index.html</loc>
-    <lastmod>2023-03-24T03:38:44.188Z</lastmod>
+    <lastmod>2023-03-25T17:38:00.654Z</lastmod>
   </url>
   <url>
     <loc>https://www.matthewrkaye.com/posts/2022-04-10-running-a-b-tests/index.html</loc>
-    <lastmod>2023-03-24T03:38:44.536Z</lastmod>
-  </url>
-  <url>
-    <loc>https://www.matthewrkaye.com/posts/2021-12-26-deploying-mlflow-on-heroku-with-heroku-postgres-s3-and-nginx-for-basic-auth/index.html</loc>
-    <lastmod>2023-03-24T03:38:45.506Z</lastmod>
-  </url>
-  <url>
-    <loc>https://www.matthewrkaye.com/posts/2021-01-10-what-i-ve-been-drinking-in-quarantine/index.html</loc>
-    <lastmod>2023-03-24T03:38:46.019Z</lastmod>
-  </url>
-  <url>
-    <loc>https://www.matthewrkaye.com/posts/2021-02-07-what-s-new-in-slackr-2-1-0/index.html</loc>
-    <lastmod>2023-03-24T03:38:46.317Z</lastmod>
-  </url>
-  <url>
-    <loc>https://www.matthewrkaye.com/posts/2023-01-09-exploring-the-tail-behavior-of-espn-s-win-probability-model/index.html</loc>
-    <lastmod>2023-03-24T03:38:46.704Z</lastmod>
-  </url>
-  <url>
-    <loc>https://www.matthewrkaye.com/posts/2022-04-10-calling-a-b-tests/index.html</loc>
-    <lastmod>2023-03-24T03:38:47.091Z</lastmod>
-  </url>
-  <url>
-    <loc>https://www.matthewrkaye.com/posts/2022-03-25-a-b-testing-a-primer/index.html</loc>
-    <lastmod>2023-03-24T03:38:47.425Z</lastmod>
-  </url>
-  <url>
-    <loc>https://www.matthewrkaye.com/posts/2021-01-07-our-2021-big-data-bowl-submission/index.html</loc>
-    <lastmod>2023-03-24T03:38:47.909Z</lastmod>
-  </url>
-  <url>
-    <loc>https://www.matthewrkaye.com/posts/2022-04-17-sequential-testing/index.html</loc>
-    <lastmod>2023-03-24T03:38:48.260Z</lastmod>
-  </url>
-  <url>
-    <loc>https://www.matthewrkaye.com/posts/2021-01-13-a-gentle-introduction-to-markov-chains-and-mcmc/index.html</loc>
-    <lastmod>2023-03-24T03:39:13.094Z</lastmod>
-  </url>
-  <url>
-    <loc>https://www.matthewrkaye.com/posts/2021-02-11-highlights-from-rstudio-global/index.html</loc>
-    <lastmod>2023-03-24T03:39:13.431Z</lastmod>
-  </url>
-  <url>
-    <loc>https://www.matthewrkaye.com/open-source.html</loc>
-    <lastmod>2023-03-24T03:39:13.707Z</lastmod>
-  </url>
-  <url>
-    <loc>https://www.matthewrkaye.com/code.html</loc>
-    <lastmod>2023-03-24T03:39:14.264Z</lastmod>
-  </url>
-  <url>
-    <loc>https://www.matthewrkaye.com/travel.html</loc>
-    <lastmod>2023-03-24T03:39:15.267Z</lastmod>
-  </url>
-  <url>
-    <loc>https://www.matthewrkaye.com/index.html</loc>
-    <lastmod>2023-03-25T17:03:00.492Z</lastmod>
-  </url>
-  <url>
-    <loc>https://www.matthewrkaye.com/posts.html</loc>
-    <lastmod>2023-03-25T17:13:31.141Z</lastmod>
-  </url>
-  <url>
-    <loc>https://www.matthewrkaye.com/stats-in-the-wild.html</loc>
-    <lastmod>2023-03-24T03:39:18.270Z</lastmod>
-  </url>
-  <url>
-    <loc>https://www.matthewrkaye.com/r-packages.html</loc>
-    <lastmod>2023-03-24T03:39:18.574Z</lastmod>
-  </url>
-  <url>
-    <loc>https://www.matthewrkaye.com/posts/2023-03-20-on-class-imbalances-in-ml/on-class-imbalances.html</loc>
-    <lastmod>2023-03-25T16:55:20.537Z</lastmod>
+    <lastmod>2023-03-25T17:38:01.024Z</lastmod>
   </url>
   <url>
     <loc>https://www.matthewrkaye.com/posts/2023-03-20-on-class-imbalances-in-ml/calibration.html</loc>
-    <lastmod>2023-03-25T17:13:30.539Z</lastmod>
+    <lastmod>2023-03-25T17:38:35.584Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.matthewrkaye.com/posts/2021-12-26-deploying-mlflow-on-heroku-with-heroku-postgres-s3-and-nginx-for-basic-auth/index.html</loc>
+    <lastmod>2023-03-25T17:38:02.165Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.matthewrkaye.com/posts/2021-01-10-what-i-ve-been-drinking-in-quarantine/index.html</loc>
+    <lastmod>2023-03-25T17:38:02.666Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.matthewrkaye.com/posts/2021-02-07-what-s-new-in-slackr-2-1-0/index.html</loc>
+    <lastmod>2023-03-25T17:38:03.044Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.matthewrkaye.com/posts/2023-01-09-exploring-the-tail-behavior-of-espn-s-win-probability-model/index.html</loc>
+    <lastmod>2023-03-25T17:38:43.740Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.matthewrkaye.com/posts/2022-04-10-calling-a-b-tests/index.html</loc>
+    <lastmod>2023-03-25T17:38:03.888Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.matthewrkaye.com/posts/2022-03-25-a-b-testing-a-primer/index.html</loc>
+    <lastmod>2023-03-25T17:38:04.346Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.matthewrkaye.com/posts/2021-01-07-our-2021-big-data-bowl-submission/index.html</loc>
+    <lastmod>2023-03-25T17:38:04.882Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.matthewrkaye.com/posts/2022-04-17-sequential-testing/index.html</loc>
+    <lastmod>2023-03-25T17:38:05.324Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.matthewrkaye.com/posts/2021-01-13-a-gentle-introduction-to-markov-chains-and-mcmc/index.html</loc>
+    <lastmod>2023-03-25T17:38:06.035Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.matthewrkaye.com/posts/2021-02-11-highlights-from-rstudio-global/index.html</loc>
+    <lastmod>2023-03-25T17:38:06.386Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.matthewrkaye.com/open-source.html</loc>
+    <lastmod>2023-03-25T17:38:06.687Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.matthewrkaye.com/code.html</loc>
+    <lastmod>2023-03-25T17:38:07.311Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.matthewrkaye.com/travel.html</loc>
+    <lastmod>2023-03-25T17:38:08.467Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.matthewrkaye.com/index.html</loc>
+    <lastmod>2023-03-25T17:38:22.945Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.matthewrkaye.com/posts.html</loc>
+    <lastmod>2023-03-25T17:38:33.621Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.matthewrkaye.com/stats-in-the-wild.html</loc>
+    <lastmod>2023-03-25T17:38:11.445Z</lastmod>
   </url>
 </urlset>

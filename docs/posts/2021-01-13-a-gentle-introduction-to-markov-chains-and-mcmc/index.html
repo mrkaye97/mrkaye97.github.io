@@ -187,6 +187,13 @@ gtag('config', '358809638', { 'anonymize_ip': true});
     </ul>
   </li>
 </ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="../../posts.xml"><i class="bi bi-rss" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+</ul>
               <div id="quarto-search" class="" title="Search"></div>
           </div> <!-- /navcollapse -->
       </div> <!-- /container-fluid -->
@@ -196,7 +203,33 @@ gtag('config', '358809638', { 'anonymize_ip': true});
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar"><div class="quarto-margin-header"><div class="margin-header-item">
+<style type="text/css">
+    #mc_embed_signup{background:#fff; clear:left; font:14px Helvetica,Arial,sans-serif;  width:100%;}
+</style>
+<div id="mc_embed_signup">
+    <form action="https://matthewrkaye.us18.list-manage.com/subscribe/post?u=ec09e4d843f1bd163969cd497&amp;id=57e1f0d88d&amp;f_id=00a914e7f0" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_self">
+        <div id="mc_embed_signup_scroll" {margin:0px;="" padding:0px;="" display:inline;}="">
+        <h2>Subscribe</h2>
+<div class="mc-field-group">
+
+    <input type="email" value="" name="EMAIL" class="required email" id="mce-EMAIL" placeholder="email address" required="">
+    <span id="mce-EMAIL-HELPERTEXT" class="helper_text"></span>
+</div>
+    <div id="mce-responses" class="clear foot">
+        <div class="response" id="mce-error-response" style="display:none"></div>
+        <div class="response" id="mce-success-response" style="display:none"></div>
+    </div>    <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+    <div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_ec09e4d843f1bd163969cd497_57e1f0d88d" tabindex="-1" value=""></div>
+        <div class="optionalParent">
+            <div class="clear foot">
+                <input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="button">
+            </div>
+        </div>
+    </div>
+</form>
+</div>
+</div></div>
         <nav id="TOC" role="doc-toc" class="toc-active">
     <h2 id="toc-title">On this page</h2>
    
@@ -278,15 +311,15 @@ p(x_{t+1} | x_{t}, x_{t-1}, x_{t-2}, .. x_{0}) = p(x_{t+1} | x_{t})
    position
       &lt;dbl&gt;
  1   0     
- 2   1.09  
- 3   0.0882
- 4   2.03  
- 5   2.68  
- 6   1.94  
- 7   1.15  
- 8   1.27  
- 9   2.56  
-10   2.95  
+ 2  -1.13  
+ 3   1.52  
+ 4  -0.0912
+ 5  -0.348 
+ 6  -1.66  
+ 7  -0.884 
+ 8  -0.491 
+ 9   0.179 
+10  -0.812 
 # … with 90 more rows</code></pre>
 </div>
 </div>
@@ -398,9 +431,9 @@ p(x_{t+1} | x_{t}, x_{t-1}, x_{t-2}, .. x_{0}) = p(x_{t+1} | x_{t})
 <pre><code># A tibble: 4 × 3
   island days_spent day_proportion
    &lt;dbl&gt;      &lt;int&gt;          &lt;dbl&gt;
-1      1          2            0.2
+1      1          1            0.1
 2      2          1            0.1
-3      3          2            0.2
+3      3          3            0.3
 4      4          5            0.5</code></pre>
 </div>
 </div>
@@ -420,13 +453,13 @@ p(x_{t+1} | x_{t}, x_{t-1}, x_{t-2}, .. x_{0}) = p(x_{t+1} | x_{t})
 <pre><code># A tibble: 4 × 4
   island days_spent day_proportion error_margin
    &lt;dbl&gt;      &lt;int&gt;          &lt;dbl&gt;        &lt;dbl&gt;
-1      1       1011          0.101      0.0110 
-2      2       2044          0.204      0.0220 
-3      3       2959          0.296     -0.0137 
-4      4       3986          0.399     -0.00350</code></pre>
+1      1       1000          0.1        0      
+2      2       1958          0.196     -0.0210 
+3      3       3063          0.306      0.0210 
+4      4       3979          0.398     -0.00525</code></pre>
 </div>
 </div>
-<p>Much better! After 10,000 iterations, we’re spending almost the exact proportion of time on each island that we want to be, as evidenced by the tiny error margins. In addition, the standard deviation of the error margins is 0.01572, which is tiny. That’s awesome! But what about if the system is more complex? Like, what if we had 100 islands?</p>
+<p>Much better! After 10,000 iterations, we’re spending almost the exact proportion of time on each island that we want to be, as evidenced by the tiny error margins. In addition, the standard deviation of the error margins is 0.01735, which is tiny. That’s awesome! But what about if the system is more complex? Like, what if we had 100 islands?</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>more_islands <span class="ot">&lt;-</span> <span class="fu">run_rwmh</span>(<span class="at">n_iters =</span> <span class="dv">10000</span>, <span class="at">island_populations =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">100</span>) <span class="sc">%&gt;%</span></span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tibble</span>(<span class="at">island =</span> .) <span class="sc">%&gt;%</span></span>
@@ -439,23 +472,23 @@ p(x_{t+1} | x_{t}, x_{t-1}, x_{t-2}, .. x_{0}) = p(x_{t+1} | x_{t})
 <span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>sd_error_margin <span class="ot">&lt;-</span> <span class="fu">sd</span>(more_islands<span class="sc">$</span>error_margin)</span>
 <span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>more_islands</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 99 × 4
+<pre><code># A tibble: 100 × 4
    island days_spent day_proportion error_margin
     &lt;dbl&gt;      &lt;int&gt;          &lt;dbl&gt;        &lt;dbl&gt;
- 1      2          2         0.0002      -0.495 
- 2      3          3         0.0003      -0.495 
- 3      4          6         0.0006      -0.243 
- 4      5          8         0.0008      -0.192 
- 5      6         18         0.0018       0.515 
- 6      7         18         0.0018       0.298 
- 7      8         20         0.002        0.262 
- 8      9         14         0.0014      -0.215 
- 9     10         26         0.0026       0.313 
-10     11         23         0.0023       0.0557
-# … with 89 more rows</code></pre>
+ 1      1          1         0.0001      -0.495 
+ 2      2          8         0.0008       1.02  
+ 3      3          9         0.0009       0.515 
+ 4      4         19         0.0019       1.40  
+ 5      5          8         0.0008      -0.192 
+ 6      6         13         0.0013       0.0942
+ 7      7         14         0.0014       0.0100
+ 8      8         11         0.0011      -0.306 
+ 9      9         19         0.0019       0.0661
+10     10         28         0.0028       0.414 
+# … with 90 more rows</code></pre>
 </div>
 </div>
-<p>No problem! Even with the extra islands, the mean error margin is still zero, and the standard deviation of the error margins is 0.17088, which is also small, but not as small as the simpler system. It’s true that a more complex system (i.e.&nbsp;more islands) would mean that we need more iterations to converge in probability to the proportions we’re shooting for, but the algorithm will still work with enough time. Let’s try running it one more time on the complex system, but this time with a million iterations.</p>
+<p>No problem! Even with the extra islands, the mean error margin is still zero, and the standard deviation of the error margins is 0.23184, which is also small, but not as small as the simpler system. It’s true that a more complex system (i.e.&nbsp;more islands) would mean that we need more iterations to converge in probability to the proportions we’re shooting for, but the algorithm will still work with enough time. Let’s try running it one more time on the complex system, but this time with a million iterations.</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>more_iters <span class="ot">&lt;-</span> <span class="fu">run_rwmh</span>(<span class="at">n_iters =</span> <span class="dv">1000000</span>, <span class="at">island_populations =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">100</span>) <span class="sc">%&gt;%</span></span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tibble</span>(<span class="at">island =</span> .) <span class="sc">%&gt;%</span></span>
@@ -471,20 +504,20 @@ p(x_{t+1} | x_{t}, x_{t-1}, x_{t-2}, .. x_{0}) = p(x_{t+1} | x_{t})
 <pre><code># A tibble: 100 × 4
    island days_spent day_proportion error_margin
     &lt;dbl&gt;      &lt;int&gt;          &lt;dbl&gt;        &lt;dbl&gt;
- 1      1        197       0.000197     -0.00515
- 2      2        404       0.000404      0.0201 
- 3      3        623       0.000623      0.0487 
- 4      4        797       0.000797      0.00621
- 5      5       1002       0.00100       0.0120 
- 6      6       1237       0.00124       0.0411 
- 7      7       1326       0.00133      -0.0434 
- 8      8       1556       0.00156      -0.0178 
- 9      9       1820       0.00182       0.0212 
-10     10       1848       0.00185      -0.0668 
+ 1      1        199       0.000199      0.00495
+ 2      2        432       0.000432      0.0908 
+ 3      3        614       0.000614      0.0336 
+ 4      4        726       0.000726     -0.0834 
+ 5      5        985       0.000985     -0.00515
+ 6      6       1157       0.00116      -0.0262 
+ 7      7       1409       0.00141       0.0165 
+ 8      8       1601       0.00160       0.0106 
+ 9      9       1695       0.00170      -0.0489 
+10     10       1952       0.00195      -0.0142 
 # … with 90 more rows</code></pre>
 </div>
 </div>
-<p>Looks like that did the trick! The standard deviation of the error margins fell to 0.01718, just as we expected.</p>
+<p>Looks like that did the trick! The standard deviation of the error margins fell to 0.02015, just as we expected.</p>
 <p>This algorithm is called the Metropolis-Hastings Algorithm, and it’s one of many in the class of Markov Chain Monte Carlo algorithms. Some others are the Gibbs Sampler and Hamiltonian Monte Carlo, both of which are frequently used in Bayesian statistics for estimating the parameters of regression models with hundreds of thousands of parameters. In short, these algorithms allow us to solve problems that were literally impossible to solve only two decades ago or so, which is an amazing feat!</p>
 </section>
 <section id="recap" class="level1">

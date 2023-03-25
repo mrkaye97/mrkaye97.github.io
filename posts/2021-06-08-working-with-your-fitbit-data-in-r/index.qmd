@@ -5,11 +5,14 @@ date: '2021-06-08'
 categories: [R, data science]
 lastmod: '2021-06-08T21:26:23-04:00'
 toc: true
+freeze: auto
 ---
 
 ```{r, include = F, echo = F}
 knitr::opts_chunk$set(echo = T, message = F, warning = F, fig.path = "static/rmarkdown-libs", fig.align = 'center')
 ```
+
+### Note: This post was updated as of 3/25/2023 for `fitbitr v0.3.0`
 
 ## Introduction
 
@@ -37,7 +40,14 @@ First, you should either generate a new token with `generate_token()` or load a 
 ```{r, include = F}
 library(fitbitr)
 
-load_cached_token(".httr-oauth")
+generate_fitbitr_token()
+
+head <- function(data, ...) {
+  data |>
+    utils::head(...) %>%
+    knitr::kable("html") |>
+    kableExtra::kable_styling(position = "center", full_width = TRUE)
+}
 
 ```
 
@@ -50,19 +60,18 @@ library(tidyverse)
 start <- as_date("2020-01-01")
 end <- as_date("2021-10-18")
 
-# load_cached_token(".httr-oauth")
+generate_fitbitr_token()
 ```
 
 And then you can start pulling your data!
 
 ```{r, cache = T}
-sleep <- sleep_summary(
+sleep <- get_sleep_summary(
   start_date = end - months(3),
   end_date = end
 )
 
-sleep %>% 
-  head()
+head(sleep)
 ```
 
 Once you've loaded some data, you can visualize it!
@@ -89,23 +98,23 @@ sleep <- sleep %>%
 )
 
 sleep %>%
-    ggplot(aes(x = date))+
-    geom_line(aes(y = et), color = 'coral', alpha = .3, na.rm = T)+
-    geom_line(aes(y = st), color = 'dodgerblue', alpha = .3, na.rm = T)+
-    geom_line(aes(y = met), color = 'coral', na.rm=T)+
-    geom_line(aes(y = mst), color = 'dodgerblue', na.rm=T)+
-    scale_y_continuous(breaks = seq(0, 30, 2),
-                       labels = trans_format(function(x) ifelse(x > 23, x - 24, x), 
-                                             format = scales::comma_format(suffix = ":00", accuracy = 1))
-    )+
-    labs(x = "Date",
-         y = 'Time')+
-    theme_fivethirtyeight()+
-  scale_x_date(date_breaks = '1 month', date_labels = '%b', expand = c(0, 0))+
-  facet_grid(. ~ year, space = 'free', scales = 'free_x', switch = 'x') +
-  theme(panel.spacing.x = unit(0,"line"), 
-        strip.placement = "outside")
-
+    ggplot(aes(x = date)) +
+    geom_line(aes(y = et), color = 'coral', alpha = .3, na.rm = T) +
+    geom_line(aes(y = st), color = 'dodgerblue', alpha = .3, na.rm = T) +
+    geom_line(aes(y = met), color = 'coral', na.rm = T) +
+    geom_line(aes(y = mst), color = 'dodgerblue', na.rm = T) +
+    scale_y_continuous(
+      breaks = seq(0, 30, 2),
+      labels = trans_format(
+        function(x) ifelse(x > 23, x - 24, x), 
+        format = scales::comma_format(suffix = ":00", accuracy = 1)
+      )
+    ) +
+    labs(x = "Date", y = 'Time') +
+    theme_fivethirtyeight() +
+    scale_x_date(date_breaks = '1 month', date_labels = '%b', expand = c(0, 0)) +
+    facet_grid(. ~ year, space = 'free', scales = 'free_x', switch = 'x') +
+    theme(panel.spacing.x = unit(0,"line"), strip.placement = "outside")
 ```
 
 This bit of code makes a nicely formatted plot of the times you went to sleep and woke up over the past three months. You can also use `fitbitr` to expand the time window with a little help from `purrr` (the Fitbit API rate limits you, so you can't request data for infinitely long windows in a single request).
@@ -142,22 +151,23 @@ sleep <- sleep %>%
   distinct()
 
 sleep %>%
-    ggplot(aes(x = date))+
-    geom_line(aes(y = et), color = 'coral', alpha = .3, na.rm = T)+
-    geom_line(aes(y = st), color = 'dodgerblue', alpha = .3, na.rm = T)+
-    geom_line(aes(y = met), color = 'coral', na.rm=T)+
-    geom_line(aes(y = mst), color = 'dodgerblue', na.rm=T)+
-    scale_y_continuous(breaks = seq(0, 30, 2),
-                       labels = trans_format(function(x) ifelse(x > 23, x - 24, x), 
-                                             format = scales::comma_format(suffix = ":00", accuracy = 1))
-    )+
-    labs(x = "Date",
-         y = 'Time')+
-    theme_fivethirtyeight()+
-  scale_x_date(date_breaks = '1 month', date_labels = '%b', expand = c(0, 0))+
+    ggplot(aes(x = date)) +
+    geom_line(aes(y = et), color = 'coral', alpha = .3, na.rm = T) +
+    geom_line(aes(y = st), color = 'dodgerblue', alpha = .3, na.rm = T) +
+    geom_line(aes(y = met), color = 'coral', na.rm = T) +
+    geom_line(aes(y = mst), color = 'dodgerblue', na.rm = T) +
+    scale_y_continuous(
+      breaks = seq(0, 30, 2),
+      labels = trans_format(
+        function(x) ifelse(x > 23, x - 24, x), 
+        format = scales::comma_format(suffix = ":00", accuracy = 1)
+      )
+    ) +
+    labs(x = "Date", y = 'Time') +
+    theme_fivethirtyeight() +
+  scale_x_date(date_breaks = '1 month', date_labels = '%b', expand = c(0, 0)) +
   facet_grid(. ~ year, space = 'free', scales = 'free_x', switch = 'x') +
-  theme(panel.spacing.x = unit(0,"line"), 
-        strip.placement = "outside")
+  theme(panel.spacing.x = unit(0,"line"), strip.placement = "outside")
 ```
 
 ## Heart Rate and Steps
@@ -221,11 +231,13 @@ df %>%
 Or maybe it'd be interesting to predict your zone minutes from your steps:
 
 ```{r}
-df %>%
+predictions <- df %>%
   mutate(steps = as.numeric(steps)) %>%
   lm(total_minutes ~ steps, data = .) %>%
   broom::tidy() %>%
   mutate(across(where(is.numeric), round, 5))
+
+head(predictions)
 ```
 
 ## Wrapping Up

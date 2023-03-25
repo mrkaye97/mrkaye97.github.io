@@ -2,7 +2,7 @@
 title: "Posts"
 listing:
   contents: posts
-  feed: false
+  feed: true
   sort: "date desc"
   type: default
   categories: true
