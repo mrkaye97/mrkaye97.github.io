@@ -10,11 +10,423 @@
 <atom:link href="https://www.matthewrkaye.com/posts.xml" rel="self" type="application/rss+xml"/>
 <description>Matt Kaye&#39;s personal website</description>
 <generator>quarto-1.2.335</generator>
-<lastBuildDate>Mon, 20 Mar 2023 04:00:00 GMT</lastBuildDate>
+<lastBuildDate>Sat, 25 Mar 2023 04:00:00 GMT</lastBuildDate>
+<item>
+  <title>Balancing Classes in Classification Problems</title>
+  <dc:creator>Matt Kaye</dc:creator>
+  <link>https://www.matthewrkaye.com/posts/2023-03-25-balancing-classes/balancing-classes.html</link>
+  <description><![CDATA[ 
+
+
+
+<section id="introduction" class="level2">
+<h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
+<p>In <a href="https://matthewrkaye.com/posts/2023-03-20-on-class-imbalances-in-ml/calibration.html">my last post</a> I wrote about common classifications metrics and, especially, calibration.</p>
+<p>With calibration in mind, this post will show why balancing your classes – which is an all-too-common practice when working on classification problems – is generally a bad idea and leads to poorly calibrated models.</p>
+</section>
+<section id="some-example-data" class="level2">
+<h2 class="anchored" data-anchor-id="some-example-data">Some Example Data</h2>
+<div class="cell">
+
+</div>
+<p>For the purposes of this example, I’ll use the Wisconsin breast cancer data. The data is build into the <code>mlbench</code> package in R and <code>scikit-learn</code> in python. You can also get it from the <a href="https://archive.ics.uci.edu/ml/datasets/Breast+Cancer+Wisconsin+(Diagnostic)">UCI Machine Learning Repository</a>.</p>
+<p>I’ll only be using <code>cl_thickness</code>, which is the indicator for clump thickness.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><span class="fu" style="color: #4758AB;">library</span>(readr)</span>
+<span id="cb1-2"><span class="fu" style="color: #4758AB;">library</span>(dplyr)</span>
+<span id="cb1-3"><span class="fu" style="color: #4758AB;">library</span>(janitor)</span>
+<span id="cb1-4"><span class="fu" style="color: #4758AB;">library</span>(purrr)</span>
+<span id="cb1-5"><span class="fu" style="color: #4758AB;">library</span>(mlbench)</span>
+<span id="cb1-6"></span>
+<span id="cb1-7"><span class="fu" style="color: #4758AB;">data</span>(BreastCancer)</span>
+<span id="cb1-8"></span>
+<span id="cb1-9">data <span class="ot" style="color: #003B4F;">&lt;-</span> BreastCancer <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb1-10">  <span class="fu" style="color: #4758AB;">clean_names</span>() <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb1-11">  <span class="fu" style="color: #4758AB;">transmute</span>(</span>
+<span id="cb1-12">    <span class="at" style="color: #657422;">cl_thickness =</span> <span class="fu" style="color: #4758AB;">as.numeric</span>(cl_thickness), </span>
+<span id="cb1-13">    class</span>
+<span id="cb1-14">  ) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb1-15">  <span class="fu" style="color: #4758AB;">as_tibble</span>()</span>
+<span id="cb1-16"></span>
+<span id="cb1-17">data <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb1-18">  <span class="fu" style="color: #4758AB;">slice_sample</span>(<span class="at" style="color: #657422;">n =</span> <span class="dv" style="color: #AD0000;">5</span>) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb1-19">  <span class="fu" style="color: #4758AB;">pretty_print</span>()</span></code></pre></div>
+<div class="cell-output-display">
+
+<table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
+ <thead>
+  <tr>
+   <th style="text-align:right;"> cl_thickness </th>
+   <th style="text-align:left;"> class </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:right;"> 8 </td>
+   <td style="text-align:left;"> malignant </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:left;"> benign </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 3 </td>
+   <td style="text-align:left;"> benign </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 3 </td>
+   <td style="text-align:left;"> benign </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:left;"> benign </td>
+  </tr>
+</tbody>
+</table>
+
+</div>
+</div>
+<p>The data is imbalanced: There are far more (about 2x) benign tumors than malignant ones in the sample.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1">data <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb2-2">  <span class="fu" style="color: #4758AB;">count</span>(class) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb2-3">  <span class="fu" style="color: #4758AB;">mutate</span>(<span class="at" style="color: #657422;">prop =</span> n <span class="sc" style="color: #5E5E5E;">/</span> <span class="fu" style="color: #4758AB;">sum</span>(n)) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb2-4">  <span class="fu" style="color: #4758AB;">pretty_print</span>()</span></code></pre></div>
+<div class="cell-output-display">
+
+<table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
+ <thead>
+  <tr>
+   <th style="text-align:left;"> class </th>
+   <th style="text-align:right;"> n </th>
+   <th style="text-align:right;"> prop </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> benign </td>
+   <td style="text-align:right;"> 458 </td>
+   <td style="text-align:right;"> 0.6552217 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> malignant </td>
+   <td style="text-align:right;"> 241 </td>
+   <td style="text-align:right;"> 0.3447783 </td>
+  </tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</section>
+<section id="model-fitting" class="level2">
+<h2 class="anchored" data-anchor-id="model-fitting">Model Fitting</h2>
+<p>With that class imbalance in mind, let’s get to model fitting. The first thing I’ll do is fit a simple logistic regression model to predict the class (either malignant or benign) from the clump thickness.</p>
+<p>First, I’ve written a bit of <code>tidymodels</code> helper code below for reuse later.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><span class="fu" style="color: #4758AB;">library</span>(tidymodels)</span>
+<span id="cb3-2"></span>
+<span id="cb3-3">fit_model <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="cf" style="color: #003B4F;">function</span>(data, spec) {</span>
+<span id="cb3-4">  spec <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">set_mode</span>(spec, <span class="st" style="color: #20794D;">"classification"</span>)</span>
+<span id="cb3-5">  </span>
+<span id="cb3-6">  rec <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">recipe</span>(</span>
+<span id="cb3-7">    class <span class="sc" style="color: #5E5E5E;">~</span> cl_thickness,</span>
+<span id="cb3-8">    <span class="at" style="color: #657422;">data =</span> data</span>
+<span id="cb3-9">  )</span>
+<span id="cb3-10">  </span>
+<span id="cb3-11">  wf <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">workflow</span>() <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb3-12">    <span class="fu" style="color: #4758AB;">add_model</span>(spec) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb3-13">    <span class="fu" style="color: #4758AB;">add_recipe</span>(rec)</span>
+<span id="cb3-14">  </span>
+<span id="cb3-15">  <span class="fu" style="color: #4758AB;">fit</span>(wf, data)</span>
+<span id="cb3-16">}</span>
+<span id="cb3-17"></span>
+<span id="cb3-18">predict_prob <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="cf" style="color: #003B4F;">function</span>(model, data) {</span>
+<span id="cb3-19">  <span class="fu" style="color: #4758AB;">predict</span>(model, data, <span class="at" style="color: #657422;">type =</span> <span class="st" style="color: #20794D;">"prob"</span>)<span class="sc" style="color: #5E5E5E;">$</span>.pred_malignant</span>
+<span id="cb3-20">}</span></code></pre></div>
+</div>
+<p>Now, I’ll fit a simple logistic regression model by specifying <code>logistic_reg()</code> as the model specification in <code>fit_model()</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><span class="fu" style="color: #4758AB;">library</span>(probably)</span>
+<span id="cb4-2"></span>
+<span id="cb4-3">unbalanced_model <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">fit_model</span>(</span>
+<span id="cb4-4">  data,</span>
+<span id="cb4-5">  <span class="fu" style="color: #4758AB;">logistic_reg</span>()</span>
+<span id="cb4-6">)</span>
+<span id="cb4-7"></span>
+<span id="cb4-8">preds <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">tibble</span>(</span>
+<span id="cb4-9">  <span class="at" style="color: #657422;">truth =</span> data<span class="sc" style="color: #5E5E5E;">$</span>class,</span>
+<span id="cb4-10">  <span class="at" style="color: #657422;">truth_int =</span> <span class="fu" style="color: #4758AB;">as.integer</span>(data<span class="sc" style="color: #5E5E5E;">$</span>class) <span class="sc" style="color: #5E5E5E;">-</span> <span class="dv" style="color: #AD0000;">1</span>,</span>
+<span id="cb4-11">  <span class="at" style="color: #657422;">estimate =</span> <span class="fu" style="color: #4758AB;">predict_prob</span>(unbalanced_model, data)</span>
+<span id="cb4-12">)</span></code></pre></div>
+</div>
+<p>And now we can make a calibration plot of our predictions. Remember, the goal is to have the points on the plot lie roughly along the line <code>y = x</code>. Lying below the line means that our predictions are too high, and above the line means our predictions are too low.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><span class="fu" style="color: #4758AB;">cal_plot_breaks</span>(preds, <span class="at" style="color: #657422;">truth =</span> truth_int, <span class="at" style="color: #657422;">estimate =</span> estimate)</span></code></pre></div>
+<div class="cell-output-display">
+<p><img src="https://www.matthewrkaye.com/posts/2023-03-25-balancing-classes/balancing-classes_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Awesome! Even with the class imbalance, our model’s probability predictions are well-calibrated. In other words, when we predict that there’s a 25% chance that a tumor is malignant, it’s actually malignant about 25% of the time.</p>
+</section>
+<section id="balancing-the-training-data" class="level2">
+<h2 class="anchored" data-anchor-id="balancing-the-training-data">Balancing the Training Data</h2>
+<p>So then, what happens if we balance the training data as we’re so often told to do? First, let’s balance by undersampling from the majority class.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1">minority_class <span class="ot" style="color: #003B4F;">&lt;-</span> data <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb6-2">  <span class="fu" style="color: #4758AB;">count</span>(class) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb6-3">  <span class="fu" style="color: #4758AB;">filter</span>(n <span class="sc" style="color: #5E5E5E;">==</span> <span class="fu" style="color: #4758AB;">min</span>(n))</span>
+<span id="cb6-4"></span>
+<span id="cb6-5">balanced <span class="ot" style="color: #003B4F;">&lt;-</span> data <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb6-6">  <span class="fu" style="color: #4758AB;">group_split</span>(class, <span class="at" style="color: #657422;">.keep =</span> <span class="cn" style="color: #8f5902;">TRUE</span>) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb6-7">  <span class="fu" style="color: #4758AB;">map_dfr</span>(</span>
+<span id="cb6-8">    <span class="sc" style="color: #5E5E5E;">~</span> {</span>
+<span id="cb6-9">      <span class="cf" style="color: #003B4F;">if</span> (.x<span class="sc" style="color: #5E5E5E;">$</span>class[<span class="dv" style="color: #AD0000;">1</span>] <span class="sc" style="color: #5E5E5E;">==</span> minority_class<span class="sc" style="color: #5E5E5E;">$</span>class) {</span>
+<span id="cb6-10">        .x</span>
+<span id="cb6-11">      } <span class="cf" style="color: #003B4F;">else</span> {</span>
+<span id="cb6-12">        <span class="fu" style="color: #4758AB;">slice_sample</span>(</span>
+<span id="cb6-13">          .x,</span>
+<span id="cb6-14">          <span class="at" style="color: #657422;">n =</span> minority_class<span class="sc" style="color: #5E5E5E;">$</span>n,</span>
+<span id="cb6-15">          <span class="at" style="color: #657422;">replace =</span> <span class="cn" style="color: #8f5902;">FALSE</span></span>
+<span id="cb6-16">        )</span>
+<span id="cb6-17">      }</span>
+<span id="cb6-18">    }</span>
+<span id="cb6-19">  )</span>
+<span id="cb6-20"></span>
+<span id="cb6-21">balanced <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb6-22">  <span class="fu" style="color: #4758AB;">count</span>(class) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb6-23">  <span class="fu" style="color: #4758AB;">pretty_print</span>()</span></code></pre></div>
+<div class="cell-output-display">
+
+<table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
+ <thead>
+  <tr>
+   <th style="text-align:left;"> class </th>
+   <th style="text-align:right;"> n </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> benign </td>
+   <td style="text-align:right;"> 241 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> malignant </td>
+   <td style="text-align:right;"> 241 </td>
+  </tr>
+</tbody>
+</table>
+
+</div>
+</div>
+<p>Now we have the same number of observations for each class. Let’s go ahead and fit another logistic regression model, but this time on the balanced data.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1">balanced_model <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">fit_model</span>(balanced, <span class="fu" style="color: #4758AB;">logistic_reg</span>())</span>
+<span id="cb7-2"></span>
+<span id="cb7-3">preds<span class="sc" style="color: #5E5E5E;">$</span>balanced_preds <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">predict_prob</span>(</span>
+<span id="cb7-4">  balanced_model,</span>
+<span id="cb7-5">  data</span>
+<span id="cb7-6">)</span>
+<span id="cb7-7"></span>
+<span id="cb7-8"><span class="fu" style="color: #4758AB;">cal_plot_breaks</span>(preds, <span class="at" style="color: #657422;">truth =</span> truth_int, <span class="at" style="color: #657422;">estimate =</span> balanced_preds)</span></code></pre></div>
+<div class="cell-output-display">
+<p><img src="https://www.matthewrkaye.com/posts/2023-03-25-balancing-classes/balancing-classes_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>All of a sudden, our model is very poorly calibrated. We’re consistently overpredicting the probability of a tumor being malignant. Why is that? Think back to what we just did: We removed a bunch of examples of benign tumors from our training data.</p>
+<p>Let’s think about that from first principles for a minute. If you had no information at all, a reasonable guess for whether or not a tumor is malignant would be the overall proportion of tumors that are malignant. In the unbalanced data, that number was about 34%. But after balancing, it’s now 50%. That means that we’ve just biased our “no-information” prediction upwards by about 16 percentage points (or 50%). And so it shouldn’t be surprising that in our calibration plot above, we see that we’re consistently over-predicting. Our probabilities are too high because the baseline rate at which the true class appears in our trainning data has just increased significantly.</p>
+<blockquote class="blockquote">
+<p>An important note which I’ll circle back to later is that this intuition about a baseline guess is directly rated to the intercept term of the logistic regression model you fit.</p>
+</blockquote>
+</section>
+<section id="smote" class="level2">
+<h2 class="anchored" data-anchor-id="smote">SMOTE</h2>
+<p>“But no!” you might be thinking. “Why would you just undersample directly? You’re supposed to use an algorithm like SMOTE to overcome your class imbalance problem.”</p>
+<p>Great! Let’s see if using SMOTE fixes our calibration issues. I’ll first use SMOTE to intelligently oversample the minority class.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><span class="fu" style="color: #4758AB;">library</span>(themis)</span>
+<span id="cb8-2"></span>
+<span id="cb8-3">smote <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">recipe</span>(class <span class="sc" style="color: #5E5E5E;">~</span> cl_thickness, <span class="at" style="color: #657422;">data =</span> data) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb8-4">  <span class="fu" style="color: #4758AB;">step_smote</span>(class) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb8-5">  <span class="fu" style="color: #4758AB;">prep</span>() <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb8-6">  <span class="fu" style="color: #4758AB;">bake</span>(<span class="at" style="color: #657422;">new_data =</span> <span class="cn" style="color: #8f5902;">NULL</span>)</span>
+<span id="cb8-7"></span>
+<span id="cb8-8">smote <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb8-9">  <span class="fu" style="color: #4758AB;">count</span>(class) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb8-10">  <span class="fu" style="color: #4758AB;">pretty_print</span>()</span></code></pre></div>
+<div class="cell-output-display">
+
+<table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
+ <thead>
+  <tr>
+   <th style="text-align:left;"> class </th>
+   <th style="text-align:right;"> n </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> benign </td>
+   <td style="text-align:right;"> 458 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> malignant </td>
+   <td style="text-align:right;"> 458 </td>
+  </tr>
+</tbody>
+</table>
+
+</div>
+</div>
+<p>Now that we have balanced classes thanks to SMOTE, let’s fit another logistic regresion model and see if it’s any better-calibrated.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1">smote_model <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">fit_model</span>(smote, <span class="fu" style="color: #4758AB;">logistic_reg</span>())</span>
+<span id="cb9-2"></span>
+<span id="cb9-3">preds<span class="sc" style="color: #5E5E5E;">$</span>smote_preds <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">predict_prob</span>(</span>
+<span id="cb9-4">  smote_model,</span>
+<span id="cb9-5">  data</span>
+<span id="cb9-6">)</span>
+<span id="cb9-7"></span>
+<span id="cb9-8"><span class="fu" style="color: #4758AB;">cal_plot_breaks</span>(preds, <span class="at" style="color: #657422;">truth =</span> truth_int, <span class="at" style="color: #657422;">estimate =</span> smote_preds)</span></code></pre></div>
+<div class="cell-output-display">
+<p><img src="https://www.matthewrkaye.com/posts/2023-03-25-balancing-classes/balancing-classes_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Interesting, same problem. With SMOTE, we still make very similar errors to the ones we made in the case where we naively undersampled from our majority class. But let’s think back to first principles again, because the exact same rationale applies. When we undersampled, we ended up artificially increasing the baseline rate of malignant tumors in our training data, which resulted in predictions that were too high. With SMOTE, we’re doing the exact same thing: We’ve stil rebalanced our data to 50/50, we’ve just done it a fancier way. So of course we’ll have the same problem with overprediction.</p>
+</section>
+<section id="a-random-forest" class="level2">
+<h2 class="anchored" data-anchor-id="a-random-forest">A Random Forest</h2>
+<p>“But no!” you might be thinking. “You need to use a more complicated model like a random forest, because logistic regression won’t pick up on complexities in your data well enough to be well-calibrated.”</p>
+<p>Great! Let’s try a random forest:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1">rf <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">fit_model</span>(smote, <span class="fu" style="color: #4758AB;">rand_forest</span>())</span>
+<span id="cb10-2"></span>
+<span id="cb10-3">preds<span class="sc" style="color: #5E5E5E;">$</span>rf_preds <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">predict_prob</span>(</span>
+<span id="cb10-4">  rf,</span>
+<span id="cb10-5">  data</span>
+<span id="cb10-6">)</span>
+<span id="cb10-7"></span>
+<span id="cb10-8"><span class="fu" style="color: #4758AB;">cal_plot_breaks</span>(preds, <span class="at" style="color: #657422;">truth =</span> truth_int, <span class="at" style="color: #657422;">estimate =</span> smote_preds)</span></code></pre></div>
+<div class="cell-output-display">
+<p><img src="https://www.matthewrkaye.com/posts/2023-03-25-balancing-classes/balancing-classes_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Same issue again, and the same logic holds. In fact, it’s even more straightforward with tree-based models. In a decision tree, you would determine a predicted probability by seeing what proportion of the labels in the leaf node that you end up in based on the features belong to the positive class. But then there’s the same logic as before: We’ve just artifically increased the number of instances of the positive class dramatically, so of course the proportion of labels belonging to the positive class in our leaf nodes will increase.</p>
+</section>
+<section id="coefficients" class="level2">
+<h2 class="anchored" data-anchor-id="coefficients">Coefficients</h2>
+<p>Looking at the coefficients of our three models can help understand what’s going on here.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><span class="fu" style="color: #4758AB;">list</span>(</span>
+<span id="cb11-2">  <span class="st" style="color: #20794D;">"Original"</span> <span class="ot" style="color: #003B4F;">=</span> unbalanced_model, </span>
+<span id="cb11-3">  <span class="st" style="color: #20794D;">"Undersampled"</span> <span class="ot" style="color: #003B4F;">=</span> balanced_model, </span>
+<span id="cb11-4">  <span class="st" style="color: #20794D;">"Smote"</span> <span class="ot" style="color: #003B4F;">=</span> smote_model</span>
+<span id="cb11-5">) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb11-6">  <span class="fu" style="color: #4758AB;">map</span>(tidy) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb11-7">  <span class="fu" style="color: #4758AB;">imap</span>(<span class="sc" style="color: #5E5E5E;">~</span> <span class="fu" style="color: #4758AB;">select</span>(.x, <span class="st" style="color: #20794D;">"Term"</span> <span class="ot" style="color: #003B4F;">=</span> term, <span class="sc" style="color: #5E5E5E;">!!</span><span class="at" style="color: #657422;">.y :=</span> <span class="st" style="color: #20794D;">"estimate"</span>)) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb11-8">  <span class="fu" style="color: #4758AB;">reduce</span>(inner_join, <span class="at" style="color: #657422;">by =</span> <span class="st" style="color: #20794D;">"Term"</span>) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb11-9">  <span class="fu" style="color: #4758AB;">pretty_print</span>()</span></code></pre></div>
+<div class="cell-output-display">
+
+<table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
+ <thead>
+  <tr>
+   <th style="text-align:left;"> Term </th>
+   <th style="text-align:right;"> Original </th>
+   <th style="text-align:right;"> Undersampled </th>
+   <th style="text-align:right;"> Smote </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> (Intercept) </td>
+   <td style="text-align:right;"> -5.1601677 </td>
+   <td style="text-align:right;"> -4.196291 </td>
+   <td style="text-align:right;"> -4.3612287 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> cl_thickness </td>
+   <td style="text-align:right;"> 0.9354593 </td>
+   <td style="text-align:right;"> 0.862551 </td>
+   <td style="text-align:right;"> 0.9021243 </td>
+  </tr>
+</tbody>
+</table>
+
+</div>
+</div>
+<p>In all three models, the coefficient associated with the clump thickness is almost exactly the same. This should make sense intuitively: Our sampling was at random, so the relationship between the clump thickness and whether or not the tumor was malignant shouldn’t change at all.</p>
+<p>The thing that does change, though, is the intercept term. In both the model where we undersampled from the majority class and in the SMOTE model, the intercept term is significantly higher than it is in the original model on the unbalanced data. This should feel similar intuitively to the idea of the baseline guess from before. As its core, the intercept term in your logistic regression model is the guess you’d make with “no” information (in this particular case, no information means a clump thickness of 0).</p>
+<p>We can illustrate this more clearly with three intercept-only models:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1">unbalanced_intercept_only <span class="ot" style="color: #003B4F;">&lt;-</span>  <span class="fu" style="color: #4758AB;">glm</span>(class <span class="sc" style="color: #5E5E5E;">~</span> <span class="dv" style="color: #AD0000;">1</span>, <span class="at" style="color: #657422;">data =</span> data, <span class="at" style="color: #657422;">family =</span> binomial)</span>
+<span id="cb12-2">undersampled_intecept_only <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">glm</span>(class <span class="sc" style="color: #5E5E5E;">~</span> <span class="dv" style="color: #AD0000;">1</span>, <span class="at" style="color: #657422;">data =</span> balanced, <span class="at" style="color: #657422;">family =</span> binomial)</span>
+<span id="cb12-3">smote_intercept_only <span class="ot" style="color: #003B4F;">&lt;-</span>       <span class="fu" style="color: #4758AB;">glm</span>(class <span class="sc" style="color: #5E5E5E;">~</span> <span class="dv" style="color: #AD0000;">1</span>, <span class="at" style="color: #657422;">data =</span> smote, <span class="at" style="color: #657422;">family =</span> binomial)</span></code></pre></div>
+</div>
+<p>Now, let’s compare the intercept coefficients of these two models on a probability (read: not a log-odds) scale.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1">convert_log_odds_to_probability <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="cf" style="color: #003B4F;">function</span>(x) {</span>
+<span id="cb13-2">  odds <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">exp</span>(x)</span>
+<span id="cb13-3">  odds <span class="sc" style="color: #5E5E5E;">/</span> (<span class="dv" style="color: #AD0000;">1</span> <span class="sc" style="color: #5E5E5E;">+</span> odds)</span>
+<span id="cb13-4">}</span>
+<span id="cb13-5"></span>
+<span id="cb13-6">unbalanced_intercept <span class="ot" style="color: #003B4F;">&lt;-</span>   <span class="fu" style="color: #4758AB;">coef</span>(unbalanced_intercept_only)</span>
+<span id="cb13-7">undersampled_intercept <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">coef</span>(undersampled_intecept_only)</span>
+<span id="cb13-8">smote_intercept <span class="ot" style="color: #003B4F;">&lt;-</span>        <span class="fu" style="color: #4758AB;">coef</span>(smote_intercept_only)</span>
+<span id="cb13-9"></span>
+<span id="cb13-10">intercepts <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">tibble</span>(</span>
+<span id="cb13-11">  <span class="at" style="color: #657422;">original =</span>     <span class="fu" style="color: #4758AB;">convert_log_odds_to_probability</span>(unbalanced_intercept),</span>
+<span id="cb13-12">  <span class="at" style="color: #657422;">undersampled =</span> <span class="fu" style="color: #4758AB;">convert_log_odds_to_probability</span>(undersampled_intercept),</span>
+<span id="cb13-13">  <span class="at" style="color: #657422;">smote =</span>        <span class="fu" style="color: #4758AB;">convert_log_odds_to_probability</span>(smote_intercept)</span>
+<span id="cb13-14">)</span>
+<span id="cb13-15"></span>
+<span id="cb13-16"><span class="fu" style="color: #4758AB;">pretty_print</span>(intercepts)</span></code></pre></div>
+<div class="cell-output-display">
+
+<table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
+ <thead>
+  <tr>
+   <th style="text-align:right;"> original </th>
+   <th style="text-align:right;"> undersampled </th>
+   <th style="text-align:right;"> smote </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:right;"> 0.3447783 </td>
+   <td style="text-align:right;"> 0.5 </td>
+   <td style="text-align:right;"> 0.5 </td>
+  </tr>
+</tbody>
+</table>
+
+</div>
+</div>
+<p>And it’s just as we expected: The intercept coefficient in the SMOTE model and the undersampling model are exactly 1/2, which corresponds to the fact that we balanced the classes to be exactly 50/50. And the intercept in the original model with the unbalanced classes is exactly the percentage of the data made up by the true class (malignant).</p>
+</section>
+<section id="when-to-rebalance" class="level2">
+<h2 class="anchored" data-anchor-id="when-to-rebalance">When To Rebalance</h2>
+<p>There are some times where re-balancing the classes in your training data might make sense. One application that comes to mind is if you have strong prior information that your training data is actually biased, and is over-representing one of the two classes.</p>
+<p>For instance, let’s imagine we have data from 1000 breast cancer patients and we know a priori that about 20% of tumors are malignant, but in the training data, maybe 40% of the tumors we have are malignant. Depending on the long-term goal of the project, it might make sense to undersample from the malignant cases to get the overall rate of tumors being malignant down to around the 20% prior.</p>
+<p>The rationale behind doing this would be that if you wanted your model to generalize well to future cases (outside of your training set) and you knew that in the broader population, about 20% of cases are malignant, your biased training data could very well result in biased predictions out-of-sample even if your predictions look good in-sample.</p>
+</section>
+<section id="conclusion" class="level2">
+<h2 class="anchored" data-anchor-id="conclusion">Conclusion</h2>
+<p>In the <a href="https://matthewrkaye.com/posts/2023-03-20-on-class-imbalances-in-ml/calibration.html">previous post</a>, I wrote about calibration. In short, I think calibration is the single most important metric in evaluating the performance of classification models.</p>
+<p>And so with that in mind, the main takeaway of this post is that you should be <em>very</em> careful about trying to “fix” the “problem” of class imbalances when you’re working on classification problems. If I could summarize the principle that I would follow in just a sentence, it would be that class imbalances often reflect important information about the prevalence of your classes in the real world, and it’s often risky to dismiss that information in the name of having data that’s split equally. In other words, class imbalances are usually not a problem at all. They’re a feature, not a bug.</p>
+
+
+</section>
+
+ ]]></description>
+  <category>R</category>
+  <category>data science</category>
+  <guid>https://www.matthewrkaye.com/posts/2023-03-25-balancing-classes/balancing-classes.html</guid>
+  <pubDate>Sat, 25 Mar 2023 04:00:00 GMT</pubDate>
+</item>
 <item>
   <title>Calibration and Evaluating Classifiers</title>
   <dc:creator>Matt Kaye</dc:creator>
-  <link>https://www.matthewrkaye.com/posts/2023-03-20-on-class-imbalances-in-ml/calibration.html</link>
+  <link>https://www.matthewrkaye.com/posts/2023-03-20-metrics-calibration/calibration.html</link>
   <description><![CDATA[ 
 
 
@@ -44,7 +456,7 @@
 <section id="calibration" class="level2">
 <h2 class="anchored" data-anchor-id="calibration">Calibration</h2>
 <p>The most important metric we track is calibration, which we’ll often evaluate by looking at a calibration plot. Below is an example of such a plot from <a href="https://projects.fivethirtyeight.com/checking-our-work/us-senate-elections/">FiveThirtyEight</a></p>
-<p><img src="https://www.matthewrkaye.com/posts/2023-03-20-on-class-imbalances-in-ml/fivethirtyeight-calibration.png" class="img-fluid"></p>
+<p><img src="https://www.matthewrkaye.com/posts/2023-03-20-metrics-calibration/fivethirtyeight-calibration.png" class="img-fluid"></p>
 <p>The idea behind calibration is to answer the basic question “When my model said that someone had a 31% chance of winning an election, did they actually win about 31% of the time?” As you get more data, you can group your predictions into buckets to answer this question. For instance, if we’re predicting college chances we might take all the times that we said someone had between a 30 and 35% chance of getting accepted, and we’d calculate the actual proportion of the time that they were accepted. If it’s about 32.5% (close to the mean prediction in our bucket), we’d say that our model is making well-calibrated predictions in that bucket. If our model makes well-calibrated predictions of admissions chances across all buckets, it’s fair to say that it’s well-calibrated in general.</p>
 <p>Calibration is important because it directly affects how we interpret our model’s predictions. If we’re making probability predictions and they’re <em>not</em> well-calibrated, then when we say something has a 25% chance of happening, or a 50% chance of happening, or a 90% chance of happening, those numbers aren’t actually meaningful. It might be the case that the 50% probablity event happens more than the 25% one and less that the 90% one, but that isn’t even a guarantee. It also is probably not the case with a badly-calibrated model that the 50% predicted probability event happens twice as often as the 25% one.</p>
 <p>For instance, let’s imagine we’re working on a classic machine learning example (and real-world) problem: Email spam detection. Ultimately, we need to predict a class: Given an email, we need our model to tell us if it’s spam or not. But for a large proportion of classifiers, this requires setting a probability threshold. For instance, if our model says there’s a greater than 50% chance that some email is spam, we mark it as spam. If false positives (a real email being marked as spam) are more problematic than false negatives (a spam email being marked as not spam), then we might increase our probability threshold to 80%, for example, which would make it “harder” for an email to be marked as spam. But with the higher threshold, the emails that we do mark as spam we’re more confident about. Often times, we’ll use domain knowledge to determine this threshold. I’ve had many conversations where we set arbitrary thresholds based on our experience or our gut instincts about how the system we’re working in should work. Often, those conversations end with something like “80% feels about right” and we go with that.</p>
@@ -62,9 +474,9 @@
 
  ]]></description>
   <category>data science</category>
-  <guid>https://www.matthewrkaye.com/posts/2023-03-20-on-class-imbalances-in-ml/calibration.html</guid>
+  <guid>https://www.matthewrkaye.com/posts/2023-03-20-metrics-calibration/calibration.html</guid>
   <pubDate>Mon, 20 Mar 2023 04:00:00 GMT</pubDate>
-  <media:content url="https://www.matthewrkaye.com/posts/2023-03-20-on-class-imbalances-in-ml/fivethirtyeight-calibration.png" medium="image" type="image/png" height="89" width="144"/>
+  <media:content url="https://www.matthewrkaye.com/posts/2023-03-20-metrics-calibration/fivethirtyeight-calibration.png" medium="image" type="image/png" height="89" width="144"/>
 </item>
 <item>
   <title>On AUC-ROC</title>
