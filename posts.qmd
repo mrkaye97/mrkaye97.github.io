@@ -17,4 +17,6 @@ aliases:
   - post.html
   - blog
   - post
+execute:
+  freeze: auto
 ---
