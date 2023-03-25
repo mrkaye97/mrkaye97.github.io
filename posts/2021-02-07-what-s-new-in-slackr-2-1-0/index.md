@@ -3,7 +3,6 @@ title: What's New in slackr 2.1.0
 author: Matt Kaye
 date: '2021-02-07'
 categories: [R]
-lastmod: '2021-02-07T13:07:49-07:00'
 toc: true
 ---
 

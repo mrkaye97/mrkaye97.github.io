@@ -181,24 +181,19 @@ font-style: italic;">## Doing a little data wrangling</span></span>
  </thead>
 <tbody>
   <tr>
-   <td style="text-align:left;"> 0 </td>
-   <td style="text-align:right;"> 19.2 </td>
-   <td style="text-align:right;"> 8 </td>
-  </tr>
-  <tr>
    <td style="text-align:left;"> 1 </td>
-   <td style="text-align:right;"> 30.4 </td>
+   <td style="text-align:right;"> 21.4 </td>
    <td style="text-align:right;"> 4 </td>
   </tr>
   <tr>
-   <td style="text-align:left;"> 1 </td>
-   <td style="text-align:right;"> 19.2 </td>
-   <td style="text-align:right;"> 6 </td>
+   <td style="text-align:left;"> 0 </td>
+   <td style="text-align:right;"> 15.5 </td>
+   <td style="text-align:right;"> 8 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> 0 </td>
-   <td style="text-align:right;"> 19.7 </td>
-   <td style="text-align:right;"> 6 </td>
+   <td style="text-align:right;"> 15.2 </td>
+   <td style="text-align:right;"> 8 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> 0 </td>
@@ -206,9 +201,14 @@ font-style: italic;">## Doing a little data wrangling</span></span>
    <td style="text-align:right;"> 8 </td>
   </tr>
   <tr>
+   <td style="text-align:left;"> 0 </td>
+   <td style="text-align:right;"> 16.4 </td>
+   <td style="text-align:right;"> 8 </td>
+  </tr>
+  <tr>
    <td style="text-align:left;"> 1 </td>
-   <td style="text-align:right;"> 18.1 </td>
-   <td style="text-align:right;"> 6 </td>
+   <td style="text-align:right;"> 24.4 </td>
+   <td style="text-align:right;"> 4 </td>
   </tr>
 </tbody>
 </table>
@@ -311,6 +311,7 @@ font-style: italic;">## For each model, compute AUC with both methods: Yardstick
 
  ]]></description>
   <category>data science</category>
+  <category>R</category>
   <guid>https://www.matthewrkaye.com/posts/2023-03-09-on-auc-roc/index.html</guid>
   <pubDate>Thu, 09 Mar 2023 05:00:00 GMT</pubDate>
 </item>

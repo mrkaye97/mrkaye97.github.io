@@ -2,7 +2,7 @@
 title: On AUC-ROC
 author: Matt Kaye
 date: '2023-03-09'
-categories: [data science]
+categories: [data science, R]
 toc: true
 ---
 
