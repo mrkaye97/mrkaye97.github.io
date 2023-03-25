@@ -74,11 +74,11 @@
   </url>
   <url>
     <loc>https://www.matthewrkaye.com/index.html</loc>
-    <lastmod>2023-03-24T03:39:15.549Z</lastmod>
+    <lastmod>2023-03-25T17:03:00.492Z</lastmod>
   </url>
   <url>
     <loc>https://www.matthewrkaye.com/posts.html</loc>
-    <lastmod>2023-03-24T03:39:16.051Z</lastmod>
+    <lastmod>2023-03-25T17:13:31.141Z</lastmod>
   </url>
   <url>
     <loc>https://www.matthewrkaye.com/stats-in-the-wild.html</loc>
@@ -87,5 +87,13 @@
   <url>
     <loc>https://www.matthewrkaye.com/r-packages.html</loc>
     <lastmod>2023-03-24T03:39:18.574Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.matthewrkaye.com/posts/2023-03-20-on-class-imbalances-in-ml/on-class-imbalances.html</loc>
+    <lastmod>2023-03-25T16:55:20.537Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.matthewrkaye.com/posts/2023-03-20-on-class-imbalances-in-ml/calibration.html</loc>
+    <lastmod>2023-03-25T17:13:30.539Z</lastmod>
   </url>
 </urlset>
