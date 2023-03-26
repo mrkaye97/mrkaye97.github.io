@@ -1,0 +1,1243 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss  xmlns:atom="http://www.w3.org/2005/Atom" 
+      xmlns:media="http://search.yahoo.com/mrss/" 
+      xmlns:content="http://purl.org/rss/1.0/modules/content/" 
+      xmlns:dc="http://purl.org/dc/elements/1.1/" 
+      version="2.0">
+<channel>
+<title>Matt Kaye</title>
+<link>https://www.matthewrkaye.com/posts.html#category=R</link>
+<atom:link href="https://www.matthewrkaye.com/posts-r.xml" rel="self" type="application/rss+xml"/>
+<description>Matt Kaye&#39;s personal website</description>
+<generator>quarto-1.2.335</generator>
+<lastBuildDate>Sat, 25 Mar 2023 04:00:00 GMT</lastBuildDate>
+<item>
+  <title>Balancing Classes in Classification Problems</title>
+  <dc:creator>Matt Kaye</dc:creator>
+  <link>https://www.matthewrkaye.com/posts/2023-03-25-balancing-classes/balancing-classes.html</link>
+  <description><![CDATA[ 
+
+
+
+<section id="introduction" class="level2">
+<h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
+<p>In <a href="https://matthewrkaye.com/posts/2023-03-20-metrics-calibration/calibration.html">my last post</a> I wrote about common classifications metrics and, especially, calibration.</p>
+<p>With calibration in mind, this post will show why balancing your classes – which is an all-too-common practice when working on classification problems – is generally a bad idea and leads to poorly calibrated models.</p>
+</section>
+<section id="some-example-data" class="level2">
+<h2 class="anchored" data-anchor-id="some-example-data">Some Example Data</h2>
+<div class="cell">
+
+</div>
+<p>For the purposes of this example, I’ll use the Wisconsin breast cancer data. The data is build into the <code>mlbench</code> package in R and <code>scikit-learn</code> in python. You can also get it from the <a href="https://archive.ics.uci.edu/ml/datasets/Breast+Cancer+Wisconsin+(Diagnostic)">UCI Machine Learning Repository</a>.</p>
+<p>I’ll only be using <code>cl_thickness</code>, which is the indicator for clump thickness.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><span class="fu" style="color: #4758AB;">library</span>(readr)</span>
+<span id="cb1-2"><span class="fu" style="color: #4758AB;">library</span>(dplyr)</span>
+<span id="cb1-3"><span class="fu" style="color: #4758AB;">library</span>(janitor)</span>
+<span id="cb1-4"><span class="fu" style="color: #4758AB;">library</span>(purrr)</span>
+<span id="cb1-5"><span class="fu" style="color: #4758AB;">library</span>(mlbench)</span>
+<span id="cb1-6"></span>
+<span id="cb1-7"><span class="fu" style="color: #4758AB;">data</span>(BreastCancer)</span>
+<span id="cb1-8"></span>
+<span id="cb1-9">data <span class="ot" style="color: #003B4F;">&lt;-</span> BreastCancer <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb1-10">  <span class="fu" style="color: #4758AB;">clean_names</span>() <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb1-11">  <span class="fu" style="color: #4758AB;">transmute</span>(</span>
+<span id="cb1-12">    <span class="at" style="color: #657422;">cl_thickness =</span> <span class="fu" style="color: #4758AB;">as.numeric</span>(cl_thickness), </span>
+<span id="cb1-13">    class</span>
+<span id="cb1-14">  ) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb1-15">  <span class="fu" style="color: #4758AB;">as_tibble</span>()</span>
+<span id="cb1-16"></span>
+<span id="cb1-17">data <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb1-18">  <span class="fu" style="color: #4758AB;">slice_sample</span>(<span class="at" style="color: #657422;">n =</span> <span class="dv" style="color: #AD0000;">5</span>) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb1-19">  <span class="fu" style="color: #4758AB;">pretty_print</span>()</span></code></pre></div>
+<div class="cell-output-display">
+
+<table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
+ <thead>
+  <tr>
+   <th style="text-align:right;"> cl_thickness </th>
+   <th style="text-align:left;"> class </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:left;"> benign </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 3 </td>
+   <td style="text-align:left;"> benign </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 4 </td>
+   <td style="text-align:left;"> benign </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 3 </td>
+   <td style="text-align:left;"> benign </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:left;"> benign </td>
+  </tr>
+</tbody>
+</table>
+
+</div>
+</div>
+<p>The data is imbalanced: There are far more (about 2x) benign tumors than malignant ones in the sample.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1">data <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb2-2">  <span class="fu" style="color: #4758AB;">count</span>(class) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb2-3">  <span class="fu" style="color: #4758AB;">mutate</span>(<span class="at" style="color: #657422;">prop =</span> n <span class="sc" style="color: #5E5E5E;">/</span> <span class="fu" style="color: #4758AB;">sum</span>(n)) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb2-4">  <span class="fu" style="color: #4758AB;">pretty_print</span>()</span></code></pre></div>
+<div class="cell-output-display">
+
+<table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
+ <thead>
+  <tr>
+   <th style="text-align:left;"> class </th>
+   <th style="text-align:right;"> n </th>
+   <th style="text-align:right;"> prop </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> benign </td>
+   <td style="text-align:right;"> 458 </td>
+   <td style="text-align:right;"> 0.6552217 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> malignant </td>
+   <td style="text-align:right;"> 241 </td>
+   <td style="text-align:right;"> 0.3447783 </td>
+  </tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</section>
+<section id="model-fitting" class="level2">
+<h2 class="anchored" data-anchor-id="model-fitting">Model Fitting</h2>
+<p>With that class imbalance in mind, let’s get to model fitting. The first thing I’ll do is fit a simple logistic regression model to predict the class (either malignant or benign) from the clump thickness.</p>
+<p>First, I’ve written a bit of <code>tidymodels</code> helper code below for reuse later.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><span class="fu" style="color: #4758AB;">library</span>(tidymodels)</span>
+<span id="cb3-2"></span>
+<span id="cb3-3">fit_model <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="cf" style="color: #003B4F;">function</span>(data, spec) {</span>
+<span id="cb3-4">  spec <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">set_mode</span>(spec, <span class="st" style="color: #20794D;">"classification"</span>)</span>
+<span id="cb3-5">  </span>
+<span id="cb3-6">  rec <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">recipe</span>(</span>
+<span id="cb3-7">    class <span class="sc" style="color: #5E5E5E;">~</span> cl_thickness,</span>
+<span id="cb3-8">    <span class="at" style="color: #657422;">data =</span> data</span>
+<span id="cb3-9">  )</span>
+<span id="cb3-10">  </span>
+<span id="cb3-11">  wf <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">workflow</span>() <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb3-12">    <span class="fu" style="color: #4758AB;">add_model</span>(spec) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb3-13">    <span class="fu" style="color: #4758AB;">add_recipe</span>(rec)</span>
+<span id="cb3-14">  </span>
+<span id="cb3-15">  <span class="fu" style="color: #4758AB;">fit</span>(wf, data)</span>
+<span id="cb3-16">}</span>
+<span id="cb3-17"></span>
+<span id="cb3-18">predict_prob <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="cf" style="color: #003B4F;">function</span>(model, data) {</span>
+<span id="cb3-19">  <span class="fu" style="color: #4758AB;">predict</span>(model, data, <span class="at" style="color: #657422;">type =</span> <span class="st" style="color: #20794D;">"prob"</span>)<span class="sc" style="color: #5E5E5E;">$</span>.pred_malignant</span>
+<span id="cb3-20">}</span></code></pre></div>
+</div>
+<p>Now, I’ll fit a simple logistic regression model by specifying <code>logistic_reg()</code> as the model specification in <code>fit_model()</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><span class="fu" style="color: #4758AB;">library</span>(probably)</span>
+<span id="cb4-2"></span>
+<span id="cb4-3">unbalanced_model <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">fit_model</span>(</span>
+<span id="cb4-4">  data,</span>
+<span id="cb4-5">  <span class="fu" style="color: #4758AB;">logistic_reg</span>()</span>
+<span id="cb4-6">)</span>
+<span id="cb4-7"></span>
+<span id="cb4-8">preds <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">tibble</span>(</span>
+<span id="cb4-9">  <span class="at" style="color: #657422;">truth =</span> data<span class="sc" style="color: #5E5E5E;">$</span>class,</span>
+<span id="cb4-10">  <span class="at" style="color: #657422;">truth_int =</span> <span class="fu" style="color: #4758AB;">as.integer</span>(data<span class="sc" style="color: #5E5E5E;">$</span>class) <span class="sc" style="color: #5E5E5E;">-</span> <span class="dv" style="color: #AD0000;">1</span>,</span>
+<span id="cb4-11">  <span class="at" style="color: #657422;">estimate =</span> <span class="fu" style="color: #4758AB;">predict_prob</span>(unbalanced_model, data)</span>
+<span id="cb4-12">)</span></code></pre></div>
+</div>
+<p>And now we can make a calibration plot of our predictions. Remember, the goal is to have the points on the plot lie roughly along the line <code>y = x</code>. Lying below the line means that our predictions are too high, and above the line means our predictions are too low.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><span class="fu" style="color: #4758AB;">cal_plot_breaks</span>(preds, <span class="at" style="color: #657422;">truth =</span> truth_int, <span class="at" style="color: #657422;">estimate =</span> estimate)</span></code></pre></div>
+<div class="cell-output-display">
+<p><img src="https://www.matthewrkaye.com/posts/2023-03-25-balancing-classes/balancing-classes_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Awesome! Even with the class imbalance, our model’s probability predictions are well-calibrated. In other words, when we predict that there’s a 25% chance that a tumor is malignant, it’s actually malignant about 25% of the time.</p>
+</section>
+<section id="balancing-the-training-data" class="level2">
+<h2 class="anchored" data-anchor-id="balancing-the-training-data">Balancing the Training Data</h2>
+<p>So then, what happens if we balance the training data as we’re so often told to do? First, let’s balance by undersampling from the majority class.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1">minority_class <span class="ot" style="color: #003B4F;">&lt;-</span> data <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb6-2">  <span class="fu" style="color: #4758AB;">count</span>(class) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb6-3">  <span class="fu" style="color: #4758AB;">filter</span>(n <span class="sc" style="color: #5E5E5E;">==</span> <span class="fu" style="color: #4758AB;">min</span>(n))</span>
+<span id="cb6-4"></span>
+<span id="cb6-5">balanced <span class="ot" style="color: #003B4F;">&lt;-</span> data <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb6-6">  <span class="fu" style="color: #4758AB;">group_split</span>(class, <span class="at" style="color: #657422;">.keep =</span> <span class="cn" style="color: #8f5902;">TRUE</span>) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb6-7">  <span class="fu" style="color: #4758AB;">map_dfr</span>(</span>
+<span id="cb6-8">    <span class="sc" style="color: #5E5E5E;">~</span> {</span>
+<span id="cb6-9">      <span class="cf" style="color: #003B4F;">if</span> (.x<span class="sc" style="color: #5E5E5E;">$</span>class[<span class="dv" style="color: #AD0000;">1</span>] <span class="sc" style="color: #5E5E5E;">==</span> minority_class<span class="sc" style="color: #5E5E5E;">$</span>class) {</span>
+<span id="cb6-10">        .x</span>
+<span id="cb6-11">      } <span class="cf" style="color: #003B4F;">else</span> {</span>
+<span id="cb6-12">        <span class="fu" style="color: #4758AB;">slice_sample</span>(</span>
+<span id="cb6-13">          .x,</span>
+<span id="cb6-14">          <span class="at" style="color: #657422;">n =</span> minority_class<span class="sc" style="color: #5E5E5E;">$</span>n,</span>
+<span id="cb6-15">          <span class="at" style="color: #657422;">replace =</span> <span class="cn" style="color: #8f5902;">FALSE</span></span>
+<span id="cb6-16">        )</span>
+<span id="cb6-17">      }</span>
+<span id="cb6-18">    }</span>
+<span id="cb6-19">  )</span>
+<span id="cb6-20"></span>
+<span id="cb6-21">balanced <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb6-22">  <span class="fu" style="color: #4758AB;">count</span>(class) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb6-23">  <span class="fu" style="color: #4758AB;">pretty_print</span>()</span></code></pre></div>
+<div class="cell-output-display">
+
+<table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
+ <thead>
+  <tr>
+   <th style="text-align:left;"> class </th>
+   <th style="text-align:right;"> n </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> benign </td>
+   <td style="text-align:right;"> 241 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> malignant </td>
+   <td style="text-align:right;"> 241 </td>
+  </tr>
+</tbody>
+</table>
+
+</div>
+</div>
+<p>Now we have the same number of observations for each class. Let’s go ahead and fit another logistic regression model, but this time on the balanced data.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1">balanced_model <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">fit_model</span>(balanced, <span class="fu" style="color: #4758AB;">logistic_reg</span>())</span>
+<span id="cb7-2"></span>
+<span id="cb7-3">preds<span class="sc" style="color: #5E5E5E;">$</span>balanced_preds <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">predict_prob</span>(</span>
+<span id="cb7-4">  balanced_model,</span>
+<span id="cb7-5">  data</span>
+<span id="cb7-6">)</span>
+<span id="cb7-7"></span>
+<span id="cb7-8"><span class="fu" style="color: #4758AB;">cal_plot_breaks</span>(preds, <span class="at" style="color: #657422;">truth =</span> truth_int, <span class="at" style="color: #657422;">estimate =</span> balanced_preds)</span></code></pre></div>
+<div class="cell-output-display">
+<p><img src="https://www.matthewrkaye.com/posts/2023-03-25-balancing-classes/balancing-classes_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>All of a sudden, our model is very poorly calibrated. We’re consistently overpredicting the probability of a tumor being malignant. Why is that? Think back to what we just did: We removed a bunch of examples of benign tumors from our training data.</p>
+<p>Let’s think about that from first principles for a minute. If you had no information at all, a reasonable guess for whether or not a tumor is malignant would be the overall proportion of tumors that are malignant. In the unbalanced data, that number was about 34%. But after balancing, it’s now 50%. That means that we’ve just biased our “no-information” prediction upwards by about 16 percentage points (or 50%). And so it shouldn’t be surprising that in our calibration plot above, we see that we’re consistently over-predicting. Our probabilities are too high because the baseline rate at which the true class appears in our trainning data has just increased significantly.</p>
+<blockquote class="blockquote">
+<p>An important note which I’ll circle back to later is that this intuition about a baseline guess is directly rated to the intercept term of the logistic regression model you fit.</p>
+</blockquote>
+</section>
+<section id="smote" class="level2">
+<h2 class="anchored" data-anchor-id="smote">SMOTE</h2>
+<p>“But no!” you might be thinking. “Why would you just undersample directly? You’re supposed to use an algorithm like SMOTE to overcome your class imbalance problem.”</p>
+<p>Great! Let’s see if using SMOTE fixes our calibration issues. I’ll first use SMOTE to intelligently oversample the minority class.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><span class="fu" style="color: #4758AB;">library</span>(themis)</span>
+<span id="cb8-2"></span>
+<span id="cb8-3">smote <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">recipe</span>(class <span class="sc" style="color: #5E5E5E;">~</span> cl_thickness, <span class="at" style="color: #657422;">data =</span> data) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb8-4">  <span class="fu" style="color: #4758AB;">step_smote</span>(class) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb8-5">  <span class="fu" style="color: #4758AB;">prep</span>() <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb8-6">  <span class="fu" style="color: #4758AB;">bake</span>(<span class="at" style="color: #657422;">new_data =</span> <span class="cn" style="color: #8f5902;">NULL</span>)</span>
+<span id="cb8-7"></span>
+<span id="cb8-8">smote <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb8-9">  <span class="fu" style="color: #4758AB;">count</span>(class) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb8-10">  <span class="fu" style="color: #4758AB;">pretty_print</span>()</span></code></pre></div>
+<div class="cell-output-display">
+
+<table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
+ <thead>
+  <tr>
+   <th style="text-align:left;"> class </th>
+   <th style="text-align:right;"> n </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> benign </td>
+   <td style="text-align:right;"> 458 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> malignant </td>
+   <td style="text-align:right;"> 458 </td>
+  </tr>
+</tbody>
+</table>
+
+</div>
+</div>
+<p>Now that we have balanced classes thanks to SMOTE, let’s fit another logistic regresion model and see if it’s any better-calibrated.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1">smote_model <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">fit_model</span>(smote, <span class="fu" style="color: #4758AB;">logistic_reg</span>())</span>
+<span id="cb9-2"></span>
+<span id="cb9-3">preds<span class="sc" style="color: #5E5E5E;">$</span>smote_preds <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">predict_prob</span>(</span>
+<span id="cb9-4">  smote_model,</span>
+<span id="cb9-5">  data</span>
+<span id="cb9-6">)</span>
+<span id="cb9-7"></span>
+<span id="cb9-8"><span class="fu" style="color: #4758AB;">cal_plot_breaks</span>(preds, <span class="at" style="color: #657422;">truth =</span> truth_int, <span class="at" style="color: #657422;">estimate =</span> smote_preds)</span></code></pre></div>
+<div class="cell-output-display">
+<p><img src="https://www.matthewrkaye.com/posts/2023-03-25-balancing-classes/balancing-classes_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Interesting, same problem. With SMOTE, we still make very similar errors to the ones we made in the case where we naively undersampled from our majority class. But let’s think back to first principles again, because the exact same rationale applies. When we undersampled, we ended up artificially increasing the baseline rate of malignant tumors in our training data, which resulted in predictions that were too high. With SMOTE, we’re doing the exact same thing: We’ve stil rebalanced our data to 50/50, we’ve just done it a fancier way. So of course we’ll have the same problem with overprediction.</p>
+</section>
+<section id="a-random-forest" class="level2">
+<h2 class="anchored" data-anchor-id="a-random-forest">A Random Forest</h2>
+<p>“But no!” you might be thinking. “You need to use a more complicated model like a random forest, because logistic regression won’t pick up on complexities in your data well enough to be well-calibrated.”</p>
+<p>Great! Let’s try a random forest:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1">rf <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">fit_model</span>(smote, <span class="fu" style="color: #4758AB;">rand_forest</span>())</span>
+<span id="cb10-2"></span>
+<span id="cb10-3">preds<span class="sc" style="color: #5E5E5E;">$</span>rf_preds <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">predict_prob</span>(</span>
+<span id="cb10-4">  rf,</span>
+<span id="cb10-5">  data</span>
+<span id="cb10-6">)</span>
+<span id="cb10-7"></span>
+<span id="cb10-8"><span class="fu" style="color: #4758AB;">cal_plot_breaks</span>(preds, <span class="at" style="color: #657422;">truth =</span> truth_int, <span class="at" style="color: #657422;">estimate =</span> smote_preds)</span></code></pre></div>
+<div class="cell-output-display">
+<p><img src="https://www.matthewrkaye.com/posts/2023-03-25-balancing-classes/balancing-classes_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Same issue again, and the same logic holds. In fact, it’s even more straightforward with tree-based models. In a decision tree, you would determine a predicted probability by seeing what proportion of the labels in the leaf node that you end up in based on the features belong to the positive class. But then there’s the same logic as before: We’ve just artifically increased the number of instances of the positive class dramatically, so of course the proportion of labels belonging to the positive class in our leaf nodes will increase.</p>
+</section>
+<section id="coefficients" class="level2">
+<h2 class="anchored" data-anchor-id="coefficients">Coefficients</h2>
+<p>Looking at the coefficients of our three models can help understand what’s going on here.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><span class="fu" style="color: #4758AB;">list</span>(</span>
+<span id="cb11-2">  <span class="st" style="color: #20794D;">"Original"</span> <span class="ot" style="color: #003B4F;">=</span> unbalanced_model, </span>
+<span id="cb11-3">  <span class="st" style="color: #20794D;">"Undersampled"</span> <span class="ot" style="color: #003B4F;">=</span> balanced_model, </span>
+<span id="cb11-4">  <span class="st" style="color: #20794D;">"Smote"</span> <span class="ot" style="color: #003B4F;">=</span> smote_model</span>
+<span id="cb11-5">) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb11-6">  <span class="fu" style="color: #4758AB;">map</span>(tidy) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb11-7">  <span class="fu" style="color: #4758AB;">imap</span>(<span class="sc" style="color: #5E5E5E;">~</span> <span class="fu" style="color: #4758AB;">select</span>(.x, <span class="st" style="color: #20794D;">"Term"</span> <span class="ot" style="color: #003B4F;">=</span> term, <span class="sc" style="color: #5E5E5E;">!!</span><span class="at" style="color: #657422;">.y :=</span> <span class="st" style="color: #20794D;">"estimate"</span>)) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb11-8">  <span class="fu" style="color: #4758AB;">reduce</span>(inner_join, <span class="at" style="color: #657422;">by =</span> <span class="st" style="color: #20794D;">"Term"</span>) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb11-9">  <span class="fu" style="color: #4758AB;">pretty_print</span>()</span></code></pre></div>
+<div class="cell-output-display">
+
+<table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
+ <thead>
+  <tr>
+   <th style="text-align:left;"> Term </th>
+   <th style="text-align:right;"> Original </th>
+   <th style="text-align:right;"> Undersampled </th>
+   <th style="text-align:right;"> Smote </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> (Intercept) </td>
+   <td style="text-align:right;"> -5.1601677 </td>
+   <td style="text-align:right;"> -4.5297265 </td>
+   <td style="text-align:right;"> -4.3095517 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> cl_thickness </td>
+   <td style="text-align:right;"> 0.9354593 </td>
+   <td style="text-align:right;"> 0.9399334 </td>
+   <td style="text-align:right;"> 0.8906694 </td>
+  </tr>
+</tbody>
+</table>
+
+</div>
+</div>
+<p>In all three models, the coefficient associated with the clump thickness is almost exactly the same. This should make sense intuitively: Our sampling was at random, so the relationship between the clump thickness and whether or not the tumor was malignant shouldn’t change at all.</p>
+<p>The thing that does change, though, is the intercept term. In both the model where we undersampled from the majority class and in the SMOTE model, the intercept term is significantly higher than it is in the original model on the unbalanced data. This should feel similar intuitively to the idea of the baseline guess from before. As its core, the intercept term in your logistic regression model is the guess you’d make with “no” information (in this particular case, no information means a clump thickness of 0).</p>
+<p>We can illustrate this more clearly with three intercept-only models:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1">unbalanced_intercept_only <span class="ot" style="color: #003B4F;">&lt;-</span>  <span class="fu" style="color: #4758AB;">glm</span>(class <span class="sc" style="color: #5E5E5E;">~</span> <span class="dv" style="color: #AD0000;">1</span>, <span class="at" style="color: #657422;">data =</span> data, <span class="at" style="color: #657422;">family =</span> binomial)</span>
+<span id="cb12-2">undersampled_intecept_only <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">glm</span>(class <span class="sc" style="color: #5E5E5E;">~</span> <span class="dv" style="color: #AD0000;">1</span>, <span class="at" style="color: #657422;">data =</span> balanced, <span class="at" style="color: #657422;">family =</span> binomial)</span>
+<span id="cb12-3">smote_intercept_only <span class="ot" style="color: #003B4F;">&lt;-</span>       <span class="fu" style="color: #4758AB;">glm</span>(class <span class="sc" style="color: #5E5E5E;">~</span> <span class="dv" style="color: #AD0000;">1</span>, <span class="at" style="color: #657422;">data =</span> smote, <span class="at" style="color: #657422;">family =</span> binomial)</span></code></pre></div>
+</div>
+<p>Now, let’s compare the intercept coefficients of these two models on a probability (read: not a log-odds) scale.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1">convert_log_odds_to_probability <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="cf" style="color: #003B4F;">function</span>(x) {</span>
+<span id="cb13-2">  odds <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">exp</span>(x)</span>
+<span id="cb13-3">  odds <span class="sc" style="color: #5E5E5E;">/</span> (<span class="dv" style="color: #AD0000;">1</span> <span class="sc" style="color: #5E5E5E;">+</span> odds)</span>
+<span id="cb13-4">}</span>
+<span id="cb13-5"></span>
+<span id="cb13-6">unbalanced_intercept <span class="ot" style="color: #003B4F;">&lt;-</span>   <span class="fu" style="color: #4758AB;">coef</span>(unbalanced_intercept_only)</span>
+<span id="cb13-7">undersampled_intercept <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">coef</span>(undersampled_intecept_only)</span>
+<span id="cb13-8">smote_intercept <span class="ot" style="color: #003B4F;">&lt;-</span>        <span class="fu" style="color: #4758AB;">coef</span>(smote_intercept_only)</span>
+<span id="cb13-9"></span>
+<span id="cb13-10">intercepts <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">tibble</span>(</span>
+<span id="cb13-11">  <span class="at" style="color: #657422;">original =</span>     <span class="fu" style="color: #4758AB;">convert_log_odds_to_probability</span>(unbalanced_intercept),</span>
+<span id="cb13-12">  <span class="at" style="color: #657422;">undersampled =</span> <span class="fu" style="color: #4758AB;">convert_log_odds_to_probability</span>(undersampled_intercept),</span>
+<span id="cb13-13">  <span class="at" style="color: #657422;">smote =</span>        <span class="fu" style="color: #4758AB;">convert_log_odds_to_probability</span>(smote_intercept)</span>
+<span id="cb13-14">)</span>
+<span id="cb13-15"></span>
+<span id="cb13-16"><span class="fu" style="color: #4758AB;">pretty_print</span>(intercepts)</span></code></pre></div>
+<div class="cell-output-display">
+
+<table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
+ <thead>
+  <tr>
+   <th style="text-align:right;"> original </th>
+   <th style="text-align:right;"> undersampled </th>
+   <th style="text-align:right;"> smote </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:right;"> 0.3447783 </td>
+   <td style="text-align:right;"> 0.5 </td>
+   <td style="text-align:right;"> 0.5 </td>
+  </tr>
+</tbody>
+</table>
+
+</div>
+</div>
+<p>And it’s just as we expected: The intercept coefficient in the SMOTE model and the undersampling model are exactly 1/2, which corresponds to the fact that we balanced the classes to be exactly 50/50. And the intercept in the original model with the unbalanced classes is exactly the percentage of the data made up by the true class (malignant).</p>
+</section>
+<section id="when-to-rebalance" class="level2">
+<h2 class="anchored" data-anchor-id="when-to-rebalance">When To Rebalance</h2>
+<p>There are some times where re-balancing the classes in your training data might make sense. One application that comes to mind is if you have strong prior information that your training data is actually biased, and is over-representing one of the two classes.</p>
+<p>For instance, let’s imagine we have data from 1000 breast cancer patients and we know a priori that about 20% of tumors are malignant, but in the training data, maybe 40% of the tumors we have are malignant. Depending on the long-term goal of the project, it might make sense to undersample from the malignant cases to get the overall rate of tumors being malignant down to around the 20% prior.</p>
+<p>The rationale behind doing this would be that if you wanted your model to generalize well to future cases (outside of your training set) and you knew that in the broader population, about 20% of cases are malignant, your biased training data could very well result in biased predictions out-of-sample even if your predictions look good in-sample.</p>
+</section>
+<section id="conclusion" class="level2">
+<h2 class="anchored" data-anchor-id="conclusion">Conclusion</h2>
+<p>In the <a href="https://matthewrkaye.com/posts/2023-03-20-metrics-calibration/calibration.html">previous post</a>, I wrote about calibration. In short, I think calibration is the single most important metric in evaluating the performance of classification models.</p>
+<p>And so with that in mind, the main takeaway of this post is that you should be <em>very</em> careful about trying to “fix” the “problem” of class imbalances when you’re working on classification problems. If I could summarize the principle that I would follow in just a sentence, it would be that class imbalances often reflect important information about the prevalence of your classes in the real world, and it’s often risky to dismiss that information in the name of having data that’s split equally. In other words, class imbalances are usually not a problem at all. They’re a feature, not a bug.</p>
+
+
+</section>
+
+ ]]></description>
+  <category>R</category>
+  <category>data science</category>
+  <guid>https://www.matthewrkaye.com/posts/2023-03-25-balancing-classes/balancing-classes.html</guid>
+  <pubDate>Sat, 25 Mar 2023 04:00:00 GMT</pubDate>
+</item>
+<item>
+  <title>On AUC-ROC</title>
+  <dc:creator>Matt Kaye</dc:creator>
+  <link>https://www.matthewrkaye.com/posts/2023-03-09-on-auc-roc/index.html</link>
+  <description><![CDATA[ 
+
+
+
+<p><strong>AUC</strong> goes by many names: AUC, AUC-ROC, ROC-AUC, the area under the curve, and so on. It’s an extremely important metric for evaluating machine learning models and it’s an uber-popular data science interview question. It’s also, at least in my experience, the single most commonly misunderstood metric in data science.</p>
+<p>I’ve heard several common misunderstandings or flat-out falsehoods from people in all kinds of roles discussing AUC. The biggest offenses tend to come from overcomplicating the topic. It’s easy to see the <a href="https://en.wikipedia.org/wiki/Receiver_operating_characteristic">Wikipedia page for the ROC curve</a> and be confused, intimidated, or some combination of the two. ROC builds off of other fundamental data science concepts – the true and false positives rates of a classifier – so it’s certainly not a good place to <em>start</em> learning about metrics for evaluating the performance of models.</p>
+<p>The most common cause for confusion about AUC seems to come from the plot of the <em>ROC</em> curve, and nothing particularly special about AUC itself. Generally, I’ll hear AUC explained as being the area under the ROC curve, and that it’s all about testing how well your model balances false positives and false negatives. That’s all well and good, but it doesn’t give someone new to AUC any intuition about what AUC <em>actually</em> means in practice. For instance, let’s imagine we’re trying to predict the chance that a student is accepted at Carleton College – a quite common problem at CollegeVine! How does saying “AUC tells me about how my model is balancing false negatives and false positives” tell me anything about how well my model is doing at predicting that student’s chances?</p>
+<p>The main issue I have with this factual-yet-unhelpful explanation of AUC is just that: While it may be true, it doesn’t get to the point. And even worse, it’s sometimes used as a crutch: A fallback answer when someone feels stuck when asked how to interpret AUC in real, practical terms.</p>
+<p>So in this post, I’ll focus on just one thing, then: Answering the question above about how to interpret AUC.</p>
+<section id="what-is-auc" class="level2">
+<h2 class="anchored" data-anchor-id="what-is-auc">What is AUC?</h2>
+<p>As I mentioned, it’s usually not helpful to try to explain AUC to someone by telling them that it’s just the area under the ROC curve, or that it’s a metric you can use for predicting <em>probabilities</em> as opposed to predicting <em>classes</em>, or that it’s a metric trying to balance false positives and false negatives. None of those things get to the crux of the problem.</p>
+<p>So what <em>is</em> AUC, then? It’s pretty simple: Let’s imagine a model <img src="https://latex.codecogs.com/png.latex?M"> being evaluated on data <img src="https://latex.codecogs.com/png.latex?X"> where <img src="https://latex.codecogs.com/png.latex?X"> contains some instances of the true class and some instances of the false class. The AUC of <img src="https://latex.codecogs.com/png.latex?M"> on <img src="https://latex.codecogs.com/png.latex?X"> is the probability that given a random item from <img src="https://latex.codecogs.com/png.latex?X"> belonging to the <em>true</em> class (<img src="https://latex.codecogs.com/png.latex?T">) and another random item from <img src="https://latex.codecogs.com/png.latex?X"> belonging to the <em>false</em> class (<img src="https://latex.codecogs.com/png.latex?F">), that the model predicts that the probability of <img src="https://latex.codecogs.com/png.latex?T"> being true (belonging to the true class) is higher than the probability of <img src="https://latex.codecogs.com/png.latex?F"> being true (belonging to the true class).</p>
+<p>Let’s go back to the example about Carleton admissions, and let’s imagine that we have a model that gives a probability of admission to Carleton given some information about a student. If I give the model one random <em>accepted</em> student and one random <em>rejected</em> student, the AUC of the model is the probability that the accepted student had a higher chance of acceptance (as estimated by the model) than the rejected student did.</p>
+<p>For more on this, I’d refer everyone to <a href="https://developers.google.com/machine-learning/crash-course/classification/roc-and-auc">this fantastic blog post</a> by the team at Google, which does a great job at explaining further and/or better.</p>
+</section>
+<section id="a-simple-implementation" class="level2">
+<h2 class="anchored" data-anchor-id="a-simple-implementation">A Simple Implementation</h2>
+<p>The easiest way to convey this idea might be to show a simple implementation of AUC. Below is some R code.</p>
+<p>First, let’s start by writing a function to do exactly what’s described above. Again, here’s the algorithm given some evaluation data:</p>
+<ol type="1">
+<li>Choose a random item from the <code>true</code> class.</li>
+<li>Choose a random item from the <code>false</code> class.</li>
+<li>Make a prediction on each of the two items.</li>
+<li>If the predicted probability for the actually true item is greater than the predicted probability for the actually false item, return true. Otherwise, return false. If they’re equal, flip a coin.</li>
+<li>Repeat 1-4 many times, and calculate the proportion of the time your model guessed correctly. This is your AUC.</li>
+</ol>
+<p>Now, let’s write this in R with a little help from some vectorization.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><span class="fu" style="color: #4758AB;">library</span>(rlang)</span>
+<span id="cb1-2"><span class="fu" style="color: #4758AB;">library</span>(dplyr)</span>
+<span id="cb1-3"><span class="fu" style="color: #4758AB;">library</span>(tibble)</span>
+<span id="cb1-4"></span>
+<span id="cb1-5"><span class="do" style="color: #5E5E5E;
+font-style: italic;">## Our AUC implementation</span></span>
+<span id="cb1-6"><span class="do" style="color: #5E5E5E;
+font-style: italic;">## In this implementation, we take a data frame containing a "truth" (i.e. whether</span></span>
+<span id="cb1-7"><span class="do" style="color: #5E5E5E;
+font-style: italic;">## the example is _actually_ in either the true class or the false class)</span></span>
+<span id="cb1-8"><span class="do" style="color: #5E5E5E;
+font-style: italic;">## and an "estimate" (our predicted probability).</span></span>
+<span id="cb1-9"><span class="do" style="color: #5E5E5E;
+font-style: italic;">## This implementation is in line with how {{yardstick}} implements all of its metrics</span></span>
+<span id="cb1-10">interpretable_auc <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="cf" style="color: #003B4F;">function</span>(data, N, <span class="at" style="color: #657422;">truth_col =</span> <span class="st" style="color: #20794D;">"truth"</span>, <span class="at" style="color: #657422;">estimate_col =</span> <span class="st" style="color: #20794D;">"estimate"</span>) {</span>
+<span id="cb1-11">  </span>
+<span id="cb1-12">  <span class="do" style="color: #5E5E5E;
+font-style: italic;">## First, subset the data down to just trues and just falses, separately</span></span>
+<span id="cb1-13">  trues <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">filter</span>(data, .data[[truth_col]] <span class="sc" style="color: #5E5E5E;">==</span> <span class="dv" style="color: #AD0000;">1</span>)</span>
+<span id="cb1-14">  falses <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">filter</span>(data, .data[[truth_col]] <span class="sc" style="color: #5E5E5E;">==</span> <span class="dv" style="color: #AD0000;">0</span>)</span>
+<span id="cb1-15">  </span>
+<span id="cb1-16">  <span class="do" style="color: #5E5E5E;
+font-style: italic;">## Sample the predicted probabilities for N `true` examples, with replacement</span></span>
+<span id="cb1-17">  random_trues <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">sample</span>(trues[[estimate_col]], <span class="at" style="color: #657422;">size =</span> N, <span class="at" style="color: #657422;">replace =</span> <span class="cn" style="color: #8f5902;">TRUE</span>)</span>
+<span id="cb1-18">  </span>
+<span id="cb1-19">  <span class="do" style="color: #5E5E5E;
+font-style: italic;">## Do the same for N `false` examples</span></span>
+<span id="cb1-20">  random_falses <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">sample</span>(falses[[estimate_col]], <span class="at" style="color: #657422;">size =</span> N, <span class="at" style="color: #657422;">replace =</span> <span class="cn" style="color: #8f5902;">TRUE</span>)</span>
+<span id="cb1-21"></span>
+<span id="cb1-22">  <span class="do" style="color: #5E5E5E;
+font-style: italic;">## If the predicted probability for the actually true</span></span>
+<span id="cb1-23">  <span class="do" style="color: #5E5E5E;
+font-style: italic;">##  item is greater than that of the actually false item,</span></span>
+<span id="cb1-24">  <span class="do" style="color: #5E5E5E;
+font-style: italic;">##  return `true`. </span></span>
+<span id="cb1-25">  <span class="do" style="color: #5E5E5E;
+font-style: italic;">## If the two are equal, flip a coin.</span></span>
+<span id="cb1-26">  <span class="do" style="color: #5E5E5E;
+font-style: italic;">## Otherwise, return false.</span></span>
+<span id="cb1-27">  true_wins <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">ifelse</span>(</span>
+<span id="cb1-28">    random_trues <span class="sc" style="color: #5E5E5E;">==</span> random_falses,</span>
+<span id="cb1-29">    <span class="fu" style="color: #4758AB;">runif</span>(N) <span class="sc" style="color: #5E5E5E;">&gt;</span> <span class="fl" style="color: #AD0000;">0.50</span>,</span>
+<span id="cb1-30">    random_trues <span class="sc" style="color: #5E5E5E;">&gt;</span> random_falses</span>
+<span id="cb1-31">  )</span>
+<span id="cb1-32">  </span>
+<span id="cb1-33">  <span class="do" style="color: #5E5E5E;
+font-style: italic;">## Compute the percentage of the time our model was "right"</span></span>
+<span id="cb1-34">  <span class="fu" style="color: #4758AB;">mean</span>(true_wins)</span>
+<span id="cb1-35">}</span></code></pre></div>
+</div>
+<p>Next, we can test our simple implementation against <code>yardstick</code> on some real data. For the sake of demonstration, I just used the built-in <code>mtcars</code> data. Here’s how the data looks:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><span class="fu" style="color: #4758AB;">library</span>(knitr)</span>
+<span id="cb2-2"><span class="fu" style="color: #4758AB;">library</span>(kableExtra)</span>
+<span id="cb2-3"></span>
+<span id="cb2-4"><span class="do" style="color: #5E5E5E;
+font-style: italic;">## Doing a little data wrangling</span></span>
+<span id="cb2-5">data <span class="ot" style="color: #003B4F;">&lt;-</span> mtcars <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb2-6">  <span class="fu" style="color: #4758AB;">transmute</span>(</span>
+<span id="cb2-7">    <span class="at" style="color: #657422;">vs =</span> <span class="fu" style="color: #4758AB;">as.factor</span>(vs),</span>
+<span id="cb2-8">    mpg,</span>
+<span id="cb2-9">    cyl</span>
+<span id="cb2-10">  ) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb2-11">  <span class="fu" style="color: #4758AB;">as_tibble</span>()</span>
+<span id="cb2-12"></span>
+<span id="cb2-13">data <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb2-14">  <span class="fu" style="color: #4758AB;">slice_sample</span>(<span class="at" style="color: #657422;">n =</span> <span class="dv" style="color: #AD0000;">6</span>) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb2-15">  <span class="fu" style="color: #4758AB;">kable</span>(<span class="st" style="color: #20794D;">"html"</span>, <span class="at" style="color: #657422;">caption =</span> <span class="st" style="color: #20794D;">'Six rows of our training data'</span>) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb2-16">  <span class="fu" style="color: #4758AB;">kable_styling</span>(<span class="at" style="color: #657422;">position =</span> <span class="st" style="color: #20794D;">"center"</span>, <span class="at" style="color: #657422;">full_width =</span> <span class="cn" style="color: #8f5902;">TRUE</span>)</span></code></pre></div>
+<div class="cell-output-display">
+
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<caption>Six rows of our training data</caption>
+ <thead>
+  <tr>
+   <th style="text-align:left;"> vs </th>
+   <th style="text-align:right;"> mpg </th>
+   <th style="text-align:right;"> cyl </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> 0 </td>
+   <td style="text-align:right;"> 15.2 </td>
+   <td style="text-align:right;"> 8 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 1 </td>
+   <td style="text-align:right;"> 18.1 </td>
+   <td style="text-align:right;"> 6 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 0 </td>
+   <td style="text-align:right;"> 26.0 </td>
+   <td style="text-align:right;"> 4 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 0 </td>
+   <td style="text-align:right;"> 14.7 </td>
+   <td style="text-align:right;"> 8 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 0 </td>
+   <td style="text-align:right;"> 10.4 </td>
+   <td style="text-align:right;"> 8 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 1 </td>
+   <td style="text-align:right;"> 21.5 </td>
+   <td style="text-align:right;"> 4 </td>
+  </tr>
+</tbody>
+</table>
+
+</div>
+</div>
+<p>Now, let’s fit a few logistic regression models to the data to see how our AUC implementation compares to the <code>yardstick</code> one.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><span class="fu" style="color: #4758AB;">library</span>(purrr)</span>
+<span id="cb3-2"><span class="fu" style="color: #4758AB;">library</span>(yardstick)</span>
+<span id="cb3-3"></span>
+<span id="cb3-4"><span class="do" style="color: #5E5E5E;
+font-style: italic;">## Simplest model -- Just an intercept. AUC should be 50%</span></span>
+<span id="cb3-5">model1 <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">glm</span>(vs <span class="sc" style="color: #5E5E5E;">~</span> <span class="dv" style="color: #AD0000;">1</span>, <span class="at" style="color: #657422;">data =</span> data, <span class="at" style="color: #657422;">family =</span> binomial)</span>
+<span id="cb3-6"></span>
+<span id="cb3-7"><span class="do" style="color: #5E5E5E;
+font-style: italic;">## Adding another predictor</span></span>
+<span id="cb3-8">model2 <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">glm</span>(vs <span class="sc" style="color: #5E5E5E;">~</span> mpg, <span class="at" style="color: #657422;">data =</span> data, <span class="at" style="color: #657422;">family =</span> binomial)</span>
+<span id="cb3-9"></span>
+<span id="cb3-10"><span class="do" style="color: #5E5E5E;
+font-style: italic;">## And another</span></span>
+<span id="cb3-11">model3 <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">glm</span>(vs <span class="sc" style="color: #5E5E5E;">~</span> mpg <span class="sc" style="color: #5E5E5E;">+</span> cyl, <span class="at" style="color: #657422;">data =</span> data, <span class="at" style="color: #657422;">family =</span> binomial)</span>
+<span id="cb3-12"></span>
+<span id="cb3-13"><span class="do" style="color: #5E5E5E;
+font-style: italic;">## Make predictions for all three models</span></span>
+<span id="cb3-14">preds <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">tibble</span>(</span>
+<span id="cb3-15">  <span class="at" style="color: #657422;">truth =</span> data<span class="sc" style="color: #5E5E5E;">$</span>vs,</span>
+<span id="cb3-16">  <span class="at" style="color: #657422;">m1 =</span> <span class="fu" style="color: #4758AB;">predict</span>(model1, <span class="at" style="color: #657422;">type =</span> <span class="st" style="color: #20794D;">"response"</span>),</span>
+<span id="cb3-17">  <span class="at" style="color: #657422;">m2 =</span> <span class="fu" style="color: #4758AB;">predict</span>(model2, <span class="at" style="color: #657422;">type =</span> <span class="st" style="color: #20794D;">"response"</span>),</span>
+<span id="cb3-18">  <span class="at" style="color: #657422;">m3 =</span> <span class="fu" style="color: #4758AB;">predict</span>(model3, <span class="at" style="color: #657422;">type =</span> <span class="st" style="color: #20794D;">"response"</span>)</span>
+<span id="cb3-19">)</span>
+<span id="cb3-20"></span>
+<span id="cb3-21"><span class="do" style="color: #5E5E5E;
+font-style: italic;">## For each model, compute AUC with both methods: Yardstick (library) and "homemade"</span></span>
+<span id="cb3-22"><span class="fu" style="color: #4758AB;">map_dfr</span>(</span>
+<span id="cb3-23">  <span class="fu" style="color: #4758AB;">c</span>(<span class="st" style="color: #20794D;">"m1"</span>, <span class="st" style="color: #20794D;">"m2"</span>, <span class="st" style="color: #20794D;">"m3"</span>),</span>
+<span id="cb3-24">  <span class="sc" style="color: #5E5E5E;">~</span> {</span>
+<span id="cb3-25">    yardstick <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">roc_auc</span>(preds, <span class="at" style="color: #657422;">truth =</span> truth, <span class="at" style="color: #657422;">estimate =</span> <span class="sc" style="color: #5E5E5E;">!!</span>.x, <span class="at" style="color: #657422;">event_level =</span> <span class="st" style="color: #20794D;">"second"</span>)<span class="sc" style="color: #5E5E5E;">$</span>.estimate</span>
+<span id="cb3-26">    homemade <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">interpretable_auc</span>(preds, <span class="at" style="color: #657422;">N =</span> <span class="dv" style="color: #AD0000;">100000</span>, <span class="at" style="color: #657422;">truth_col =</span> <span class="st" style="color: #20794D;">"truth"</span>, <span class="at" style="color: #657422;">estimate_col =</span> .x)</span>
+<span id="cb3-27">    <span class="fu" style="color: #4758AB;">tibble</span>(</span>
+<span id="cb3-28">      <span class="at" style="color: #657422;">model =</span> .x,</span>
+<span id="cb3-29">      <span class="at" style="color: #657422;">yardstick =</span> <span class="fu" style="color: #4758AB;">round</span>(yardstick, <span class="at" style="color: #657422;">digits =</span> <span class="dv" style="color: #AD0000;">2</span>),</span>
+<span id="cb3-30">      <span class="at" style="color: #657422;">homemade =</span> <span class="fu" style="color: #4758AB;">round</span>(homemade, <span class="at" style="color: #657422;">digits =</span> <span class="dv" style="color: #AD0000;">2</span>)</span>
+<span id="cb3-31">    )</span>
+<span id="cb3-32">  }</span>
+<span id="cb3-33">) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb3-34">  <span class="fu" style="color: #4758AB;">kable</span>(<span class="st" style="color: #20794D;">"html"</span>, <span class="at" style="color: #657422;">caption =</span> <span class="st" style="color: #20794D;">'Yardstick vs. Our Implementation'</span>) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb3-35">  <span class="fu" style="color: #4758AB;">kable_styling</span>(<span class="at" style="color: #657422;">position =</span> <span class="st" style="color: #20794D;">"center"</span>, <span class="at" style="color: #657422;">full_width =</span> <span class="cn" style="color: #8f5902;">TRUE</span>)</span></code></pre></div>
+<div class="cell-output-display">
+
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<caption>Yardstick vs. Our Implementation</caption>
+ <thead>
+  <tr>
+   <th style="text-align:left;"> model </th>
+   <th style="text-align:right;"> yardstick </th>
+   <th style="text-align:right;"> homemade </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> m1 </td>
+   <td style="text-align:right;"> 0.50 </td>
+   <td style="text-align:right;"> 0.50 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> m2 </td>
+   <td style="text-align:right;"> 0.91 </td>
+   <td style="text-align:right;"> 0.91 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> m3 </td>
+   <td style="text-align:right;"> 0.95 </td>
+   <td style="text-align:right;"> 0.95 </td>
+  </tr>
+</tbody>
+</table>
+
+</div>
+</div>
+<p>As we’ve seen here, AUC actually shouldn’t be all that much of a cause for confusion! The way I like to frame it is this: The AUC of your model is how good your model is at making even-odds bets. If I give your model two options and ask it to pick which one it thinks is more likely, a “better” model (by AUC standards) will be better at identifying the true class more often.</p>
+<p>In real terms, that’s a meaningful, good thing. If we’re trying to predict the probability of a cancer patient having cancer, it’s important that our model can distinguish between people with cancer and people without it when given one person from each class. If it couldn’t - meaning the model was either randomly guessing or doing worse than random - the AUC would be 50% (or below 50%, in the worse-than-random disaster scenario).</p>
+</section>
+<section id="additional-thoughts" class="level2">
+<h2 class="anchored" data-anchor-id="additional-thoughts">Additional Thoughts</h2>
+<p>I also often hear the misconception that AUC is sensitive to things like class imbalance. This means that if the true class makes up a disproportionately large (or small) proportion of the evaluation data, that can skew the AUC. But based on the intuition we just built before, that’s of course not true. The key thing to remember is that the model is given one true and one false example. In choosing those, it doesn’t matter if the true class only makes up 0.005% of all of the examples in the evaluation data: AUC is only evaluating the model on its ability to determine <em>which</em> of the two is the true class.</p>
+<p>However, there is one thing related to class imbalance, and just sample size in general, that <em>would</em> affect AUC, which is the raw number of examples of each class in the evaluation data. If, for instance, you had only a single instance of the <code>true</code> class in the evaluation set, then the AUC of the model is entirely determined by how good the predictions of the model are on that single example. For instance, if we have a single <code>true</code> class and the model predicts a 100% probability of it being true, then, assuming the predictions for all of the other examples in the evaluation set are <em>not</em> 100%, the AUC of the model as evaluated on that data is 100%. This isn’t necessarily because the model is “good” in any sense, but just because the model is over-indexing to a single good prediction in the evaluation set. In practice though, this AUC estimate wouldn’t generalize. As we got more data, the predictions for all the true classes would certainly not all be 100%, so the AUC of the model would go down over time.</p>
+<p>Fortunately, there’s an easy fix for this problem. AUCs are a point estimate, but we could also estimate a margin of error or a confidence interval for our AUC. For a situation where we only have a single instance of the true class in the evaluation set, the margin of error for our AUC would be very wide.</p>
+</section>
+<section id="wrapping-up" class="level2">
+<h2 class="anchored" data-anchor-id="wrapping-up">Wrapping Up</h2>
+<p>Hopefully this post helped give a better intuition for what AUC actually is! A couple of major takeaways:</p>
+<ol type="1">
+<li>AUC doesn’t need to be this super complicated thing about trading off between false positives and negatives and trying many different classification thresholds and such. In my opinion, it’s much simpler to just think about it as the likelihood of a guess that your model makes between two choices being correct.</li>
+<li>AUC isn’t affected by class imbalances.</li>
+</ol>
+
+
+</section>
+
+ ]]></description>
+  <category>data science</category>
+  <category>R</category>
+  <guid>https://www.matthewrkaye.com/posts/2023-03-09-on-auc-roc/index.html</guid>
+  <pubDate>Thu, 09 Mar 2023 05:00:00 GMT</pubDate>
+</item>
+<item>
+  <title>Working With Your Fitbit Data in R</title>
+  <dc:creator>Matt Kaye</dc:creator>
+  <link>https://www.matthewrkaye.com/posts/2021-06-08-working-with-your-fitbit-data-in-r/index.html</link>
+  <description><![CDATA[ 
+
+
+
+<section id="note-this-post-was-updated-as-of-3252023-for-fitbitr-v0.3.0" class="level3">
+<h3 class="anchored" data-anchor-id="note-this-post-was-updated-as-of-3252023-for-fitbitr-v0.3.0">Note: This post was updated as of 3/25/2023 for <code>fitbitr v0.3.0</code></h3>
+</section>
+<section id="introduction" class="level2">
+<h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
+<p><code>fitbitr 0.1.0</code> is now available on CRAN! You can install it with</p>
+<div class="sourceCode" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><span class="fu" style="color: #4758AB;">install.packages</span>(<span class="st" style="color: #20794D;">"fitbitr"</span>)</span></code></pre></div>
+<p>or you can get the latest dev version with</p>
+<div class="sourceCode" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><span class="do" style="color: #5E5E5E;
+font-style: italic;">## install.packages("devtools")</span></span>
+<span id="cb2-2">devtools<span class="sc" style="color: #5E5E5E;">::</span><span class="fu" style="color: #4758AB;">install_github</span>(<span class="st" style="color: #20794D;">"mrkaye97/fitbitr"</span>)</span></code></pre></div>
+<p><code>fitbitr</code> makes it easy to pull your Fitbit data into R and use it for whatever interests you: personal projects, visualization, medical purposes, etc.</p>
+<p>This post shows how you might use <code>fitbitr</code> to pull and visualize some of your data.</p>
+</section>
+<section id="sleep" class="level2">
+<h2 class="anchored" data-anchor-id="sleep">Sleep</h2>
+<p>First, you should either generate a new token with <code>generate_token()</code> or load a cached token with <code>load_cached_token()</code>.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><span class="fu" style="color: #4758AB;">library</span>(fitbitr)</span>
+<span id="cb3-2"><span class="fu" style="color: #4758AB;">library</span>(lubridate)</span>
+<span id="cb3-3"><span class="fu" style="color: #4758AB;">library</span>(tidyverse)</span>
+<span id="cb3-4"></span>
+<span id="cb3-5"><span class="do" style="color: #5E5E5E;
+font-style: italic;">## Dates to use throughout post</span></span>
+<span id="cb3-6">start <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">as_date</span>(<span class="st" style="color: #20794D;">"2020-01-01"</span>)</span>
+<span id="cb3-7">end <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">as_date</span>(<span class="st" style="color: #20794D;">"2021-10-18"</span>)</span>
+<span id="cb3-8"></span>
+<span id="cb3-9"><span class="fu" style="color: #4758AB;">generate_fitbitr_token</span>()</span></code></pre></div>
+</div>
+<p>And then you can start pulling your data!</p>
+<div class="cell" data-layout-align="center" data-hash="index_cache/html/unnamed-chunk-4_2f14a0443cc6b122ece6398ada43397c">
+<div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1">sleep <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">get_sleep_summary</span>(</span>
+<span id="cb4-2">  <span class="at" style="color: #657422;">start_date =</span> end <span class="sc" style="color: #5E5E5E;">-</span> <span class="fu" style="color: #4758AB;">months</span>(<span class="dv" style="color: #AD0000;">3</span>),</span>
+<span id="cb4-3">  <span class="at" style="color: #657422;">end_date =</span> end</span>
+<span id="cb4-4">)</span>
+<span id="cb4-5"></span>
+<span id="cb4-6"><span class="fu" style="color: #4758AB;">head</span>(sleep)</span></code></pre></div>
+<div class="cell-output-display">
+
+<table class="table" style="margin-left: auto; margin-right: auto;">
+ <thead>
+  <tr>
+   <th style="text-align:right;"> log_id </th>
+   <th style="text-align:left;"> date </th>
+   <th style="text-align:left;"> start_time </th>
+   <th style="text-align:left;"> end_time </th>
+   <th style="text-align:right;"> duration </th>
+   <th style="text-align:right;"> efficiency </th>
+   <th style="text-align:right;"> minutes_to_fall_asleep </th>
+   <th style="text-align:right;"> minutes_asleep </th>
+   <th style="text-align:right;"> minutes_awake </th>
+   <th style="text-align:right;"> minutes_after_wakeup </th>
+   <th style="text-align:right;"> time_in_bed </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:right;"> 34207402675 </td>
+   <td style="text-align:left;"> 2021-10-18 </td>
+   <td style="text-align:left;"> 2021-10-17 23:01:00 </td>
+   <td style="text-align:left;"> 2021-10-18 06:30:00 </td>
+   <td style="text-align:right;"> 26940000 </td>
+   <td style="text-align:right;"> 91 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 391 </td>
+   <td style="text-align:right;"> 58 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 449 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 34193579435 </td>
+   <td style="text-align:left;"> 2021-10-17 </td>
+   <td style="text-align:left;"> 2021-10-16 23:03:30 </td>
+   <td style="text-align:left;"> 2021-10-17 08:11:00 </td>
+   <td style="text-align:right;"> 32820000 </td>
+   <td style="text-align:right;"> 95 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 472 </td>
+   <td style="text-align:right;"> 75 </td>
+   <td style="text-align:right;"> 4 </td>
+   <td style="text-align:right;"> 547 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 34183584553 </td>
+   <td style="text-align:left;"> 2021-10-16 </td>
+   <td style="text-align:left;"> 2021-10-15 22:46:30 </td>
+   <td style="text-align:left;"> 2021-10-16 06:57:30 </td>
+   <td style="text-align:right;"> 29460000 </td>
+   <td style="text-align:right;"> 94 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 424 </td>
+   <td style="text-align:right;"> 67 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 491 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 34174304493 </td>
+   <td style="text-align:left;"> 2021-10-15 </td>
+   <td style="text-align:left;"> 2021-10-14 23:50:00 </td>
+   <td style="text-align:left;"> 2021-10-15 08:20:30 </td>
+   <td style="text-align:right;"> 30600000 </td>
+   <td style="text-align:right;"> 94 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 438 </td>
+   <td style="text-align:right;"> 72 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 510 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 34159751655 </td>
+   <td style="text-align:left;"> 2021-10-14 </td>
+   <td style="text-align:left;"> 2021-10-13 23:34:00 </td>
+   <td style="text-align:left;"> 2021-10-14 09:18:00 </td>
+   <td style="text-align:right;"> 35040000 </td>
+   <td style="text-align:right;"> 98 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 524 </td>
+   <td style="text-align:right;"> 60 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 584 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 34146865838 </td>
+   <td style="text-align:left;"> 2021-10-13 </td>
+   <td style="text-align:left;"> 2021-10-12 23:50:00 </td>
+   <td style="text-align:left;"> 2021-10-13 08:32:30 </td>
+   <td style="text-align:right;"> 31320000 </td>
+   <td style="text-align:right;"> 94 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 461 </td>
+   <td style="text-align:right;"> 61 </td>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 522 </td>
+  </tr>
+</tbody>
+</table>
+
+</div>
+</div>
+<p>Once you’ve loaded some data, you can visualize it!</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><span class="fu" style="color: #4758AB;">library</span>(zoo)</span>
+<span id="cb5-2"><span class="fu" style="color: #4758AB;">library</span>(scales)</span>
+<span id="cb5-3"><span class="fu" style="color: #4758AB;">library</span>(ggthemes)</span>
+<span id="cb5-4"></span>
+<span id="cb5-5">sleep <span class="ot" style="color: #003B4F;">&lt;-</span> sleep <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb5-6">  <span class="fu" style="color: #4758AB;">mutate</span>(</span>
+<span id="cb5-7">   <span class="at" style="color: #657422;">date =</span> <span class="fu" style="color: #4758AB;">as_date</span>(date),</span>
+<span id="cb5-8">   <span class="at" style="color: #657422;">start_time =</span> <span class="fu" style="color: #4758AB;">as_datetime</span>(start_time),</span>
+<span id="cb5-9">   <span class="at" style="color: #657422;">end_time =</span> <span class="fu" style="color: #4758AB;">as_datetime</span>(end_time),</span>
+<span id="cb5-10">   <span class="at" style="color: #657422;">sh =</span> <span class="fu" style="color: #4758AB;">ifelse</span>(<span class="fu" style="color: #4758AB;">hour</span>(start_time) <span class="sc" style="color: #5E5E5E;">&lt;</span> <span class="dv" style="color: #AD0000;">8</span>, <span class="fu" style="color: #4758AB;">hour</span>(start_time) <span class="sc" style="color: #5E5E5E;">+</span> <span class="dv" style="color: #AD0000;">24</span>, <span class="fu" style="color: #4758AB;">hour</span>(start_time)), <span class="co" style="color: #5E5E5E;">#create numeric times</span></span>
+<span id="cb5-11">   <span class="at" style="color: #657422;">sm =</span> <span class="fu" style="color: #4758AB;">minute</span>(start_time),</span>
+<span id="cb5-12">   <span class="at" style="color: #657422;">st =</span> sh <span class="sc" style="color: #5E5E5E;">+</span> sm<span class="sc" style="color: #5E5E5E;">/</span><span class="dv" style="color: #AD0000;">60</span>,</span>
+<span id="cb5-13">   <span class="at" style="color: #657422;">eh =</span> <span class="fu" style="color: #4758AB;">hour</span>(end_time),</span>
+<span id="cb5-14">   <span class="at" style="color: #657422;">em =</span> <span class="fu" style="color: #4758AB;">minute</span>(end_time),</span>
+<span id="cb5-15">   <span class="at" style="color: #657422;">et =</span> eh <span class="sc" style="color: #5E5E5E;">+</span> em<span class="sc" style="color: #5E5E5E;">/</span><span class="dv" style="color: #AD0000;">60</span>,</span>
+<span id="cb5-16">   <span class="at" style="color: #657422;">mst =</span> <span class="fu" style="color: #4758AB;">rollmean</span>(st, <span class="dv" style="color: #AD0000;">7</span>, <span class="at" style="color: #657422;">fill =</span> <span class="cn" style="color: #8f5902;">NA</span>), <span class="co" style="color: #5E5E5E;">#create moving averages</span></span>
+<span id="cb5-17">   <span class="at" style="color: #657422;">met =</span> <span class="fu" style="color: #4758AB;">rollmean</span>(et, <span class="dv" style="color: #AD0000;">7</span>, <span class="at" style="color: #657422;">fill =</span> <span class="cn" style="color: #8f5902;">NA</span>),</span>
+<span id="cb5-18">   <span class="at" style="color: #657422;">year =</span> <span class="fu" style="color: #4758AB;">year</span>(start_time)</span>
+<span id="cb5-19">)</span>
+<span id="cb5-20"></span>
+<span id="cb5-21">sleep <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb5-22">    <span class="fu" style="color: #4758AB;">ggplot</span>(<span class="fu" style="color: #4758AB;">aes</span>(<span class="at" style="color: #657422;">x =</span> date)) <span class="sc" style="color: #5E5E5E;">+</span></span>
+<span id="cb5-23">    <span class="fu" style="color: #4758AB;">geom_line</span>(<span class="fu" style="color: #4758AB;">aes</span>(<span class="at" style="color: #657422;">y =</span> et), <span class="at" style="color: #657422;">color =</span> <span class="st" style="color: #20794D;">'coral'</span>, <span class="at" style="color: #657422;">alpha =</span> .<span class="dv" style="color: #AD0000;">3</span>, <span class="at" style="color: #657422;">na.rm =</span> T) <span class="sc" style="color: #5E5E5E;">+</span></span>
+<span id="cb5-24">    <span class="fu" style="color: #4758AB;">geom_line</span>(<span class="fu" style="color: #4758AB;">aes</span>(<span class="at" style="color: #657422;">y =</span> st), <span class="at" style="color: #657422;">color =</span> <span class="st" style="color: #20794D;">'dodgerblue'</span>, <span class="at" style="color: #657422;">alpha =</span> .<span class="dv" style="color: #AD0000;">3</span>, <span class="at" style="color: #657422;">na.rm =</span> T) <span class="sc" style="color: #5E5E5E;">+</span></span>
+<span id="cb5-25">    <span class="fu" style="color: #4758AB;">geom_line</span>(<span class="fu" style="color: #4758AB;">aes</span>(<span class="at" style="color: #657422;">y =</span> met), <span class="at" style="color: #657422;">color =</span> <span class="st" style="color: #20794D;">'coral'</span>, <span class="at" style="color: #657422;">na.rm =</span> T) <span class="sc" style="color: #5E5E5E;">+</span></span>
+<span id="cb5-26">    <span class="fu" style="color: #4758AB;">geom_line</span>(<span class="fu" style="color: #4758AB;">aes</span>(<span class="at" style="color: #657422;">y =</span> mst), <span class="at" style="color: #657422;">color =</span> <span class="st" style="color: #20794D;">'dodgerblue'</span>, <span class="at" style="color: #657422;">na.rm =</span> T) <span class="sc" style="color: #5E5E5E;">+</span></span>
+<span id="cb5-27">    <span class="fu" style="color: #4758AB;">scale_y_continuous</span>(</span>
+<span id="cb5-28">      <span class="at" style="color: #657422;">breaks =</span> <span class="fu" style="color: #4758AB;">seq</span>(<span class="dv" style="color: #AD0000;">0</span>, <span class="dv" style="color: #AD0000;">30</span>, <span class="dv" style="color: #AD0000;">2</span>),</span>
+<span id="cb5-29">      <span class="at" style="color: #657422;">labels =</span> <span class="fu" style="color: #4758AB;">trans_format</span>(</span>
+<span id="cb5-30">        <span class="cf" style="color: #003B4F;">function</span>(x) <span class="fu" style="color: #4758AB;">ifelse</span>(x <span class="sc" style="color: #5E5E5E;">&gt;</span> <span class="dv" style="color: #AD0000;">23</span>, x <span class="sc" style="color: #5E5E5E;">-</span> <span class="dv" style="color: #AD0000;">24</span>, x), </span>
+<span id="cb5-31">        <span class="at" style="color: #657422;">format =</span> scales<span class="sc" style="color: #5E5E5E;">::</span><span class="fu" style="color: #4758AB;">comma_format</span>(<span class="at" style="color: #657422;">suffix =</span> <span class="st" style="color: #20794D;">":00"</span>, <span class="at" style="color: #657422;">accuracy =</span> <span class="dv" style="color: #AD0000;">1</span>)</span>
+<span id="cb5-32">      )</span>
+<span id="cb5-33">    ) <span class="sc" style="color: #5E5E5E;">+</span></span>
+<span id="cb5-34">    <span class="fu" style="color: #4758AB;">labs</span>(<span class="at" style="color: #657422;">x =</span> <span class="st" style="color: #20794D;">"Date"</span>, <span class="at" style="color: #657422;">y =</span> <span class="st" style="color: #20794D;">'Time'</span>) <span class="sc" style="color: #5E5E5E;">+</span></span>
+<span id="cb5-35">    <span class="fu" style="color: #4758AB;">theme_fivethirtyeight</span>() <span class="sc" style="color: #5E5E5E;">+</span></span>
+<span id="cb5-36">    <span class="fu" style="color: #4758AB;">scale_x_date</span>(<span class="at" style="color: #657422;">date_breaks =</span> <span class="st" style="color: #20794D;">'1 month'</span>, <span class="at" style="color: #657422;">date_labels =</span> <span class="st" style="color: #20794D;">'%b'</span>, <span class="at" style="color: #657422;">expand =</span> <span class="fu" style="color: #4758AB;">c</span>(<span class="dv" style="color: #AD0000;">0</span>, <span class="dv" style="color: #AD0000;">0</span>)) <span class="sc" style="color: #5E5E5E;">+</span></span>
+<span id="cb5-37">    <span class="fu" style="color: #4758AB;">facet_grid</span>(. <span class="sc" style="color: #5E5E5E;">~</span> year, <span class="at" style="color: #657422;">space =</span> <span class="st" style="color: #20794D;">'free'</span>, <span class="at" style="color: #657422;">scales =</span> <span class="st" style="color: #20794D;">'free_x'</span>, <span class="at" style="color: #657422;">switch =</span> <span class="st" style="color: #20794D;">'x'</span>) <span class="sc" style="color: #5E5E5E;">+</span></span>
+<span id="cb5-38">    <span class="fu" style="color: #4758AB;">theme</span>(<span class="at" style="color: #657422;">panel.spacing.x =</span> <span class="fu" style="color: #4758AB;">unit</span>(<span class="dv" style="color: #AD0000;">0</span>,<span class="st" style="color: #20794D;">"line"</span>), <span class="at" style="color: #657422;">strip.placement =</span> <span class="st" style="color: #20794D;">"outside"</span>)</span></code></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://www.matthewrkaye.com/posts/2021-06-08-working-with-your-fitbit-data-in-r/static/rmarkdown-libsunnamed-chunk-5-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>This bit of code makes a nicely formatted plot of the times you went to sleep and woke up over the past three months. You can also use <code>fitbitr</code> to expand the time window with a little help from <code>purrr</code> (the Fitbit API rate limits you, so you can’t request data for infinitely long windows in a single request).</p>
+<div class="cell" data-layout-align="center" data-hash="index_cache/html/unnamed-chunk-6_af35efd52163eeefe06857cbd3a33893">
+<div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><span class="do" style="color: #5E5E5E;
+font-style: italic;">## Pull three months of data</span></span>
+<span id="cb6-2">sleep <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">map_dfr</span>(</span>
+<span id="cb6-3">  <span class="dv" style="color: #AD0000;">3</span><span class="sc" style="color: #5E5E5E;">:</span><span class="dv" style="color: #AD0000;">0</span>,</span>
+<span id="cb6-4">  <span class="sc" style="color: #5E5E5E;">~</span> <span class="fu" style="color: #4758AB;">sleep_summary</span>(</span>
+<span id="cb6-5">    end <span class="sc" style="color: #5E5E5E;">-</span> <span class="fu" style="color: #4758AB;">months</span>(.x), </span>
+<span id="cb6-6">    end <span class="sc" style="color: #5E5E5E;">-</span> <span class="fu" style="color: #4758AB;">months</span>(.x) <span class="sc" style="color: #5E5E5E;">+</span> <span class="fu" style="color: #4758AB;">months</span>(<span class="dv" style="color: #AD0000;">1</span>)</span>
+<span id="cb6-7">  )</span>
+<span id="cb6-8">)</span></code></pre></div>
+</div>
+<p>After pulling the data, we can use the same code again to visualize it.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1">sleep <span class="ot" style="color: #003B4F;">&lt;-</span> sleep <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb7-2">  <span class="fu" style="color: #4758AB;">mutate</span>(</span>
+<span id="cb7-3">   <span class="at" style="color: #657422;">date =</span> <span class="fu" style="color: #4758AB;">as_date</span>(date),</span>
+<span id="cb7-4">   <span class="at" style="color: #657422;">start_time =</span> <span class="fu" style="color: #4758AB;">as_datetime</span>(start_time),</span>
+<span id="cb7-5">   <span class="at" style="color: #657422;">end_time =</span> <span class="fu" style="color: #4758AB;">as_datetime</span>(end_time),</span>
+<span id="cb7-6">   <span class="at" style="color: #657422;">sh =</span> <span class="fu" style="color: #4758AB;">ifelse</span>(<span class="fu" style="color: #4758AB;">hour</span>(start_time) <span class="sc" style="color: #5E5E5E;">&lt;</span> <span class="dv" style="color: #AD0000;">8</span>, <span class="fu" style="color: #4758AB;">hour</span>(start_time) <span class="sc" style="color: #5E5E5E;">+</span> <span class="dv" style="color: #AD0000;">24</span>, <span class="fu" style="color: #4758AB;">hour</span>(start_time)), <span class="co" style="color: #5E5E5E;">#create numeric times</span></span>
+<span id="cb7-7">   <span class="at" style="color: #657422;">sm =</span> <span class="fu" style="color: #4758AB;">minute</span>(start_time),</span>
+<span id="cb7-8">   <span class="at" style="color: #657422;">st =</span> sh <span class="sc" style="color: #5E5E5E;">+</span> sm<span class="sc" style="color: #5E5E5E;">/</span><span class="dv" style="color: #AD0000;">60</span>,</span>
+<span id="cb7-9">   <span class="at" style="color: #657422;">eh =</span> <span class="fu" style="color: #4758AB;">hour</span>(end_time),</span>
+<span id="cb7-10">   <span class="at" style="color: #657422;">em =</span> <span class="fu" style="color: #4758AB;">minute</span>(end_time),</span>
+<span id="cb7-11">   <span class="at" style="color: #657422;">et =</span> eh <span class="sc" style="color: #5E5E5E;">+</span> em<span class="sc" style="color: #5E5E5E;">/</span><span class="dv" style="color: #AD0000;">60</span>,</span>
+<span id="cb7-12">   <span class="at" style="color: #657422;">mst =</span> <span class="fu" style="color: #4758AB;">rollmean</span>(st, <span class="dv" style="color: #AD0000;">7</span>, <span class="at" style="color: #657422;">fill =</span> <span class="cn" style="color: #8f5902;">NA</span>), <span class="co" style="color: #5E5E5E;">#create moving averages</span></span>
+<span id="cb7-13">   <span class="at" style="color: #657422;">met =</span> <span class="fu" style="color: #4758AB;">rollmean</span>(et, <span class="dv" style="color: #AD0000;">7</span>, <span class="at" style="color: #657422;">fill =</span> <span class="cn" style="color: #8f5902;">NA</span>),</span>
+<span id="cb7-14">   <span class="at" style="color: #657422;">year =</span> <span class="fu" style="color: #4758AB;">year</span>(start_time)</span>
+<span id="cb7-15">) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb7-16">  <span class="fu" style="color: #4758AB;">distinct</span>()</span>
+<span id="cb7-17"></span>
+<span id="cb7-18">sleep <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb7-19">    <span class="fu" style="color: #4758AB;">ggplot</span>(<span class="fu" style="color: #4758AB;">aes</span>(<span class="at" style="color: #657422;">x =</span> date)) <span class="sc" style="color: #5E5E5E;">+</span></span>
+<span id="cb7-20">    <span class="fu" style="color: #4758AB;">geom_line</span>(<span class="fu" style="color: #4758AB;">aes</span>(<span class="at" style="color: #657422;">y =</span> et), <span class="at" style="color: #657422;">color =</span> <span class="st" style="color: #20794D;">'coral'</span>, <span class="at" style="color: #657422;">alpha =</span> .<span class="dv" style="color: #AD0000;">3</span>, <span class="at" style="color: #657422;">na.rm =</span> T) <span class="sc" style="color: #5E5E5E;">+</span></span>
+<span id="cb7-21">    <span class="fu" style="color: #4758AB;">geom_line</span>(<span class="fu" style="color: #4758AB;">aes</span>(<span class="at" style="color: #657422;">y =</span> st), <span class="at" style="color: #657422;">color =</span> <span class="st" style="color: #20794D;">'dodgerblue'</span>, <span class="at" style="color: #657422;">alpha =</span> .<span class="dv" style="color: #AD0000;">3</span>, <span class="at" style="color: #657422;">na.rm =</span> T) <span class="sc" style="color: #5E5E5E;">+</span></span>
+<span id="cb7-22">    <span class="fu" style="color: #4758AB;">geom_line</span>(<span class="fu" style="color: #4758AB;">aes</span>(<span class="at" style="color: #657422;">y =</span> met), <span class="at" style="color: #657422;">color =</span> <span class="st" style="color: #20794D;">'coral'</span>, <span class="at" style="color: #657422;">na.rm =</span> T) <span class="sc" style="color: #5E5E5E;">+</span></span>
+<span id="cb7-23">    <span class="fu" style="color: #4758AB;">geom_line</span>(<span class="fu" style="color: #4758AB;">aes</span>(<span class="at" style="color: #657422;">y =</span> mst), <span class="at" style="color: #657422;">color =</span> <span class="st" style="color: #20794D;">'dodgerblue'</span>, <span class="at" style="color: #657422;">na.rm =</span> T) <span class="sc" style="color: #5E5E5E;">+</span></span>
+<span id="cb7-24">    <span class="fu" style="color: #4758AB;">scale_y_continuous</span>(</span>
+<span id="cb7-25">      <span class="at" style="color: #657422;">breaks =</span> <span class="fu" style="color: #4758AB;">seq</span>(<span class="dv" style="color: #AD0000;">0</span>, <span class="dv" style="color: #AD0000;">30</span>, <span class="dv" style="color: #AD0000;">2</span>),</span>
+<span id="cb7-26">      <span class="at" style="color: #657422;">labels =</span> <span class="fu" style="color: #4758AB;">trans_format</span>(</span>
+<span id="cb7-27">        <span class="cf" style="color: #003B4F;">function</span>(x) <span class="fu" style="color: #4758AB;">ifelse</span>(x <span class="sc" style="color: #5E5E5E;">&gt;</span> <span class="dv" style="color: #AD0000;">23</span>, x <span class="sc" style="color: #5E5E5E;">-</span> <span class="dv" style="color: #AD0000;">24</span>, x), </span>
+<span id="cb7-28">        <span class="at" style="color: #657422;">format =</span> scales<span class="sc" style="color: #5E5E5E;">::</span><span class="fu" style="color: #4758AB;">comma_format</span>(<span class="at" style="color: #657422;">suffix =</span> <span class="st" style="color: #20794D;">":00"</span>, <span class="at" style="color: #657422;">accuracy =</span> <span class="dv" style="color: #AD0000;">1</span>)</span>
+<span id="cb7-29">      )</span>
+<span id="cb7-30">    ) <span class="sc" style="color: #5E5E5E;">+</span></span>
+<span id="cb7-31">    <span class="fu" style="color: #4758AB;">labs</span>(<span class="at" style="color: #657422;">x =</span> <span class="st" style="color: #20794D;">"Date"</span>, <span class="at" style="color: #657422;">y =</span> <span class="st" style="color: #20794D;">'Time'</span>) <span class="sc" style="color: #5E5E5E;">+</span></span>
+<span id="cb7-32">    <span class="fu" style="color: #4758AB;">theme_fivethirtyeight</span>() <span class="sc" style="color: #5E5E5E;">+</span></span>
+<span id="cb7-33">  <span class="fu" style="color: #4758AB;">scale_x_date</span>(<span class="at" style="color: #657422;">date_breaks =</span> <span class="st" style="color: #20794D;">'1 month'</span>, <span class="at" style="color: #657422;">date_labels =</span> <span class="st" style="color: #20794D;">'%b'</span>, <span class="at" style="color: #657422;">expand =</span> <span class="fu" style="color: #4758AB;">c</span>(<span class="dv" style="color: #AD0000;">0</span>, <span class="dv" style="color: #AD0000;">0</span>)) <span class="sc" style="color: #5E5E5E;">+</span></span>
+<span id="cb7-34">  <span class="fu" style="color: #4758AB;">facet_grid</span>(. <span class="sc" style="color: #5E5E5E;">~</span> year, <span class="at" style="color: #657422;">space =</span> <span class="st" style="color: #20794D;">'free'</span>, <span class="at" style="color: #657422;">scales =</span> <span class="st" style="color: #20794D;">'free_x'</span>, <span class="at" style="color: #657422;">switch =</span> <span class="st" style="color: #20794D;">'x'</span>) <span class="sc" style="color: #5E5E5E;">+</span></span>
+<span id="cb7-35">  <span class="fu" style="color: #4758AB;">theme</span>(<span class="at" style="color: #657422;">panel.spacing.x =</span> <span class="fu" style="color: #4758AB;">unit</span>(<span class="dv" style="color: #AD0000;">0</span>,<span class="st" style="color: #20794D;">"line"</span>), <span class="at" style="color: #657422;">strip.placement =</span> <span class="st" style="color: #20794D;">"outside"</span>)</span></code></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://www.matthewrkaye.com/posts/2021-06-08-working-with-your-fitbit-data-in-r/static/rmarkdown-libsunnamed-chunk-7-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="heart-rate-and-steps" class="level2">
+<h2 class="anchored" data-anchor-id="heart-rate-and-steps">Heart Rate and Steps</h2>
+<p>You can also pull your heart rate data with <code>fitbitr</code>. Maybe we’re curious about seeing how the number of minutes spent in the “fat burn,” “cardio,” and “peak” zones correlates with the number of steps taken that day. Let’s find out!</p>
+<div class="cell" data-layout-align="center" data-hash="index_cache/html/unnamed-chunk-8_df41135438270860bd7e0fd1091a4efa">
+<div class="sourceCode cell-code" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1">hr <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">map_dfr</span>(</span>
+<span id="cb8-2">  <span class="dv" style="color: #AD0000;">3</span><span class="sc" style="color: #5E5E5E;">:</span><span class="dv" style="color: #AD0000;">0</span>,</span>
+<span id="cb8-3">  <span class="sc" style="color: #5E5E5E;">~</span> <span class="fu" style="color: #4758AB;">heart_rate_zones</span>(</span>
+<span id="cb8-4">    end <span class="sc" style="color: #5E5E5E;">-</span> <span class="fu" style="color: #4758AB;">months</span>(.x), </span>
+<span id="cb8-5">    end <span class="sc" style="color: #5E5E5E;">-</span> <span class="fu" style="color: #4758AB;">months</span>(.x) <span class="sc" style="color: #5E5E5E;">+</span> <span class="fu" style="color: #4758AB;">months</span>(<span class="dv" style="color: #AD0000;">1</span>)</span>
+<span id="cb8-6">  )</span>
+<span id="cb8-7">)</span>
+<span id="cb8-8"></span>
+<span id="cb8-9">steps <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">map_dfr</span>(</span>
+<span id="cb8-10">  <span class="dv" style="color: #AD0000;">3</span><span class="sc" style="color: #5E5E5E;">:</span><span class="dv" style="color: #AD0000;">0</span>,</span>
+<span id="cb8-11">  <span class="sc" style="color: #5E5E5E;">~</span> <span class="fu" style="color: #4758AB;">steps</span>(</span>
+<span id="cb8-12">    end <span class="sc" style="color: #5E5E5E;">-</span> <span class="fu" style="color: #4758AB;">months</span>(.x), </span>
+<span id="cb8-13">    end <span class="sc" style="color: #5E5E5E;">-</span> <span class="fu" style="color: #4758AB;">months</span>(.x) <span class="sc" style="color: #5E5E5E;">+</span> <span class="fu" style="color: #4758AB;">months</span>(<span class="dv" style="color: #AD0000;">1</span>)</span>
+<span id="cb8-14">  )</span>
+<span id="cb8-15">)</span></code></pre></div>
+</div>
+<p>First, we can examine the heart rate data:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><span class="fu" style="color: #4758AB;">head</span>(hr)</span></code></pre></div>
+<div class="cell-output-display">
+
+<table class="table" style="margin-left: auto; margin-right: auto;">
+ <thead>
+  <tr>
+   <th style="text-align:left;"> date </th>
+   <th style="text-align:left;"> zone </th>
+   <th style="text-align:right;"> min_hr </th>
+   <th style="text-align:right;"> max_hr </th>
+   <th style="text-align:right;"> minutes_in_zone </th>
+   <th style="text-align:right;"> calories_out </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> 2021-07-18 </td>
+   <td style="text-align:left;"> Out of Range </td>
+   <td style="text-align:right;"> 30 </td>
+   <td style="text-align:right;"> 113 </td>
+   <td style="text-align:right;"> 1440 </td>
+   <td style="text-align:right;"> 2530.16460 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2021-07-18 </td>
+   <td style="text-align:left;"> Fat Burn </td>
+   <td style="text-align:right;"> 113 </td>
+   <td style="text-align:right;"> 141 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 0.00000 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2021-07-18 </td>
+   <td style="text-align:left;"> Cardio </td>
+   <td style="text-align:right;"> 141 </td>
+   <td style="text-align:right;"> 176 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 0.00000 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2021-07-18 </td>
+   <td style="text-align:left;"> Peak </td>
+   <td style="text-align:right;"> 176 </td>
+   <td style="text-align:right;"> 220 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 0.00000 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2021-07-19 </td>
+   <td style="text-align:left;"> Out of Range </td>
+   <td style="text-align:right;"> 30 </td>
+   <td style="text-align:right;"> 113 </td>
+   <td style="text-align:right;"> 1408 </td>
+   <td style="text-align:right;"> 2689.45124 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2021-07-19 </td>
+   <td style="text-align:left;"> Fat Burn </td>
+   <td style="text-align:right;"> 113 </td>
+   <td style="text-align:right;"> 141 </td>
+   <td style="text-align:right;"> 9 </td>
+   <td style="text-align:right;"> 86.59917 </td>
+  </tr>
+</tbody>
+</table>
+
+</div>
+</div>
+<p>and the steps data:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><span class="fu" style="color: #4758AB;">head</span>(steps)</span></code></pre></div>
+<div class="cell-output-display">
+
+<table class="table" style="margin-left: auto; margin-right: auto;">
+ <thead>
+  <tr>
+   <th style="text-align:left;"> date </th>
+   <th style="text-align:right;"> steps </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> 2021-07-18 </td>
+   <td style="text-align:right;"> 5620 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2021-07-19 </td>
+   <td style="text-align:right;"> 7537 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2021-07-20 </td>
+   <td style="text-align:right;"> 5513 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2021-07-21 </td>
+   <td style="text-align:right;"> 9014 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2021-07-22 </td>
+   <td style="text-align:right;"> 10883 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2021-07-23 </td>
+   <td style="text-align:right;"> 2975 </td>
+  </tr>
+</tbody>
+</table>
+
+</div>
+</div>
+<p>Now, let’s plot them against each other.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb11" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1">df <span class="ot" style="color: #003B4F;">&lt;-</span> hr <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb11-2">  <span class="fu" style="color: #4758AB;">filter</span>(zone <span class="sc" style="color: #5E5E5E;">!=</span> <span class="st" style="color: #20794D;">"Out of Range"</span>) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb11-3">  <span class="fu" style="color: #4758AB;">group_by</span>(date) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb11-4">  <span class="fu" style="color: #4758AB;">summarize</span>(<span class="at" style="color: #657422;">total_minutes =</span> <span class="fu" style="color: #4758AB;">sum</span>(minutes_in_zone), <span class="at" style="color: #657422;">.groups =</span> <span class="st" style="color: #20794D;">"drop"</span>) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb11-5">  <span class="fu" style="color: #4758AB;">inner_join</span>(steps, <span class="at" style="color: #657422;">by =</span> <span class="st" style="color: #20794D;">"date"</span>)</span>
+<span id="cb11-6">  </span>
+<span id="cb11-7">df <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb11-8">  <span class="fu" style="color: #4758AB;">mutate</span>(<span class="at" style="color: #657422;">steps =</span> <span class="fu" style="color: #4758AB;">as.numeric</span>(steps)) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb11-9">  <span class="fu" style="color: #4758AB;">filter</span>(<span class="fu" style="color: #4758AB;">log</span>(total_minutes) <span class="sc" style="color: #5E5E5E;">&gt;</span> <span class="dv" style="color: #AD0000;">1</span>) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb11-10">  <span class="fu" style="color: #4758AB;">ggplot</span>(</span>
+<span id="cb11-11">    <span class="fu" style="color: #4758AB;">aes</span>(</span>
+<span id="cb11-12">      steps,</span>
+<span id="cb11-13">      total_minutes</span>
+<span id="cb11-14">    )</span>
+<span id="cb11-15">  ) <span class="sc" style="color: #5E5E5E;">+</span></span>
+<span id="cb11-16">  <span class="fu" style="color: #4758AB;">geom_point</span>() <span class="sc" style="color: #5E5E5E;">+</span></span>
+<span id="cb11-17">  <span class="fu" style="color: #4758AB;">geom_smooth</span>(<span class="at" style="color: #657422;">method =</span> <span class="st" style="color: #20794D;">"lm"</span>, <span class="at" style="color: #657422;">se =</span> F) <span class="sc" style="color: #5E5E5E;">+</span></span>
+<span id="cb11-18">  <span class="fu" style="color: #4758AB;">scale_x_log10</span>() <span class="sc" style="color: #5E5E5E;">+</span></span>
+<span id="cb11-19">  <span class="fu" style="color: #4758AB;">scale_y_log10</span>()</span></code></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://www.matthewrkaye.com/posts/2021-06-08-working-with-your-fitbit-data-in-r/static/rmarkdown-libsunnamed-chunk-11-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Or maybe it’d be interesting to predict your zone minutes from your steps:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1">predictions <span class="ot" style="color: #003B4F;">&lt;-</span> df <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb12-2">  <span class="fu" style="color: #4758AB;">mutate</span>(<span class="at" style="color: #657422;">steps =</span> <span class="fu" style="color: #4758AB;">as.numeric</span>(steps)) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb12-3">  <span class="fu" style="color: #4758AB;">lm</span>(total_minutes <span class="sc" style="color: #5E5E5E;">~</span> steps, <span class="at" style="color: #657422;">data =</span> .) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb12-4">  broom<span class="sc" style="color: #5E5E5E;">::</span><span class="fu" style="color: #4758AB;">tidy</span>() <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb12-5">  <span class="fu" style="color: #4758AB;">mutate</span>(<span class="fu" style="color: #4758AB;">across</span>(<span class="fu" style="color: #4758AB;">where</span>(is.numeric), round, <span class="dv" style="color: #AD0000;">5</span>))</span>
+<span id="cb12-6"></span>
+<span id="cb12-7"><span class="fu" style="color: #4758AB;">head</span>(predictions)</span></code></pre></div>
+<div class="cell-output-display">
+
+<table class="table" style="margin-left: auto; margin-right: auto;">
+ <thead>
+  <tr>
+   <th style="text-align:left;"> term </th>
+   <th style="text-align:right;"> estimate </th>
+   <th style="text-align:right;"> std.error </th>
+   <th style="text-align:right;"> statistic </th>
+   <th style="text-align:right;"> p.value </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> (Intercept) </td>
+   <td style="text-align:right;"> 23.09761 </td>
+   <td style="text-align:right;"> 5.77502 </td>
+   <td style="text-align:right;"> 3.99957 </td>
+   <td style="text-align:right;"> 0.00011 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> steps </td>
+   <td style="text-align:right;"> 0.00252 </td>
+   <td style="text-align:right;"> 0.00056 </td>
+   <td style="text-align:right;"> 4.52922 </td>
+   <td style="text-align:right;"> 0.00001 </td>
+  </tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</section>
+<section id="wrapping-up" class="level2">
+<h2 class="anchored" data-anchor-id="wrapping-up">Wrapping Up</h2>
+<p>And that’s it! Hopefully this helped show how <code>fitbitr</code> makes pulling your data easy, and gets you curious about the insights you can glean from your own data. The Fitbit API gives you access to so much interesting information about yourself, your habits, your fitness, and so much more, and <code>fitbitr</code> is just meant to be a door into that gold mine.</p>
+
+
+</section>
+
+ ]]></description>
+  <category>R</category>
+  <category>data science</category>
+  <guid>https://www.matthewrkaye.com/posts/2021-06-08-working-with-your-fitbit-data-in-r/index.html</guid>
+  <pubDate>Tue, 08 Jun 2021 04:00:00 GMT</pubDate>
+</item>
+<item>
+  <title>Highlights From rstudio::global</title>
+  <dc:creator>Matt Kaye</dc:creator>
+  <link>https://www.matthewrkaye.com/posts/2021-02-11-highlights-from-rstudio-global/index.html</link>
+  <description><![CDATA[ 
+
+
+
+<p><code>rstudio::global</code>, this year’s iteration of the annual RStudio conference, was a few weeks ago. Here were some highlights:</p>
+<section id="talks" class="level2">
+<h2 class="anchored" data-anchor-id="talks">Talks</h2>
+<p>There were a few talks I really loved:</p>
+<ul>
+<li><a href="https://rstudio.com/resources/rstudioglobal-2021/using-r-to-up-your-experimentation-game/">Using R to Up Your Experimentation Game</a>, by Shirbi Ish-Shalom. On experimentation, sequential testing, taking big swings, and being statistically rigorous</li>
+<li><a href="https://rstudio.com/resources/rstudioglobal-2021/maintaining-the-house-the-tidyverse-built/">Maintaining the House the Tidyverse Built</a>, by Hadley Wickham. On building and maintaining the Tidyverse, and what package maintenance in the real world is like when you have millions of downloads.</li>
+<li><a href="https://rstudio.com/resources/rstudioglobal-2021/organization-how-to-make-internal-r-packages-part-of-your-team/">oRganization: How to Make Internal R Packages Part of Your Team</a>, by Emily Riederer. On how using internal packages (like <code>collegeviner</code> at CollegeVine!) can improve your R workflow and make teamwork in R dramatically easier, smoother, and more efficient.</li>
+<li><a href="https://rstudio.com/resources/rstudioglobal-2021/fairness-and-data-science-failures-factors-and-futures/">Fairness and Data Science: Failures, Factors, and Futures</a>, by Grant Fleming. On model fairness, bias, and evaluation techniques, and why they’re important to get right.</li>
+</ul>
+</section>
+<section id="cool-new-things" class="level2">
+<h2 class="anchored" data-anchor-id="cool-new-things">Cool New Things</h2>
+<ul>
+<li><code>finetune</code>, Max Kuhn’s new <code>tune</code>-adjacent package, is live (albeit a little buggy)! It has some cool new model tuning algorithms, including racing methods with <code>tune_race_anova()</code> and <code>tune_race_win_loss()</code>, in addition to my personal favorite: <code>tune_sim_anneal()</code> for Simulated Annealing! <a href="https://rstudio.com/resources/rstudioglobal-2021/whats-new-in-tidymodels/">Link to the talk</a></li>
+<li>Major improvements to <code>shiny</code>, including some serious caching upgrades that’ll improve performance dramatically! <a href="https://rstudio.com/resources/rstudioglobal-2021/making-shiny-apps-faster-with-caching/">Link to the talk</a></li>
+</ul>
+</section>
+<section id="other-highlights" class="level2">
+<h2 class="anchored" data-anchor-id="other-highlights">Other Highlights</h2>
+<ul>
+<li>Meeting a bunch of people in the breakout sessions! This year, there were virtual “tables” where you could drag your avatar to “sit down”, and once you were close enough to a table you could hear all of its conversation.</li>
+</ul>
+
+
+</section>
+
+ ]]></description>
+  <category>R</category>
+  <category>data science</category>
+  <guid>https://www.matthewrkaye.com/posts/2021-02-11-highlights-from-rstudio-global/index.html</guid>
+  <pubDate>Thu, 11 Feb 2021 05:00:00 GMT</pubDate>
+</item>
+<item>
+  <title>What’s New in slackr 2.1.0</title>
+  <dc:creator>Matt Kaye</dc:creator>
+  <link>https://www.matthewrkaye.com/posts/2021-02-07-what-s-new-in-slackr-2-1-0/index.html</link>
+  <description><![CDATA[ 
+
+
+
+<section id="introduction" class="level2">
+<h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
+<p><code>slackr 2.1.0+</code> is live! There are a whole bunch of exciting changes that we (mostly <a href="https://github.com/andrie">Andrie de Vries</a> and I) have made to improve the package a bunch.</p>
+</section>
+<section id="changes" class="level2">
+<h2 class="anchored" data-anchor-id="changes">Changes</h2>
+<p>Here are some of the things that are new in <code>slackr 2.1.0+</code>. For more info on the package, check out the <a href="https://github.com/mrkaye97/slackr">Github repo</a> and the <a href="https://mrkaye97.github.io/slackr/index.html">pkgdown site</a>.</p>
+<section id="ease-of-use-improvements" class="level3">
+<h3 class="anchored" data-anchor-id="ease-of-use-improvements">Ease of Use Improvements</h3>
+<ul>
+<li>We’ve dramatically improved error messaging, so long gone are the days of errors like <code>No 'id' column found in 'x'</code>! Now, error messages should be far more helpful, with some hints about what might be going wrong.</li>
+<li>We’ve updated the package documentation significantly, so now there’s a far more informative <a href="https://github.com/mrkaye97/slackr">README</a>, some vignettes, and a <a href="https://mrkaye97.github.io/slackr/index.html">pkgdown site</a>.</li>
+<li>We’ve more clearly described the different use cases for <code>slackr</code>, in order to better help users set up <code>slackr</code> in a way that makes sense for them.</li>
+</ul>
+</section>
+<section id="new-features" class="level3">
+<h3 class="anchored" data-anchor-id="new-features">New Features</h3>
+<ul>
+<li>We’ve fixed a bunch of bugs that were preventing things like <code>icon_emoji</code> and <code>username</code> from working, so those are fixed now!</li>
+<li>We’ve brought back some old functions that were removed in <code>slackr 2.0.0</code>: <code>slackr_history()</code> and <code>slackr_delete()</code>. See the docs for descriptions of what these functions can do.</li>
+</ul>
+</section>
+<section id="back-end-changes" class="level3">
+<h3 class="anchored" data-anchor-id="back-end-changes">Back-End Changes</h3>
+<p>We’ve made a ton of changes for how <code>slackr</code> interacts with the Slack API:</p>
+<ul>
+<li>We now allow paging, which is especially helpful when you have a workspace of more than 1000 channels.</li>
+<li>We cache requests to get lists of channels and users so that we don’t need to repeat common API calls. This speeds up calls to <code>slackr_***()</code> and limits how often you need to actually hit the API.</li>
+<li>We’ve gotten rid of a really nasty implementation of channel caching (writing a local cache to the disk) in favor of the method described above.</li>
+<li>We’ve factored out API calls into a separate function, which makes the package easier to understand and test.</li>
+<li>Speaking of testing, we’ve implemented a whole bunch of unit tests, and will be working on more.</li>
+</ul>
+</section>
+<section id="deprecations" class="level3">
+<h3 class="anchored" data-anchor-id="deprecations">Deprecations</h3>
+<ul>
+<li>We’ve deprecated a bunch of camel case functions in favor of their snake case counterparts for simplicity. Don’t worry! These are soft-deprecated for now. They won’t go away fully until a future version of <code>slackr</code></li>
+<li>We’ve deprecated <code>text_slackr</code> in favor of <code>slackr_msg</code>, since they do basically the same thing.</li>
+</ul>
+
+
+</section>
+</section>
+
+ ]]></description>
+  <category>R</category>
+  <guid>https://www.matthewrkaye.com/posts/2021-02-07-what-s-new-in-slackr-2-1-0/index.html</guid>
+  <pubDate>Sun, 07 Feb 2021 05:00:00 GMT</pubDate>
+</item>
+</channel>
+</rss>

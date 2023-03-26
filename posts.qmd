@@ -2,7 +2,8 @@
 title: "Posts"
 listing:
   contents: posts
-  feed: true
+  feed:
+    categories: [R]
   sort: "date desc"
   type: default
   categories: true
