@@ -29,7 +29,7 @@
 <div class="cell">
 
 </div>
-<p>For the purposes of this example, I’ll use the Wisconsin breast cancer data. The data is build into the <code>mlbench</code> package in R and <code>scikit-learn</code> in python. You can also get it from the <a href="https://archive.ics.uci.edu/ml/datasets/Breast+Cancer+Wisconsin+(Diagnostic)">UCI Machine Learning Repository</a>.</p>
+<p>For the purposes of this example, I’ll use the Wisconsin breast cancer data. The data is builr into the <code>mlbench</code> package in R and <code>scikit-learn</code> in python. You can also get it from the <a href="https://archive.ics.uci.edu/ml/datasets/Breast+Cancer+Wisconsin+(Diagnostic)">UCI Machine Learning Repository</a>.</p>
 <p>I’ll only be using <code>cl_thickness</code>, which is the indicator for clump thickness.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><span class="fu" style="color: #4758AB;">library</span>(readr)</span>
@@ -62,23 +62,23 @@
  </thead>
 <tbody>
   <tr>
-   <td style="text-align:right;"> 4 </td>
-   <td style="text-align:left;"> benign </td>
-  </tr>
-  <tr>
    <td style="text-align:right;"> 7 </td>
    <td style="text-align:left;"> malignant </td>
   </tr>
   <tr>
-   <td style="text-align:right;"> 5 </td>
+   <td style="text-align:right;"> 4 </td>
    <td style="text-align:left;"> benign </td>
   </tr>
   <tr>
-   <td style="text-align:right;"> 3 </td>
+   <td style="text-align:right;"> 2 </td>
    <td style="text-align:left;"> benign </td>
   </tr>
   <tr>
    <td style="text-align:right;"> 1 </td>
+   <td style="text-align:left;"> benign </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 3 </td>
    <td style="text-align:left;"> benign </td>
   </tr>
 </tbody>
@@ -340,14 +340,14 @@
   <tr>
    <td style="text-align:left;"> (Intercept) </td>
    <td style="text-align:right;"> -5.1601677 </td>
-   <td style="text-align:right;"> -4.3091705 </td>
-   <td style="text-align:right;"> -4.3511577 </td>
+   <td style="text-align:right;"> -4.2037171 </td>
+   <td style="text-align:right;"> -4.3412655 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> cl_thickness </td>
    <td style="text-align:right;"> 0.9354593 </td>
-   <td style="text-align:right;"> 0.8889979 </td>
-   <td style="text-align:right;"> 0.8993583 </td>
+   <td style="text-align:right;"> 0.8662146 </td>
+   <td style="text-align:right;"> 0.8969732 </td>
   </tr>
 </tbody>
 </table>
