@@ -1,9 +1,7 @@
 ---
+title: My Three Favorite, Alphabetically
 toc: false
 ---
-
-My Three Favorite, Alphabetically
----------------------------------
 
 *   **ALGORITHMS:** [Bogo Sort](https://en.wikipedia.org/wiki/Bogosort), [Logistic Regression](https://en.wikipedia.org/wiki/Logistic_regression), [Metropolis-Hastings](https://en.wikipedia.org/wiki/Metropolis%E2%80%93Hastings_algorithm)
 *   **ARTISTS:** Dalí, Monet, Picasso

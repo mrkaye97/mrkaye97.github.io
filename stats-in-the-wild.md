@@ -1,12 +1,14 @@
 ---
 toc: false
+title: Statistics in the Wild
+callout-appearance: minimal
 ---
 
-## Since 92.4% of statistics are made up:
+### Since 92.4% of statistics are made up...
 
-_**Disclaimer:** This is a rolling compilation of a number of uses of statistics by the media, on TV broadcasts, and from other sources, mainly having to do with sports and politics. Some are good, some are bad, and some are laughable. Decisions about which belong in each category are left to the reader. Kindly excuse any slight misquotes, and enjoy!_
-
-<br>
+::: {.callout-important}
+**Disclaimer:** This is a rolling compilation of a number of uses of statistics by the media, on TV broadcasts, and from other sources, mainly having to do with sports and politics. Some are good, some are bad, and some are laughable. Decisions about which belong in each category are left to the reader. Kindly excuse any slight misquotes, and enjoy!
+:::
 
 - **All-time Stat:** Oakland Athletics outfielder Khris Davis hit .247 for four years in a row.
 
