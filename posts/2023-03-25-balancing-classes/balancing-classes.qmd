@@ -16,7 +16,7 @@ With calibration in mind, this post will show why balancing your classes -- whic
 ## Some Example Data
 
 ```{r, echo = FALSE}
-knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE, cache = TRUE)
 
 pretty_print <- function(data) {
   data |>
@@ -244,7 +244,7 @@ smote_intercept_only <-       glm(class ~ 1, data = smote, family = binomial)
 ```
 
 
-Now, let's compare the intercept coefficients of these two models on a probability (read: not a log-odds) scale.
+Now, let's compare the intercept coefficients of these three models on a probability (read: not a log-odds) scale.
 
 ```{r}
 convert_log_odds_to_probability <- function(x) {

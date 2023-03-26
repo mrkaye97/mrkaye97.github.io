@@ -29,9 +29,9 @@
 <div class="cell">
 
 </div>
-<p>For the purposes of this example, I’ll use the Wisconsin breast cancer data. The data is builr into the <code>mlbench</code> package in R and <code>scikit-learn</code> in python. You can also get it from the <a href="https://archive.ics.uci.edu/ml/datasets/Breast+Cancer+Wisconsin+(Diagnostic)">UCI Machine Learning Repository</a>.</p>
+<p>For the purposes of this example, I’ll use the Wisconsin breast cancer data. The data is built into the <code>mlbench</code> package in R and <code>scikit-learn</code> in python. You can also get it from the <a href="https://archive.ics.uci.edu/ml/datasets/Breast+Cancer+Wisconsin+(Diagnostic)">UCI Machine Learning Repository</a>.</p>
 <p>I’ll only be using <code>cl_thickness</code>, which is the indicator for clump thickness.</p>
-<div class="cell">
+<div class="cell" data-hash="balancing-classes_cache/html/unnamed-chunk-2_2d07da233c515f06e9ba17c34c77b64e">
 <div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><span class="fu" style="color: #4758AB;">library</span>(readr)</span>
 <span id="cb1-2"><span class="fu" style="color: #4758AB;">library</span>(dplyr)</span>
 <span id="cb1-3"><span class="fu" style="color: #4758AB;">library</span>(janitor)</span>
@@ -62,7 +62,15 @@
  </thead>
 <tbody>
   <tr>
-   <td style="text-align:right;"> 7 </td>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:left;"> benign </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 3 </td>
+   <td style="text-align:left;"> benign </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 5 </td>
    <td style="text-align:left;"> malignant </td>
   </tr>
   <tr>
@@ -70,15 +78,7 @@
    <td style="text-align:left;"> benign </td>
   </tr>
   <tr>
-   <td style="text-align:right;"> 2 </td>
-   <td style="text-align:left;"> benign </td>
-  </tr>
-  <tr>
    <td style="text-align:right;"> 1 </td>
-   <td style="text-align:left;"> benign </td>
-  </tr>
-  <tr>
-   <td style="text-align:right;"> 3 </td>
    <td style="text-align:left;"> benign </td>
   </tr>
 </tbody>
@@ -87,7 +87,7 @@
 </div>
 </div>
 <p>The data is imbalanced: There are far more (about 2x) benign tumors than malignant ones in the sample.</p>
-<div class="cell">
+<div class="cell" data-hash="balancing-classes_cache/html/unnamed-chunk-3_52ea88dedd038573a8a6f2ef94ce554e">
 <div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1">data <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
 <span id="cb2-2">  <span class="fu" style="color: #4758AB;">count</span>(class) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
 <span id="cb2-3">  <span class="fu" style="color: #4758AB;">mutate</span>(<span class="at" style="color: #657422;">prop =</span> n <span class="sc" style="color: #5E5E5E;">/</span> <span class="fu" style="color: #4758AB;">sum</span>(n)) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
@@ -123,7 +123,7 @@
 <h2 class="anchored" data-anchor-id="model-fitting">Model Fitting</h2>
 <p>With that class imbalance in mind, let’s get to model fitting. The first thing I’ll do is fit a simple logistic regression model to predict the class (either malignant or benign) from the clump thickness.</p>
 <p>First, I’ve written a bit of <code>tidymodels</code> helper code below for reuse later.</p>
-<div class="cell">
+<div class="cell" data-hash="balancing-classes_cache/html/unnamed-chunk-4_4dc844657887e02084b5bd5224e2a415">
 <div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><span class="fu" style="color: #4758AB;">library</span>(tidymodels)</span>
 <span id="cb3-2"></span>
 <span id="cb3-3">fit_model <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="cf" style="color: #003B4F;">function</span>(data, spec) {</span>
@@ -146,7 +146,7 @@
 <span id="cb3-20">}</span></code></pre></div>
 </div>
 <p>Now, I’ll fit a simple logistic regression model by specifying <code>logistic_reg()</code> as the model specification in <code>fit_model()</code>.</p>
-<div class="cell">
+<div class="cell" data-hash="balancing-classes_cache/html/unnamed-chunk-5_5ddb90f924073d8a54cad67b62f080c3">
 <div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><span class="fu" style="color: #4758AB;">library</span>(probably)</span>
 <span id="cb4-2"></span>
 <span id="cb4-3">unbalanced_model <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">fit_model</span>(</span>
@@ -161,7 +161,7 @@
 <span id="cb4-12">)</span></code></pre></div>
 </div>
 <p>And now we can make a calibration plot of our predictions. Remember, the goal is to have the points on the plot lie roughly along the line <code>y = x</code>. Lying below the line means that our predictions are too high, and above the line means our predictions are too low.</p>
-<div class="cell">
+<div class="cell" data-hash="balancing-classes_cache/html/unnamed-chunk-6_20a805dbf7b4dfcacd10ad444a4c3c16">
 <div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><span class="fu" style="color: #4758AB;">cal_plot_breaks</span>(preds, <span class="at" style="color: #657422;">truth =</span> truth_int, <span class="at" style="color: #657422;">estimate =</span> estimate)</span></code></pre></div>
 <div class="cell-output-display">
 <p><img src="https://www.matthewrkaye.com/posts/2023-03-25-balancing-classes/balancing-classes_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid" width="672"></p>
@@ -172,7 +172,7 @@
 <section id="balancing-the-training-data" class="level2">
 <h2 class="anchored" data-anchor-id="balancing-the-training-data">Balancing the Training Data</h2>
 <p>So then, what happens if we balance the training data as we’re so often told to do? First, let’s balance by undersampling from the majority class.</p>
-<div class="cell">
+<div class="cell" data-hash="balancing-classes_cache/html/unnamed-chunk-7_2380b25282112c841a0375cfc3ca3e14">
 <div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1">minority_class <span class="ot" style="color: #003B4F;">&lt;-</span> data <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
 <span id="cb6-2">  <span class="fu" style="color: #4758AB;">count</span>(class) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
 <span id="cb6-3">  <span class="fu" style="color: #4758AB;">filter</span>(n <span class="sc" style="color: #5E5E5E;">==</span> <span class="fu" style="color: #4758AB;">min</span>(n))</span>
@@ -220,7 +220,7 @@
 </div>
 </div>
 <p>Now we have the same number of observations for each class. Let’s go ahead and fit another logistic regression model, but this time on the balanced data.</p>
-<div class="cell">
+<div class="cell" data-hash="balancing-classes_cache/html/unnamed-chunk-8_735757caafdc44ca11c2c7594b73d407">
 <div class="sourceCode cell-code" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1">balanced_model <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">fit_model</span>(balanced, <span class="fu" style="color: #4758AB;">logistic_reg</span>())</span>
 <span id="cb7-2"></span>
 <span id="cb7-3">preds<span class="sc" style="color: #5E5E5E;">$</span>balanced_preds <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">predict_prob</span>(</span>
@@ -243,7 +243,7 @@
 <h2 class="anchored" data-anchor-id="smote">SMOTE</h2>
 <p>“But no!” you might be thinking. “Why would you just undersample directly? You’re supposed to use an algorithm like SMOTE to overcome your class imbalance problem.”</p>
 <p>Great! Let’s see if using SMOTE fixes our calibration issues. I’ll first use SMOTE to intelligently oversample the minority class.</p>
-<div class="cell">
+<div class="cell" data-hash="balancing-classes_cache/html/unnamed-chunk-9_b45531424bf2bcd7f30a57e581010e5a">
 <div class="sourceCode cell-code" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><span class="fu" style="color: #4758AB;">library</span>(themis)</span>
 <span id="cb8-2"></span>
 <span id="cb8-3">smote <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">recipe</span>(class <span class="sc" style="color: #5E5E5E;">~</span> cl_thickness, <span class="at" style="color: #657422;">data =</span> data) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
@@ -278,7 +278,7 @@
 </div>
 </div>
 <p>Now that we have balanced classes thanks to SMOTE, let’s fit another logistic regresion model and see if it’s any better-calibrated.</p>
-<div class="cell">
+<div class="cell" data-hash="balancing-classes_cache/html/unnamed-chunk-10_6b34fe011f168962a48acd30cbdb7259">
 <div class="sourceCode cell-code" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1">smote_model <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">fit_model</span>(smote, <span class="fu" style="color: #4758AB;">logistic_reg</span>())</span>
 <span id="cb9-2"></span>
 <span id="cb9-3">preds<span class="sc" style="color: #5E5E5E;">$</span>smote_preds <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">predict_prob</span>(</span>
@@ -297,7 +297,7 @@
 <h2 class="anchored" data-anchor-id="a-random-forest">A Random Forest</h2>
 <p>“But no!” you might be thinking. “You need to use a more complicated model like a random forest, because logistic regression won’t pick up on complexities in your data well enough to be well-calibrated.”</p>
 <p>Great! Let’s try a random forest:</p>
-<div class="cell">
+<div class="cell" data-hash="balancing-classes_cache/html/unnamed-chunk-11_c68820cff38a66615728555770703763">
 <div class="sourceCode cell-code" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1">rf <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">fit_model</span>(smote, <span class="fu" style="color: #4758AB;">rand_forest</span>())</span>
 <span id="cb10-2"></span>
 <span id="cb10-3">preds<span class="sc" style="color: #5E5E5E;">$</span>rf_preds <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">predict_prob</span>(</span>
@@ -315,7 +315,7 @@
 <section id="coefficients" class="level2">
 <h2 class="anchored" data-anchor-id="coefficients">Coefficients</h2>
 <p>Looking at the coefficients of our three models can help understand what’s going on here.</p>
-<div class="cell">
+<div class="cell" data-hash="balancing-classes_cache/html/unnamed-chunk-12_5a969a88051dbbffacc249a1c1f0b7d3">
 <div class="sourceCode cell-code" id="cb11" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><span class="fu" style="color: #4758AB;">list</span>(</span>
 <span id="cb11-2">  <span class="st" style="color: #20794D;">"Original"</span> <span class="ot" style="color: #003B4F;">=</span> unbalanced_model, </span>
 <span id="cb11-3">  <span class="st" style="color: #20794D;">"Undersampled"</span> <span class="ot" style="color: #003B4F;">=</span> balanced_model, </span>
@@ -340,14 +340,14 @@
   <tr>
    <td style="text-align:left;"> (Intercept) </td>
    <td style="text-align:right;"> -5.1601677 </td>
-   <td style="text-align:right;"> -4.2037171 </td>
-   <td style="text-align:right;"> -4.3412655 </td>
+   <td style="text-align:right;"> -4.0441444 </td>
+   <td style="text-align:right;"> -4.4363999 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> cl_thickness </td>
    <td style="text-align:right;"> 0.9354593 </td>
-   <td style="text-align:right;"> 0.8662146 </td>
-   <td style="text-align:right;"> 0.8969732 </td>
+   <td style="text-align:right;"> 0.8190776 </td>
+   <td style="text-align:right;"> 0.9159715 </td>
   </tr>
 </tbody>
 </table>
@@ -357,13 +357,13 @@
 <p>In all three models, the coefficient associated with the clump thickness is almost exactly the same. This should make sense intuitively: Our sampling was at random, so the relationship between the clump thickness and whether or not the tumor was malignant shouldn’t change at all.</p>
 <p>The thing that does change, though, is the intercept term. In both the model where we undersampled from the majority class and in the SMOTE model, the intercept term is significantly higher than it is in the original model on the unbalanced data. This should feel similar intuitively to the idea of the baseline guess from before. As its core, the intercept term in your logistic regression model is the guess you’d make with “no” information (in this particular case, no information means a clump thickness of 0).</p>
 <p>We can illustrate this more clearly with three intercept-only models:</p>
-<div class="cell">
+<div class="cell" data-hash="balancing-classes_cache/html/unnamed-chunk-13_78f63c1f411976c37ab83d6c098efd89">
 <div class="sourceCode cell-code" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1">unbalanced_intercept_only <span class="ot" style="color: #003B4F;">&lt;-</span>  <span class="fu" style="color: #4758AB;">glm</span>(class <span class="sc" style="color: #5E5E5E;">~</span> <span class="dv" style="color: #AD0000;">1</span>, <span class="at" style="color: #657422;">data =</span> data, <span class="at" style="color: #657422;">family =</span> binomial)</span>
 <span id="cb12-2">undersampled_intecept_only <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">glm</span>(class <span class="sc" style="color: #5E5E5E;">~</span> <span class="dv" style="color: #AD0000;">1</span>, <span class="at" style="color: #657422;">data =</span> balanced, <span class="at" style="color: #657422;">family =</span> binomial)</span>
 <span id="cb12-3">smote_intercept_only <span class="ot" style="color: #003B4F;">&lt;-</span>       <span class="fu" style="color: #4758AB;">glm</span>(class <span class="sc" style="color: #5E5E5E;">~</span> <span class="dv" style="color: #AD0000;">1</span>, <span class="at" style="color: #657422;">data =</span> smote, <span class="at" style="color: #657422;">family =</span> binomial)</span></code></pre></div>
 </div>
-<p>Now, let’s compare the intercept coefficients of these two models on a probability (read: not a log-odds) scale.</p>
-<div class="cell">
+<p>Now, let’s compare the intercept coefficients of these three models on a probability (read: not a log-odds) scale.</p>
+<div class="cell" data-hash="balancing-classes_cache/html/unnamed-chunk-14_59bf20284da8fe1d1340e69222ef67fe">
 <div class="sourceCode cell-code" id="cb13" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1">convert_log_odds_to_probability <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="cf" style="color: #003B4F;">function</span>(x) {</span>
 <span id="cb13-2">  odds <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">exp</span>(x)</span>
 <span id="cb13-3">  odds <span class="sc" style="color: #5E5E5E;">/</span> (<span class="dv" style="color: #AD0000;">1</span> <span class="sc" style="color: #5E5E5E;">+</span> odds)</span>

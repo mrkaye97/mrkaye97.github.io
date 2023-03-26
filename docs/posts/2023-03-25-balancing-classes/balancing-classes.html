@@ -317,9 +317,9 @@ cookieconsent.run({
 <div class="cell">
 
 </div>
-<p>For the purposes of this example, I’ll use the Wisconsin breast cancer data. The data is builr into the <code>mlbench</code> package in R and <code>scikit-learn</code> in python. You can also get it from the <a href="https://archive.ics.uci.edu/ml/datasets/Breast+Cancer+Wisconsin+(Diagnostic)">UCI Machine Learning Repository</a>.</p>
+<p>For the purposes of this example, I’ll use the Wisconsin breast cancer data. The data is built into the <code>mlbench</code> package in R and <code>scikit-learn</code> in python. You can also get it from the <a href="https://archive.ics.uci.edu/ml/datasets/Breast+Cancer+Wisconsin+(Diagnostic)">UCI Machine Learning Repository</a>.</p>
 <p>I’ll only be using <code>cl_thickness</code>, which is the indicator for clump thickness.</p>
-<div class="cell">
+<div class="cell" data-hash="balancing-classes_cache/html/unnamed-chunk-2_2d07da233c515f06e9ba17c34c77b64e">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readr)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(janitor)</span>
@@ -350,7 +350,15 @@ cookieconsent.run({
  </thead>
 <tbody>
   <tr>
-   <td style="text-align:right;"> 7 </td>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:left;"> benign </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 3 </td>
+   <td style="text-align:left;"> benign </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 5 </td>
    <td style="text-align:left;"> malignant </td>
   </tr>
   <tr>
@@ -358,15 +366,7 @@ cookieconsent.run({
    <td style="text-align:left;"> benign </td>
   </tr>
   <tr>
-   <td style="text-align:right;"> 2 </td>
-   <td style="text-align:left;"> benign </td>
-  </tr>
-  <tr>
    <td style="text-align:right;"> 1 </td>
-   <td style="text-align:left;"> benign </td>
-  </tr>
-  <tr>
-   <td style="text-align:right;"> 3 </td>
    <td style="text-align:left;"> benign </td>
   </tr>
 </tbody>
@@ -375,7 +375,7 @@ cookieconsent.run({
 </div>
 </div>
 <p>The data is imbalanced: There are far more (about 2x) benign tumors than malignant ones in the sample.</p>
-<div class="cell">
+<div class="cell" data-hash="balancing-classes_cache/html/unnamed-chunk-3_52ea88dedd038573a8a6f2ef94ce554e">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>data <span class="sc">%&gt;%</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(class) <span class="sc">%&gt;%</span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">prop =</span> n <span class="sc">/</span> <span class="fu">sum</span>(n)) <span class="sc">%&gt;%</span></span>
@@ -411,7 +411,7 @@ cookieconsent.run({
 <h2 class="anchored" data-anchor-id="model-fitting">Model Fitting</h2>
 <p>With that class imbalance in mind, let’s get to model fitting. The first thing I’ll do is fit a simple logistic regression model to predict the class (either malignant or benign) from the clump thickness.</p>
 <p>First, I’ve written a bit of <code>tidymodels</code> helper code below for reuse later.</p>
-<div class="cell">
+<div class="cell" data-hash="balancing-classes_cache/html/unnamed-chunk-4_4dc844657887e02084b5bd5224e2a415">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidymodels)</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>fit_model <span class="ot">&lt;-</span> <span class="cf">function</span>(data, spec) {</span>
@@ -434,7 +434,7 @@ cookieconsent.run({
 <span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Now, I’ll fit a simple logistic regression model by specifying <code>logistic_reg()</code> as the model specification in <code>fit_model()</code>.</p>
-<div class="cell">
+<div class="cell" data-hash="balancing-classes_cache/html/unnamed-chunk-5_5ddb90f924073d8a54cad67b62f080c3">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(probably)</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>unbalanced_model <span class="ot">&lt;-</span> <span class="fu">fit_model</span>(</span>
@@ -449,7 +449,7 @@ cookieconsent.run({
 <span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>And now we can make a calibration plot of our predictions. Remember, the goal is to have the points on the plot lie roughly along the line <code>y = x</code>. Lying below the line means that our predictions are too high, and above the line means our predictions are too low.</p>
-<div class="cell">
+<div class="cell" data-hash="balancing-classes_cache/html/unnamed-chunk-6_20a805dbf7b4dfcacd10ad444a4c3c16">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cal_plot_breaks</span>(preds, <span class="at">truth =</span> truth_int, <span class="at">estimate =</span> estimate)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="balancing-classes_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid" width="672"></p>
@@ -460,7 +460,7 @@ cookieconsent.run({
 <section id="balancing-the-training-data" class="level2">
 <h2 class="anchored" data-anchor-id="balancing-the-training-data">Balancing the Training Data</h2>
 <p>So then, what happens if we balance the training data as we’re so often told to do? First, let’s balance by undersampling from the majority class.</p>
-<div class="cell">
+<div class="cell" data-hash="balancing-classes_cache/html/unnamed-chunk-7_2380b25282112c841a0375cfc3ca3e14">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>minority_class <span class="ot">&lt;-</span> data <span class="sc">%&gt;%</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(class) <span class="sc">%&gt;%</span></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(n <span class="sc">==</span> <span class="fu">min</span>(n))</span>
@@ -508,7 +508,7 @@ cookieconsent.run({
 </div>
 </div>
 <p>Now we have the same number of observations for each class. Let’s go ahead and fit another logistic regression model, but this time on the balanced data.</p>
-<div class="cell">
+<div class="cell" data-hash="balancing-classes_cache/html/unnamed-chunk-8_735757caafdc44ca11c2c7594b73d407">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>balanced_model <span class="ot">&lt;-</span> <span class="fu">fit_model</span>(balanced, <span class="fu">logistic_reg</span>())</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>preds<span class="sc">$</span>balanced_preds <span class="ot">&lt;-</span> <span class="fu">predict_prob</span>(</span>
@@ -531,7 +531,7 @@ cookieconsent.run({
 <h2 class="anchored" data-anchor-id="smote">SMOTE</h2>
 <p>“But no!” you might be thinking. “Why would you just undersample directly? You’re supposed to use an algorithm like SMOTE to overcome your class imbalance problem.”</p>
 <p>Great! Let’s see if using SMOTE fixes our calibration issues. I’ll first use SMOTE to intelligently oversample the minority class.</p>
-<div class="cell">
+<div class="cell" data-hash="balancing-classes_cache/html/unnamed-chunk-9_b45531424bf2bcd7f30a57e581010e5a">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(themis)</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>smote <span class="ot">&lt;-</span> <span class="fu">recipe</span>(class <span class="sc">~</span> cl_thickness, <span class="at">data =</span> data) <span class="sc">%&gt;%</span></span>
@@ -566,7 +566,7 @@ cookieconsent.run({
 </div>
 </div>
 <p>Now that we have balanced classes thanks to SMOTE, let’s fit another logistic regresion model and see if it’s any better-calibrated.</p>
-<div class="cell">
+<div class="cell" data-hash="balancing-classes_cache/html/unnamed-chunk-10_6b34fe011f168962a48acd30cbdb7259">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>smote_model <span class="ot">&lt;-</span> <span class="fu">fit_model</span>(smote, <span class="fu">logistic_reg</span>())</span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>preds<span class="sc">$</span>smote_preds <span class="ot">&lt;-</span> <span class="fu">predict_prob</span>(</span>
@@ -585,7 +585,7 @@ cookieconsent.run({
 <h2 class="anchored" data-anchor-id="a-random-forest">A Random Forest</h2>
 <p>“But no!” you might be thinking. “You need to use a more complicated model like a random forest, because logistic regression won’t pick up on complexities in your data well enough to be well-calibrated.”</p>
 <p>Great! Let’s try a random forest:</p>
-<div class="cell">
+<div class="cell" data-hash="balancing-classes_cache/html/unnamed-chunk-11_c68820cff38a66615728555770703763">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>rf <span class="ot">&lt;-</span> <span class="fu">fit_model</span>(smote, <span class="fu">rand_forest</span>())</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>preds<span class="sc">$</span>rf_preds <span class="ot">&lt;-</span> <span class="fu">predict_prob</span>(</span>
@@ -603,7 +603,7 @@ cookieconsent.run({
 <section id="coefficients" class="level2">
 <h2 class="anchored" data-anchor-id="coefficients">Coefficients</h2>
 <p>Looking at the coefficients of our three models can help understand what’s going on here.</p>
-<div class="cell">
+<div class="cell" data-hash="balancing-classes_cache/html/unnamed-chunk-12_5a969a88051dbbffacc249a1c1f0b7d3">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">list</span>(</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Original"</span> <span class="ot">=</span> unbalanced_model, </span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Undersampled"</span> <span class="ot">=</span> balanced_model, </span>
@@ -628,14 +628,14 @@ cookieconsent.run({
   <tr>
    <td style="text-align:left;"> (Intercept) </td>
    <td style="text-align:right;"> -5.1601677 </td>
-   <td style="text-align:right;"> -4.2037171 </td>
-   <td style="text-align:right;"> -4.3412655 </td>
+   <td style="text-align:right;"> -4.0441444 </td>
+   <td style="text-align:right;"> -4.4363999 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> cl_thickness </td>
    <td style="text-align:right;"> 0.9354593 </td>
-   <td style="text-align:right;"> 0.8662146 </td>
-   <td style="text-align:right;"> 0.8969732 </td>
+   <td style="text-align:right;"> 0.8190776 </td>
+   <td style="text-align:right;"> 0.9159715 </td>
   </tr>
 </tbody>
 </table>
@@ -645,13 +645,13 @@ cookieconsent.run({
 <p>In all three models, the coefficient associated with the clump thickness is almost exactly the same. This should make sense intuitively: Our sampling was at random, so the relationship between the clump thickness and whether or not the tumor was malignant shouldn’t change at all.</p>
 <p>The thing that does change, though, is the intercept term. In both the model where we undersampled from the majority class and in the SMOTE model, the intercept term is significantly higher than it is in the original model on the unbalanced data. This should feel similar intuitively to the idea of the baseline guess from before. As its core, the intercept term in your logistic regression model is the guess you’d make with “no” information (in this particular case, no information means a clump thickness of 0).</p>
 <p>We can illustrate this more clearly with three intercept-only models:</p>
-<div class="cell">
+<div class="cell" data-hash="balancing-classes_cache/html/unnamed-chunk-13_78f63c1f411976c37ab83d6c098efd89">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>unbalanced_intercept_only <span class="ot">&lt;-</span>  <span class="fu">glm</span>(class <span class="sc">~</span> <span class="dv">1</span>, <span class="at">data =</span> data, <span class="at">family =</span> binomial)</span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>undersampled_intecept_only <span class="ot">&lt;-</span> <span class="fu">glm</span>(class <span class="sc">~</span> <span class="dv">1</span>, <span class="at">data =</span> balanced, <span class="at">family =</span> binomial)</span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>smote_intercept_only <span class="ot">&lt;-</span>       <span class="fu">glm</span>(class <span class="sc">~</span> <span class="dv">1</span>, <span class="at">data =</span> smote, <span class="at">family =</span> binomial)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Now, let’s compare the intercept coefficients of these two models on a probability (read: not a log-odds) scale.</p>
-<div class="cell">
+<p>Now, let’s compare the intercept coefficients of these three models on a probability (read: not a log-odds) scale.</p>
+<div class="cell" data-hash="balancing-classes_cache/html/unnamed-chunk-14_59bf20284da8fe1d1340e69222ef67fe">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>convert_log_odds_to_probability <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  odds <span class="ot">&lt;-</span> <span class="fu">exp</span>(x)</span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  odds <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">+</span> odds)</span>
