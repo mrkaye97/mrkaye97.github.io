@@ -1,5 +1,5 @@
 ---
-title: Calibration and Evaluating Classifiers
+title: Calibration and Evaluating Classification Models
 subtitle: Metrics for probability predictions
 author: Matt Kaye
 date: '2023-03-20'
