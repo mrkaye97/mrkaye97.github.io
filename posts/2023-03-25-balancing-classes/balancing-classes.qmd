@@ -25,7 +25,7 @@ pretty_print <- function(data) {
 }
 ```
 
-For the purposes of this example, I'll use the Wisconsin breast cancer data. The data is build into the `mlbench` package in R and `scikit-learn` in python. You can also get it from the [UCI Machine Learning Repository](https://archive.ics.uci.edu/ml/datasets/Breast+Cancer+Wisconsin+(Diagnostic)).
+For the purposes of this example, I'll use the Wisconsin breast cancer data. The data is built into the `mlbench` package in R and `scikit-learn` in python. You can also get it from the [UCI Machine Learning Repository](https://archive.ics.uci.edu/ml/datasets/Breast+Cancer+Wisconsin+(Diagnostic)).
 
 I'll only be using `cl_thickness`, which is the indicator for clump thickness.
 
