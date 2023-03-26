@@ -21,7 +21,7 @@
 
 <section id="introduction" class="level2">
 <h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
-<p>In <a href="https://matthewrkaye.com/posts/2023-03-20-on-class-imbalances-in-ml/calibration.html">my last post</a> I wrote about common classifications metrics and, especially, calibration.</p>
+<p>In <a href="https://matthewrkaye.com/posts/2023-03-20-metrics-calibration/calibration.html">my last post</a> I wrote about common classifications metrics and, especially, calibration.</p>
 <p>With calibration in mind, this post will show why balancing your classes – which is an all-too-common practice when working on classification problems – is generally a bad idea and leads to poorly calibrated models.</p>
 </section>
 <section id="some-example-data" class="level2">
@@ -62,12 +62,12 @@
  </thead>
 <tbody>
   <tr>
-   <td style="text-align:right;"> 5 </td>
-   <td style="text-align:left;"> malignant </td>
+   <td style="text-align:right;"> 2 </td>
+   <td style="text-align:left;"> benign </td>
   </tr>
   <tr>
-   <td style="text-align:right;"> 8 </td>
-   <td style="text-align:left;"> malignant </td>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:left;"> benign </td>
   </tr>
   <tr>
    <td style="text-align:right;"> 1 </td>
@@ -75,11 +75,11 @@
   </tr>
   <tr>
    <td style="text-align:right;"> 6 </td>
-   <td style="text-align:left;"> malignant </td>
+   <td style="text-align:left;"> benign </td>
   </tr>
   <tr>
-   <td style="text-align:right;"> 5 </td>
-   <td style="text-align:left;"> benign </td>
+   <td style="text-align:right;"> 10 </td>
+   <td style="text-align:left;"> malignant </td>
   </tr>
 </tbody>
 </table>
@@ -340,14 +340,14 @@
   <tr>
    <td style="text-align:left;"> (Intercept) </td>
    <td style="text-align:right;"> -5.1601677 </td>
-   <td style="text-align:right;"> -4.4140080 </td>
-   <td style="text-align:right;"> -4.3025985 </td>
+   <td style="text-align:right;"> -4.3371007 </td>
+   <td style="text-align:right;"> -4.5166126 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> cl_thickness </td>
    <td style="text-align:right;"> 0.9354593 </td>
-   <td style="text-align:right;"> 0.9082286 </td>
-   <td style="text-align:right;"> 0.8923001 </td>
+   <td style="text-align:right;"> 0.9004362 </td>
+   <td style="text-align:right;"> 0.9310853 </td>
   </tr>
 </tbody>
 </table>
@@ -411,7 +411,7 @@
 </section>
 <section id="conclusion" class="level2">
 <h2 class="anchored" data-anchor-id="conclusion">Conclusion</h2>
-<p>In the <a href="https://matthewrkaye.com/posts/2023-03-20-on-class-imbalances-in-ml/calibration.html">previous post</a>, I wrote about calibration. In short, I think calibration is the single most important metric in evaluating the performance of classification models.</p>
+<p>In the <a href="https://matthewrkaye.com/posts/2023-03-20-metrics-calibration/calibration.html">previous post</a>, I wrote about calibration. In short, I think calibration is the single most important metric in evaluating the performance of classification models.</p>
 <p>And so with that in mind, the main takeaway of this post is that you should be <em>very</em> careful about trying to “fix” the “problem” of class imbalances when you’re working on classification problems. If I could summarize the principle that I would follow in just a sentence, it would be that class imbalances often reflect important information about the prevalence of your classes in the real world, and it’s often risky to dismiss that information in the name of having data that’s split equally. In other words, class imbalances are usually not a problem at all. They’re a feature, not a bug.</p>
 
 

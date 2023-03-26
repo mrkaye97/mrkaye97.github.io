@@ -9,7 +9,7 @@ toc: true
 
 ## Introduction
 
-In [my last post](https://matthewrkaye.com/posts/2023-03-20-on-class-imbalances-in-ml/calibration.html) I wrote about common classifications metrics and, especially, calibration.
+In [my last post](https://matthewrkaye.com/posts/2023-03-20-metrics-calibration/calibration.html) I wrote about common classifications metrics and, especially, calibration.
 
 With calibration in mind, this post will show why balancing your classes -- which is an all-too-common practice when working on classification problems -- is generally a bad idea and leads to poorly calibrated models.
 
@@ -277,7 +277,7 @@ The rationale behind doing this would be that if you wanted your model to genera
 
 ## Conclusion
 
-In the [previous post](https://matthewrkaye.com/posts/2023-03-20-on-class-imbalances-in-ml/calibration.html), I wrote about calibration. In short, I think calibration is the single most important metric in evaluating the performance of classification models.
+In the [previous post](https://matthewrkaye.com/posts/2023-03-20-metrics-calibration/calibration.html), I wrote about calibration. In short, I think calibration is the single most important metric in evaluating the performance of classification models.
 
 And so with that in mind, the main takeaway of this post is that you should be _very_ careful about trying to "fix" the "problem" of class imbalances when you're working on classification problems. If I could summarize the principle that I would follow in just a sentence, it would be that class imbalances often reflect important information about the prevalence of your classes in the real world, and it's often risky to dismiss that information in the name of having data that's split equally. In other words, class imbalances are usually not a problem at all. They're a feature, not a bug.
 
