@@ -33,6 +33,8 @@ website:
             file: stats-in-the-wild.md
           - text: "Going places"
             file: travel.qmd
+          - text: "Blogroll"
+            file: blogroll.qmd
     right:
       - icon: rss
         href: posts.xml
