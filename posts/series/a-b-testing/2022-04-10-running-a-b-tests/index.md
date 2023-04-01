@@ -6,7 +6,7 @@ categories: [data science, statistics, a/b testing]
 toc: true
 ---
 
-This is the second post in a series on A/B testing. In [the last post](https://mrkaye97.github.io/blog/post/2022-03-25-a-b-testing-a-primer/), I gave a high-level overview of what A/B testing is and why we might do it. This post will go a few steps farther. I'll discuss *how* an A/B test is run, what we're looking for along the way, and what happens when we call it one way or the other. This will set us up for the next post, which will discuss the mechanics of A/B testing.
+This is the second post in a series on A/B testing. In [the last post](https://matthewrkaye.com/posts/series/a-b-testing/2022-03-25-a-b-testing-a-primer/), I gave a high-level overview of what A/B testing is and why we might do it. This post will go a few steps farther. I'll discuss *how* an A/B test is run, what we're looking for along the way, and what happens when we call it one way or the other. This will set us up for the next post, which will discuss the mechanics of A/B testing.
 
 ## How Can I Run An A/B Test?
 
