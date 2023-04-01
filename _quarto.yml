@@ -20,7 +20,11 @@ website:
   navbar:
     left:
       - text: "Blog"
-        file: posts.qmd
+        menu:
+          - text: "Posts"
+            file: posts.qmd
+          - text: "Series"
+            file: series.qmd
       - text: "Code"
         file: code.qmd
       - text: Resume

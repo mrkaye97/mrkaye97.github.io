@@ -1,0 +1,24 @@
+---
+title: "Series"
+listing:
+  - id: a-b-testing
+    contents: posts/series/a-b-testing
+    sort: "date desc"
+    type: table
+    feed: false
+    categories: true
+    sort-ui: true
+    filter-ui: true
+    fields: [date, title, reading-time]
+    page-size: 5
+page-layout: full
+title-block-banner: false
+execute:
+  freeze: auto
+---
+
+## A/B Testing
+
+::: {#a-b-testing}
+:::
+
