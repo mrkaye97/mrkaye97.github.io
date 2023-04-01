@@ -297,7 +297,7 @@
 <h2 class="anchored" data-anchor-id="a-random-forest">A Random Forest</h2>
 <p>“But no!” you might be thinking. “You need to use a more complicated model like a random forest, because logistic regression won’t pick up on complexities in your data well enough to be well-calibrated.”</p>
 <p>Great! Let’s try a random forest:</p>
-<div class="cell" data-hash="balancing-classes_cache/html/unnamed-chunk-11_c68820cff38a66615728555770703763">
+<div class="cell" data-hash="balancing-classes_cache/html/unnamed-chunk-11_1a783e29f38834cc1c230212e4000d0a">
 <div class="sourceCode cell-code" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1">rf <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">fit_model</span>(smote, <span class="fu" style="color: #4758AB;">rand_forest</span>())</span>
 <span id="cb10-2"></span>
 <span id="cb10-3">preds<span class="sc" style="color: #5E5E5E;">$</span>rf_preds <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">predict_prob</span>(</span>
@@ -305,12 +305,12 @@
 <span id="cb10-5">  data</span>
 <span id="cb10-6">)</span>
 <span id="cb10-7"></span>
-<span id="cb10-8"><span class="fu" style="color: #4758AB;">cal_plot_breaks</span>(preds, <span class="at" style="color: #657422;">truth =</span> truth_int, <span class="at" style="color: #657422;">estimate =</span> smote_preds)</span></code></pre></div>
+<span id="cb10-8"><span class="fu" style="color: #4758AB;">cal_plot_breaks</span>(preds, <span class="at" style="color: #657422;">truth =</span> truth_int, <span class="at" style="color: #657422;">estimate =</span> rf_preds)</span></code></pre></div>
 <div class="cell-output-display">
 <p><img src="https://www.matthewrkaye.com/posts/2023-03-25-balancing-classes/balancing-classes_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
-<p>Same issue again, and the same logic holds. In fact, it’s even more straightforward with tree-based models. In a decision tree, you would determine a predicted probability by seeing what proportion of the labels in the leaf node that you end up in based on the features belong to the positive class. But then there’s the same logic as before: We’ve just artifically increased the number of instances of the positive class dramatically, so of course the proportion of labels belonging to the positive class in our leaf nodes will increase.</p>
+<p>Same issue again, albeit not quite as severe. And the same logic holds. In fact, it’s even more straightforward with tree-based models. In a decision tree, you would determine a predicted probability by seeing what proportion of the labels in the leaf node that you end up in based on the features belong to the positive class. But then there’s the same logic as before: We’ve just artifically increased the number of instances of the positive class dramatically, so of course the proportion of labels belonging to the positive class in our leaf nodes will increase.</p>
 </section>
 <section id="coefficients" class="level2">
 <h2 class="anchored" data-anchor-id="coefficients">Coefficients</h2>

@@ -596,7 +596,7 @@ cookieconsent.run({
 <h2 class="anchored" data-anchor-id="a-random-forest">A Random Forest</h2>
 <p>“But no!” you might be thinking. “You need to use a more complicated model like a random forest, because logistic regression won’t pick up on complexities in your data well enough to be well-calibrated.”</p>
 <p>Great! Let’s try a random forest:</p>
-<div class="cell" data-hash="balancing-classes_cache/html/unnamed-chunk-11_c68820cff38a66615728555770703763">
+<div class="cell" data-hash="balancing-classes_cache/html/unnamed-chunk-11_1a783e29f38834cc1c230212e4000d0a">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>rf <span class="ot">&lt;-</span> <span class="fu">fit_model</span>(smote, <span class="fu">rand_forest</span>())</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>preds<span class="sc">$</span>rf_preds <span class="ot">&lt;-</span> <span class="fu">predict_prob</span>(</span>
@@ -604,12 +604,12 @@ cookieconsent.run({
 <span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  data</span>
 <span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="fu">cal_plot_breaks</span>(preds, <span class="at">truth =</span> truth_int, <span class="at">estimate =</span> smote_preds)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="fu">cal_plot_breaks</span>(preds, <span class="at">truth =</span> truth_int, <span class="at">estimate =</span> rf_preds)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="balancing-classes_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
-<p>Same issue again, and the same logic holds. In fact, it’s even more straightforward with tree-based models. In a decision tree, you would determine a predicted probability by seeing what proportion of the labels in the leaf node that you end up in based on the features belong to the positive class. But then there’s the same logic as before: We’ve just artifically increased the number of instances of the positive class dramatically, so of course the proportion of labels belonging to the positive class in our leaf nodes will increase.</p>
+<p>Same issue again, albeit not quite as severe. And the same logic holds. In fact, it’s even more straightforward with tree-based models. In a decision tree, you would determine a predicted probability by seeing what proportion of the labels in the leaf node that you end up in based on the features belong to the positive class. But then there’s the same logic as before: We’ve just artifically increased the number of instances of the positive class dramatically, so of course the proportion of labels belonging to the positive class in our leaf nodes will increase.</p>
 </section>
 <section id="coefficients" class="level2">
 <h2 class="anchored" data-anchor-id="coefficients">Coefficients</h2>
