@@ -44,7 +44,7 @@ website:
       {{< fa regular copyright >}} Matt Kaye, 2023<br>
 
     right: |
-      Built in R with ❤ and [Quarto](https://quarto.org/)<br>
+      Built in R with [Quarto](https://quarto.org/) and ❤<br>
       [Source at {{< fa brands github >}} GitHub](https://github.com/mrkaye97/mrkaye97.github.io)
 
 format:

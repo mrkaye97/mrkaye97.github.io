@@ -2,7 +2,7 @@
 title: Balancing Classes in Classification Problems
 subtitle: And why it's generally a bad idea
 author: Matt Kaye
-date: '2023-03-25'
+date: '2023-04-01'
 categories: [R, data science]
 toc: true
 ---

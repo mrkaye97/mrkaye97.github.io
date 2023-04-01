@@ -2,7 +2,7 @@
 title: "Sometimes I go places.\n When I do, I like taking pictures.\n Here are some of my favorites."
 toc: false
 execute:
-  freeze: false
+  freeze: auto
 ---
 
 ```{r, results = 'asis', echo = FALSE}
