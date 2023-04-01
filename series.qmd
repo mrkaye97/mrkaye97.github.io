@@ -1,5 +1,4 @@
 ---
-title: "Series"
 listing:
   - id: a-b-testing
     contents: posts/series/a-b-testing
@@ -22,3 +21,8 @@ execute:
 ::: {#a-b-testing}
 :::
 
+
+
+## All Posts
+
+To see all of my blog posts, go to [the posts page](posts.qmd)

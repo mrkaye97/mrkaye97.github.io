@@ -598,29 +598,29 @@ font-style: italic;">## Doing a little data wrangling</span></span>
    <td style="text-align:right;"> 4 </td>
   </tr>
   <tr>
+   <td style="text-align:left;"> 1 </td>
+   <td style="text-align:right;"> 17.8 </td>
+   <td style="text-align:right;"> 6 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 0 </td>
+   <td style="text-align:right;"> 17.3 </td>
+   <td style="text-align:right;"> 8 </td>
+  </tr>
+  <tr>
    <td style="text-align:left;"> 0 </td>
    <td style="text-align:right;"> 10.4 </td>
    <td style="text-align:right;"> 8 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> 0 </td>
-   <td style="text-align:right;"> 15.2 </td>
+   <td style="text-align:right;"> 19.2 </td>
    <td style="text-align:right;"> 8 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> 1 </td>
-   <td style="text-align:right;"> 30.4 </td>
+   <td style="text-align:right;"> 24.4 </td>
    <td style="text-align:right;"> 4 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> 0 </td>
-   <td style="text-align:right;"> 15.0 </td>
-   <td style="text-align:right;"> 8 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> 0 </td>
-   <td style="text-align:right;"> 19.2 </td>
-   <td style="text-align:right;"> 8 </td>
   </tr>
 </tbody>
 </table>
