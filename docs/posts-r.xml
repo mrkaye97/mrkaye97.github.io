@@ -335,7 +335,7 @@ font-style: italic;">## if "some" is a very small percentage.</span></span>
 <span id="cb11-26">  )</span>
 <span id="cb11-27">})</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Test passed 🎉</code></pre>
+<pre><code>Test passed 🥳</code></pre>
 </div>
 </div>
 </section>
@@ -429,33 +429,33 @@ font-style: italic;">## if "some" is a very small percentage.</span></span>
  </thead>
 <tbody>
   <tr>
-   <td style="text-align:right;"> 4.618 </td>
-   <td style="text-align:right;"> 3.141 </td>
+   <td style="text-align:right;"> 4.246 </td>
+   <td style="text-align:right;"> 2.464 </td>
    <td style="text-align:left;"> TRUE </td>
   </tr>
   <tr>
-   <td style="text-align:right;"> 3.112 </td>
-   <td style="text-align:right;"> 2.352 </td>
+   <td style="text-align:right;"> 5.590 </td>
+   <td style="text-align:right;"> 2.700 </td>
    <td style="text-align:left;"> TRUE </td>
   </tr>
   <tr>
-   <td style="text-align:right;"> 4.450 </td>
-   <td style="text-align:right;"> 2.248 </td>
+   <td style="text-align:right;"> 4.203 </td>
+   <td style="text-align:right;"> 0.481 </td>
    <td style="text-align:left;"> TRUE </td>
   </tr>
   <tr>
-   <td style="text-align:right;"> 4.584 </td>
-   <td style="text-align:right;"> 1.284 </td>
+   <td style="text-align:right;"> 4.634 </td>
+   <td style="text-align:right;"> 4.086 </td>
    <td style="text-align:left;"> TRUE </td>
   </tr>
   <tr>
-   <td style="text-align:right;"> 5.604 </td>
-   <td style="text-align:right;"> 2.504 </td>
+   <td style="text-align:right;"> 2.719 </td>
+   <td style="text-align:right;"> 5.368 </td>
    <td style="text-align:left;"> TRUE </td>
   </tr>
   <tr>
-   <td style="text-align:right;"> 5.883 </td>
-   <td style="text-align:right;"> 1.863 </td>
+   <td style="text-align:right;"> 6.736 </td>
+   <td style="text-align:right;"> 0.526 </td>
    <td style="text-align:left;"> TRUE </td>
   </tr>
 </tbody>
@@ -480,15 +480,15 @@ font-style: italic;">## if "some" is a very small percentage.</span></span>
 <tbody>
   <tr>
    <td style="text-align:left;"> (Intercept) </td>
-   <td style="text-align:right;"> 13.175 </td>
+   <td style="text-align:right;"> 14.099 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> sepal_length </td>
-   <td style="text-align:right;"> -1.739 </td>
+   <td style="text-align:right;"> -1.838 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> petal_width </td>
-   <td style="text-align:right;"> -0.916 </td>
+   <td style="text-align:right;"> -1.251 </td>
   </tr>
 </tbody>
 </table>
@@ -502,10 +502,10 @@ font-style: italic;">## if "some" is a very small percentage.</span></span>
 <span id="cb17-3"></span>
 <span id="cb17-4"><span class="fu" style="color: #4758AB;">cat</span>(<span class="fu" style="color: #4758AB;">paste0</span>(<span class="st" style="color: #20794D;">"Model accuracy is "</span>, accuracy, <span class="st" style="color: #20794D;">"%"</span>))</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Model accuracy is 90%</code></pre>
+<pre><code>Model accuracy is 87%</code></pre>
 </div>
 </div>
-<p>And that’s it – you have a simple retraining job. This is a very minimal example, but this general framework is very flexible and modular, and it makes up the foundation for how we write our retraining jobs at CollegeVine. You can plug and play all different kinds of feature engineering logic, logic to fetch raw data, metrics, etc. We also use <a href="https://mlflow.org/">MLFlow</a> for versioning models and tracking experiments, so our retraining jobs have logs of logging of artifacts, parameters, and metrics to our MLFlow instance.</p>
+<p>And that’s it – you have a simple retraining job. This is a very minimal example, but this general framework is very flexible and modular, and it makes up the foundation for how we write our retraining jobs at CollegeVine. You can plug and play all different kinds of feature engineering logic, logic to fetch raw data, metrics, etc. We also use <a href="https://mlflow.org/">MLFlow</a> for versioning models and tracking experiments, so our retraining jobs have lots of logging of artifacts, parameters, and metrics to our MLFlow instance.</p>
 </section>
 <section id="a-monitoring-job" class="level3">
 <h3 class="anchored" data-anchor-id="a-monitoring-job">A Monitoring Job</h3>
@@ -547,7 +547,7 @@ font-style: italic;">## possibly by logging the value as a parameter in the MLFl
 <span id="cb21-7"></span>
 <span id="cb21-8"><span class="fu" style="color: #4758AB;">cat</span>(<span class="fu" style="color: #4758AB;">paste0</span>(<span class="st" style="color: #20794D;">"Out-of-sample accuracy is "</span>, accuracy, <span class="st" style="color: #20794D;">"%"</span>))</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Out-of-sample accuracy is 88%</code></pre>
+<pre><code>Out-of-sample accuracy is 82%</code></pre>
 </div>
 </div>
 </section>

@@ -341,7 +341,7 @@ accuracy <- compute_accuracy(preds, features$is_setosa)
 cat(paste0("Model accuracy is ", accuracy, "%"))
 ```
 
-And that's it -- you have a simple retraining job. This is a very minimal example, but this general framework is very flexible and modular, and it makes up the foundation for how we write our retraining jobs at CollegeVine. You can plug and play all different kinds of feature engineering logic, logic to fetch raw data, metrics, etc. We also use [MLFlow](https://mlflow.org/) for versioning models and tracking experiments, so our retraining jobs have logs of logging of artifacts, parameters, and metrics to our MLFlow instance. 
+And that's it -- you have a simple retraining job. This is a very minimal example, but this general framework is very flexible and modular, and it makes up the foundation for how we write our retraining jobs at CollegeVine. You can plug and play all different kinds of feature engineering logic, logic to fetch raw data, metrics, etc. We also use [MLFlow](https://mlflow.org/) for versioning models and tracking experiments, so our retraining jobs have lots of logging of artifacts, parameters, and metrics to our MLFlow instance. 
 
 ### A Monitoring Job
 
