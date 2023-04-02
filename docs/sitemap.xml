@@ -70,7 +70,7 @@
   </url>
   <url>
     <loc>https://www.matthewrkaye.com/series.html</loc>
-    <lastmod>2023-04-01T22:16:19.833Z</lastmod>
+    <lastmod>2023-04-02T18:53:54.413Z</lastmod>
   </url>
   <url>
     <loc>https://www.matthewrkaye.com/code.html</loc>
@@ -82,7 +82,7 @@
   </url>
   <url>
     <loc>https://www.matthewrkaye.com/index.html</loc>
-    <lastmod>2023-04-01T22:16:20.716Z</lastmod>
+    <lastmod>2023-04-02T18:53:50.899Z</lastmod>
   </url>
   <url>
     <loc>https://www.matthewrkaye.com/blogroll.html</loc>
@@ -90,10 +90,14 @@
   </url>
   <url>
     <loc>https://www.matthewrkaye.com/posts.html</loc>
-    <lastmod>2023-04-01T22:16:21.576Z</lastmod>
+    <lastmod>2023-04-02T18:51:30.796Z</lastmod>
   </url>
   <url>
     <loc>https://www.matthewrkaye.com/stats-in-the-wild.html</loc>
     <lastmod>2023-04-01T22:16:23.626Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.matthewrkaye.com/posts/series/doing-data-science/2023-04-01-library-code/library-code.html</loc>
+    <lastmod>2023-04-02T18:53:59.051Z</lastmod>
   </url>
 </urlset>

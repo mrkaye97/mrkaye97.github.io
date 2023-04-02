@@ -2,13 +2,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.2.335">
+<meta name="generator" content="quarto-1.2.475">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="description" content="Matt Kaye’s personal website.">
 
-<title>Matt Kaye – series</title>
+<title>Matt Kaye - Series</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -80,6 +80,34 @@ ul.task-list li input[type="checkbox"] {
 
     window['quarto-listings'] = window['quarto-listings'] || {};
     window['quarto-listings']['listing-a-b-testing'] = new List('listing-a-b-testing', options);
+
+    if (window['quarto-listing-loaded']) {
+      window['quarto-listing-loaded']();
+    }
+  });
+
+  window.addEventListener('hashchange',() => {
+    if (window['quarto-listing-loaded']) {
+      window['quarto-listing-loaded']();
+    }
+  })
+  
+
+  window.document.addEventListener("DOMContentLoaded", function (_event) {
+    const listingTargetEl = window.document.querySelector('#listing-doing-data-science .list');
+    if (!listingTargetEl) {
+      // No listing discovered, do not attach.
+      return; 
+    }
+
+    const options = {
+      valueNames: ['listing-date','listing-title','listing-reading-time',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-title-sort'] }],
+      
+      searchColumns: ["listing-date","listing-title","listing-author"],
+    };
+
+    window['quarto-listings'] = window['quarto-listings'] || {};
+    window['quarto-listings']['listing-doing-data-science'] = new List('listing-doing-data-science', options);
 
     if (window['quarto-listing-loaded']) {
       window['quarto-listing-loaded']();
@@ -207,50 +235,45 @@ cookieconsent.run({
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#ab-testing" id="toc-ab-testing" class="nav-link active" data-scroll-target="#ab-testing">A/B Testing</a></li>
+  <li><a href="#the-missing-semester-of-your-ds-education" id="toc-the-missing-semester-of-your-ds-education" class="nav-link active" data-scroll-target="#the-missing-semester-of-your-ds-education">The Missing Semester of Your <strong><em>DS</em></strong> Education</a></li>
+  <li><a href="#ab-testing" id="toc-ab-testing" class="nav-link" data-scroll-target="#ab-testing">A/B Testing</a></li>
   <li><a href="#all-posts" id="toc-all-posts" class="nav-link" data-scroll-target="#all-posts">All Posts</a></li>
   </ul>
 </nav>
-    <h5 class="quarto-listing-category-title">Categories</h5><div class="quarto-listing-category category-default"><div class="category" data-category="">All <span class="quarto-category-count">(4)</span></div><div class="category" data-category="a/b testing">a/b testing <span class="quarto-category-count">(3)</span></div><div class="category" data-category="data science">data science <span class="quarto-category-count">(4)</span></div><div class="category" data-category="statistics">statistics <span class="quarto-category-count">(4)</span></div></div></div>
+    </div>
 <!-- main -->
 <main class="content column-page-left" id="quarto-document-content">
 
-
-
-<section id="ab-testing" class="level2">
-<h2 class="anchored" data-anchor-id="ab-testing">A/B Testing</h2>
-<div id="listing-a-b-testing" class="quarto-listing quarto-listing-container-table">
-<div class="listing-actions-group">
-   <div class="input-group input-group-sm quarto-listing-sort">
-     <span class="input-group-text"><i class="bi bi-sort-down"></i></span>
-     <select id="listing-a-b-testing-sort" class="form-select" aria-label="Order By" onchange="window['quarto-listings']['listing-a-b-testing'].sort(this.options[this.selectedIndex].value, { order: this.options[this.selectedIndex].getAttribute('data-direction')})">
-       <option value="" disabled="" selected="" hidden="">Order By</option>
-       <option value="index" data-direction="asc">Default</option>
-         <option value="listing-date-sort" data-direction="asc">
-          Date - Oldest
-        </option>
-         <option value="listing-date-sort" data-direction="desc">
-          Date - Newest
-        </option>
-         <option value="listing-title-sort" data-direction="asc">
-          Title
-        </option>
-     </select>
-  </div>
-    <div class="input-group input-group-sm quarto-listing-filter">
-      <span class="input-group-text"><i class="bi bi-search"></i></span>
-      <input type="text" class="search form-control" placeholder="Filter">
-    </div>
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Series</h1>
 </div>
 
-<table class="quarto-listing-table table">
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<section id="the-missing-semester-of-your-ds-education" class="level2">
+<h2 class="anchored" data-anchor-id="the-missing-semester-of-your-ds-education">The Missing Semester of Your <strong><em>DS</em></strong> Education</h2>
+<p>Heavily inspired by <a href="https://missing.csail.mit.edu/">The Missing Semester of Your CS Education</a>, this is a series on all of the aspects of doing data science that you probably didn’t learn in class or from doing research. I’ve learned a lot in the past few years about what it takes to do data science professionally and, frankly, my data science education had some gaping holes. The goal of this series is to help others fill some of those holes (to the best of my ability) by sharing some of the things I’ve learned along the way from great mentors and terrible mistakes.</p>
+<div id="listing-doing-data-science" class="quarto-listing quarto-listing-container-table">
+
+<table class="quarto-listing-table table table-striped table-hover">
 <thead>
 <tr>
 <th>
-<a class="sort" data-sort="listing-date-sort" onclick="if (this.classList.contains('sort-asc')) { this.classList.add('sort-desc'); this.classList.remove('sort-asc') } else { this.classList.add('sort-asc'); this.classList.remove('sort-desc')} return false;">Date</a>
+Date
 </th>
 <th>
-<a class="sort" data-sort="listing-title-sort" onclick="if (this.classList.contains('sort-asc')) { this.classList.add('sort-desc'); this.classList.remove('sort-asc') } else { this.classList.add('sort-asc'); this.classList.remove('sort-desc')} return false;">Title</a>
+Title
 </th>
 <th>
 Reading Time
@@ -258,29 +281,60 @@ Reading Time
 </tr>
 </thead>
 <tbody class="list">
-<tr data-index="0" data-categories="data science,statistics" data-listing-date-sort="1650168000000" data-listing-file-modified-sort="1679278609866" data-listing-reading-time-sort="4.87" data-listing-title-sort="Sequential Testing" data-listing-filename-sort="index.md">
+<tr data-index="0" data-categories="R,data science" data-listing-date-sort="1680321600000" data-listing-file-modified-sort="1680461323676" data-listing-reading-time-sort="13" data-listing-title-sort="Library Code" data-listing-filename-sort="library-code.qmd" onclick="href = this.querySelector('a').getAttribute('href');
+ if (href) { window.location=href ; return false; }">
 <td class="listing-date">
-Apr 17, 2022
+Apr 1, 2023
 </td>
 <td class="listing-title">
-<a href="./posts/series/a-b-testing/2022-04-17-sequential-testing/index.html" class="title">Sequential Testing</a>
+<a href="./posts/series/doing-data-science/2023-04-01-library-code/library-code.html" class="title">Library Code</a>
 </td>
 <td class="listing-reading-time">
-4 min
+13 min
 </td>
 </tr>
-<tr data-index="1" data-categories="data science,statistics,a/b testing" data-listing-date-sort="1649563200000" data-listing-file-modified-sort="1679259447126" data-listing-reading-time-sort="6.39" data-listing-title-sort="Calling A/B Tests" data-listing-filename-sort="index.md">
+</tbody>
+
+</table>
+<div class="listing-no-matching d-none">
+No matching items
+</div>
+</div>
+</section>
+<section id="ab-testing" class="level2">
+<h2 class="anchored" data-anchor-id="ab-testing">A/B Testing</h2>
+<p>A series on common pitfalls in A/B testing and how sequential testing solves many common A/B testing problems.</p>
+<div id="listing-a-b-testing" class="quarto-listing quarto-listing-container-table">
+
+<table class="quarto-listing-table table table-striped table-hover">
+<thead>
+<tr>
+<th>
+Date
+</th>
+<th>
+Title
+</th>
+<th>
+Reading Time
+</th>
+</tr>
+</thead>
+<tbody class="list">
+<tr data-index="0" data-categories="data science,statistics,a/b testing" data-listing-date-sort="1648180800000" data-listing-file-modified-sort="1679259447126" data-listing-reading-time-sort="3.89" data-listing-title-sort="A/B Testing: A Primer" data-listing-filename-sort="index.md" onclick="href = this.querySelector('a').getAttribute('href');
+ if (href) { window.location=href ; return false; }">
 <td class="listing-date">
-Apr 10, 2022
+Mar 25, 2022
 </td>
 <td class="listing-title">
-<a href="./posts/series/a-b-testing/2022-04-10-calling-a-b-tests/index.html" class="title">Calling A/B Tests</a>
+<a href="./posts/series/a-b-testing/2022-03-25-a-b-testing-a-primer/index.html" class="title">A/B Testing: A Primer</a>
 </td>
 <td class="listing-reading-time">
-6 min
+3 min
 </td>
 </tr>
-<tr data-index="2" data-categories="data science,statistics,a/b testing" data-listing-date-sort="1649476800000" data-listing-file-modified-sort="1680387681095" data-listing-reading-time-sort="4.445" data-listing-title-sort="Running A/B Tests" data-listing-filename-sort="index.md">
+<tr data-index="1" data-categories="data science,statistics,a/b testing" data-listing-date-sort="1649476800000" data-listing-file-modified-sort="1680387681095" data-listing-reading-time-sort="4.445" data-listing-title-sort="Running A/B Tests" data-listing-filename-sort="index.md" onclick="href = this.querySelector('a').getAttribute('href');
+ if (href) { window.location=href ; return false; }">
 <td class="listing-date">
 Apr 9, 2022
 </td>
@@ -291,15 +345,28 @@ Apr 9, 2022
 4 min
 </td>
 </tr>
-<tr data-index="3" data-categories="data science,statistics,a/b testing" data-listing-date-sort="1648180800000" data-listing-file-modified-sort="1679259447126" data-listing-reading-time-sort="3.89" data-listing-title-sort="A/B Testing: A Primer" data-listing-filename-sort="index.md">
+<tr data-index="2" data-categories="data science,statistics,a/b testing" data-listing-date-sort="1649563200000" data-listing-file-modified-sort="1679259447126" data-listing-reading-time-sort="6.39" data-listing-title-sort="Calling A/B Tests" data-listing-filename-sort="index.md" onclick="href = this.querySelector('a').getAttribute('href');
+ if (href) { window.location=href ; return false; }">
 <td class="listing-date">
-Mar 25, 2022
+Apr 10, 2022
 </td>
 <td class="listing-title">
-<a href="./posts/series/a-b-testing/2022-03-25-a-b-testing-a-primer/index.html" class="title">A/B Testing: A Primer</a>
+<a href="./posts/series/a-b-testing/2022-04-10-calling-a-b-tests/index.html" class="title">Calling A/B Tests</a>
 </td>
 <td class="listing-reading-time">
-3 min
+6 min
+</td>
+</tr>
+<tr data-index="3" data-categories="data science,statistics" data-listing-date-sort="1650168000000" data-listing-file-modified-sort="1679278609866" data-listing-reading-time-sort="4.87" data-listing-title-sort="Sequential Testing" data-listing-filename-sort="index.md" onclick="href = this.querySelector('a').getAttribute('href');
+ if (href) { window.location=href ; return false; }">
+<td class="listing-date">
+Apr 17, 2022
+</td>
+<td class="listing-title">
+<a href="./posts/series/a-b-testing/2022-04-17-sequential-testing/index.html" class="title">Sequential Testing</a>
+</td>
+<td class="listing-reading-time">
+4 min
 </td>
 </tr>
 </tbody>

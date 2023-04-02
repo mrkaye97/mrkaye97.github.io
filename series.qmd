@@ -1,22 +1,47 @@
 ---
+title: "Series"
 listing:
   - id: a-b-testing
     contents: posts/series/a-b-testing
-    sort: "date desc"
+    sort: "date asc"
     type: table
     feed: false
-    categories: true
-    sort-ui: true
-    filter-ui: true
+    sort-ui: false
+    filter-ui: false
     fields: [date, title, reading-time]
     page-size: 5
+    table-hover: true
+    table-striped: true
+    categories: false
+  - id: doing-data-science
+    contents: posts/series/doing-data-science
+    sort: "date asc"
+    type: table
+    feed: false
+    sort-ui: false
+    filter-ui: false
+    fields: [date, title, reading-time]
+    page-size: 5
+    table-hover: true
+    table-striped: true
+    categories: false
 page-layout: full
 title-block-banner: false
 execute:
   freeze: auto
 ---
 
+## The Missing Semester of Your **_DS_** Education
+
+Heavily inspired by [The Missing Semester of Your CS Education](https://missing.csail.mit.edu/), this is a series on all of the aspects of doing data science that you probably didn't learn in class or from doing research. I've learned a lot in the past few years about what it takes to do data science professionally and, frankly, my data science education had some gaping holes. The goal of this series is to help others fill some of those holes (to the best of my ability) by sharing some of the things I've learned along the way from great mentors and terrible mistakes.
+
+::: {#doing-data-science}
+:::
+
+
 ## A/B Testing
+
+A series on common pitfalls in A/B testing and how sequential testing solves many common A/B testing problems.
 
 ::: {#a-b-testing}
 :::
