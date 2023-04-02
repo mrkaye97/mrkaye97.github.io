@@ -163,7 +163,7 @@ font-style: italic;">## Should be able to query an example table</span></span>
 <span id="cb4-19">  )</span>
 <span id="cb4-20">})</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Test passed 🎊</code></pre>
+<pre><code>Test passed 🥇</code></pre>
 </div>
 </div>
 </section>
@@ -335,7 +335,7 @@ font-style: italic;">## if "some" is a very small percentage.</span></span>
 <span id="cb11-26">  )</span>
 <span id="cb11-27">})</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Test passed 🥳</code></pre>
+<pre><code>Test passed 🎊</code></pre>
 </div>
 </div>
 </section>
@@ -429,33 +429,33 @@ font-style: italic;">## if "some" is a very small percentage.</span></span>
  </thead>
 <tbody>
   <tr>
-   <td style="text-align:right;"> 4.246 </td>
-   <td style="text-align:right;"> 2.464 </td>
+   <td style="text-align:right;"> 5.072 </td>
+   <td style="text-align:right;"> 1.901 </td>
    <td style="text-align:left;"> TRUE </td>
   </tr>
   <tr>
-   <td style="text-align:right;"> 5.590 </td>
-   <td style="text-align:right;"> 2.700 </td>
+   <td style="text-align:right;"> 4.619 </td>
+   <td style="text-align:right;"> 5.549 </td>
    <td style="text-align:left;"> TRUE </td>
   </tr>
   <tr>
-   <td style="text-align:right;"> 4.203 </td>
-   <td style="text-align:right;"> 0.481 </td>
+   <td style="text-align:right;"> 4.715 </td>
+   <td style="text-align:right;"> 4.057 </td>
    <td style="text-align:left;"> TRUE </td>
   </tr>
   <tr>
-   <td style="text-align:right;"> 4.634 </td>
-   <td style="text-align:right;"> 4.086 </td>
+   <td style="text-align:right;"> 5.237 </td>
+   <td style="text-align:right;"> 1.498 </td>
    <td style="text-align:left;"> TRUE </td>
   </tr>
   <tr>
-   <td style="text-align:right;"> 2.719 </td>
-   <td style="text-align:right;"> 5.368 </td>
+   <td style="text-align:right;"> 4.708 </td>
+   <td style="text-align:right;"> 0.780 </td>
    <td style="text-align:left;"> TRUE </td>
   </tr>
   <tr>
-   <td style="text-align:right;"> 6.736 </td>
-   <td style="text-align:right;"> 0.526 </td>
+   <td style="text-align:right;"> 6.666 </td>
+   <td style="text-align:right;"> 0.786 </td>
    <td style="text-align:left;"> TRUE </td>
   </tr>
 </tbody>
@@ -480,15 +480,15 @@ font-style: italic;">## if "some" is a very small percentage.</span></span>
 <tbody>
   <tr>
    <td style="text-align:left;"> (Intercept) </td>
-   <td style="text-align:right;"> 14.099 </td>
+   <td style="text-align:right;"> 13.389 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> sepal_length </td>
-   <td style="text-align:right;"> -1.838 </td>
+   <td style="text-align:right;"> -1.635 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> petal_width </td>
-   <td style="text-align:right;"> -1.251 </td>
+   <td style="text-align:right;"> -1.214 </td>
   </tr>
 </tbody>
 </table>
@@ -502,7 +502,7 @@ font-style: italic;">## if "some" is a very small percentage.</span></span>
 <span id="cb17-3"></span>
 <span id="cb17-4"><span class="fu" style="color: #4758AB;">cat</span>(<span class="fu" style="color: #4758AB;">paste0</span>(<span class="st" style="color: #20794D;">"Model accuracy is "</span>, accuracy, <span class="st" style="color: #20794D;">"%"</span>))</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Model accuracy is 87%</code></pre>
+<pre><code>Model accuracy is 83%</code></pre>
 </div>
 </div>
 <p>And that’s it – you have a simple retraining job. This is a very minimal example, but this general framework is very flexible and modular, and it makes up the foundation for how we write our retraining jobs at CollegeVine. You can plug and play all different kinds of feature engineering logic, logic to fetch raw data, metrics, etc. We also use <a href="https://mlflow.org/">MLFlow</a> for versioning models and tracking experiments, so our retraining jobs have lots of logging of artifacts, parameters, and metrics to our MLFlow instance.</p>
@@ -510,44 +510,66 @@ font-style: italic;">## if "some" is a very small percentage.</span></span>
 <section id="a-monitoring-job" class="level3">
 <h3 class="anchored" data-anchor-id="a-monitoring-job">A Monitoring Job</h3>
 <p>Next, let’s imagine we want to monitor out-of-sample performance of the model. Let’s modify the table with our raw data in the database for this, just for the sake of an example.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1">transaction_result <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">dbWithTransaction</span>(</span>
+<span id="cb19-2">  <span class="at" style="color: #657422;">conn =</span> conn,</span>
+<span id="cb19-3">  {</span>
+<span id="cb19-4">    <span class="fu" style="color: #4758AB;">dbExecute</span>(</span>
+<span id="cb19-5">      <span class="at" style="color: #657422;">conn =</span> conn,</span>
+<span id="cb19-6">      <span class="st" style="color: #20794D;">"</span></span>
+<span id="cb19-7"><span class="st" style="color: #20794D;">      ALTER TABLE blog.iris</span></span>
+<span id="cb19-8"><span class="st" style="color: #20794D;">      ADD COLUMN created_at TIMESTAMP</span></span>
+<span id="cb19-9"><span class="st" style="color: #20794D;">      "</span></span>
+<span id="cb19-10">    )</span>
+<span id="cb19-11">    </span>
+<span id="cb19-12">    <span class="fu" style="color: #4758AB;">dbExecute</span>(</span>
+<span id="cb19-13">      <span class="at" style="color: #657422;">conn =</span> conn,</span>
+<span id="cb19-14">      <span class="st" style="color: #20794D;">"</span></span>
+<span id="cb19-15"><span class="st" style="color: #20794D;">      UPDATE blog.iris</span></span>
+<span id="cb19-16"><span class="st" style="color: #20794D;">      SET created_at = NOW() - random() * INTERVAL '2 weeks'</span></span>
+<span id="cb19-17"><span class="st" style="color: #20794D;">      "</span></span>
+<span id="cb19-18">    )</span>
+<span id="cb19-19">  }</span>
+<span id="cb19-20">)</span></code></pre></div>
+</div>
 <p>Great, and now let’s make one or two small modifications to our code from above that pulled the raw data from the data warehouse.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb19" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1">fetch_raw_data <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="cf" style="color: #003B4F;">function</span>(conn, <span class="at" style="color: #657422;">created_after =</span> <span class="st" style="color: #20794D;">'1970-01-01 00:00:00'</span>) {</span>
-<span id="cb19-2">  <span class="fu" style="color: #4758AB;">dbGetQuery</span>(</span>
-<span id="cb19-3">    <span class="at" style="color: #657422;">conn =</span> conn,</span>
-<span id="cb19-4">    <span class="fu" style="color: #4758AB;">sprintf</span>(</span>
-<span id="cb19-5">      <span class="st" style="color: #20794D;">"</span></span>
-<span id="cb19-6"><span class="st" style="color: #20794D;">      SELECT *</span></span>
-<span id="cb19-7"><span class="st" style="color: #20794D;">      FROM blog.iris</span></span>
-<span id="cb19-8"><span class="st" style="color: #20794D;">      WHERE </span></span>
-<span id="cb19-9"><span class="st" style="color: #20794D;">        species IN ('setosa', 'virginica')</span></span>
-<span id="cb19-10"><span class="st" style="color: #20794D;">        AND created_at &gt; '%s'</span></span>
-<span id="cb19-11"><span class="st" style="color: #20794D;">      "</span>,</span>
-<span id="cb19-12">      created_after</span>
-<span id="cb19-13">    )</span>
-<span id="cb19-14">  )</span>
-<span id="cb19-15">}</span></code></pre></div>
+<div class="sourceCode cell-code" id="cb20" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1">fetch_raw_data <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="cf" style="color: #003B4F;">function</span>(conn, <span class="at" style="color: #657422;">created_after =</span> <span class="st" style="color: #20794D;">'1970-01-01 00:00:00'</span>) {</span>
+<span id="cb20-2">  <span class="fu" style="color: #4758AB;">dbGetQuery</span>(</span>
+<span id="cb20-3">    <span class="at" style="color: #657422;">conn =</span> conn,</span>
+<span id="cb20-4">    <span class="fu" style="color: #4758AB;">sprintf</span>(</span>
+<span id="cb20-5">      <span class="st" style="color: #20794D;">"</span></span>
+<span id="cb20-6"><span class="st" style="color: #20794D;">      SELECT *</span></span>
+<span id="cb20-7"><span class="st" style="color: #20794D;">      FROM blog.iris</span></span>
+<span id="cb20-8"><span class="st" style="color: #20794D;">      WHERE </span></span>
+<span id="cb20-9"><span class="st" style="color: #20794D;">        species IN ('setosa', 'virginica')</span></span>
+<span id="cb20-10"><span class="st" style="color: #20794D;">        AND created_at &gt; '%s'</span></span>
+<span id="cb20-11"><span class="st" style="color: #20794D;">      "</span>,</span>
+<span id="cb20-12">      created_after</span>
+<span id="cb20-13">    )</span>
+<span id="cb20-14">  )</span>
+<span id="cb20-15">}</span></code></pre></div>
 </div>
 <p>All we’ve done here is added the ability to specify a <code>created_at</code> date to use as the cutoff point, where we’d only include records in our raw data that were created after said point. In practice, this lets us filter our raw data down to only records that were created after the model was trained (the out-of-sample data).</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb20" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><span class="do" style="color: #5E5E5E;
+<div class="sourceCode cell-code" id="cb21" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><span class="do" style="color: #5E5E5E;
 font-style: italic;">## In practice, this would be set at training time and "frozen"</span></span>
-<span id="cb20-2"><span class="do" style="color: #5E5E5E;
+<span id="cb21-2"><span class="do" style="color: #5E5E5E;
 font-style: italic;">## possibly by logging the value as a parameter in the MLFlow run</span></span>
-<span id="cb20-3">model_trained_at <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">median</span>(<span class="fu" style="color: #4758AB;">fetch_raw_data</span>(conn)<span class="sc" style="color: #5E5E5E;">$</span>created_at)</span></code></pre></div>
+<span id="cb21-3">model_trained_at <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">median</span>(<span class="fu" style="color: #4758AB;">fetch_raw_data</span>(conn)<span class="sc" style="color: #5E5E5E;">$</span>created_at)</span></code></pre></div>
 </div>
 <p>And now that we’ve artificially created a <code>trained_at</code> date for the model, we can run our monitoring job. It’s quite simple, and very similar to the retraining job. All we do here is pull raw data that has been created since the model was trained, run the feature engineering pipeline, make predictions, and compute the accuracy of the model out-of-sample.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb21" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1">raw <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">fetch_raw_data</span>(conn, <span class="at" style="color: #657422;">created_after =</span> model_trained_at)</span>
-<span id="cb21-2"></span>
-<span id="cb21-3">features <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">create_features</span>(raw)</span>
-<span id="cb21-4">predictions <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">predict</span>(model, features)</span>
-<span id="cb21-5"></span>
-<span id="cb21-6">accuracy <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">compute_accuracy</span>(predictions, features<span class="sc" style="color: #5E5E5E;">$</span>is_setosa)</span>
-<span id="cb21-7"></span>
-<span id="cb21-8"><span class="fu" style="color: #4758AB;">cat</span>(<span class="fu" style="color: #4758AB;">paste0</span>(<span class="st" style="color: #20794D;">"Out-of-sample accuracy is "</span>, accuracy, <span class="st" style="color: #20794D;">"%"</span>))</span></code></pre></div>
+<div class="sourceCode cell-code" id="cb22" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1">raw <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">fetch_raw_data</span>(conn, <span class="at" style="color: #657422;">created_after =</span> model_trained_at)</span>
+<span id="cb22-2"></span>
+<span id="cb22-3">features <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">create_features</span>(raw)</span>
+<span id="cb22-4">predictions <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">predict</span>(model, features)</span>
+<span id="cb22-5"></span>
+<span id="cb22-6">accuracy <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">compute_accuracy</span>(predictions, features<span class="sc" style="color: #5E5E5E;">$</span>is_setosa)</span>
+<span id="cb22-7"></span>
+<span id="cb22-8"><span class="fu" style="color: #4758AB;">cat</span>(<span class="fu" style="color: #4758AB;">paste0</span>(<span class="st" style="color: #20794D;">"Out-of-sample accuracy is "</span>, accuracy, <span class="st" style="color: #20794D;">"%"</span>))</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Out-of-sample accuracy is 82%</code></pre>
+<pre><code>Out-of-sample accuracy is 74%</code></pre>
 </div>
 </div>
 </section>

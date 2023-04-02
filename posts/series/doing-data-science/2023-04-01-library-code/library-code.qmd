@@ -347,21 +347,26 @@ And that's it -- you have a simple retraining job. This is a very minimal exampl
 
 Next, let's imagine we want to monitor out-of-sample performance of the model. Let's modify the table with our raw data in the database for this, just for the sake of an example.
 
-```{r, message = FALSE, warning = FALSE, include = FALSE}
-dbExecute(
+```{r, message = FALSE, warning = FALSE}
+transaction_result <- dbWithTransaction(
   conn = conn,
-  "
-  ALTER TABLE blog.iris
-  ADD COLUMN created_at TIMESTAMP
-  "
-)
-
-dbExecute(
-  conn = conn,
-  "
-  UPDATE blog.iris
-  SET created_at = NOW() - random() * INTERVAL '2 weeks'
-  "
+  {
+    dbExecute(
+      conn = conn,
+      "
+      ALTER TABLE blog.iris
+      ADD COLUMN created_at TIMESTAMP
+      "
+    )
+    
+    dbExecute(
+      conn = conn,
+      "
+      UPDATE blog.iris
+      SET created_at = NOW() - random() * INTERVAL '2 weeks'
+      "
+    )
+  }
 )
 ```
 
