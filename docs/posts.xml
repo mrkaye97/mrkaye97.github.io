@@ -12,13 +12,23 @@
 <generator>quarto-1.2.475</generator>
 <lastBuildDate>Sat, 01 Apr 2023 04:00:00 GMT</lastBuildDate>
 <item>
-  <title>Library Code</title>
+  <title>Writing Internal Libraries for Analytics Work</title>
   <dc:creator>Matt Kaye</dc:creator>
   <link>https://www.matthewrkaye.com/posts/series/doing-data-science/2023-04-01-library-code/library-code.html</link>
   <description><![CDATA[ 
 
 
 
+<div class="callout-note callout callout-style-simple no-icon">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-body-container">
+<p>This post is part of a series called <a href="https://matthewrkaye.com/series.html#the-missing-semester-of-your-ds-education">The Missing Semester of Your DS Education</a>.</p>
+</div>
+</div>
+</div>
 <section id="introduction" class="level2">
 <h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
 <p>By definition, library code is code that’s written to being reused by programs other than itself that are unrelated to each other. For instance, <code>dplyr</code> (R) and <code>pandas</code> (Python) are common examples of library code: Instead of writing code from scratch to work with tabular data, you might use one of those two fantastic libraries. And you get some additional benefits from using them:</p>
@@ -163,7 +173,7 @@ font-style: italic;">## Should be able to query an example table</span></span>
 <span id="cb4-19">  )</span>
 <span id="cb4-20">})</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Test passed 🥇</code></pre>
+<pre><code>Test passed 🥳</code></pre>
 </div>
 </div>
 </section>
@@ -335,7 +345,7 @@ font-style: italic;">## if "some" is a very small percentage.</span></span>
 <span id="cb11-26">  )</span>
 <span id="cb11-27">})</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Test passed 🎊</code></pre>
+<pre><code>Test passed 😀</code></pre>
 </div>
 </div>
 </section>
@@ -429,33 +439,33 @@ font-style: italic;">## if "some" is a very small percentage.</span></span>
  </thead>
 <tbody>
   <tr>
-   <td style="text-align:right;"> 5.072 </td>
-   <td style="text-align:right;"> 1.901 </td>
+   <td style="text-align:right;"> 5.933 </td>
+   <td style="text-align:right;"> 1.712 </td>
    <td style="text-align:left;"> TRUE </td>
   </tr>
   <tr>
-   <td style="text-align:right;"> 4.619 </td>
-   <td style="text-align:right;"> 5.549 </td>
+   <td style="text-align:right;"> 5.390 </td>
+   <td style="text-align:right;"> 1.254 </td>
    <td style="text-align:left;"> TRUE </td>
   </tr>
   <tr>
-   <td style="text-align:right;"> 4.715 </td>
-   <td style="text-align:right;"> 4.057 </td>
+   <td style="text-align:right;"> 5.055 </td>
+   <td style="text-align:right;"> 2.595 </td>
    <td style="text-align:left;"> TRUE </td>
   </tr>
   <tr>
-   <td style="text-align:right;"> 5.237 </td>
-   <td style="text-align:right;"> 1.498 </td>
+   <td style="text-align:right;"> 4.891 </td>
+   <td style="text-align:right;"> 0.777 </td>
    <td style="text-align:left;"> TRUE </td>
   </tr>
   <tr>
-   <td style="text-align:right;"> 4.708 </td>
-   <td style="text-align:right;"> 0.780 </td>
+   <td style="text-align:right;"> 3.859 </td>
+   <td style="text-align:right;"> 0.472 </td>
    <td style="text-align:left;"> TRUE </td>
   </tr>
   <tr>
-   <td style="text-align:right;"> 6.666 </td>
-   <td style="text-align:right;"> 0.786 </td>
+   <td style="text-align:right;"> 4.677 </td>
+   <td style="text-align:right;"> 3.209 </td>
    <td style="text-align:left;"> TRUE </td>
   </tr>
 </tbody>
@@ -480,15 +490,15 @@ font-style: italic;">## if "some" is a very small percentage.</span></span>
 <tbody>
   <tr>
    <td style="text-align:left;"> (Intercept) </td>
-   <td style="text-align:right;"> 13.389 </td>
+   <td style="text-align:right;"> 12.148 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> sepal_length </td>
-   <td style="text-align:right;"> -1.635 </td>
+   <td style="text-align:right;"> -1.473 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> petal_width </td>
-   <td style="text-align:right;"> -1.214 </td>
+   <td style="text-align:right;"> -1.146 </td>
   </tr>
 </tbody>
 </table>
@@ -502,7 +512,7 @@ font-style: italic;">## if "some" is a very small percentage.</span></span>
 <span id="cb17-3"></span>
 <span id="cb17-4"><span class="fu" style="color: #4758AB;">cat</span>(<span class="fu" style="color: #4758AB;">paste0</span>(<span class="st" style="color: #20794D;">"Model accuracy is "</span>, accuracy, <span class="st" style="color: #20794D;">"%"</span>))</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Model accuracy is 83%</code></pre>
+<pre><code>Model accuracy is 90%</code></pre>
 </div>
 </div>
 <p>And that’s it – you have a simple retraining job. This is a very minimal example, but this general framework is very flexible and modular, and it makes up the foundation for how we write our retraining jobs at CollegeVine. You can plug and play all different kinds of feature engineering logic, logic to fetch raw data, metrics, etc. We also use <a href="https://mlflow.org/">MLFlow</a> for versioning models and tracking experiments, so our retraining jobs have lots of logging of artifacts, parameters, and metrics to our MLFlow instance.</p>
@@ -569,7 +579,7 @@ font-style: italic;">## possibly by logging the value as a parameter in the MLFl
 <span id="cb22-7"></span>
 <span id="cb22-8"><span class="fu" style="color: #4758AB;">cat</span>(<span class="fu" style="color: #4758AB;">paste0</span>(<span class="st" style="color: #20794D;">"Out-of-sample accuracy is "</span>, accuracy, <span class="st" style="color: #20794D;">"%"</span>))</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Out-of-sample accuracy is 74%</code></pre>
+<pre><code>Out-of-sample accuracy is 80%</code></pre>
 </div>
 </div>
 </section>

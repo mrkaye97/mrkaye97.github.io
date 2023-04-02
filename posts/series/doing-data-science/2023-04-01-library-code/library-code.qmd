@@ -1,6 +1,6 @@
 ---
-title: Library Code
-subtitle: Write, test, version, share, rinse, repeat
+title: Writing Internal Libraries for Analytics Work
+subtitle: Or packages, or modules, or whatever you wish to call them
 author: Matt Kaye
 date: '2023-04-01'
 categories: [R, data science]
@@ -9,6 +9,11 @@ toc-depth: 4
 callout-appearance: minimal
 code-annotations: hover
 ---
+
+::: {.callout-note}
+This post is part of a series called [The Missing Semester of Your DS Education](https://matthewrkaye.com/series.html#the-missing-semester-of-your-ds-education).
+:::
+
 
 ## Introduction
 
