@@ -6,12 +6,14 @@
       "/posts/series/a-b-testing/2022-04-10-running-a-b-tests/index.html",
       "/posts/series/a-b-testing/2022-04-10-calling-a-b-tests/index.html",
       "/posts/series/a-b-testing/2022-04-17-sequential-testing/index.html",
-      "/posts/series/doing-data-science/2023-04-01-library-code/library-code.html"
+      "/posts/series/doing-data-science/2023-04-01-library-code/library-code.html",
+      "/posts/series/doing-data-science/2023-04-03-unit-testing/unit-testing.html"
     ]
   },
   {
     "listing": "/posts.html",
     "items": [
+      "/posts/series/doing-data-science/2023-04-03-unit-testing/unit-testing.html",
       "/posts/series/doing-data-science/2023-04-01-library-code/library-code.html",
       "/posts/2023-03-25-balancing-classes/balancing-classes.html",
       "/posts/2023-03-20-metrics-calibration/calibration.html",

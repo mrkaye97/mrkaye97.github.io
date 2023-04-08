@@ -6,7 +6,7 @@
   </url>
   <url>
     <loc>https://www.matthewrkaye.com/posts/series/doing-data-science/2023-04-01-library-code/library-code.html</loc>
-    <lastmod>2023-04-02T21:23:56.309Z</lastmod>
+    <lastmod>2023-04-06T01:00:27.222Z</lastmod>
   </url>
   <url>
     <loc>https://www.matthewrkaye.com/posts/series/a-b-testing/2022-04-10-running-a-b-tests/index.html</loc>
@@ -54,7 +54,7 @@
   </url>
   <url>
     <loc>https://www.matthewrkaye.com/posts/2023-03-25-balancing-classes/balancing-classes.html</loc>
-    <lastmod>2023-04-02T18:54:56.994Z</lastmod>
+    <lastmod>2023-04-08T03:09:26.759Z</lastmod>
   </url>
   <url>
     <loc>https://www.matthewrkaye.com/posts/2023-03-20-metrics-calibration/calibration.html</loc>
@@ -74,7 +74,7 @@
   </url>
   <url>
     <loc>https://www.matthewrkaye.com/series.html</loc>
-    <lastmod>2023-04-02T21:23:53.249Z</lastmod>
+    <lastmod>2023-04-08T03:10:31.976Z</lastmod>
   </url>
   <url>
     <loc>https://www.matthewrkaye.com/code.html</loc>
@@ -86,7 +86,7 @@
   </url>
   <url>
     <loc>https://www.matthewrkaye.com/index.html</loc>
-    <lastmod>2023-04-02T18:55:00.583Z</lastmod>
+    <lastmod>2023-04-06T00:15:16.863Z</lastmod>
   </url>
   <url>
     <loc>https://www.matthewrkaye.com/blogroll.html</loc>
@@ -94,10 +94,14 @@
   </url>
   <url>
     <loc>https://www.matthewrkaye.com/posts.html</loc>
-    <lastmod>2023-04-02T21:23:53.897Z</lastmod>
+    <lastmod>2023-04-08T03:09:27.386Z</lastmod>
   </url>
   <url>
     <loc>https://www.matthewrkaye.com/stats-in-the-wild.html</loc>
     <lastmod>2023-04-02T18:55:03.712Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.matthewrkaye.com/posts/series/doing-data-science/2023-04-03-unit-testing/unit-testing.html</loc>
+    <lastmod>2023-04-08T03:10:36.434Z</lastmod>
   </url>
 </urlset>

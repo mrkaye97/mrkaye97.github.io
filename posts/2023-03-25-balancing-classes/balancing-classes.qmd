@@ -275,6 +275,8 @@ For instance, let's imagine we have data from 1000 breast cancer patients and we
 
 The rationale behind doing this would be that if you wanted your model to generalize well to future cases (outside of your training set) and you knew that in the broader population about 20% of cases are malignant, your biased training data could very well result in biased predictions out-of-sample even if your predictions look good in-sample.
 
+Another case where rebalancing can make sense is if you plan to use a technique like [Platt Scaling](https://en.wikipedia.org/wiki/Platt_scaling) or [Isotonic Regression](https://en.wikipedia.org/wiki/Isotonic_regression#:~:text=In%20statistics%20and%20numerical%20analysis,to%20the%20observations%20as%20possible.) to re-calibrate your predictions ex-post. These methods are a bit beyond the scope of this post, but they're both fantastic ways to make sure a model is giving well-calibrated predictions while using classifiers that don't guarantee calibration, such as tree-based models. For instance, a combination of upsampling with SMOTE, using an often poorly-calibrated classifier like a tree booster such as XGBoost, and then re-calibrating ex-post with a Platt Scaler can result in a rare win-win scenario: Well-calibrated predictions, but also improved performance on normal classification metrics like the F1 score or AUC.
+
 ## Conclusion
 
 In the [previous post](https://matthewrkaye.com/posts/2023-03-20-metrics-calibration/calibration.html), I wrote about calibration. In short, I think calibration is the single most important metric in evaluating the performance of classification models.

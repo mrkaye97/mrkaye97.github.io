@@ -10,7 +10,543 @@
 <atom:link href="https://www.matthewrkaye.com/posts.xml" rel="self" type="application/rss+xml"/>
 <description>Matt Kaye&#39;s personal website</description>
 <generator>quarto-1.2.475</generator>
-<lastBuildDate>Sat, 01 Apr 2023 04:00:00 GMT</lastBuildDate>
+<lastBuildDate>Wed, 05 Apr 2023 04:00:00 GMT</lastBuildDate>
+<item>
+  <title>Unit Testing Analytics Code</title>
+  <dc:creator>Matt Kaye</dc:creator>
+  <link>https://www.matthewrkaye.com/posts/series/doing-data-science/2023-04-03-unit-testing/unit-testing.html</link>
+  <description><![CDATA[ 
+
+
+
+<div class="cell">
+
+</div>
+<div class="callout-note callout callout-style-simple no-icon">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-body-container">
+<p>This post is part of a series called <a href="https://matthewrkaye.com/series.html#the-missing-semester-of-your-ds-education">The Missing Semester of Your DS Education</a>.</p>
+</div>
+</div>
+</div>
+<section id="introduction" class="level2">
+<h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
+<p>Unit testing was a concept I had never even heard of before I started my <em>second</em> data science job. It never came up in any of my college statistics or computer science courses. It never came up in any of my data science internships. It never came up in my first data science job.</p>
+<p>In conversations I have with friends – and, broadly, conversations with basically anyone doing data science or analytics – I face lots of pushback when it comes to unit testing. Usually the objections come in the form of either not knowing <em>why</em> you might test, since the code is just so simple and straightforward that nothing could go wrong, or not understanding the value added. In my opinion, both of these objections come from the same place. At first glance, it seems like some combination of blissful ignorance about what could go wrong and overconfidence in one’s own ability or in their code’s correctness, but I think that the objections actually come from something deeper. In my opinion, it’s the unfamiliarity of testing. It’s not something that’s commonly taught to people involved in analytics, and so it feels new. That can be scary.</p>
+</section>
+<section id="whats-a-unit-test" class="level2">
+<h2 class="anchored" data-anchor-id="whats-a-unit-test">What’s A Unit Test?</h2>
+<p>First thing’s first: What’s a unit test? It’s actually really simple! Unit testing tests the smallest possible components of your code for correctness and what I would define as “good behavior.” In analytics, you might test things like feature engineering steps, metric definitions, or data wrangling code. The basic idea of a unit test is that you take a function you’ve written, and you’d make up some inputs to the function and then check if your code produces the outputs you’d expect. In the simplest case, you might test the identity function as follows:</p>
+<div class="cell" data-layout-align="center" data-hash="unit-testing_cache/html/unnamed-chunk-2_baedc5f932b2628f085597b746bbe0fd">
+<div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1">identity <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="cf" style="color: #003B4F;">function</span>(x) {</span>
+<span id="cb1-2">  x</span>
+<span id="cb1-3">}</span>
+<span id="cb1-4"></span>
+<span id="cb1-5"><span class="fu" style="color: #4758AB;">test_that</span>(<span class="st" style="color: #20794D;">"The identity returns the input"</span>, {</span>
+<span id="cb1-6">  <span class="fu" style="color: #4758AB;">expect_identical</span>(<span class="dv" style="color: #AD0000;">1</span>, <span class="fu" style="color: #4758AB;">identity</span>(<span class="dv" style="color: #AD0000;">1</span>))</span>
+<span id="cb1-7">  <span class="fu" style="color: #4758AB;">expect_identical</span>(<span class="st" style="color: #20794D;">"foo"</span>, <span class="fu" style="color: #4758AB;">identity</span>(<span class="st" style="color: #20794D;">"foo"</span>))</span>
+<span id="cb1-8">  <span class="fu" style="color: #4758AB;">expect_identical</span>(<span class="dv" style="color: #AD0000;">1</span><span class="sc" style="color: #5E5E5E;">:</span><span class="dv" style="color: #AD0000;">100</span>, <span class="fu" style="color: #4758AB;">identity</span>(<span class="dv" style="color: #AD0000;">1</span><span class="sc" style="color: #5E5E5E;">:</span><span class="dv" style="color: #AD0000;">100</span>))</span>
+<span id="cb1-9">  <span class="fu" style="color: #4758AB;">expect_identical</span>(</span>
+<span id="cb1-10">    <span class="fu" style="color: #4758AB;">lm</span>(iris<span class="sc" style="color: #5E5E5E;">$</span>Sepal.Length <span class="sc" style="color: #5E5E5E;">~</span> iris<span class="sc" style="color: #5E5E5E;">$</span>Sepal.Width), </span>
+<span id="cb1-11">    <span class="fu" style="color: #4758AB;">identity</span>(<span class="fu" style="color: #4758AB;">lm</span>(iris<span class="sc" style="color: #5E5E5E;">$</span>Sepal.Length <span class="sc" style="color: #5E5E5E;">~</span> iris<span class="sc" style="color: #5E5E5E;">$</span>Sepal.Width))</span>
+<span id="cb1-12">  )</span>
+<span id="cb1-13">})</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Test passed 😸</code></pre>
+</div>
+</div>
+<p>All we’re doing here is checking that for some given input, our function returns the expected (correct) output. You can also test that your function returns an error or warning, returns nothing, returns <em>some</em> output, and much more. I’d highly recommend looking at the documentation for <a href="https://testthat.r-lib.org/">testthat</a> or <a href="https://docs.pytest.org/en/7.2.x/">pytest</a> to get a sense for what and how to test.</p>
+</section>
+<section id="case-study-feature-engineering" class="level2">
+<h2 class="anchored" data-anchor-id="case-study-feature-engineering">Case Study: Feature Engineering</h2>
+<p>Data scientists very often write feature engineering code. And as it turns out, feature engineering is a very common place where bugs can pop up unbeknownst to the code’s author.</p>
+<div class="callout-important callout callout-style-simple no-icon">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-body-container">
+<p>It’s important to note that data scientists are usually writing Python or R, which are both dynamically typed, interpreted languages. Unit testing is doubly valuable in these types of languages, since you don’t get the benefits of a compiler and static type checks to catch issues in your code. In languages like Python and R, anything can go wrong in your code. And you often won’t find out about issues until runtime, or, depending on the nature of the bug, even later (if ever).</p>
+</div>
+</div>
+</div>
+<section id="an-example" class="level3">
+<h3 class="anchored" data-anchor-id="an-example">An Example</h3>
+<p>Let’s write some example code to create a simple feature to use in a hypothetical machine learning model downstream.</p>
+<div class="cell" data-layout-align="center" data-hash="unit-testing_cache/html/unnamed-chunk-3_c0b2015731146ce93b02b161739792e3">
+<div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1">create_feature <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="cf" style="color: #003B4F;">function</span>(x) {</span>
+<span id="cb3-2">  (x <span class="sc" style="color: #5E5E5E;">-</span> <span class="fu" style="color: #4758AB;">mean</span>(x)) <span class="sc" style="color: #5E5E5E;">/</span> <span class="fu" style="color: #4758AB;">sd</span>(x)</span>
+<span id="cb3-3">}</span></code></pre></div>
+</div>
+<p>This might look familiar: It’s a function that takes a variable <code>x</code> and standardizes it. Now I’ll generate some data to show how it works.</p>
+<div class="cell" data-layout-align="center" data-hash="unit-testing_cache/html/unnamed-chunk-4_9ac936cca1e25eb9019ac68762ca5b1d">
+<div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><span class="do" style="color: #5E5E5E;
+font-style: italic;">## 1000 draws from a Normal(25, 5)</span></span>
+<span id="cb4-2">raw <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">rnorm</span>(<span class="dv" style="color: #AD0000;">1000</span>, <span class="at" style="color: #657422;">mean =</span> <span class="dv" style="color: #AD0000;">25</span>, <span class="at" style="color: #657422;">sd =</span> <span class="dv" style="color: #AD0000;">5</span>)</span></code></pre></div>
+</div>
+<p>We can plot a histogram of our data to show what it looks like:</p>
+<div class="cell" data-layout-align="center" data-hash="unit-testing_cache/html/unnamed-chunk-5_17a166d70193940a337fca5e0b5ca90d">
+<div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><span class="fu" style="color: #4758AB;">hist</span>(raw, <span class="at" style="color: #657422;">breaks =</span> <span class="dv" style="color: #AD0000;">20</span>)</span></code></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://www.matthewrkaye.com/posts/series/doing-data-science/2023-04-03-unit-testing/unit-testing_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Now, let’s run <code>raw</code> through our feature engineering function.</p>
+<div class="cell" data-layout-align="center" data-hash="unit-testing_cache/html/unnamed-chunk-6_f4f67fc856df93ccf70f288974bb0b99">
+<div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1">std <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">create_feature</span>(raw)</span>
+<span id="cb6-2"></span>
+<span id="cb6-3"><span class="fu" style="color: #4758AB;">hist</span>(std, <span class="at" style="color: #657422;">breaks =</span> <span class="dv" style="color: #AD0000;">20</span>)</span></code></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://www.matthewrkaye.com/posts/series/doing-data-science/2023-04-03-unit-testing/unit-testing_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Great! Now <code>std</code>, the new variable that we created from standardizing <code>raw</code>, looks like it follows a standard normal distribution.</p>
+</section>
+<section id="trivial-examples-unexpected-results" class="level3">
+<h3 class="anchored" data-anchor-id="trivial-examples-unexpected-results">Trivial Examples, Unexpected Results</h3>
+<p>Now that we’ve written a function to create a feature, let’s use that feature engineering step on a couple of real-world examples. Keep in mind that as data scientists, we’re often working with messy data – it could include missing values, outliers, data of an incorrect type, etc. and there are often very few guarantees about what our data will look like in practice. These next few examples show how things could go wrong (often very quietly) in our seemingly correct feature engineering step we wrote above.</p>
+<section id="missings" class="level4">
+<h4 class="anchored" data-anchor-id="missings">Missings</h4>
+<p>Let’s do the simplest thing first: What happens when we have missing values in our data?</p>
+<div class="cell" data-layout-align="center" data-hash="unit-testing_cache/html/unnamed-chunk-7_66d14569627d7f135f70aba9b621a747">
+<div class="sourceCode cell-code" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><span class="fu" style="color: #4758AB;">create_feature</span>(<span class="fu" style="color: #4758AB;">c</span>(<span class="dv" style="color: #AD0000;">1</span>, <span class="dv" style="color: #AD0000;">2</span>, <span class="dv" style="color: #AD0000;">3</span>, <span class="cn" style="color: #8f5902;">NA_real_</span>))</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] NA NA NA NA</code></pre>
+</div>
+</div>
+<p>If you’re familiar with R, this should be expected. And you’re probably thinking to yourself that we just need to set <code>na.rm = TRUE</code>, and you’d be right! But this brings me to the first major point I’d like to make on how things can go wrong.</p>
+<div class="callout-important callout callout-style-simple no-icon">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-body-container">
+<p>When you’re writing your code, it’s easy to forget things like adding <code>na.rm = TRUE</code> when the data you’re working with doesn’t appear to need it. It’s probably not your default behavior to remember to always set the flag to tell R to remove <code>NA</code> values, since if you’re not working with any of them, why would you remember to do that? Expecting yourself to <em>remember</em> to do something like this is a recipe for very brittle, error-prone code.</p>
+</div>
+</div>
+</div>
+<p>Let’s fix this bug the naïve way.</p>
+<div class="cell" data-layout-align="center" data-hash="unit-testing_cache/html/unnamed-chunk-8_beddeadd9fea526fe93dd5c2c16d30d8">
+<div class="sourceCode cell-code" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1">create_feature <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="cf" style="color: #003B4F;">function</span>(x) {</span>
+<span id="cb9-2">  (x <span class="sc" style="color: #5E5E5E;">-</span> <span class="fu" style="color: #4758AB;">mean</span>(x, <span class="at" style="color: #657422;">na.rm =</span> <span class="cn" style="color: #8f5902;">TRUE</span>)) <span class="sc" style="color: #5E5E5E;">/</span> <span class="fu" style="color: #4758AB;">sd</span>(x, <span class="at" style="color: #657422;">na.rm =</span> <span class="cn" style="color: #8f5902;">TRUE</span>)</span>
+<span id="cb9-3">}</span></code></pre></div>
+</div>
+<p>Great, and now let’s test it.</p>
+<div class="cell" data-layout-align="center" data-hash="unit-testing_cache/html/unnamed-chunk-9_610ec24f14a67ee57097ae419c1bf0a7">
+<div class="sourceCode cell-code" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><span class="fu" style="color: #4758AB;">create_feature</span>(<span class="fu" style="color: #4758AB;">c</span>(<span class="dv" style="color: #AD0000;">1</span>, <span class="dv" style="color: #AD0000;">2</span>, <span class="dv" style="color: #AD0000;">3</span>, <span class="cn" style="color: #8f5902;">NA_real_</span>))</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] -1  0  1 NA</code></pre>
+</div>
+</div>
+<p>Looks good. Now all of our non-missing values have been correctly transformed.</p>
+</section>
+<section id="zero-standard-deviation" class="level4">
+<h4 class="anchored" data-anchor-id="zero-standard-deviation">Zero Standard Deviation</h4>
+<p>How about another non-trivial bug: A standard deviation of zero. Consider a toy example: Predicting whether or not someone plays basketball.</p>
+<p>In this example, let’s say we have both men and women in our training data, and we want to use the height of each person to predict whether that person plays basketball. It probably doesn’t make sense to standardize the heights without grouping, since we don’t want to end up with a distribution of heights where most of the women are below average and most of the men are above average. It’d be much smarter to standardize <em>within group</em>, which would then produce a measure of height relative to the “competition” in some sense. Let’s give that a shot on a trivial data set where every man is the same height.</p>
+<div class="cell" data-layout-align="center" data-hash="unit-testing_cache/html/unnamed-chunk-10_bc7fd46e599dfc1c3b6a52f79cff7f6c">
+<div class="sourceCode cell-code" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><span class="fu" style="color: #4758AB;">library</span>(tibble)</span>
+<span id="cb12-2"><span class="fu" style="color: #4758AB;">library</span>(dplyr)</span>
+<span id="cb12-3"></span>
+<span id="cb12-4">data <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">tibble</span>(</span>
+<span id="cb12-5">  <span class="at" style="color: #657422;">player_id =</span> <span class="dv" style="color: #AD0000;">1</span><span class="sc" style="color: #5E5E5E;">:</span><span class="dv" style="color: #AD0000;">6</span>,</span>
+<span id="cb12-6">  <span class="at" style="color: #657422;">sex =</span> <span class="fu" style="color: #4758AB;">c</span>(<span class="st" style="color: #20794D;">"M"</span>, <span class="st" style="color: #20794D;">"M"</span>, <span class="st" style="color: #20794D;">"M"</span>, <span class="st" style="color: #20794D;">"F"</span>, <span class="st" style="color: #20794D;">"F"</span>, <span class="st" style="color: #20794D;">"F"</span>),</span>
+<span id="cb12-7">  <span class="at" style="color: #657422;">height =</span> <span class="fu" style="color: #4758AB;">c</span>(<span class="dv" style="color: #AD0000;">77</span>, <span class="dv" style="color: #AD0000;">77</span>, <span class="dv" style="color: #AD0000;">77</span>, <span class="dv" style="color: #AD0000;">70</span>, <span class="dv" style="color: #AD0000;">71</span>, <span class="dv" style="color: #AD0000;">72</span>)</span>
+<span id="cb12-8">)</span>
+<span id="cb12-9"></span>
+<span id="cb12-10">data <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb12-11">  <span class="fu" style="color: #4758AB;">group_by</span>(sex) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb12-12">  <span class="fu" style="color: #4758AB;">mutate</span>(</span>
+<span id="cb12-13">    <span class="at" style="color: #657422;">height_std =</span> <span class="fu" style="color: #4758AB;">create_feature</span>(height)</span>
+<span id="cb12-14">  ) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb12-15">  <span class="fu" style="color: #4758AB;">ungroup</span>() <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb12-16">  <span class="fu" style="color: #4758AB;">pretty_print</span>()</span></code></pre></div>
+<div class="cell-output-display">
+
+<table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
+ <thead>
+  <tr>
+   <th style="text-align:right;"> player_id </th>
+   <th style="text-align:left;"> sex </th>
+   <th style="text-align:right;"> height </th>
+   <th style="text-align:right;"> height_std </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:left;"> M </td>
+   <td style="text-align:right;"> 77 </td>
+   <td style="text-align:right;"> NaN </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 2 </td>
+   <td style="text-align:left;"> M </td>
+   <td style="text-align:right;"> 77 </td>
+   <td style="text-align:right;"> NaN </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 3 </td>
+   <td style="text-align:left;"> M </td>
+   <td style="text-align:right;"> 77 </td>
+   <td style="text-align:right;"> NaN </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 4 </td>
+   <td style="text-align:left;"> F </td>
+   <td style="text-align:right;"> 70 </td>
+   <td style="text-align:right;"> -1 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 5 </td>
+   <td style="text-align:left;"> F </td>
+   <td style="text-align:right;"> 71 </td>
+   <td style="text-align:right;"> 0 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 6 </td>
+   <td style="text-align:left;"> F </td>
+   <td style="text-align:right;"> 72 </td>
+   <td style="text-align:right;"> 1 </td>
+  </tr>
+</tbody>
+</table>
+
+</div>
+</div>
+<p>So what happened here? In the male group, all of the heights were the same. This resulted in a standard deviation of zero when we went to standardize our height variable, which meant dividing by zero. So we get <code>NaN</code> back – Not a Number.</p>
+<p>This example feels trivial, but in practice it’s not. If your data had hundreds or thousands of groups, it’s not all that unlikely to have a situation like this. And note that R doesn’t throw any kind of warning or error, it just quietly returns you <code>NaN</code> when you’re expecting a real number.</p>
+</section>
+</section>
+<section id="infinity" class="level3">
+<h3 class="anchored" data-anchor-id="infinity">Infinity</h3>
+<p>R also has a built in value for infinity: <code>Inf</code>. What happens if we try to build our feature when we had an <code>Inf</code> in our data?</p>
+<div class="cell" data-layout-align="center" data-hash="unit-testing_cache/html/unnamed-chunk-11_1a72ecd0170ee247890cedea5ca0fc4c">
+<div class="sourceCode cell-code" id="cb13" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><span class="fu" style="color: #4758AB;">create_feature</span>(<span class="fu" style="color: #4758AB;">c</span>(<span class="dv" style="color: #AD0000;">1</span>, <span class="dv" style="color: #AD0000;">2</span>, <span class="dv" style="color: #AD0000;">3</span>, <span class="cn" style="color: #8f5902;">Inf</span>))</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] NaN NaN NaN NaN</code></pre>
+</div>
+</div>
+<p>A bunch of <code>NaN</code>. This seems trivial too, but imagine the following example, which you very well might run into in the real world: Computing GDP per capita.</p>
+<div class="cell" data-layout-align="center" data-hash="unit-testing_cache/html/unnamed-chunk-12_be3d01bf006bc4dde1dcb2773c82909c">
+<div class="sourceCode cell-code" id="cb15" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1">data <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">tibble</span>(</span>
+<span id="cb15-2">  <span class="at" style="color: #657422;">gdp =</span> <span class="fu" style="color: #4758AB;">c</span>(<span class="dv" style="color: #AD0000;">1000</span>, <span class="dv" style="color: #AD0000;">2000</span>, <span class="dv" style="color: #AD0000;">3000</span>),</span>
+<span id="cb15-3">  <span class="at" style="color: #657422;">population =</span> <span class="fu" style="color: #4758AB;">c</span>(<span class="dv" style="color: #AD0000;">0</span>, <span class="dv" style="color: #AD0000;">50</span>, <span class="dv" style="color: #AD0000;">100</span>)</span>
+<span id="cb15-4">)</span>
+<span id="cb15-5"></span>
+<span id="cb15-6">data <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb15-7">  <span class="fu" style="color: #4758AB;">mutate</span>(</span>
+<span id="cb15-8">    <span class="at" style="color: #657422;">gdp_per_capita =</span> gdp <span class="sc" style="color: #5E5E5E;">/</span> population</span>
+<span id="cb15-9">  ) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb15-10">  <span class="fu" style="color: #4758AB;">mutate</span>(</span>
+<span id="cb15-11">    <span class="at" style="color: #657422;">gdp_per_capita_std =</span> <span class="fu" style="color: #4758AB;">create_feature</span>(gdp_per_capita)</span>
+<span id="cb15-12">  ) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb15-13">  <span class="fu" style="color: #4758AB;">pretty_print</span>()</span></code></pre></div>
+<div class="cell-output-display">
+
+<table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
+ <thead>
+  <tr>
+   <th style="text-align:right;"> gdp </th>
+   <th style="text-align:right;"> population </th>
+   <th style="text-align:right;"> gdp_per_capita </th>
+   <th style="text-align:right;"> gdp_per_capita_std </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:right;"> 1000 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> Inf </td>
+   <td style="text-align:right;"> NaN </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 2000 </td>
+   <td style="text-align:right;"> 50 </td>
+   <td style="text-align:right;"> 40 </td>
+   <td style="text-align:right;"> NaN </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 3000 </td>
+   <td style="text-align:right;"> 100 </td>
+   <td style="text-align:right;"> 30 </td>
+   <td style="text-align:right;"> NaN </td>
+  </tr>
+</tbody>
+</table>
+
+</div>
+</div>
+<p>R doesn’t yell at you for dividing by zero unlike Python for instance, or virtually any other self-respecting programming language. This means that if you accidentally divide by zero somewhere in your data pipeline, you could very well end up with a bunch of <code>NaN</code> if you standardize. And working with real-world data means that dividing by zero happens fairly often, generally because of small issues in the data we’re working with.</p>
+<section id="one-row-per-group" class="level4">
+<h4 class="anchored" data-anchor-id="one-row-per-group">One Row Per Group</h4>
+<p>Back to grouping: It’s also pretty likely when working with real-world data that you might have a group with only one row. Let’s see what happens in that case.</p>
+<div class="cell" data-layout-align="center" data-hash="unit-testing_cache/html/unnamed-chunk-13_1b416dece320c2ff339e61ec34c96db0">
+<div class="sourceCode cell-code" id="cb16" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1">data <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">tibble</span>(</span>
+<span id="cb16-2">  <span class="at" style="color: #657422;">group =</span> <span class="fu" style="color: #4758AB;">c</span>(<span class="dv" style="color: #AD0000;">1</span>, <span class="dv" style="color: #AD0000;">2</span>, <span class="dv" style="color: #AD0000;">2</span>, <span class="dv" style="color: #AD0000;">3</span>, <span class="dv" style="color: #AD0000;">3</span>),</span>
+<span id="cb16-3">  <span class="at" style="color: #657422;">value =</span> <span class="dv" style="color: #AD0000;">1</span><span class="sc" style="color: #5E5E5E;">:</span><span class="dv" style="color: #AD0000;">5</span></span>
+<span id="cb16-4">)</span>
+<span id="cb16-5"></span>
+<span id="cb16-6">data <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb16-7">  <span class="fu" style="color: #4758AB;">group_by</span>(group) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb16-8">  <span class="fu" style="color: #4758AB;">mutate</span>(</span>
+<span id="cb16-9">    <span class="at" style="color: #657422;">value_std =</span> <span class="fu" style="color: #4758AB;">create_feature</span>(value)</span>
+<span id="cb16-10">  ) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb16-11">  <span class="fu" style="color: #4758AB;">ungroup</span>() <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb16-12">  <span class="fu" style="color: #4758AB;">pretty_print</span>()</span></code></pre></div>
+<div class="cell-output-display">
+
+<table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
+ <thead>
+  <tr>
+   <th style="text-align:right;"> group </th>
+   <th style="text-align:right;"> value </th>
+   <th style="text-align:right;"> value_std </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> NA </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 2 </td>
+   <td style="text-align:right;"> 2 </td>
+   <td style="text-align:right;"> -0.7071068 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 2 </td>
+   <td style="text-align:right;"> 3 </td>
+   <td style="text-align:right;"> 0.7071068 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 3 </td>
+   <td style="text-align:right;"> 4 </td>
+   <td style="text-align:right;"> -0.7071068 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 3 </td>
+   <td style="text-align:right;"> 5 </td>
+   <td style="text-align:right;"> 0.7071068 </td>
+  </tr>
+</tbody>
+</table>
+
+</div>
+</div>
+<p>Once again, same issue. A single-row group returns <code>NA</code>, since the standard deviation of a single number isn’t defined.</p>
+</section>
+</section>
+<section id="lessons" class="level3">
+<h3 class="anchored" data-anchor-id="lessons">Lessons</h3>
+<p>What have we learned here?</p>
+<p>In short, there are many ways for things to quietly go wrong in your data pipelines, especially in a language like R. Even with a function as simple as standardization, it’s easy to cook up all kinds of possible corner cases or other issues that would cause your function to return any number of unpredictable results. And when working with real-world data, some of these quirks are inevitable. It’s virtually impossible that you’d never run into any of the issues enumerated above when working with messy data for any amount of time. And these examples were about as simple as they could be. In the real world, analytical code is often far more complicated and data far messier than this, which compounds the likelihood of issues like these.</p>
+</section>
+</section>
+<section id="enter-testing" class="level2">
+<h2 class="anchored" data-anchor-id="enter-testing">Enter Testing</h2>
+<p>And with all of that: Back to testing. Testing is the only way to know that your code is actually doing what you think it’s doing, and writing tests is a great way to make guarantees about the ability of your code to handle some of these issues that we’ve discussed. Writing tests also lets you ensure that your implementation is correct, and it lets you refactor your code more easily by loudly alerting you if you’ve broken something, which should make you much more confident in the correctness of your implementation.</p>
+<div class="callout-note callout callout-style-simple no-icon">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-body-container">
+<p>If you’re not familiar with it, this is a good point to introduce <a href="https://en.wikipedia.org/wiki/Test-driven_development">Test-Driven Development</a>. It’s not something I would <em>always</em> recommend, but at least being familiar with it might make for a good starting point when it comes to learning how to think about writing tests for your code</p>
+</div>
+</div>
+</div>
+<section id="testing-our-standardization-function" class="level3">
+<h3 class="anchored" data-anchor-id="testing-our-standardization-function">Testing Our Standardization Function</h3>
+<p>And with that, let’s write some tests. Imagine that we knew that we wanted to write our feature engineering function to do standardization. We also know that we want to avoid some of the bugs that we introduced in the examples above. One possible option for handling those cases where our function will do something unexpected would be to throw an error if we get unexpected inputs. That’s what I’ll illustrate here – it’d let the user learn about the issue quickly and debug. There are many options for how to handle these issues though. You might also fall back on a default value when your code will return a <code>NA</code> or <code>NaN</code>, for instance. Now, on to the tests.</p>
+<div class="cell" data-layout-align="center" data-hash="unit-testing_cache/html/unnamed-chunk-14_ef42be270c0b4a2180a42e0f12a36fff">
+<div class="sourceCode cell-code" id="cb17" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><span class="fu" style="color: #4758AB;">library</span>(testthat)</span>
+<span id="cb17-2"></span>
+<span id="cb17-3">test <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="cf" style="color: #003B4F;">function</span>() {</span>
+<span id="cb17-4">  <span class="fu" style="color: #4758AB;">test_that</span>(<span class="st" style="color: #20794D;">"Standardized variable is transformed correctly"</span>, {</span>
+<span id="cb17-5">    random_normal <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">rnorm</span>(<span class="dv" style="color: #AD0000;">1000</span>, <span class="dv" style="color: #AD0000;">10</span>, <span class="dv" style="color: #AD0000;">5</span>)</span>
+<span id="cb17-6">    </span>
+<span id="cb17-7">    <span class="do" style="color: #5E5E5E;
+font-style: italic;">## Expect that the mean of the transformed data is within</span></span>
+<span id="cb17-8">    <span class="do" style="color: #5E5E5E;
+font-style: italic;">## 0.005 of zero</span></span>
+<span id="cb17-9">    <span class="fu" style="color: #4758AB;">expect_lt</span>(</span>
+<span id="cb17-10">      <span class="fu" style="color: #4758AB;">abs</span>(<span class="fu" style="color: #4758AB;">mean</span>(<span class="fu" style="color: #4758AB;">create_feature</span>(random_normal))),</span>
+<span id="cb17-11">      <span class="fl" style="color: #AD0000;">0.005</span></span>
+<span id="cb17-12">    )</span>
+<span id="cb17-13">    </span>
+<span id="cb17-14">    <span class="do" style="color: #5E5E5E;
+font-style: italic;">## Expect that the stddev of the transformed data is within</span></span>
+<span id="cb17-15">    <span class="do" style="color: #5E5E5E;
+font-style: italic;">## 0.005 of 1</span></span>
+<span id="cb17-16">    <span class="fu" style="color: #4758AB;">expect_lt</span>(</span>
+<span id="cb17-17">      <span class="fu" style="color: #4758AB;">abs</span>(<span class="dv" style="color: #AD0000;">1</span> <span class="sc" style="color: #5E5E5E;">-</span> <span class="fu" style="color: #4758AB;">sd</span>(<span class="fu" style="color: #4758AB;">create_feature</span>(random_normal))),</span>
+<span id="cb17-18">      <span class="fl" style="color: #AD0000;">0.005</span></span>
+<span id="cb17-19">    )</span>
+<span id="cb17-20">    </span>
+<span id="cb17-21">    <span class="do" style="color: #5E5E5E;
+font-style: italic;">## Expect that the math is done correctly</span></span>
+<span id="cb17-22">    <span class="fu" style="color: #4758AB;">expect_identical</span>(</span>
+<span id="cb17-23">      <span class="fu" style="color: #4758AB;">create_feature</span>(<span class="fu" style="color: #4758AB;">c</span>(<span class="dv" style="color: #AD0000;">1</span>,<span class="dv" style="color: #AD0000;">2</span>,<span class="dv" style="color: #AD0000;">3</span>)),</span>
+<span id="cb17-24">      <span class="fu" style="color: #4758AB;">c</span>(<span class="sc" style="color: #5E5E5E;">-</span><span class="dv" style="color: #AD0000;">1</span>, <span class="dv" style="color: #AD0000;">0</span>, <span class="dv" style="color: #AD0000;">1</span>)</span>
+<span id="cb17-25">    )</span>
+<span id="cb17-26">  })</span>
+<span id="cb17-27">  </span>
+<span id="cb17-28">  <span class="fu" style="color: #4758AB;">test_that</span>(<span class="st" style="color: #20794D;">"Inifinity causes an error"</span>, {</span>
+<span id="cb17-29">    <span class="fu" style="color: #4758AB;">expect_error</span>(</span>
+<span id="cb17-30">      <span class="fu" style="color: #4758AB;">create_feature</span>(<span class="fu" style="color: #4758AB;">c</span>(<span class="dv" style="color: #AD0000;">1</span>, <span class="dv" style="color: #AD0000;">2</span>, <span class="dv" style="color: #AD0000;">3</span> <span class="sc" style="color: #5E5E5E;">/</span> <span class="dv" style="color: #AD0000;">0</span>)),</span>
+<span id="cb17-31">      <span class="st" style="color: #20794D;">"`x` must not contain any infinite values"</span></span>
+<span id="cb17-32">    )</span>
+<span id="cb17-33">  })</span>
+<span id="cb17-34">  </span>
+<span id="cb17-35">  <span class="fu" style="color: #4758AB;">test_that</span>(<span class="st" style="color: #20794D;">"Zero stddev causes an error"</span>, {</span>
+<span id="cb17-36">    <span class="fu" style="color: #4758AB;">expect_error</span>(</span>
+<span id="cb17-37">      <span class="fu" style="color: #4758AB;">create_feature</span>(<span class="fu" style="color: #4758AB;">c</span>(<span class="dv" style="color: #AD0000;">1</span>, <span class="dv" style="color: #AD0000;">1</span>, <span class="dv" style="color: #AD0000;">1</span>)),</span>
+<span id="cb17-38">      <span class="st" style="color: #20794D;">"`x` must have a non-zero standard deviation"</span></span>
+<span id="cb17-39">    )</span>
+<span id="cb17-40">  })</span>
+<span id="cb17-41">  </span>
+<span id="cb17-42">  <span class="fu" style="color: #4758AB;">test_that</span>(<span class="st" style="color: #20794D;">"Length one causes an error"</span>, {</span>
+<span id="cb17-43">    <span class="fu" style="color: #4758AB;">expect_error</span>(</span>
+<span id="cb17-44">      <span class="fu" style="color: #4758AB;">create_feature</span>(<span class="fu" style="color: #4758AB;">c</span>(<span class="dv" style="color: #AD0000;">1</span>)),</span>
+<span id="cb17-45">      <span class="st" style="color: #20794D;">"`x` must have more than one unique element"</span></span>
+<span id="cb17-46">    )</span>
+<span id="cb17-47">  })</span>
+<span id="cb17-48">}</span></code></pre></div>
+</div>
+<p>And now let’s run our test suite.</p>
+<div class="cell" data-layout-align="center" data-hash="unit-testing_cache/html/unnamed-chunk-15_f3981b5864d544f963cae4722f3e8480">
+<div class="sourceCode cell-code" id="cb18" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><span class="fu" style="color: #4758AB;">test</span>()</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Test passed 🥳
+── Failure (&lt;text&gt;:29:5): Inifinity causes an error ────────────────────────────
+`create_feature(c(1, 2, 3/0))` did not throw an error.</code></pre>
+</div>
+<div class="cell-output cell-output-error">
+<pre><code>Error in `reporter$stop_if_needed()`:
+! Test failed</code></pre>
+</div>
+</div>
+<p>Unsurprisingly, we get some failures. So now let’s refactor our feature engineering function to pass our tests.</p>
+<div class="cell" data-layout-align="center" data-hash="unit-testing_cache/html/unnamed-chunk-16_a73c51c5b2a787a6ae1a655434346bc3">
+<div class="sourceCode cell-code" id="cb21" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><span class="fu" style="color: #4758AB;">library</span>(rlang)</span>
+<span id="cb21-2"></span>
+<span id="cb21-3">create_feature <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="cf" style="color: #003B4F;">function</span>(x) {</span>
+<span id="cb21-4">  </span>
+<span id="cb21-5">  mu <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">mean</span>(x, <span class="at" style="color: #657422;">na.rm =</span> <span class="cn" style="color: #8f5902;">TRUE</span>)</span>
+<span id="cb21-6">  sigma <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">sd</span>(x, <span class="at" style="color: #657422;">na.rm =</span> <span class="cn" style="color: #8f5902;">TRUE</span>)</span>
+<span id="cb21-7"></span>
+<span id="cb21-8">  <span class="cf" style="color: #003B4F;">if</span> (<span class="fu" style="color: #4758AB;">isTRUE</span>(sigma <span class="sc" style="color: #5E5E5E;">==</span> <span class="dv" style="color: #AD0000;">0</span>)) <span class="fu" style="color: #4758AB;">abort</span>(<span class="st" style="color: #20794D;">"`x` must have a non-zero standard deviation."</span>)</span>
+<span id="cb21-9">  <span class="cf" style="color: #003B4F;">if</span> (<span class="fu" style="color: #4758AB;">isTRUE</span>(<span class="fu" style="color: #4758AB;">length</span>(<span class="fu" style="color: #4758AB;">unique</span>(x)) <span class="sc" style="color: #5E5E5E;">==</span> 1L)) <span class="fu" style="color: #4758AB;">abort</span>(<span class="st" style="color: #20794D;">"`x` must have more than one unique element."</span>)</span>
+<span id="cb21-10">  <span class="cf" style="color: #003B4F;">if</span> (<span class="fu" style="color: #4758AB;">isTRUE</span>(<span class="fu" style="color: #4758AB;">any</span>(<span class="fu" style="color: #4758AB;">is.nan</span>(x)))) <span class="fu" style="color: #4758AB;">abort</span>(<span class="st" style="color: #20794D;">"`x` must not contain any `NaN` values."</span>)</span>
+<span id="cb21-11">  <span class="cf" style="color: #003B4F;">if</span> (<span class="fu" style="color: #4758AB;">isTRUE</span>(<span class="fu" style="color: #4758AB;">any</span>(<span class="fu" style="color: #4758AB;">is.infinite</span>(x)))) <span class="fu" style="color: #4758AB;">abort</span>(<span class="st" style="color: #20794D;">"`x` must not contain any infinite values."</span>)</span>
+<span id="cb21-12"></span>
+<span id="cb21-13">  (x <span class="sc" style="color: #5E5E5E;">-</span> mu) <span class="sc" style="color: #5E5E5E;">/</span> sigma</span>
+<span id="cb21-14">}</span>
+<span id="cb21-15"></span>
+<span id="cb21-16"><span class="fu" style="color: #4758AB;">test</span>()</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Test passed 🥳
+Test passed 🥳
+Test passed 🥳
+Test passed 🥳</code></pre>
+</div>
+</div>
+<p>Woohoo! Our tests all passed. Now, if the user of our function tries to do something like only providing a single value for <code>x</code>, they get an informative error back.</p>
+<div class="cell" data-layout-align="center" data-hash="unit-testing_cache/html/unnamed-chunk-17_19da53894d89db6c1f9cf12905f7fca1">
+<div class="sourceCode cell-code" id="cb23" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><span class="fu" style="color: #4758AB;">create_feature</span>(<span class="fu" style="color: #4758AB;">c</span>(<span class="dv" style="color: #AD0000;">1</span>))</span></code></pre></div>
+<div class="cell-output cell-output-error">
+<pre><code>Error in `create_feature()`:
+! `x` must have more than one unique element.</code></pre>
+</div>
+</div>
+<p>In a less trivial example, consider our grouped computation from before:</p>
+<div class="cell" data-layout-align="center" data-hash="unit-testing_cache/html/unnamed-chunk-18_4f030a334d25f2c3e8643902d66d4d59">
+<div class="sourceCode cell-code" id="cb25" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1">data <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">tibble</span>(</span>
+<span id="cb25-2">  <span class="at" style="color: #657422;">group =</span> <span class="fu" style="color: #4758AB;">c</span>(<span class="dv" style="color: #AD0000;">1</span>, <span class="dv" style="color: #AD0000;">2</span>, <span class="dv" style="color: #AD0000;">2</span>, <span class="dv" style="color: #AD0000;">3</span>, <span class="dv" style="color: #AD0000;">3</span>),</span>
+<span id="cb25-3">  <span class="at" style="color: #657422;">value =</span> <span class="dv" style="color: #AD0000;">1</span><span class="sc" style="color: #5E5E5E;">:</span><span class="dv" style="color: #AD0000;">5</span></span>
+<span id="cb25-4">)</span>
+<span id="cb25-5"></span>
+<span id="cb25-6">data <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb25-7">  <span class="fu" style="color: #4758AB;">group_by</span>(group) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb25-8">  <span class="fu" style="color: #4758AB;">mutate</span>(</span>
+<span id="cb25-9">    <span class="at" style="color: #657422;">value_std =</span> <span class="fu" style="color: #4758AB;">create_feature</span>(value)</span>
+<span id="cb25-10">  ) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb25-11">  <span class="fu" style="color: #4758AB;">ungroup</span>() <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb25-12">  <span class="fu" style="color: #4758AB;">pretty_print</span>()</span></code></pre></div>
+<div class="cell-output cell-output-error">
+<pre><code>Error in `mutate()`:
+ℹ In argument: `value_std = create_feature(value)`.
+ℹ In group 1: `group = 1`.
+Caused by error in `create_feature()`:
+! `x` must have more than one unique element.</code></pre>
+</div>
+</div>
+<p>Not only do we get a helpful error, but in this particular case <code>dplyr</code> also adds helpful context: It tells us which step failed and which group it failed on so that we can effectively debug.</p>
+</section>
+</section>
+<section id="refactoring" class="level2">
+<h2 class="anchored" data-anchor-id="refactoring">Refactoring</h2>
+<p>Now that we have a test suite, we can also refactor our function and be much more confident that we haven’t broken anything. Let’s do an overly complicated refactor.</p>
+<div class="cell" data-layout-align="center" data-hash="unit-testing_cache/html/unnamed-chunk-19_939f340cf3b4d95e2e88831c4af67082">
+<div class="sourceCode cell-code" id="cb27" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1">create_feature <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="cf" style="color: #003B4F;">function</span>(x) {</span>
+<span id="cb27-2">  </span>
+<span id="cb27-3">  <span class="do" style="color: #5E5E5E;
+font-style: italic;">## Compute the mean as the sum of the non-null elements </span></span>
+<span id="cb27-4">  <span class="do" style="color: #5E5E5E;
+font-style: italic;">## divided by the number of non-null elements</span></span>
+<span id="cb27-5">  mu <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">sum</span>(x, <span class="at" style="color: #657422;">na.rm =</span> <span class="cn" style="color: #8f5902;">TRUE</span>) <span class="sc" style="color: #5E5E5E;">/</span> <span class="fu" style="color: #4758AB;">length</span>(<span class="fu" style="color: #4758AB;">na.omit</span>(x))</span>
+<span id="cb27-6">  sigma <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">sd</span>(x, <span class="at" style="color: #657422;">na.rm =</span> <span class="cn" style="color: #8f5902;">TRUE</span>)</span>
+<span id="cb27-7"></span>
+<span id="cb27-8">  <span class="cf" style="color: #003B4F;">if</span> (<span class="fu" style="color: #4758AB;">isTRUE</span>(sigma <span class="sc" style="color: #5E5E5E;">==</span> <span class="dv" style="color: #AD0000;">0</span>)) <span class="fu" style="color: #4758AB;">abort</span>(<span class="st" style="color: #20794D;">"`x` must have a non-zero standard deviation."</span>)</span>
+<span id="cb27-9">  <span class="cf" style="color: #003B4F;">if</span> (<span class="fu" style="color: #4758AB;">isTRUE</span>(<span class="fu" style="color: #4758AB;">length</span>(<span class="fu" style="color: #4758AB;">unique</span>(x)) <span class="sc" style="color: #5E5E5E;">==</span> 1L)) <span class="fu" style="color: #4758AB;">abort</span>(<span class="st" style="color: #20794D;">"`x` must have more than one unique element."</span>)</span>
+<span id="cb27-10">  <span class="cf" style="color: #003B4F;">if</span> (<span class="fu" style="color: #4758AB;">isTRUE</span>(<span class="fu" style="color: #4758AB;">any</span>(<span class="fu" style="color: #4758AB;">is.nan</span>(x)))) <span class="fu" style="color: #4758AB;">abort</span>(<span class="st" style="color: #20794D;">"`x` must not contain any `NaN` values."</span>)</span>
+<span id="cb27-11">  <span class="cf" style="color: #003B4F;">if</span> (<span class="fu" style="color: #4758AB;">isTRUE</span>(<span class="fu" style="color: #4758AB;">any</span>(<span class="fu" style="color: #4758AB;">is.infinite</span>(x)))) <span class="fu" style="color: #4758AB;">abort</span>(<span class="st" style="color: #20794D;">"`x` must not contain any infinite values."</span>)</span>
+<span id="cb27-12"></span>
+<span id="cb27-13">  (x <span class="sc" style="color: #5E5E5E;">-</span> mu) <span class="sc" style="color: #5E5E5E;">/</span> sigma</span>
+<span id="cb27-14">}</span></code></pre></div>
+</div>
+<p>And now let’s run our tests again.</p>
+<div class="cell" data-layout-align="center" data-hash="unit-testing_cache/html/unnamed-chunk-20_e2a30e02b399e6ee2fe3cfc2cf4bbe95">
+<div class="sourceCode cell-code" id="cb28" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><span class="fu" style="color: #4758AB;">test</span>()</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Test passed 🥳
+Test passed 🥳
+Test passed 🥳
+Test passed 🥇</code></pre>
+</div>
+</div>
+<p>Awesome! We just did a simple refactor and our tests passed, so I feel good about the correctness of that refactor. This was a very simple example, but you could imagine arbitrarily complex refactors. The value of a test suite increases exponentially as the complexity of the code increases.</p>
+</section>
+<section id="wrapping-up" class="level2">
+<h2 class="anchored" data-anchor-id="wrapping-up">Wrapping Up</h2>
+<p>There are a few important takeaways from this post.</p>
+<p>First and most importantly, it’s important to test your code. There are so many ways that things can go wrong, and writing tests is the only way to really be confident that nothing is. This is especially true in dynamically typed, interpreted languages like R or Python, where data scientists don’t get the benefits of a compiler or a static type system to catch bugs in their code.</p>
+<p>Second, analytical code that’s well-written should be easy to test. Ultimately, lots of the code we write for analytics work takes some data, does something to it, and returns some new data. That type of logic makes for a great use case for unit testing: If your code doesn’t produce the values you expect, it’s incorrect.</p>
+<p>Lastly, there are many tools in Python (<code>pytest</code>, <code>unittest</code>, etc.) and R (<code>testthat</code>) to make unit testing as simple as writing a few lines of logic and an assertion or two. And then you get all the benefits of having well-tested code, such as the newly-found ease of refactoring said code without being concerned about breaking it.</p>
+<p>Happy testing, and enjoy the peace of mind!</p>
+
+
+</section>
+
+ ]]></description>
+  <category>R</category>
+  <category>data science</category>
+  <guid>https://www.matthewrkaye.com/posts/series/doing-data-science/2023-04-03-unit-testing/unit-testing.html</guid>
+  <pubDate>Wed, 05 Apr 2023 04:00:00 GMT</pubDate>
+</item>
 <item>
   <title>Writing Internal Libraries for Analytics Work</title>
   <dc:creator>Matt Kaye</dc:creator>
@@ -997,6 +1533,7 @@ font-style: italic;">## possibly by logging the value as a parameter in the MLFl
 <p>There are some times where re-balancing the classes in your training data might make sense. One application that comes to mind is if you have strong prior information that your training data is actually biased, and is over-representing one of the two classes.</p>
 <p>For instance, let’s imagine we have data from 1000 breast cancer patients and we know a priori that about 20% of tumors are malignant, but in the training data, maybe 40% of the tumors we have are malignant. Depending on the long-term goal of the project, it might make sense to undersample from the malignant cases to get the overall rate of tumors being malignant down to around the 20% prior.</p>
 <p>The rationale behind doing this would be that if you wanted your model to generalize well to future cases (outside of your training set) and you knew that in the broader population about 20% of cases are malignant, your biased training data could very well result in biased predictions out-of-sample even if your predictions look good in-sample.</p>
+<p>Another case where rebalancing can make sense is if you plan to use a technique like <a href="https://en.wikipedia.org/wiki/Platt_scaling">Platt Scaling</a> or <a href="https://en.wikipedia.org/wiki/Isotonic_regression#:~:text=In%20statistics%20and%20numerical%20analysis,to%20the%20observations%20as%20possible.">Isotonic Regression</a> to re-calibrate your predictions ex-post. These methods are a bit beyond the scope of this post, but they’re both fantastic ways to make sure a model is giving well-calibrated predictions while using classifiers that don’t guarantee calibration, such as tree-based models. For instance, a combination of upsampling with SMOTE, using an often poorly-calibrated classifier like a tree booster such as XGBoost, and then re-calibrating ex-post with a Platt Scaler can result in a rare win-win scenario: Well-calibrated predictions, but also improved performance on normal classification metrics like the F1 score or AUC.</p>
 </section>
 <section id="conclusion" class="level2">
 <h2 class="anchored" data-anchor-id="conclusion">Conclusion</h2>
