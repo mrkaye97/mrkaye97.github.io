@@ -27,8 +27,6 @@ website:
             file: series.qmd
       - text: "Code"
         file: code.qmd
-      - text: Resume
-        file: "/resume/Matthew_Kaye_Resume.pdf"
       - text: "More"
         menu:
           - text: "My three favorite"

@@ -709,7 +709,7 @@ font-style: italic;">## Should be able to query an example table</span></span>
 <span id="cb4-19">  )</span>
 <span id="cb4-20">})</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Test passed 🎊</code></pre>
+<pre><code>Test passed 🎉</code></pre>
 </div>
 </div>
 </section>
@@ -975,33 +975,33 @@ font-style: italic;">## if "some" is a very small percentage.</span></span>
  </thead>
 <tbody>
   <tr>
-   <td style="text-align:right;"> 4.600 </td>
-   <td style="text-align:right;"> 1.105 </td>
+   <td style="text-align:right;"> 3.149 </td>
+   <td style="text-align:right;"> 1.038 </td>
    <td style="text-align:left;"> TRUE </td>
   </tr>
   <tr>
-   <td style="text-align:right;"> 5.094 </td>
-   <td style="text-align:right;"> 0.498 </td>
+   <td style="text-align:right;"> 4.081 </td>
+   <td style="text-align:right;"> 0.917 </td>
    <td style="text-align:left;"> TRUE </td>
   </tr>
   <tr>
-   <td style="text-align:right;"> 5.358 </td>
-   <td style="text-align:right;"> 1.235 </td>
+   <td style="text-align:right;"> 5.785 </td>
+   <td style="text-align:right;"> 0.362 </td>
    <td style="text-align:left;"> TRUE </td>
   </tr>
   <tr>
-   <td style="text-align:right;"> 4.975 </td>
-   <td style="text-align:right;"> 3.154 </td>
+   <td style="text-align:right;"> 4.277 </td>
+   <td style="text-align:right;"> 2.962 </td>
    <td style="text-align:left;"> TRUE </td>
   </tr>
   <tr>
-   <td style="text-align:right;"> 2.903 </td>
-   <td style="text-align:right;"> 2.875 </td>
+   <td style="text-align:right;"> 4.839 </td>
+   <td style="text-align:right;"> 2.027 </td>
    <td style="text-align:left;"> TRUE </td>
   </tr>
   <tr>
-   <td style="text-align:right;"> 5.862 </td>
-   <td style="text-align:right;"> 1.760 </td>
+   <td style="text-align:right;"> 5.498 </td>
+   <td style="text-align:right;"> 6.044 </td>
    <td style="text-align:left;"> TRUE </td>
   </tr>
 </tbody>
@@ -1026,15 +1026,15 @@ font-style: italic;">## if "some" is a very small percentage.</span></span>
 <tbody>
   <tr>
    <td style="text-align:left;"> (Intercept) </td>
-   <td style="text-align:right;"> 13.439 </td>
+   <td style="text-align:right;"> 11.106 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> sepal_length </td>
-   <td style="text-align:right;"> -1.525 </td>
+   <td style="text-align:right;"> -1.503 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> petal_width </td>
-   <td style="text-align:right;"> -1.614 </td>
+   <td style="text-align:right;"> -0.769 </td>
   </tr>
 </tbody>
 </table>
@@ -1664,34 +1664,34 @@ font-style: italic;">## Doing a little data wrangling</span></span>
  </thead>
 <tbody>
   <tr>
-   <td style="text-align:left;"> 1 </td>
-   <td style="text-align:right;"> 24.4 </td>
-   <td style="text-align:right;"> 4 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> 1 </td>
-   <td style="text-align:right;"> 21.4 </td>
-   <td style="text-align:right;"> 4 </td>
-  </tr>
-  <tr>
    <td style="text-align:left;"> 0 </td>
-   <td style="text-align:right;"> 16.4 </td>
+   <td style="text-align:right;"> 15.2 </td>
    <td style="text-align:right;"> 8 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> 0 </td>
-   <td style="text-align:right;"> 21.0 </td>
+   <td style="text-align:right;"> 15.2 </td>
+   <td style="text-align:right;"> 8 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 1 </td>
+   <td style="text-align:right;"> 18.1 </td>
    <td style="text-align:right;"> 6 </td>
   </tr>
   <tr>
-   <td style="text-align:left;"> 1 </td>
-   <td style="text-align:right;"> 33.9 </td>
-   <td style="text-align:right;"> 4 </td>
+   <td style="text-align:left;"> 0 </td>
+   <td style="text-align:right;"> 14.7 </td>
+   <td style="text-align:right;"> 8 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> 0 </td>
-   <td style="text-align:right;"> 15.0 </td>
+   <td style="text-align:right;"> 15.5 </td>
    <td style="text-align:right;"> 8 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 0 </td>
+   <td style="text-align:right;"> 19.7 </td>
+   <td style="text-align:right;"> 6 </td>
   </tr>
 </tbody>
 </table>
