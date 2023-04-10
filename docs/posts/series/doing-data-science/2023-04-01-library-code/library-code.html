@@ -484,7 +484,7 @@ cookieconsent.run({
 <span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>  )</span>
 <span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Test passed 🌈</code></pre>
+<pre><code>Test passed 🎊</code></pre>
 </div>
 </div>
 </section>
@@ -636,7 +636,7 @@ cookieconsent.run({
 <span id="cb11-26"><a href="#cb11-26" aria-hidden="true" tabindex="-1"></a>  )</span>
 <span id="cb11-27"><a href="#cb11-27" aria-hidden="true" tabindex="-1"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Test passed 😸</code></pre>
+<pre><code>Test passed 🎉</code></pre>
 </div>
 </div>
 </section>
@@ -730,33 +730,33 @@ cookieconsent.run({
  </thead>
 <tbody>
   <tr>
-   <td style="text-align:right;"> 4.319 </td>
-   <td style="text-align:right;"> 0.865 </td>
+   <td style="text-align:right;"> 4.600 </td>
+   <td style="text-align:right;"> 1.105 </td>
    <td style="text-align:left;"> TRUE </td>
   </tr>
   <tr>
-   <td style="text-align:right;"> 6.098 </td>
-   <td style="text-align:right;"> 2.516 </td>
+   <td style="text-align:right;"> 5.094 </td>
+   <td style="text-align:right;"> 0.498 </td>
    <td style="text-align:left;"> TRUE </td>
   </tr>
   <tr>
-   <td style="text-align:right;"> 5.440 </td>
-   <td style="text-align:right;"> 1.711 </td>
+   <td style="text-align:right;"> 5.358 </td>
+   <td style="text-align:right;"> 1.235 </td>
    <td style="text-align:left;"> TRUE </td>
   </tr>
   <tr>
-   <td style="text-align:right;"> 5.429 </td>
-   <td style="text-align:right;"> 3.022 </td>
+   <td style="text-align:right;"> 4.975 </td>
+   <td style="text-align:right;"> 3.154 </td>
    <td style="text-align:left;"> TRUE </td>
   </tr>
   <tr>
-   <td style="text-align:right;"> 5.107 </td>
-   <td style="text-align:right;"> 1.077 </td>
+   <td style="text-align:right;"> 2.903 </td>
+   <td style="text-align:right;"> 2.875 </td>
    <td style="text-align:left;"> TRUE </td>
   </tr>
   <tr>
-   <td style="text-align:right;"> 5.578 </td>
-   <td style="text-align:right;"> 2.414 </td>
+   <td style="text-align:right;"> 5.862 </td>
+   <td style="text-align:right;"> 1.760 </td>
    <td style="text-align:left;"> TRUE </td>
   </tr>
 </tbody>
@@ -781,15 +781,15 @@ cookieconsent.run({
 <tbody>
   <tr>
    <td style="text-align:left;"> (Intercept) </td>
-   <td style="text-align:right;"> 11.368 </td>
+   <td style="text-align:right;"> 13.439 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> sepal_length </td>
-   <td style="text-align:right;"> -1.494 </td>
+   <td style="text-align:right;"> -1.525 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> petal_width </td>
-   <td style="text-align:right;"> -0.868 </td>
+   <td style="text-align:right;"> -1.614 </td>
   </tr>
 </tbody>
 </table>
@@ -803,7 +803,7 @@ cookieconsent.run({
 <span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">paste0</span>(<span class="st">"Model accuracy is "</span>, accuracy, <span class="st">"%"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Model accuracy is 82%</code></pre>
+<pre><code>Model accuracy is 85%</code></pre>
 </div>
 </div>
 <p>And that’s it – you have a simple retraining job. This is a very minimal example, but this general framework is very flexible and modular, and it makes up the foundation for how we write our retraining jobs at CollegeVine. You can plug and play all different kinds of feature engineering logic, logic to fetch raw data, metrics, etc. We also use <a href="https://mlflow.org/">MLFlow</a> for versioning models and tracking experiments, so our retraining jobs have lots of logging of artifacts, parameters, and metrics to our MLFlow instance.</p>
