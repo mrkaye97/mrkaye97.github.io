@@ -1,0 +1,247 @@
+---
+title: Pull Requests, Code Review, and The Art of Requesting Changes
+author: Matt Kaye
+date: '2023-04-14'
+categories: [R, data science]
+toc: true
+toc-depth: 4
+callout-appearance: minimal
+code-annotations: hover
+---
+
+```{r, echo = FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE, cache = TRUE, fig.align = "center")
+
+Sys.setenv(
+  SITE_ROOT_DIR = rprojroot::find_root(
+  rprojroot::root_criterion(function(path) file.exists(file.path(path, "website.Rproj")), "has somefile")
+  )
+)
+
+pretty_print <- function(data) {
+  data |>
+    knitr::kable("html") |>
+    kableExtra::kable_styling(position = "center", full_width = FALSE)
+}
+```
+
+::: {.callout-note}
+This post is part of a series called [The Missing Semester of Your DS Education](https://matthewrkaye.com/series.html#the-missing-semester-of-your-ds-education).
+:::
+
+## Introduction
+
+In [my last post](https://matthewrkaye.com/posts/series/doing-data-science/2023-04-03-unit-testing/unit-testing.html) on unit testing analytics code, I started off by saying that I had never heard of unit testing until my second data science job. Not in college, not in internships, and not in my first data science job. The same is true for pull requests and code review -- they were completely new to me. 
+
+This, in my view, is a very unfortunate commonality in analytics teams. All too often, code will go unreviewed or kept out of any kind of version control system entirely. Ultimately, this practice, albeit common, is detrimental to the teams practicing it.
+
+Since then, code review -- both doing code review for others and getting feedback from others on my code -- has grown to become one of my favorite parts of my job. It's also a mission-critical process for any team that strives to maintain a high-quality codebase. But more importantly, it's an valuable social exercise, and an fun way for contributors to come together as a team to collaborate, learn from each other, and improve their skills.
+
+::: {.callout-note}
+I'd also like to note that the Tidyverse team just published a [great series on code review](https://tidyverse.github.io/code-review/), which I'd highly recommend reading.
+:::
+
+## But First: Git
+
+There are a ton of introductions to Git online, all of which are far better than anything I could write here. If you're not already at least somewhat familiar with Git, I'd recommend starting with a post like one of these:
+
+* [From GitHub](https://docs.github.com/en/get-started/using-git/about-git)
+* [From Atlassian](https://www.atlassian.com/git/tutorials/what-is-version-control)
+* [From Git itself](https://git-scm.com/book/en/v2/Getting-Started-What-is-Git%3F)
+
+That said, what I'll discuss here doesn't require any particular Git knowledge.
+
+## On Code Review
+
+I wasn't sure where to start this post. I considered discussing Git itself, but I decided it would be better to leave it to the experts. Then I thought about discussing the function of [pull requests](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/about-pull-requests), but that didn't seem particularly valuable either. So I figured I might just jump into the meat of it: Why code review is valuable, and why analytics teams should be doing more of it than they are.
+
+### Why Do We Review Code?
+
+People and teams have wildly differing opinions about what the main objective of code review is. The following is the opinion of the Tidyverse team:
+
+> The primary purpose of code review is to ensure that the overall “code health” of our packages is improving over time.
+
+Another common opinion on the main purpose of code review is to catch bugs in code before they hit production. 
+
+In my opinion, these are both important objectives of code review to be sure, but are not the _main_ objective. My team's view is that the main objective of code review is knowledge transfer between teammates. On our team -- with "team" encompassing both data and engineering -- we talk often about the [bus factor](https://en.wikipedia.org/wiki/Bus_factor) of our work. A toned-down explanation of the bus factor is that it represents the number of people who need to go on vacation, or be out sick, or leave for a new job for a project to come to a grinding halt because else nobody on the team knows how a particular system works. We've been bitten multiple times by projects with a bus factor of one, meaning that if one person were to leave, that project would be left in limbo. 
+
+Analytics work is no different than engineering work in this respect: If one data scientist lives in a dark room for two years building a novel model and ships it to production without anyone else knowing how it works, how to maintain it, and how to monitor it, then that project is risky. If that data scientist were to leave, there would be a model in production that nobody else had experience working with, which could result in any number of issues. In steps code review to help us solve this problem.
+
+
+### Other Reasons To Review Code
+
+Aside from knowledge transfer, code review is also a valuable opportunity to do quality control. In no particular order, all of the following (and more) can be suggested in code review:
+
+1. Bug fixes
+2. Maintainability improvements, such as improving the readability of the code, adding comments, adding tests, etc.
+3. Performance improvements
+4. Security improvements
+
+All of these are important aspects of maintaining a codebase over the long-term, and, in my experience, are far too often overlooked by analytics teams. In particular, a past team of mine -- as well as many others, from what I've read and heard in talking to others in analytical roles -- had a bad habit of data scientists being siloed and not having any eyes on their work until things were "ready" to be shipped to production. In my opinion, data products are software and should be treated as such. This means that if our models will be shipped to production, then it's imperative that the code underlying them is written in a way that's understandable by others, safe, correct, and, to whatever extent necessary, performant. Code review helps achieve all of these goals.
+
+Lastly, code review is a social exercise. It's a great way for a team to work together, especially in the world of remote work. In getting feedback from teammates, data scientists get to flex their collaboration muscle and, ideally, this type of collaboration allows the whole to be more than the sum of its parts. 
+
+### An Example Review
+
+Since code review is unfamiliar to a lot of us in the analytics world, I'll give an example of how I might do a review. Our team often works with data from external sources like the Census for doing all kinds of analysis. Let's imagine reviewing the following code that a hypothetical teammate has put in to determine the five counties in Arizona with the highest percentage of Native American residents:
+
+```{r}
+library(httr)
+library(purrr)
+library(dplyr)
+
+variables <- c(
+  "NAME",
+  "B01001A_001E",
+  "B01001B_001E",
+  "B01001C_001E",
+  "B01001D_001E",
+  "B01001E_001E",
+  "B01001F_001E",
+  "B01001G_001E"
+)
+
+response <- GET(
+  "https://api.census.gov/data/2019/acs/acs5",
+  query = list(
+    get = paste(variables, collapse = ","),
+    "for" = "tract:*",
+    "in" = "state:04",
+    key = secret::get_secret("CENSUS_API_KEY", vault = sprintf("%s/posts/config", Sys.getenv("SITE_ROOT_DIR")))
+  )
+) %>%
+  content()
+
+cols <- response[[1]]
+response <- response[-1]
+
+response %>%
+  map_dfr(
+    ~ set_names(.x, cols)
+  ) %>%
+  janitor::clean_names() %>%
+  mutate(
+    across(
+      -c(name, tract, county, state),
+      as.numeric
+    )
+  ) %>%
+  group_by(county) %>%
+  summarize(
+    na_pct = sum(b01001c_001e) / sum(rowSums(across(where(is.numeric))))
+  ) %>%
+  slice_max(
+    order_by = na_pct,
+    n = 5
+  ) %>%
+  pretty_print()
+```
+
+At first glance, this code looks pretty involved and poorly written to me. In the real world, we often write complicated code that relies on hyper-specific domain knowledge about the problem being solved in order to really understand it. As I mentioned above, our team often finds ourselves working with external data sources, such as the Census data shown here. And these sources usually have their own internal codes or identifiers that denote what the data you're actually looking at is about. For instance, the series `B01001C_001E` used above represents the total Native American population in a region. In the Census, it's corresponding "concept" is defined as the following:
+
+> B01001C_001E: SEX BY AGE (AMERICAN INDIAN AND ALASKA NATIVE ALONE)
+
+Obviously, these codes are not comprehensible for the layman. There's method to the madness, but we so often work with gibberish codes that don't correspond to anything intuitive and make code review and maintenance dramatically harder. The challenge here is that in order to effectively review this code, the reviewer not only needs to review what the code is trying to accomplish in some high-level sense, but also needs to understand the data itself and its schema in order to understand how the author is trying to accomplish their goal. Unfortunately, the code's author has not done a good job of helping the reviewer (me) understand the code. 
+
+Not only do I not have any context on the Census codes, but there's no documentation linked (or written out) to help me find what the codes mean, there's no documentation of the API response to explain why they're seemingly removing the first item in the response's body and setting it as the names of the columns in my final data frame, and there's no explanation of what `na_pct` means, which in the context of this work means "percentage Native American" but could also reasonably mean something like "percentage of the data that's `null`". 
+
+And this is exactly where the value of code review comes in. We often like to say that you're not writing code for yourself right now. Instead, you should be writing it for a future you in six months or a year who won't remember all of the intricacies of this problem anymore. In short, you want your code to be understandable to future you, and, by extension, your teammates. But code authors, just like anyone else working on a project of any sort, are often so deep in the weeds of their work and so familiar with all of the ins and outs that it's easy to forget just how confusing their work can be at times. Code review is a great opportunity for others to ask for clarification, which is the knowledge transfer I mentioned before.
+
+If a teammate put in these changes, I'd request a few improvements:
+
+1. What do the Census codes mean?
+2. What does `na_pct` mean?
+3. What does the response from the Census API look like?
+4. What does `state:04` mean?
+
+After requesting clarification on all of those points, I'd hope the code would ultimately end up looking something like this:
+
+```{r}
+## Data from the Census ACS (American Community Survey)
+##
+## ACS 2019 5-year data
+## B01001A_001E: Total White alone population
+## B01001B_001E: Total Black or African American alone population
+## B01001C_001E: Total American Indian and Alaska Native alone population
+## B01001D_001E: Total Asian alone population
+## B01001E_001E: Total Native Hawaiian and Other Pacific Islander alone population
+## B01001F_001E: Total Some other race alone population
+## B01001G_001E: Total Two or more races population
+##
+## Codes of the form B01001X_001E
+## correspond to "Total X population" where X
+## is a race as defined by the Census. For instance,
+## B01001A_001E: Total White alone population
+variables <- c(
+  white_alone = "B01001A_001E",
+  black = "B01001B_001E",
+  native_american = "B01001C_001E",
+  asian = "B01001D_001E",
+  hawaiian_pacific_islander = "B01001E_001E",
+  other_alone = "B01001F_001E",
+  multi_racial = "B01001G_001E"
+)
+
+response <- GET(
+  "https://api.census.gov/data/2019/acs/acs5",
+  query = list(
+    get = paste(variables, collapse = ","),
+    "for" = "tract:*",
+    "in" = "state:04",
+    key = secret::get_secret("CENSUS_API_KEY", vault = sprintf("%s/posts/config", Sys.getenv("SITE_ROOT_DIR")))
+  )
+) %>%
+  content()
+
+## The first item in the JSON response body is a vector
+## of the names of the fields returned.
+## For this query, we get: 
+##
+##   * B01001A_001E
+##   * B01001B_001E
+##   * B01001C_001E
+##   * B01001D_001E
+##   * B01001E_001E
+##   * B01001F_001E
+##   * B01001G_001E
+##   * state
+##   * county
+##   * tract
+##
+## Every other record contains data corresponding to these fields.
+## The values in the population fields (e.g. B01001A_001E) are integers
+## representing the total population for that racial group in that tract.
+## The state, county, and tract are all FIPS codes.
+cols <- response[[1]]
+response <- response[-1]
+
+response %>%
+  map_dfr(
+    ~ set_names(.x, cols)
+  ) %>%
+  janitor::clean_names() %>%
+  mutate(
+    across(
+      all_of(tolower(unname(variables))),
+      as.numeric
+    )
+  ) %>%
+  group_by(county) %>%
+  summarize(
+    percent_native_american = sum(b01001c_001e) / sum(rowSums(across(all_of(tolower(unname(variables))))))
+  ) %>%
+  slice_max(
+    order_by = percent_native_american,
+    n = 5
+  ) %>%
+  pretty_print()
+```
+
+Now that the code has been rewritten, future readers of the code have some much needed context. The author has explained what the data looks like when we get it back from the API, has explained what each of the codes corresponds to, and has renamed a variable to be more helpful. Ultimately, these changes will make it easier for readers to understand what this code is trying to accomplish and work with it.
+
+## Wrapping Up
+
+The key takeaway here should be that in doing this review, we've established some shared sense of how this code works between _multiple_ people instead of just one (the author) understanding it. In addition, the reviewer helped the author rework their code to make it easier for anyone else on the team to understand. This means that when we need to use this code in the future, it'll be written in a way that makes it easier for that future person to work with, which will ultimately lead to them being able to ship more quickly and confidently, and needing to reinvent the wheel less often.
+
+A popular saying is that code is read ten times more than it's written since we often need to understand existing code to author new code. Reviews are a great way to make sure that code is written in a maintainable, understandable way so that when it's read all of those many times in the future, it's able to be understood effortlessly.
+

@@ -10,7 +10,347 @@
 <atom:link href="https://www.matthewrkaye.com/posts-r.xml" rel="self" type="application/rss+xml"/>
 <description>Matt Kaye&#39;s personal website</description>
 <generator>quarto-1.2.475</generator>
-<lastBuildDate>Wed, 05 Apr 2023 04:00:00 GMT</lastBuildDate>
+<lastBuildDate>Fri, 14 Apr 2023 04:00:00 GMT</lastBuildDate>
+<item>
+  <title>Pull Requests, Code Review, and The Art of Requesting Changes</title>
+  <dc:creator>Matt Kaye</dc:creator>
+  <link>https://www.matthewrkaye.com/posts/series/doing-data-science/2023-04-14-code-review/code-review.html</link>
+  <description><![CDATA[ 
+
+
+
+<div class="cell">
+
+</div>
+<div class="callout-note callout callout-style-simple no-icon">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-body-container">
+<p>This post is part of a series called <a href="https://matthewrkaye.com/series.html#the-missing-semester-of-your-ds-education">The Missing Semester of Your DS Education</a>.</p>
+</div>
+</div>
+</div>
+<section id="introduction" class="level2">
+<h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
+<p>In <a href="https://matthewrkaye.com/posts/series/doing-data-science/2023-04-03-unit-testing/unit-testing.html">my last post</a> on unit testing analytics code, I started off by saying that I had never heard of unit testing until my second data science job. Not in college, not in internships, and not in my first data science job. The same is true for pull requests and code review – they were completely new to me.</p>
+<p>This, in my view, is a very unfortunate commonality in analytics teams. All too often, code will go unreviewed or kept out of any kind of version control system entirely. Ultimately, this practice, albeit common, is detrimental to the teams practicing it.</p>
+<p>Since then, code review – both doing code review for others and getting feedback from others on my code – has grown to become one of my favorite parts of my job. It’s also a mission-critical process for any team that strives to maintain a high-quality codebase. But more importantly, it’s an valuable social exercise, and an fun way for contributors to come together as a team to collaborate, learn from each other, and improve their skills.</p>
+<div class="callout-note callout callout-style-simple no-icon">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-body-container">
+<p>I’d also like to note that the Tidyverse team just published a <a href="https://tidyverse.github.io/code-review/">great series on code review</a>, which I’d highly recommend reading.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="but-first-git" class="level2">
+<h2 class="anchored" data-anchor-id="but-first-git">But First: Git</h2>
+<p>There are a ton of introductions to Git online, all of which are far better than anything I could write here. If you’re not already at least somewhat familiar with Git, I’d recommend starting with a post like one of these:</p>
+<ul>
+<li><a href="https://docs.github.com/en/get-started/using-git/about-git">From GitHub</a></li>
+<li><a href="https://www.atlassian.com/git/tutorials/what-is-version-control">From Atlassian</a></li>
+<li><a href="https://git-scm.com/book/en/v2/Getting-Started-What-is-Git%3F">From Git itself</a></li>
+</ul>
+<p>That said, what I’ll discuss here doesn’t require any particular Git knowledge.</p>
+</section>
+<section id="on-code-review" class="level2">
+<h2 class="anchored" data-anchor-id="on-code-review">On Code Review</h2>
+<p>I wasn’t sure where to start this post. I considered discussing Git itself, but I decided it would be better to leave it to the experts. Then I thought about discussing the function of <a href="https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/about-pull-requests">pull requests</a>, but that didn’t seem particularly valuable either. So I figured I might just jump into the meat of it: Why code review is valuable, and why analytics teams should be doing more of it than they are.</p>
+<section id="why-do-we-review-code" class="level3">
+<h3 class="anchored" data-anchor-id="why-do-we-review-code">Why Do We Review Code?</h3>
+<p>People and teams have wildly differing opinions about what the main objective of code review is. The following is the opinion of the Tidyverse team:</p>
+<blockquote class="blockquote">
+<p>The primary purpose of code review is to ensure that the overall “code health” of our packages is improving over time.</p>
+</blockquote>
+<p>Another common opinion on the main purpose of code review is to catch bugs in code before they hit production.</p>
+<p>In my opinion, these are both important objectives of code review to be sure, but are not the <em>main</em> objective. My team’s view is that the main objective of code review is knowledge transfer between teammates. On our team – with “team” encompassing both data and engineering – we talk often about the <a href="https://en.wikipedia.org/wiki/Bus_factor">bus factor</a> of our work. A toned-down explanation of the bus factor is that it represents the number of people who need to go on vacation, or be out sick, or leave for a new job for a project to come to a grinding halt because else nobody on the team knows how a particular system works. We’ve been bitten multiple times by projects with a bus factor of one, meaning that if one person were to leave, that project would be left in limbo.</p>
+<p>Analytics work is no different than engineering work in this respect: If one data scientist lives in a dark room for two years building a novel model and ships it to production without anyone else knowing how it works, how to maintain it, and how to monitor it, then that project is risky. If that data scientist were to leave, there would be a model in production that nobody else had experience working with, which could result in any number of issues. In steps code review to help us solve this problem.</p>
+</section>
+<section id="other-reasons-to-review-code" class="level3">
+<h3 class="anchored" data-anchor-id="other-reasons-to-review-code">Other Reasons To Review Code</h3>
+<p>Aside from knowledge transfer, code review is also a valuable opportunity to do quality control. In no particular order, all of the following (and more) can be suggested in code review:</p>
+<ol type="1">
+<li>Bug fixes</li>
+<li>Maintainability improvements, such as improving the readability of the code, adding comments, adding tests, etc.</li>
+<li>Performance improvements</li>
+<li>Security improvements</li>
+</ol>
+<p>All of these are important aspects of maintaining a codebase over the long-term, and, in my experience, are far too often overlooked by analytics teams. In particular, a past team of mine – as well as many others, from what I’ve read and heard in talking to others in analytical roles – had a bad habit of data scientists being siloed and not having any eyes on their work until things were “ready” to be shipped to production. In my opinion, data products are software and should be treated as such. This means that if our models will be shipped to production, then it’s imperative that the code underlying them is written in a way that’s understandable by others, safe, correct, and, to whatever extent necessary, performant. Code review helps achieve all of these goals.</p>
+<p>Lastly, code review is a social exercise. It’s a great way for a team to work together, especially in the world of remote work. In getting feedback from teammates, data scientists get to flex their collaboration muscle and, ideally, this type of collaboration allows the whole to be more than the sum of its parts.</p>
+</section>
+<section id="an-example-review" class="level3">
+<h3 class="anchored" data-anchor-id="an-example-review">An Example Review</h3>
+<p>Since code review is unfamiliar to a lot of us in the analytics world, I’ll give an example of how I might do a review. Our team often works with data from external sources like the Census for doing all kinds of analysis. Let’s imagine reviewing the following code that a hypothetical teammate has put in to determine the five counties in Arizona with the highest percentage of Native American residents:</p>
+<div class="cell" data-layout-align="center" data-hash="code-review_cache/html/unnamed-chunk-2_c1ec406875876f9127deb3a4b1812bb4">
+<div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><span class="fu" style="color: #4758AB;">library</span>(httr)</span>
+<span id="cb1-2"><span class="fu" style="color: #4758AB;">library</span>(purrr)</span>
+<span id="cb1-3"><span class="fu" style="color: #4758AB;">library</span>(dplyr)</span>
+<span id="cb1-4"></span>
+<span id="cb1-5">variables <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">c</span>(</span>
+<span id="cb1-6">  <span class="st" style="color: #20794D;">"NAME"</span>,</span>
+<span id="cb1-7">  <span class="st" style="color: #20794D;">"B01001A_001E"</span>,</span>
+<span id="cb1-8">  <span class="st" style="color: #20794D;">"B01001B_001E"</span>,</span>
+<span id="cb1-9">  <span class="st" style="color: #20794D;">"B01001C_001E"</span>,</span>
+<span id="cb1-10">  <span class="st" style="color: #20794D;">"B01001D_001E"</span>,</span>
+<span id="cb1-11">  <span class="st" style="color: #20794D;">"B01001E_001E"</span>,</span>
+<span id="cb1-12">  <span class="st" style="color: #20794D;">"B01001F_001E"</span>,</span>
+<span id="cb1-13">  <span class="st" style="color: #20794D;">"B01001G_001E"</span></span>
+<span id="cb1-14">)</span>
+<span id="cb1-15"></span>
+<span id="cb1-16">response <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">GET</span>(</span>
+<span id="cb1-17">  <span class="st" style="color: #20794D;">"https://api.census.gov/data/2019/acs/acs5"</span>,</span>
+<span id="cb1-18">  <span class="at" style="color: #657422;">query =</span> <span class="fu" style="color: #4758AB;">list</span>(</span>
+<span id="cb1-19">    <span class="at" style="color: #657422;">get =</span> <span class="fu" style="color: #4758AB;">paste</span>(variables, <span class="at" style="color: #657422;">collapse =</span> <span class="st" style="color: #20794D;">","</span>),</span>
+<span id="cb1-20">    <span class="st" style="color: #20794D;">"for"</span> <span class="ot" style="color: #003B4F;">=</span> <span class="st" style="color: #20794D;">"tract:*"</span>,</span>
+<span id="cb1-21">    <span class="st" style="color: #20794D;">"in"</span> <span class="ot" style="color: #003B4F;">=</span> <span class="st" style="color: #20794D;">"state:04"</span>,</span>
+<span id="cb1-22">    <span class="at" style="color: #657422;">key =</span> secret<span class="sc" style="color: #5E5E5E;">::</span><span class="fu" style="color: #4758AB;">get_secret</span>(<span class="st" style="color: #20794D;">"CENSUS_API_KEY"</span>, <span class="at" style="color: #657422;">vault =</span> <span class="fu" style="color: #4758AB;">sprintf</span>(<span class="st" style="color: #20794D;">"%s/posts/config"</span>, <span class="fu" style="color: #4758AB;">Sys.getenv</span>(<span class="st" style="color: #20794D;">"SITE_ROOT_DIR"</span>)))</span>
+<span id="cb1-23">  )</span>
+<span id="cb1-24">) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb1-25">  <span class="fu" style="color: #4758AB;">content</span>()</span>
+<span id="cb1-26"></span>
+<span id="cb1-27">cols <span class="ot" style="color: #003B4F;">&lt;-</span> response[[<span class="dv" style="color: #AD0000;">1</span>]]</span>
+<span id="cb1-28">response <span class="ot" style="color: #003B4F;">&lt;-</span> response[<span class="sc" style="color: #5E5E5E;">-</span><span class="dv" style="color: #AD0000;">1</span>]</span>
+<span id="cb1-29"></span>
+<span id="cb1-30">response <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb1-31">  <span class="fu" style="color: #4758AB;">map_dfr</span>(</span>
+<span id="cb1-32">    <span class="sc" style="color: #5E5E5E;">~</span> <span class="fu" style="color: #4758AB;">set_names</span>(.x, cols)</span>
+<span id="cb1-33">  ) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb1-34">  janitor<span class="sc" style="color: #5E5E5E;">::</span><span class="fu" style="color: #4758AB;">clean_names</span>() <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb1-35">  <span class="fu" style="color: #4758AB;">mutate</span>(</span>
+<span id="cb1-36">    <span class="fu" style="color: #4758AB;">across</span>(</span>
+<span id="cb1-37">      <span class="sc" style="color: #5E5E5E;">-</span><span class="fu" style="color: #4758AB;">c</span>(name, tract, county, state),</span>
+<span id="cb1-38">      as.numeric</span>
+<span id="cb1-39">    )</span>
+<span id="cb1-40">  ) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb1-41">  <span class="fu" style="color: #4758AB;">group_by</span>(county) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb1-42">  <span class="fu" style="color: #4758AB;">summarize</span>(</span>
+<span id="cb1-43">    <span class="at" style="color: #657422;">na_pct =</span> <span class="fu" style="color: #4758AB;">sum</span>(b01001c_001e) <span class="sc" style="color: #5E5E5E;">/</span> <span class="fu" style="color: #4758AB;">sum</span>(<span class="fu" style="color: #4758AB;">rowSums</span>(<span class="fu" style="color: #4758AB;">across</span>(<span class="fu" style="color: #4758AB;">where</span>(is.numeric))))</span>
+<span id="cb1-44">  ) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb1-45">  <span class="fu" style="color: #4758AB;">slice_max</span>(</span>
+<span id="cb1-46">    <span class="at" style="color: #657422;">order_by =</span> na_pct,</span>
+<span id="cb1-47">    <span class="at" style="color: #657422;">n =</span> <span class="dv" style="color: #AD0000;">5</span></span>
+<span id="cb1-48">  ) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb1-49">  <span class="fu" style="color: #4758AB;">pretty_print</span>()</span></code></pre></div>
+<div class="cell-output-display">
+
+<table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
+ <thead>
+  <tr>
+   <th style="text-align:left;"> county </th>
+   <th style="text-align:right;"> na_pct </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> 001 </td>
+   <td style="text-align:right;"> 0.7377187 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 017 </td>
+   <td style="text-align:right;"> 0.4465544 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 005 </td>
+   <td style="text-align:right;"> 0.2654699 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 007 </td>
+   <td style="text-align:right;"> 0.1630934 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 012 </td>
+   <td style="text-align:right;"> 0.1495215 </td>
+  </tr>
+</tbody>
+</table>
+
+</div>
+</div>
+<p>At first glance, this code looks pretty involved and poorly written to me. In the real world, we often write complicated code that relies on hyper-specific domain knowledge about the problem being solved in order to really understand it. As I mentioned above, our team often finds ourselves working with external data sources, such as the Census data shown here. And these sources usually have their own internal codes or identifiers that denote what the data you’re actually looking at is about. For instance, the series <code>B01001C_001E</code> used above represents the total Native American population in a region. In the Census, it’s corresponding “concept” is defined as the following:</p>
+<blockquote class="blockquote">
+<p>B01001C_001E: SEX BY AGE (AMERICAN INDIAN AND ALASKA NATIVE ALONE)</p>
+</blockquote>
+<p>Obviously, these codes are not comprehensible for the layman. There’s method to the madness, but we so often work with gibberish codes that don’t correspond to anything intuitive and make code review and maintenance dramatically harder. The challenge here is that in order to effectively review this code, the reviewer not only needs to review what the code is trying to accomplish in some high-level sense, but also needs to understand the data itself and its schema in order to understand how the author is trying to accomplish their goal. Unfortunately, the code’s author has not done a good job of helping the reviewer (me) understand the code.</p>
+<p>Not only do I not have any context on the Census codes, but there’s no documentation linked (or written out) to help me find what the codes mean, there’s no documentation of the API response to explain why they’re seemingly removing the first item in the response’s body and setting it as the names of the columns in my final data frame, and there’s no explanation of what <code>na_pct</code> means, which in the context of this work means “percentage Native American” but could also reasonably mean something like “percentage of the data that’s <code>null</code>”.</p>
+<p>And this is exactly where the value of code review comes in. We often like to say that you’re not writing code for yourself right now. Instead, you should be writing it for a future you in six months or a year who won’t remember all of the intricacies of this problem anymore. In short, you want your code to be understandable to future you, and, by extension, your teammates. But code authors, just like anyone else working on a project of any sort, are often so deep in the weeds of their work and so familiar with all of the ins and outs that it’s easy to forget just how confusing their work can be at times. Code review is a great opportunity for others to ask for clarification, which is the knowledge transfer I mentioned before.</p>
+<p>If a teammate put in these changes, I’d request a few improvements:</p>
+<ol type="1">
+<li>What do the Census codes mean?</li>
+<li>What does <code>na_pct</code> mean?</li>
+<li>What does the response from the Census API look like?</li>
+<li>What does <code>state:04</code> mean?</li>
+</ol>
+<p>After requesting clarification on all of those points, I’d hope the code would ultimately end up looking something like this:</p>
+<div class="cell" data-layout-align="center" data-hash="code-review_cache/html/unnamed-chunk-3_bc7e9589d4c80bfdaf8689be7b9da287">
+<div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><span class="do" style="color: #5E5E5E;
+font-style: italic;">## Data from the Census ACS (American Community Survey)</span></span>
+<span id="cb2-2"><span class="do" style="color: #5E5E5E;
+font-style: italic;">##</span></span>
+<span id="cb2-3"><span class="do" style="color: #5E5E5E;
+font-style: italic;">## ACS 2019 5-year data</span></span>
+<span id="cb2-4"><span class="do" style="color: #5E5E5E;
+font-style: italic;">## B01001A_001E: Total White alone population</span></span>
+<span id="cb2-5"><span class="do" style="color: #5E5E5E;
+font-style: italic;">## B01001B_001E: Total Black or African American alone population</span></span>
+<span id="cb2-6"><span class="do" style="color: #5E5E5E;
+font-style: italic;">## B01001C_001E: Total American Indian and Alaska Native alone population</span></span>
+<span id="cb2-7"><span class="do" style="color: #5E5E5E;
+font-style: italic;">## B01001D_001E: Total Asian alone population</span></span>
+<span id="cb2-8"><span class="do" style="color: #5E5E5E;
+font-style: italic;">## B01001E_001E: Total Native Hawaiian and Other Pacific Islander alone population</span></span>
+<span id="cb2-9"><span class="do" style="color: #5E5E5E;
+font-style: italic;">## B01001F_001E: Total Some other race alone population</span></span>
+<span id="cb2-10"><span class="do" style="color: #5E5E5E;
+font-style: italic;">## B01001G_001E: Total Two or more races population</span></span>
+<span id="cb2-11"><span class="do" style="color: #5E5E5E;
+font-style: italic;">##</span></span>
+<span id="cb2-12"><span class="do" style="color: #5E5E5E;
+font-style: italic;">## Codes of the form B01001X_001E</span></span>
+<span id="cb2-13"><span class="do" style="color: #5E5E5E;
+font-style: italic;">## correspond to "Total X population" where X</span></span>
+<span id="cb2-14"><span class="do" style="color: #5E5E5E;
+font-style: italic;">## is a race as defined by the Census. For instance,</span></span>
+<span id="cb2-15"><span class="do" style="color: #5E5E5E;
+font-style: italic;">## B01001A_001E: Total White alone population</span></span>
+<span id="cb2-16">variables <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">c</span>(</span>
+<span id="cb2-17">  <span class="at" style="color: #657422;">white_alone =</span> <span class="st" style="color: #20794D;">"B01001A_001E"</span>,</span>
+<span id="cb2-18">  <span class="at" style="color: #657422;">black =</span> <span class="st" style="color: #20794D;">"B01001B_001E"</span>,</span>
+<span id="cb2-19">  <span class="at" style="color: #657422;">native_american =</span> <span class="st" style="color: #20794D;">"B01001C_001E"</span>,</span>
+<span id="cb2-20">  <span class="at" style="color: #657422;">asian =</span> <span class="st" style="color: #20794D;">"B01001D_001E"</span>,</span>
+<span id="cb2-21">  <span class="at" style="color: #657422;">hawaiian_pacific_islander =</span> <span class="st" style="color: #20794D;">"B01001E_001E"</span>,</span>
+<span id="cb2-22">  <span class="at" style="color: #657422;">other_alone =</span> <span class="st" style="color: #20794D;">"B01001F_001E"</span>,</span>
+<span id="cb2-23">  <span class="at" style="color: #657422;">multi_racial =</span> <span class="st" style="color: #20794D;">"B01001G_001E"</span></span>
+<span id="cb2-24">)</span>
+<span id="cb2-25"></span>
+<span id="cb2-26">response <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">GET</span>(</span>
+<span id="cb2-27">  <span class="st" style="color: #20794D;">"https://api.census.gov/data/2019/acs/acs5"</span>,</span>
+<span id="cb2-28">  <span class="at" style="color: #657422;">query =</span> <span class="fu" style="color: #4758AB;">list</span>(</span>
+<span id="cb2-29">    <span class="at" style="color: #657422;">get =</span> <span class="fu" style="color: #4758AB;">paste</span>(variables, <span class="at" style="color: #657422;">collapse =</span> <span class="st" style="color: #20794D;">","</span>),</span>
+<span id="cb2-30">    <span class="st" style="color: #20794D;">"for"</span> <span class="ot" style="color: #003B4F;">=</span> <span class="st" style="color: #20794D;">"tract:*"</span>,</span>
+<span id="cb2-31">    <span class="st" style="color: #20794D;">"in"</span> <span class="ot" style="color: #003B4F;">=</span> <span class="st" style="color: #20794D;">"state:04"</span>,</span>
+<span id="cb2-32">    <span class="at" style="color: #657422;">key =</span> secret<span class="sc" style="color: #5E5E5E;">::</span><span class="fu" style="color: #4758AB;">get_secret</span>(<span class="st" style="color: #20794D;">"CENSUS_API_KEY"</span>, <span class="at" style="color: #657422;">vault =</span> <span class="fu" style="color: #4758AB;">sprintf</span>(<span class="st" style="color: #20794D;">"%s/posts/config"</span>, <span class="fu" style="color: #4758AB;">Sys.getenv</span>(<span class="st" style="color: #20794D;">"SITE_ROOT_DIR"</span>)))</span>
+<span id="cb2-33">  )</span>
+<span id="cb2-34">) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb2-35">  <span class="fu" style="color: #4758AB;">content</span>()</span>
+<span id="cb2-36"></span>
+<span id="cb2-37"><span class="do" style="color: #5E5E5E;
+font-style: italic;">## The first item in the JSON response body is a vector</span></span>
+<span id="cb2-38"><span class="do" style="color: #5E5E5E;
+font-style: italic;">## of the names of the fields returned.</span></span>
+<span id="cb2-39"><span class="do" style="color: #5E5E5E;
+font-style: italic;">## For this query, we get: </span></span>
+<span id="cb2-40"><span class="do" style="color: #5E5E5E;
+font-style: italic;">##</span></span>
+<span id="cb2-41"><span class="do" style="color: #5E5E5E;
+font-style: italic;">##   * B01001A_001E</span></span>
+<span id="cb2-42"><span class="do" style="color: #5E5E5E;
+font-style: italic;">##   * B01001B_001E</span></span>
+<span id="cb2-43"><span class="do" style="color: #5E5E5E;
+font-style: italic;">##   * B01001C_001E</span></span>
+<span id="cb2-44"><span class="do" style="color: #5E5E5E;
+font-style: italic;">##   * B01001D_001E</span></span>
+<span id="cb2-45"><span class="do" style="color: #5E5E5E;
+font-style: italic;">##   * B01001E_001E</span></span>
+<span id="cb2-46"><span class="do" style="color: #5E5E5E;
+font-style: italic;">##   * B01001F_001E</span></span>
+<span id="cb2-47"><span class="do" style="color: #5E5E5E;
+font-style: italic;">##   * B01001G_001E</span></span>
+<span id="cb2-48"><span class="do" style="color: #5E5E5E;
+font-style: italic;">##   * state</span></span>
+<span id="cb2-49"><span class="do" style="color: #5E5E5E;
+font-style: italic;">##   * county</span></span>
+<span id="cb2-50"><span class="do" style="color: #5E5E5E;
+font-style: italic;">##   * tract</span></span>
+<span id="cb2-51"><span class="do" style="color: #5E5E5E;
+font-style: italic;">##</span></span>
+<span id="cb2-52"><span class="do" style="color: #5E5E5E;
+font-style: italic;">## Every other record contains data corresponding to these fields.</span></span>
+<span id="cb2-53"><span class="do" style="color: #5E5E5E;
+font-style: italic;">## The values in the population fields (e.g. B01001A_001E) are integers</span></span>
+<span id="cb2-54"><span class="do" style="color: #5E5E5E;
+font-style: italic;">## representing the total population for that racial group in that tract.</span></span>
+<span id="cb2-55"><span class="do" style="color: #5E5E5E;
+font-style: italic;">## The state, county, and tract are all FIPS codes.</span></span>
+<span id="cb2-56">cols <span class="ot" style="color: #003B4F;">&lt;-</span> response[[<span class="dv" style="color: #AD0000;">1</span>]]</span>
+<span id="cb2-57">response <span class="ot" style="color: #003B4F;">&lt;-</span> response[<span class="sc" style="color: #5E5E5E;">-</span><span class="dv" style="color: #AD0000;">1</span>]</span>
+<span id="cb2-58"></span>
+<span id="cb2-59">response <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb2-60">  <span class="fu" style="color: #4758AB;">map_dfr</span>(</span>
+<span id="cb2-61">    <span class="sc" style="color: #5E5E5E;">~</span> <span class="fu" style="color: #4758AB;">set_names</span>(.x, cols)</span>
+<span id="cb2-62">  ) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb2-63">  janitor<span class="sc" style="color: #5E5E5E;">::</span><span class="fu" style="color: #4758AB;">clean_names</span>() <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb2-64">  <span class="fu" style="color: #4758AB;">mutate</span>(</span>
+<span id="cb2-65">    <span class="fu" style="color: #4758AB;">across</span>(</span>
+<span id="cb2-66">      <span class="fu" style="color: #4758AB;">all_of</span>(<span class="fu" style="color: #4758AB;">tolower</span>(<span class="fu" style="color: #4758AB;">unname</span>(variables))),</span>
+<span id="cb2-67">      as.numeric</span>
+<span id="cb2-68">    )</span>
+<span id="cb2-69">  ) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb2-70">  <span class="fu" style="color: #4758AB;">group_by</span>(county) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb2-71">  <span class="fu" style="color: #4758AB;">summarize</span>(</span>
+<span id="cb2-72">    <span class="at" style="color: #657422;">percent_native_american =</span> <span class="fu" style="color: #4758AB;">sum</span>(b01001c_001e) <span class="sc" style="color: #5E5E5E;">/</span> <span class="fu" style="color: #4758AB;">sum</span>(<span class="fu" style="color: #4758AB;">rowSums</span>(<span class="fu" style="color: #4758AB;">across</span>(<span class="fu" style="color: #4758AB;">all_of</span>(<span class="fu" style="color: #4758AB;">tolower</span>(<span class="fu" style="color: #4758AB;">unname</span>(variables))))))</span>
+<span id="cb2-73">  ) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb2-74">  <span class="fu" style="color: #4758AB;">slice_max</span>(</span>
+<span id="cb2-75">    <span class="at" style="color: #657422;">order_by =</span> percent_native_american,</span>
+<span id="cb2-76">    <span class="at" style="color: #657422;">n =</span> <span class="dv" style="color: #AD0000;">5</span></span>
+<span id="cb2-77">  ) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb2-78">  <span class="fu" style="color: #4758AB;">pretty_print</span>()</span></code></pre></div>
+<div class="cell-output-display">
+
+<table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
+ <thead>
+  <tr>
+   <th style="text-align:left;"> county </th>
+   <th style="text-align:right;"> percent_native_american </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> 001 </td>
+   <td style="text-align:right;"> 0.7377187 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 017 </td>
+   <td style="text-align:right;"> 0.4465544 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 005 </td>
+   <td style="text-align:right;"> 0.2654699 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 007 </td>
+   <td style="text-align:right;"> 0.1630934 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 012 </td>
+   <td style="text-align:right;"> 0.1495215 </td>
+  </tr>
+</tbody>
+</table>
+
+</div>
+</div>
+<p>Now that the code has been rewritten, future readers of the code have some much needed context. The author has explained what the data looks like when we get it back from the API, has explained what each of the codes corresponds to, and has renamed a variable to be more helpful. Ultimately, these changes will make it easier for readers to understand what this code is trying to accomplish and work with it.</p>
+</section>
+</section>
+<section id="wrapping-up" class="level2">
+<h2 class="anchored" data-anchor-id="wrapping-up">Wrapping Up</h2>
+<p>The key takeaway here should be that in doing this review, we’ve established some shared sense of how this code works between <em>multiple</em> people instead of just one (the author) understanding it. In addition, the reviewer helped the author rework their code to make it easier for anyone else on the team to understand. This means that when we need to use this code in the future, it’ll be written in a way that makes it easier for that future person to work with, which will ultimately lead to them being able to ship more quickly and confidently, and needing to reinvent the wheel less often.</p>
+<p>A popular saying is that code is read ten times more than it’s written since we often need to understand existing code to author new code. Reviews are a great way to make sure that code is written in a maintainable, understandable way so that when it’s read all of those many times in the future, it’s able to be understood effortlessly.</p>
+
+
+</section>
+
+ ]]></description>
+  <category>R</category>
+  <category>data science</category>
+  <guid>https://www.matthewrkaye.com/posts/series/doing-data-science/2023-04-14-code-review/code-review.html</guid>
+  <pubDate>Fri, 14 Apr 2023 04:00:00 GMT</pubDate>
+</item>
 <item>
   <title>Unit Testing Analytics Code</title>
   <dc:creator>Matt Kaye</dc:creator>
@@ -975,33 +1315,33 @@ font-style: italic;">## if "some" is a very small percentage.</span></span>
  </thead>
 <tbody>
   <tr>
-   <td style="text-align:right;"> 3.149 </td>
-   <td style="text-align:right;"> 1.038 </td>
+   <td style="text-align:right;"> 4.466 </td>
+   <td style="text-align:right;"> 0.717 </td>
    <td style="text-align:left;"> TRUE </td>
   </tr>
   <tr>
-   <td style="text-align:right;"> 4.081 </td>
-   <td style="text-align:right;"> 0.917 </td>
+   <td style="text-align:right;"> 6.667 </td>
+   <td style="text-align:right;"> 3.686 </td>
    <td style="text-align:left;"> TRUE </td>
   </tr>
   <tr>
-   <td style="text-align:right;"> 5.785 </td>
-   <td style="text-align:right;"> 0.362 </td>
+   <td style="text-align:right;"> 5.962 </td>
+   <td style="text-align:right;"> 1.343 </td>
    <td style="text-align:left;"> TRUE </td>
   </tr>
   <tr>
-   <td style="text-align:right;"> 4.277 </td>
-   <td style="text-align:right;"> 2.962 </td>
+   <td style="text-align:right;"> 3.743 </td>
+   <td style="text-align:right;"> 0.666 </td>
    <td style="text-align:left;"> TRUE </td>
   </tr>
   <tr>
-   <td style="text-align:right;"> 4.839 </td>
-   <td style="text-align:right;"> 2.027 </td>
+   <td style="text-align:right;"> 5.542 </td>
+   <td style="text-align:right;"> 2.363 </td>
    <td style="text-align:left;"> TRUE </td>
   </tr>
   <tr>
-   <td style="text-align:right;"> 5.498 </td>
-   <td style="text-align:right;"> 6.044 </td>
+   <td style="text-align:right;"> 5.239 </td>
+   <td style="text-align:right;"> 0.942 </td>
    <td style="text-align:left;"> TRUE </td>
   </tr>
 </tbody>
@@ -1026,15 +1366,15 @@ font-style: italic;">## if "some" is a very small percentage.</span></span>
 <tbody>
   <tr>
    <td style="text-align:left;"> (Intercept) </td>
-   <td style="text-align:right;"> 11.106 </td>
+   <td style="text-align:right;"> 11.797 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> sepal_length </td>
-   <td style="text-align:right;"> -1.503 </td>
+   <td style="text-align:right;"> -1.574 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> petal_width </td>
-   <td style="text-align:right;"> -0.769 </td>
+   <td style="text-align:right;"> -0.852 </td>
   </tr>
 </tbody>
 </table>
@@ -1048,7 +1388,7 @@ font-style: italic;">## if "some" is a very small percentage.</span></span>
 <span id="cb17-3"></span>
 <span id="cb17-4"><span class="fu" style="color: #4758AB;">cat</span>(<span class="fu" style="color: #4758AB;">paste0</span>(<span class="st" style="color: #20794D;">"Model accuracy is "</span>, accuracy, <span class="st" style="color: #20794D;">"%"</span>))</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Model accuracy is 85%</code></pre>
+<pre><code>Model accuracy is 90%</code></pre>
 </div>
 </div>
 <p>And that’s it – you have a simple retraining job. This is a very minimal example, but this general framework is very flexible and modular, and it makes up the foundation for how we write our retraining jobs at CollegeVine. You can plug and play all different kinds of feature engineering logic, logic to fetch raw data, metrics, etc. We also use <a href="https://mlflow.org/">MLFlow</a> for versioning models and tracking experiments, so our retraining jobs have lots of logging of artifacts, parameters, and metrics to our MLFlow instance.</p>
@@ -1115,7 +1455,7 @@ font-style: italic;">## possibly by logging the value as a parameter in the MLFl
 <span id="cb22-7"></span>
 <span id="cb22-8"><span class="fu" style="color: #4758AB;">cat</span>(<span class="fu" style="color: #4758AB;">paste0</span>(<span class="st" style="color: #20794D;">"Out-of-sample accuracy is "</span>, accuracy, <span class="st" style="color: #20794D;">"%"</span>))</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Out-of-sample accuracy is 82%</code></pre>
+<pre><code>Out-of-sample accuracy is 76%</code></pre>
 </div>
 </div>
 </section>
@@ -1664,34 +2004,34 @@ font-style: italic;">## Doing a little data wrangling</span></span>
  </thead>
 <tbody>
   <tr>
-   <td style="text-align:left;"> 0 </td>
-   <td style="text-align:right;"> 15.2 </td>
-   <td style="text-align:right;"> 8 </td>
+   <td style="text-align:left;"> 1 </td>
+   <td style="text-align:right;"> 21.4 </td>
+   <td style="text-align:right;"> 4 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 1 </td>
+   <td style="text-align:right;"> 21.5 </td>
+   <td style="text-align:right;"> 4 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> 0 </td>
-   <td style="text-align:right;"> 15.2 </td>
+   <td style="text-align:right;"> 10.4 </td>
    <td style="text-align:right;"> 8 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> 1 </td>
-   <td style="text-align:right;"> 18.1 </td>
+   <td style="text-align:right;"> 21.4 </td>
    <td style="text-align:right;"> 6 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> 0 </td>
-   <td style="text-align:right;"> 14.7 </td>
+   <td style="text-align:right;"> 14.3 </td>
    <td style="text-align:right;"> 8 </td>
   </tr>
   <tr>
-   <td style="text-align:left;"> 0 </td>
-   <td style="text-align:right;"> 15.5 </td>
-   <td style="text-align:right;"> 8 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> 0 </td>
-   <td style="text-align:right;"> 19.7 </td>
-   <td style="text-align:right;"> 6 </td>
+   <td style="text-align:left;"> 1 </td>
+   <td style="text-align:right;"> 32.4 </td>
+   <td style="text-align:right;"> 4 </td>
   </tr>
 </tbody>
 </table>
