@@ -10,7 +10,7 @@
 <atom:link href="https://www.matthewrkaye.com/posts-r.xml" rel="self" type="application/rss+xml"/>
 <description>Matt Kaye&#39;s personal website</description>
 <generator>quarto-1.2.475</generator>
-<lastBuildDate>Fri, 14 Apr 2023 04:00:00 GMT</lastBuildDate>
+<lastBuildDate>Mon, 24 Apr 2023 04:00:00 GMT</lastBuildDate>
 <item>
   <title>Pull Requests, Code Review, and The Art of Requesting Changes</title>
   <dc:creator>Matt Kaye</dc:creator>
@@ -349,7 +349,7 @@ font-style: italic;">## The state, county, and tract are all FIPS codes.</span><
   <category>R</category>
   <category>data science</category>
   <guid>https://www.matthewrkaye.com/posts/series/doing-data-science/2023-04-14-code-review/code-review.html</guid>
-  <pubDate>Fri, 14 Apr 2023 04:00:00 GMT</pubDate>
+  <pubDate>Mon, 24 Apr 2023 04:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Unit Testing Analytics Code</title>
@@ -1315,33 +1315,33 @@ font-style: italic;">## if "some" is a very small percentage.</span></span>
  </thead>
 <tbody>
   <tr>
-   <td style="text-align:right;"> 4.466 </td>
-   <td style="text-align:right;"> 0.717 </td>
+   <td style="text-align:right;"> 3.992 </td>
+   <td style="text-align:right;"> 1.914 </td>
    <td style="text-align:left;"> TRUE </td>
   </tr>
   <tr>
-   <td style="text-align:right;"> 6.667 </td>
-   <td style="text-align:right;"> 3.686 </td>
+   <td style="text-align:right;"> 5.403 </td>
+   <td style="text-align:right;"> 4.237 </td>
    <td style="text-align:left;"> TRUE </td>
   </tr>
   <tr>
-   <td style="text-align:right;"> 5.962 </td>
-   <td style="text-align:right;"> 1.343 </td>
+   <td style="text-align:right;"> 6.162 </td>
+   <td style="text-align:right;"> 1.084 </td>
    <td style="text-align:left;"> TRUE </td>
   </tr>
   <tr>
-   <td style="text-align:right;"> 3.743 </td>
-   <td style="text-align:right;"> 0.666 </td>
+   <td style="text-align:right;"> 5.073 </td>
+   <td style="text-align:right;"> 3.481 </td>
    <td style="text-align:left;"> TRUE </td>
   </tr>
   <tr>
-   <td style="text-align:right;"> 5.542 </td>
-   <td style="text-align:right;"> 2.363 </td>
+   <td style="text-align:right;"> 4.675 </td>
+   <td style="text-align:right;"> 2.885 </td>
    <td style="text-align:left;"> TRUE </td>
   </tr>
   <tr>
-   <td style="text-align:right;"> 5.239 </td>
-   <td style="text-align:right;"> 0.942 </td>
+   <td style="text-align:right;"> 6.154 </td>
+   <td style="text-align:right;"> 0.798 </td>
    <td style="text-align:left;"> TRUE </td>
   </tr>
 </tbody>
@@ -1366,15 +1366,15 @@ font-style: italic;">## if "some" is a very small percentage.</span></span>
 <tbody>
   <tr>
    <td style="text-align:left;"> (Intercept) </td>
-   <td style="text-align:right;"> 11.797 </td>
+   <td style="text-align:right;"> 9.257 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> sepal_length </td>
-   <td style="text-align:right;"> -1.574 </td>
+   <td style="text-align:right;"> -1.159 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> petal_width </td>
-   <td style="text-align:right;"> -0.852 </td>
+   <td style="text-align:right;"> -0.803 </td>
   </tr>
 </tbody>
 </table>
@@ -1388,7 +1388,7 @@ font-style: italic;">## if "some" is a very small percentage.</span></span>
 <span id="cb17-3"></span>
 <span id="cb17-4"><span class="fu" style="color: #4758AB;">cat</span>(<span class="fu" style="color: #4758AB;">paste0</span>(<span class="st" style="color: #20794D;">"Model accuracy is "</span>, accuracy, <span class="st" style="color: #20794D;">"%"</span>))</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Model accuracy is 90%</code></pre>
+<pre><code>Model accuracy is 80%</code></pre>
 </div>
 </div>
 <p>And that’s it – you have a simple retraining job. This is a very minimal example, but this general framework is very flexible and modular, and it makes up the foundation for how we write our retraining jobs at CollegeVine. You can plug and play all different kinds of feature engineering logic, logic to fetch raw data, metrics, etc. We also use <a href="https://mlflow.org/">MLFlow</a> for versioning models and tracking experiments, so our retraining jobs have lots of logging of artifacts, parameters, and metrics to our MLFlow instance.</p>
@@ -1455,7 +1455,7 @@ font-style: italic;">## possibly by logging the value as a parameter in the MLFl
 <span id="cb22-7"></span>
 <span id="cb22-8"><span class="fu" style="color: #4758AB;">cat</span>(<span class="fu" style="color: #4758AB;">paste0</span>(<span class="st" style="color: #20794D;">"Out-of-sample accuracy is "</span>, accuracy, <span class="st" style="color: #20794D;">"%"</span>))</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Out-of-sample accuracy is 76%</code></pre>
+<pre><code>Out-of-sample accuracy is 90%</code></pre>
 </div>
 </div>
 </section>
@@ -2005,8 +2005,23 @@ font-style: italic;">## Doing a little data wrangling</span></span>
 <tbody>
   <tr>
    <td style="text-align:left;"> 1 </td>
-   <td style="text-align:right;"> 21.4 </td>
+   <td style="text-align:right;"> 32.4 </td>
    <td style="text-align:right;"> 4 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 1 </td>
+   <td style="text-align:right;"> 18.1 </td>
+   <td style="text-align:right;"> 6 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 1 </td>
+   <td style="text-align:right;"> 17.8 </td>
+   <td style="text-align:right;"> 6 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 0 </td>
+   <td style="text-align:right;"> 15.8 </td>
+   <td style="text-align:right;"> 8 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> 1 </td>
@@ -2014,23 +2029,8 @@ font-style: italic;">## Doing a little data wrangling</span></span>
    <td style="text-align:right;"> 4 </td>
   </tr>
   <tr>
-   <td style="text-align:left;"> 0 </td>
-   <td style="text-align:right;"> 10.4 </td>
-   <td style="text-align:right;"> 8 </td>
-  </tr>
-  <tr>
    <td style="text-align:left;"> 1 </td>
-   <td style="text-align:right;"> 21.4 </td>
-   <td style="text-align:right;"> 6 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> 0 </td>
-   <td style="text-align:right;"> 14.3 </td>
-   <td style="text-align:right;"> 8 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> 1 </td>
-   <td style="text-align:right;"> 32.4 </td>
+   <td style="text-align:right;"> 27.3 </td>
    <td style="text-align:right;"> 4 </td>
   </tr>
 </tbody>
