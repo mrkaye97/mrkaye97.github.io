@@ -8,6 +8,9 @@ project:
 description-meta: "Matt Kaye's personal website."
 
 website:
+  favicon: photos/favicon.png
+  twitter-card: true
+  open-graph: true
   title: "Matt Kaye"
   site-url: "https://www.matthewrkaye.com"
   repo-url: https://github.com/mrkaye97/mrkaye97.github.io

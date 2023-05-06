@@ -1049,7 +1049,7 @@ font-style: italic;">## Should be able to query an example table</span></span>
 <span id="cb4-19">  )</span>
 <span id="cb4-20">})</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Test passed 😸</code></pre>
+<pre><code>Test passed 😀</code></pre>
 </div>
 </div>
 </section>
@@ -1315,33 +1315,33 @@ font-style: italic;">## if "some" is a very small percentage.</span></span>
  </thead>
 <tbody>
   <tr>
-   <td style="text-align:right;"> 5.132 </td>
-   <td style="text-align:right;"> 0.818 </td>
+   <td style="text-align:right;"> 5.244 </td>
+   <td style="text-align:right;"> 2.702 </td>
    <td style="text-align:left;"> TRUE </td>
   </tr>
   <tr>
-   <td style="text-align:right;"> 6.565 </td>
-   <td style="text-align:right;"> 1.376 </td>
+   <td style="text-align:right;"> 4.650 </td>
+   <td style="text-align:right;"> 1.676 </td>
    <td style="text-align:left;"> TRUE </td>
   </tr>
   <tr>
-   <td style="text-align:right;"> 6.124 </td>
-   <td style="text-align:right;"> 1.076 </td>
+   <td style="text-align:right;"> 5.804 </td>
+   <td style="text-align:right;"> 1.860 </td>
    <td style="text-align:left;"> TRUE </td>
   </tr>
   <tr>
-   <td style="text-align:right;"> 4.791 </td>
-   <td style="text-align:right;"> 3.061 </td>
+   <td style="text-align:right;"> 3.553 </td>
+   <td style="text-align:right;"> 1.037 </td>
    <td style="text-align:left;"> TRUE </td>
   </tr>
   <tr>
-   <td style="text-align:right;"> 4.789 </td>
-   <td style="text-align:right;"> 2.836 </td>
+   <td style="text-align:right;"> 4.880 </td>
+   <td style="text-align:right;"> 1.934 </td>
    <td style="text-align:left;"> TRUE </td>
   </tr>
   <tr>
-   <td style="text-align:right;"> 4.866 </td>
-   <td style="text-align:right;"> 1.163 </td>
+   <td style="text-align:right;"> 6.026 </td>
+   <td style="text-align:right;"> 0.870 </td>
    <td style="text-align:left;"> TRUE </td>
   </tr>
 </tbody>
@@ -1366,15 +1366,15 @@ font-style: italic;">## if "some" is a very small percentage.</span></span>
 <tbody>
   <tr>
    <td style="text-align:left;"> (Intercept) </td>
-   <td style="text-align:right;"> 9.853 </td>
+   <td style="text-align:right;"> 17.661 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> sepal_length </td>
-   <td style="text-align:right;"> -1.291 </td>
+   <td style="text-align:right;"> -1.939 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> petal_width </td>
-   <td style="text-align:right;"> -0.819 </td>
+   <td style="text-align:right;"> -1.940 </td>
   </tr>
 </tbody>
 </table>
@@ -1388,7 +1388,7 @@ font-style: italic;">## if "some" is a very small percentage.</span></span>
 <span id="cb17-3"></span>
 <span id="cb17-4"><span class="fu" style="color: #4758AB;">cat</span>(<span class="fu" style="color: #4758AB;">paste0</span>(<span class="st" style="color: #20794D;">"Model accuracy is "</span>, accuracy, <span class="st" style="color: #20794D;">"%"</span>))</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Model accuracy is 81%</code></pre>
+<pre><code>Model accuracy is 89%</code></pre>
 </div>
 </div>
 <p>And that’s it – you have a simple retraining job. This is a very minimal example, but this general framework is very flexible and modular, and it makes up the foundation for how we write our retraining jobs at CollegeVine. You can plug and play all different kinds of feature engineering logic, logic to fetch raw data, metrics, etc. We also use <a href="https://mlflow.org/">MLFlow</a> for versioning models and tracking experiments, so our retraining jobs have lots of logging of artifacts, parameters, and metrics to our MLFlow instance.</p>
@@ -1455,7 +1455,7 @@ font-style: italic;">## possibly by logging the value as a parameter in the MLFl
 <span id="cb22-7"></span>
 <span id="cb22-8"><span class="fu" style="color: #4758AB;">cat</span>(<span class="fu" style="color: #4758AB;">paste0</span>(<span class="st" style="color: #20794D;">"Out-of-sample accuracy is "</span>, accuracy, <span class="st" style="color: #20794D;">"%"</span>))</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Out-of-sample accuracy is 76%</code></pre>
+<pre><code>Out-of-sample accuracy is 80%</code></pre>
 </div>
 </div>
 </section>
@@ -2060,18 +2060,13 @@ font-style: italic;">## Doing a little data wrangling</span></span>
 <tbody>
   <tr>
    <td style="text-align:left;"> 1 </td>
-   <td style="text-align:right;"> 19.2 </td>
-   <td style="text-align:right;"> 6 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> 1 </td>
-   <td style="text-align:right;"> 30.4 </td>
+   <td style="text-align:right;"> 24.4 </td>
    <td style="text-align:right;"> 4 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> 0 </td>
-   <td style="text-align:right;"> 10.4 </td>
-   <td style="text-align:right;"> 8 </td>
+   <td style="text-align:right;"> 21.0 </td>
+   <td style="text-align:right;"> 6 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> 0 </td>
@@ -2080,12 +2075,17 @@ font-style: italic;">## Doing a little data wrangling</span></span>
   </tr>
   <tr>
    <td style="text-align:left;"> 0 </td>
-   <td style="text-align:right;"> 21.0 </td>
-   <td style="text-align:right;"> 6 </td>
+   <td style="text-align:right;"> 15.2 </td>
+   <td style="text-align:right;"> 8 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> 1 </td>
-   <td style="text-align:right;"> 22.8 </td>
+   <td style="text-align:right;"> 21.5 </td>
+   <td style="text-align:right;"> 4 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 0 </td>
+   <td style="text-align:right;"> 26.0 </td>
    <td style="text-align:right;"> 4 </td>
   </tr>
 </tbody>

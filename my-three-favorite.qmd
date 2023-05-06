@@ -20,7 +20,7 @@ toc: false
 *   **FICTIONAL CHARACTERS:** Elaine Benes, Oberyn Martell, Samwise Gamgee
 *   **FOODS:** Bananas, Maitake Mushrooms, Peanut Butter
 *   **KITCHEN UTENSILS:** 7" Santoku Knife, Tasting Spoon, Tongs
-*   **MOVIES:** [Birdman](https://www.rottentomatoes.com/m/birdman_2014), [It's a Wonderful Life](https://www.rottentomatoes.com/m/its_a_wonderful_life), [Ferris Bueller's Day Off](https://www.rottentomatoes.com/m/ferris_buellers_day_off)
+*   **MOVIES:** [Birdman](https://www.rottentomatoes.com/m/birdman_2014), [Inside Out](https://www.rottentomatoes.com/m/inside_out_2015), [Moonrise Kingdom](https://www.rottentomatoes.com/m/moonrise_kingdom)
 *   **NON-CITY PLACES:** Acadia National Park, Baseball Hall of Fame, Little Cottonwood Canyon
 *   **PARADIGMS:** [Bayesian](https://en.wikipedia.org/wiki/Bayesian_statistics), [Behavioral](https://en.wikipedia.org/wiki/Behavioral_economics), [Functional](https://en.wikipedia.org/wiki/Functional_programming)
 *   **PIECES OF COOKWARE:** 3-Quart Saute Pan, Cast Iron Skillet, Dutch Oven
