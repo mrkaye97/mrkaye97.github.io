@@ -1,0 +1,78 @@
+---
+title: Workflow Orchestration
+subtitle: A Beginner's Guide to Shutting Down Your Machine at Night
+author: Matt Kaye
+date: '2023-04-24'
+categories: [data science]
+toc: true
+toc-depth: 4
+callout-appearance: minimal
+code-annotations: hover
+---
+
+```{r, echo = FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE, cache = TRUE, fig.align = "center")
+
+Sys.setenv(
+  SITE_ROOT_DIR = rprojroot::find_root(
+  rprojroot::root_criterion(function(path) file.exists(file.path(path, "website.Rproj")), "has somefile")
+  )
+)
+
+pretty_print <- function(data) {
+  data |>
+    knitr::kable("html") |>
+    kableExtra::kable_styling(position = "center", full_width = FALSE)
+}
+```
+
+::: {.callout-note}
+This post is part of a series called [The Missing Semester of Your DS Education](https://matthewrkaye.com/series.html#the-missing-semester-of-your-ds-education).
+:::
+
+## Introduction
+
+When I first started my current job, I installed an app called [Amphetamine](https://apps.apple.com/us/app/amphetamine/id937984704?mt=12) on my machine. As an editorial sidebar: I'd highly recommend Amphetamine. It's a great app.
+
+But anyways, the point is that the reason I had installed Amphetamine was to keep my machine alive at night as I was running some code to train a model or do some analysis that took seven or eight hours _locally_. My strategy -- which I thought was the norm at the time, and was a habit I had brought over from my previous data science role -- was to kick off a job manually, tell Amphetamine to keep my machine awake, plug it in, turn the brightness down, and go to sleep. In the morning, I could wake up and see my results.
+
+## Headaches
+
+I imagine that this pattern is fairly common for data scientists. I thought it was totally normal, and it worked well enough (aside from the fact that my machine's battery was crying out for help, but I digress). Over the past few years, I've learned just how much of an [anti-pattern](https://en.wikipedia.org/wiki/Anti-pattern#:~:text=The%20anti%2Dpattern%20is%20a,pattern%20is%20attempting%20to%20address.) this was in reality. There were a number of painful aspects to this strategy that I had cooked up, all of which took me far too long to recognize as being legitimate:
+
+1. Running a job on local at night means that there's no audit trail of past job runs, and no schedule for future ones. Everything is ad-hoc and "memoryless" in some sense. Without the help of other tooling, it's hard to remember what happened before and what jobs have run and which are yet to be run.
+2. If something went wrong, I was the only one to know about it. Since the problem -- error or otherwise -- would only show up on my machine, none of my teammates would have any idea that anything had broken.
+3. If a product (a model, a dashboard requiring some data wrangling to happen, etc.) needed to be updated for a production setting, the only way to go about that was for me to put down my work, open my code to do the updates, and kick off the job. Unfortunately, these jobs would often eat lots of my machine's compute resources, leaving me unproductive for the remainder of the day while something ran.
+4. What I could build and run was severely constrained by the compute resources of my machine, which is pretty beefy but not invincible.
+
+## Workflow Orchestration and MLOps
+
+As it turns out, there are many, many tools that provide the proverbial ibuprofen for these headaches, if you will. Broadly speaking, they fall into two often-overlapping categories: Workflow orchestration tools and MLOps tools. This post will cover workflow orchestration, since workflow orchestration tools are a core part of most every data stack and are more common than MLOps tools, as they're used for data science, data engineering, and more.
+
+There are lots of workflow orchestrators on the market, and there's a wide range of options in terms of capabilities they provide, whether they're self-hosted, open-source tools or managed services, and much more. A few popular names in the space are [Airflow](https://airflow.apache.org/), [Luigi](https://github.com/spotify/luigi), [Dagster](https://dagster.io/), [Argo](https://argoproj.github.io/), and [Prefect](https://www.prefect.io). These are all fantastic tools that come with their own pros and cons, but at their core they all seek to achieve a similar goal: Letting you and your team run jobs in a sane way.
+
+The long and short of workflow orchestration tools is that they provide tooling to help you run code -- often in different languages and performing disparate tasks -- in any way you want, by providing high-level APIs for triggering your jobs. For instance, we often run R code using Docker containers running in individual pods on our Kubernetes cluster, while we might trigger a bash task to just run on the leader node of our cluster without spinning up a new container. Even if that was a lot of technical jargon, the main takeaway is simple: Workflow orchestration tools let you run your code in many ways and in many places, which is incredibly powerful. You can run jobs locally (on your tool of choice's compute) or you can farm them off to an external source of compute (like [Batch](https://aws.amazon.com/batch/) or [Lambda](https://aws.amazon.com/lambda/), and many, many more) to have them run in a galaxy far, far away. The workflow orchestrator will handle the triggering of the job, the monitoring of the job and listening for it to complete successfully or with errors, and will handle the alerting, deciding whether or not to continue running the next steps in the job based on what happened in the previous ones, and so on. All of these tools are highly configurable to your needs.
+
+## Airflow
+
+Our team uses [Airflow](https://airflow.apache.org/) ([Astronomer](https://www.astronomer.io/) in particular, which has a very helpful team and does a great job of managing complicated things like Kubernetes and authentication for us), so that's what I'll discuss here. And this time, it'll be concise.
+
+Airflow solves a few key problems for us:
+
+1. It lets us run jobs on schedules that we define in the code. We can define any schedule we want, and our jobs will magically be run on time, in the cloud. In addition, if we want to manually trigger a job, all we have to do is press the play button.
+2. It lets us modularize our jobs, so that if a step fails, we can retry or restart from the _failure_ as opposed to from the _start_, which often saves lots of time.
+3. It provides great visibility into the jobs themselves. In particular, we know when they fail, we know how long steps are taking to complete, and so on. Airflow makes it easy to track and audit what's happening inside of our jobs.
+4. It lets us trigger jobs in many places, such as running retraining jobs for our ML models on AWS Batch. Batch lets us spin up a machine that matches some compute requirements we have, run whatever code we need to on it, and shut down once it finishes. This is hugely valuable, since some of our jobs are memory heavy, and others require lots of cores to parallelize across, and so on. Airflow's [BatchOperator](https://registry.astronomer.io/providers/apache-airflow-providers-amazon/versions/7.3.0/modules/BatchOperator) lets us configure the compute resources we need for each individual step (task) in our job, which is extremely flexible.
+5. And much, much more.
+
+Note that these points are solutions to the headaches listed above. In particular:
+
+1. Airflow lets us track past runs of jobs, so it's easy to audit the history of any particular job and schedule future jobs as we please.
+2. Airflow can send notifications of job failures to (e.g.) Slack, which lets our team know that something is broken and starts our triage process.
+3. Airflow lets us very easily run our jobs on third-party (AWS, in our case) compute, which results in something of a "set it and forget it" process for running jobs: We press play, and wait for the job to finish. And in the meantime, we continue doing whatever else we were working on with minimal disruption.
+4. Since Airflow lets us easily run jobs on AWS compute and we can dynamically set compute requirements, we can spin up a specific machine -- an EC2 box in our case -- that's well-suited to the needs of our jobs. We have some memory intensive jobs that we run on big R4 instances, which provide lots of RAM. You might also need a GPU for a job that trains a deep learning model, in which case you'd configure your compute requirements to include a GPU, and Batch could spin up a P3 instance (with a GPU). Instead of being limited by the compute resources of our local machines, we now have easy access to the entire AWS fleet of EC2 instance types.
+
+## Wrapping Up
+
+There was admittedly a lot of technical jargon in this post. But the main takeaway is this: Having a true workflow orchestration tool like Airflow makes it simple for you to run your analytical code (or any other code!) in a sane way. Workflow orchestrators help you run your code on certain schedules, provide lots of visibility into individual runs of your code, help you farm off your code to third-party compute, alert you when things go wrong, and so much more. So please, please shut off your machine at night instead of training your models on it. If you can, you should use a workflow orchestrator. It's good for your machine's health, your team's productivity, and your sanity.
+

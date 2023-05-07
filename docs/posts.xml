@@ -352,6 +352,79 @@ font-style: italic;">## The state, county, and tract are all FIPS codes.</span><
   <pubDate>Mon, 24 Apr 2023 04:00:00 GMT</pubDate>
 </item>
 <item>
+  <title>Workflow Orchestration</title>
+  <dc:creator>Matt Kaye</dc:creator>
+  <link>https://www.matthewrkaye.com/posts/series/doing-data-science/2023-05-06-workflow-orchestration/workflow-orchestration.html</link>
+  <description><![CDATA[ 
+
+
+
+<div class="cell">
+
+</div>
+<div class="callout-note callout callout-style-simple no-icon">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-body-container">
+<p>This post is part of a series called <a href="https://matthewrkaye.com/series.html#the-missing-semester-of-your-ds-education">The Missing Semester of Your DS Education</a>.</p>
+</div>
+</div>
+</div>
+<section id="introduction" class="level2">
+<h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
+<p>When I first started my current job, I installed an app called <a href="https://apps.apple.com/us/app/amphetamine/id937984704?mt=12">Amphetamine</a> on my machine. As an editorial sidebar: I’d highly recommend Amphetamine. It’s a great app.</p>
+<p>But anyways, the point is that the reason I had installed Amphetamine was to keep my machine alive at night as I was running some code to train a model or do some analysis that took seven or eight hours <em>locally</em>. My strategy – which I thought was the norm at the time, and was a habit I had brought over from my previous data science role – was to kick off a job manually, tell Amphetamine to keep my machine awake, plug it in, turn the brightness down, and go to sleep. In the morning, I could wake up and see my results.</p>
+</section>
+<section id="headaches" class="level2">
+<h2 class="anchored" data-anchor-id="headaches">Headaches</h2>
+<p>I imagine that this pattern is fairly common for data scientists. I thought it was totally normal, and it worked well enough (aside from the fact that my machine’s battery was crying out for help, but I digress). Over the past few years, I’ve learned just how much of an <a href="https://en.wikipedia.org/wiki/Anti-pattern#:~:text=The%20anti%2Dpattern%20is%20a,pattern%20is%20attempting%20to%20address.">anti-pattern</a> this was in reality. There were a number of painful aspects to this strategy that I had cooked up, all of which took me far too long to recognize as being legitimate:</p>
+<ol type="1">
+<li>Running a job on local at night means that there’s no audit trail of past job runs, and no schedule for future ones. Everything is ad-hoc and “memoryless” in some sense. Without the help of other tooling, it’s hard to remember what happened before and what jobs have run and which are yet to be run.</li>
+<li>If something went wrong, I was the only one to know about it. Since the problem – error or otherwise – would only show up on my machine, none of my teammates would have any idea that anything had broken.</li>
+<li>If a product (a model, a dashboard requiring some data wrangling to happen, etc.) needed to be updated for a production setting, the only way to go about that was for me to put down my work, open my code to do the updates, and kick off the job. Unfortunately, these jobs would often eat lots of my machine’s compute resources, leaving me unproductive for the remainder of the day while something ran.</li>
+<li>What I could build and run was severely constrained by the compute resources of my machine, which is pretty beefy but not invincible.</li>
+</ol>
+</section>
+<section id="workflow-orchestration-and-mlops" class="level2">
+<h2 class="anchored" data-anchor-id="workflow-orchestration-and-mlops">Workflow Orchestration and MLOps</h2>
+<p>As it turns out, there are many, many tools that provide the proverbial ibuprofen for these headaches, if you will. Broadly speaking, they fall into two often-overlapping categories: Workflow orchestration tools and MLOps tools. This post will cover workflow orchestration, since workflow orchestration tools are a core part of most every data stack and are more common than MLOps tools, as they’re used for data science, data engineering, and more.</p>
+<p>There are lots of workflow orchestrators on the market, and there’s a wide range of options in terms of capabilities they provide, whether they’re self-hosted, open-source tools or managed services, and much more. A few popular names in the space are <a href="https://airflow.apache.org/">Airflow</a>, <a href="https://github.com/spotify/luigi">Luigi</a>, <a href="https://dagster.io/">Dagster</a>, <a href="https://argoproj.github.io/">Argo</a>, and <a href="https://www.prefect.io">Prefect</a>. These are all fantastic tools that come with their own pros and cons, but at their core they all seek to achieve a similar goal: Letting you and your team run jobs in a sane way.</p>
+<p>The long and short of workflow orchestration tools is that they provide tooling to help you run code – often in different languages and performing disparate tasks – in any way you want, by providing high-level APIs for triggering your jobs. For instance, we often run R code using Docker containers running in individual pods on our Kubernetes cluster, while we might trigger a bash task to just run on the leader node of our cluster without spinning up a new container. Even if that was a lot of technical jargon, the main takeaway is simple: Workflow orchestration tools let you run your code in many ways and in many places, which is incredibly powerful. You can run jobs locally (on your tool of choice’s compute) or you can farm them off to an external source of compute (like <a href="https://aws.amazon.com/batch/">Batch</a> or <a href="https://aws.amazon.com/lambda/">Lambda</a>, and many, many more) to have them run in a galaxy far, far away. The workflow orchestrator will handle the triggering of the job, the monitoring of the job and listening for it to complete successfully or with errors, and will handle the alerting, deciding whether or not to continue running the next steps in the job based on what happened in the previous ones, and so on. All of these tools are highly configurable to your needs.</p>
+</section>
+<section id="airflow" class="level2">
+<h2 class="anchored" data-anchor-id="airflow">Airflow</h2>
+<p>Our team uses <a href="https://airflow.apache.org/">Airflow</a> (<a href="https://www.astronomer.io/">Astronomer</a> in particular, which has a very helpful team and does a great job of managing complicated things like Kubernetes and authentication for us), so that’s what I’ll discuss here. And this time, it’ll be concise.</p>
+<p>Airflow solves a few key problems for us:</p>
+<ol type="1">
+<li>It lets us run jobs on schedules that we define in the code. We can define any schedule we want, and our jobs will magically be run on time, in the cloud. In addition, if we want to manually trigger a job, all we have to do is press the play button.</li>
+<li>It lets us modularize our jobs, so that if a step fails, we can retry or restart from the <em>failure</em> as opposed to from the <em>start</em>, which often saves lots of time.</li>
+<li>It provides great visibility into the jobs themselves. In particular, we know when they fail, we know how long steps are taking to complete, and so on. Airflow makes it easy to track and audit what’s happening inside of our jobs.</li>
+<li>It lets us trigger jobs in many places, such as running retraining jobs for our ML models on AWS Batch. Batch lets us spin up a machine that matches some compute requirements we have, run whatever code we need to on it, and shut down once it finishes. This is hugely valuable, since some of our jobs are memory heavy, and others require lots of cores to parallelize across, and so on. Airflow’s <a href="https://registry.astronomer.io/providers/apache-airflow-providers-amazon/versions/7.3.0/modules/BatchOperator">BatchOperator</a> lets us configure the compute resources we need for each individual step (task) in our job, which is extremely flexible.</li>
+<li>And much, much more.</li>
+</ol>
+<p>Note that these points are solutions to the headaches listed above. In particular:</p>
+<ol type="1">
+<li>Airflow lets us track past runs of jobs, so it’s easy to audit the history of any particular job and schedule future jobs as we please.</li>
+<li>Airflow can send notifications of job failures to (e.g.) Slack, which lets our team know that something is broken and starts our triage process.</li>
+<li>Airflow lets us very easily run our jobs on third-party (AWS, in our case) compute, which results in something of a “set it and forget it” process for running jobs: We press play, and wait for the job to finish. And in the meantime, we continue doing whatever else we were working on with minimal disruption.</li>
+<li>Since Airflow lets us easily run jobs on AWS compute and we can dynamically set compute requirements, we can spin up a specific machine – an EC2 box in our case – that’s well-suited to the needs of our jobs. We have some memory intensive jobs that we run on big R4 instances, which provide lots of RAM. You might also need a GPU for a job that trains a deep learning model, in which case you’d configure your compute requirements to include a GPU, and Batch could spin up a P3 instance (with a GPU). Instead of being limited by the compute resources of our local machines, we now have easy access to the entire AWS fleet of EC2 instance types.</li>
+</ol>
+</section>
+<section id="wrapping-up" class="level2">
+<h2 class="anchored" data-anchor-id="wrapping-up">Wrapping Up</h2>
+<p>There was admittedly a lot of technical jargon in this post. But the main takeaway is this: Having a true workflow orchestration tool like Airflow makes it simple for you to run your analytical code (or any other code!) in a sane way. Workflow orchestrators help you run your code on certain schedules, provide lots of visibility into individual runs of your code, help you farm off your code to third-party compute, alert you when things go wrong, and so much more. So please, please shut off your machine at night instead of training your models on it. If you can, you should use a workflow orchestrator. It’s good for your machine’s health, your team’s productivity, and your sanity.</p>
+
+
+</section>
+
+ ]]></description>
+  <category>data science</category>
+  <guid>https://www.matthewrkaye.com/posts/series/doing-data-science/2023-05-06-workflow-orchestration/workflow-orchestration.html</guid>
+  <pubDate>Mon, 24 Apr 2023 04:00:00 GMT</pubDate>
+</item>
+<item>
   <title>Unit Testing Analytics Code</title>
   <dc:creator>Matt Kaye</dc:creator>
   <link>https://www.matthewrkaye.com/posts/series/doing-data-science/2023-04-03-unit-testing/unit-testing.html</link>
@@ -1049,7 +1122,7 @@ font-style: italic;">## Should be able to query an example table</span></span>
 <span id="cb4-19">  )</span>
 <span id="cb4-20">})</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Test passed 😀</code></pre>
+<pre><code>Test passed 🌈</code></pre>
 </div>
 </div>
 </section>
@@ -1221,7 +1294,7 @@ font-style: italic;">## if "some" is a very small percentage.</span></span>
 <span id="cb11-26">  )</span>
 <span id="cb11-27">})</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Test passed 😸</code></pre>
+<pre><code>Test passed 🌈</code></pre>
 </div>
 </div>
 </section>
@@ -1315,33 +1388,33 @@ font-style: italic;">## if "some" is a very small percentage.</span></span>
  </thead>
 <tbody>
   <tr>
-   <td style="text-align:right;"> 5.348 </td>
-   <td style="text-align:right;"> 4.382 </td>
+   <td style="text-align:right;"> 4.889 </td>
+   <td style="text-align:right;"> 3.648 </td>
    <td style="text-align:left;"> TRUE </td>
   </tr>
   <tr>
-   <td style="text-align:right;"> 6.769 </td>
-   <td style="text-align:right;"> 2.284 </td>
+   <td style="text-align:right;"> 5.988 </td>
+   <td style="text-align:right;"> 1.696 </td>
    <td style="text-align:left;"> TRUE </td>
   </tr>
   <tr>
-   <td style="text-align:right;"> 4.901 </td>
-   <td style="text-align:right;"> 2.721 </td>
+   <td style="text-align:right;"> 4.646 </td>
+   <td style="text-align:right;"> 2.578 </td>
    <td style="text-align:left;"> TRUE </td>
   </tr>
   <tr>
-   <td style="text-align:right;"> 4.057 </td>
-   <td style="text-align:right;"> 1.404 </td>
+   <td style="text-align:right;"> 4.414 </td>
+   <td style="text-align:right;"> 0.996 </td>
    <td style="text-align:left;"> TRUE </td>
   </tr>
   <tr>
-   <td style="text-align:right;"> 6.530 </td>
-   <td style="text-align:right;"> 1.965 </td>
+   <td style="text-align:right;"> 4.318 </td>
+   <td style="text-align:right;"> 3.526 </td>
    <td style="text-align:left;"> TRUE </td>
   </tr>
   <tr>
-   <td style="text-align:right;"> 5.538 </td>
-   <td style="text-align:right;"> 1.535 </td>
+   <td style="text-align:right;"> 3.853 </td>
+   <td style="text-align:right;"> 1.501 </td>
    <td style="text-align:left;"> TRUE </td>
   </tr>
 </tbody>
@@ -1366,15 +1439,15 @@ font-style: italic;">## if "some" is a very small percentage.</span></span>
 <tbody>
   <tr>
    <td style="text-align:left;"> (Intercept) </td>
-   <td style="text-align:right;"> 9.717 </td>
+   <td style="text-align:right;"> 10.420 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> sepal_length </td>
-   <td style="text-align:right;"> -1.171 </td>
+   <td style="text-align:right;"> -1.174 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> petal_width </td>
-   <td style="text-align:right;"> -0.985 </td>
+   <td style="text-align:right;"> -1.204 </td>
   </tr>
 </tbody>
 </table>
@@ -1388,7 +1461,7 @@ font-style: italic;">## if "some" is a very small percentage.</span></span>
 <span id="cb17-3"></span>
 <span id="cb17-4"><span class="fu" style="color: #4758AB;">cat</span>(<span class="fu" style="color: #4758AB;">paste0</span>(<span class="st" style="color: #20794D;">"Model accuracy is "</span>, accuracy, <span class="st" style="color: #20794D;">"%"</span>))</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Model accuracy is 82%</code></pre>
+<pre><code>Model accuracy is 87%</code></pre>
 </div>
 </div>
 <p>And that’s it – you have a simple retraining job. This is a very minimal example, but this general framework is very flexible and modular, and it makes up the foundation for how we write our retraining jobs at CollegeVine. You can plug and play all different kinds of feature engineering logic, logic to fetch raw data, metrics, etc. We also use <a href="https://mlflow.org/">MLFlow</a> for versioning models and tracking experiments, so our retraining jobs have lots of logging of artifacts, parameters, and metrics to our MLFlow instance.</p>
@@ -1455,7 +1528,7 @@ font-style: italic;">## possibly by logging the value as a parameter in the MLFl
 <span id="cb22-7"></span>
 <span id="cb22-8"><span class="fu" style="color: #4758AB;">cat</span>(<span class="fu" style="color: #4758AB;">paste0</span>(<span class="st" style="color: #20794D;">"Out-of-sample accuracy is "</span>, accuracy, <span class="st" style="color: #20794D;">"%"</span>))</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Out-of-sample accuracy is 80%</code></pre>
+<pre><code>Out-of-sample accuracy is 84%</code></pre>
 </div>
 </div>
 </section>
@@ -2059,24 +2132,24 @@ font-style: italic;">## Doing a little data wrangling</span></span>
  </thead>
 <tbody>
   <tr>
-   <td style="text-align:left;"> 0 </td>
-   <td style="text-align:right;"> 14.3 </td>
-   <td style="text-align:right;"> 8 </td>
+   <td style="text-align:left;"> 1 </td>
+   <td style="text-align:right;"> 32.4 </td>
+   <td style="text-align:right;"> 4 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 1 </td>
+   <td style="text-align:right;"> 30.4 </td>
+   <td style="text-align:right;"> 4 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> 0 </td>
-   <td style="text-align:right;"> 15.0 </td>
-   <td style="text-align:right;"> 8 </td>
+   <td style="text-align:right;"> 26.0 </td>
+   <td style="text-align:right;"> 4 </td>
   </tr>
   <tr>
-   <td style="text-align:left;"> 0 </td>
-   <td style="text-align:right;"> 21.0 </td>
-   <td style="text-align:right;"> 6 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> 0 </td>
-   <td style="text-align:right;"> 19.7 </td>
-   <td style="text-align:right;"> 6 </td>
+   <td style="text-align:left;"> 1 </td>
+   <td style="text-align:right;"> 30.4 </td>
+   <td style="text-align:right;"> 4 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> 0 </td>
@@ -2084,9 +2157,9 @@ font-style: italic;">## Doing a little data wrangling</span></span>
    <td style="text-align:right;"> 8 </td>
   </tr>
   <tr>
-   <td style="text-align:left;"> 0 </td>
-   <td style="text-align:right;"> 18.7 </td>
-   <td style="text-align:right;"> 8 </td>
+   <td style="text-align:left;"> 1 </td>
+   <td style="text-align:right;"> 17.8 </td>
+   <td style="text-align:right;"> 6 </td>
   </tr>
 </tbody>
 </table>

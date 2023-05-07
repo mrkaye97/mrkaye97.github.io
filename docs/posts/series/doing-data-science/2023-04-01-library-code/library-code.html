@@ -487,7 +487,7 @@ cookieconsent.run({
 <span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>  )</span>
 <span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Test passed 😀</code></pre>
+<pre><code>Test passed 🌈</code></pre>
 </div>
 </div>
 </section>
@@ -639,7 +639,7 @@ cookieconsent.run({
 <span id="cb11-26"><a href="#cb11-26" aria-hidden="true" tabindex="-1"></a>  )</span>
 <span id="cb11-27"><a href="#cb11-27" aria-hidden="true" tabindex="-1"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Test passed 😸</code></pre>
+<pre><code>Test passed 🌈</code></pre>
 </div>
 </div>
 </section>
@@ -733,33 +733,33 @@ cookieconsent.run({
  </thead>
 <tbody>
   <tr>
-   <td style="text-align:right;"> 5.348 </td>
-   <td style="text-align:right;"> 4.382 </td>
+   <td style="text-align:right;"> 4.889 </td>
+   <td style="text-align:right;"> 3.648 </td>
    <td style="text-align:left;"> TRUE </td>
   </tr>
   <tr>
-   <td style="text-align:right;"> 6.769 </td>
-   <td style="text-align:right;"> 2.284 </td>
+   <td style="text-align:right;"> 5.988 </td>
+   <td style="text-align:right;"> 1.696 </td>
    <td style="text-align:left;"> TRUE </td>
   </tr>
   <tr>
-   <td style="text-align:right;"> 4.901 </td>
-   <td style="text-align:right;"> 2.721 </td>
+   <td style="text-align:right;"> 4.646 </td>
+   <td style="text-align:right;"> 2.578 </td>
    <td style="text-align:left;"> TRUE </td>
   </tr>
   <tr>
-   <td style="text-align:right;"> 4.057 </td>
-   <td style="text-align:right;"> 1.404 </td>
+   <td style="text-align:right;"> 4.414 </td>
+   <td style="text-align:right;"> 0.996 </td>
    <td style="text-align:left;"> TRUE </td>
   </tr>
   <tr>
-   <td style="text-align:right;"> 6.530 </td>
-   <td style="text-align:right;"> 1.965 </td>
+   <td style="text-align:right;"> 4.318 </td>
+   <td style="text-align:right;"> 3.526 </td>
    <td style="text-align:left;"> TRUE </td>
   </tr>
   <tr>
-   <td style="text-align:right;"> 5.538 </td>
-   <td style="text-align:right;"> 1.535 </td>
+   <td style="text-align:right;"> 3.853 </td>
+   <td style="text-align:right;"> 1.501 </td>
    <td style="text-align:left;"> TRUE </td>
   </tr>
 </tbody>
@@ -784,15 +784,15 @@ cookieconsent.run({
 <tbody>
   <tr>
    <td style="text-align:left;"> (Intercept) </td>
-   <td style="text-align:right;"> 9.717 </td>
+   <td style="text-align:right;"> 10.420 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> sepal_length </td>
-   <td style="text-align:right;"> -1.171 </td>
+   <td style="text-align:right;"> -1.174 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> petal_width </td>
-   <td style="text-align:right;"> -0.985 </td>
+   <td style="text-align:right;"> -1.204 </td>
   </tr>
 </tbody>
 </table>
@@ -806,7 +806,7 @@ cookieconsent.run({
 <span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">paste0</span>(<span class="st">"Model accuracy is "</span>, accuracy, <span class="st">"%"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Model accuracy is 82%</code></pre>
+<pre><code>Model accuracy is 87%</code></pre>
 </div>
 </div>
 <p>And that’s it – you have a simple retraining job. This is a very minimal example, but this general framework is very flexible and modular, and it makes up the foundation for how we write our retraining jobs at CollegeVine. You can plug and play all different kinds of feature engineering logic, logic to fetch raw data, metrics, etc. We also use <a href="https://mlflow.org/">MLFlow</a> for versioning models and tracking experiments, so our retraining jobs have lots of logging of artifacts, parameters, and metrics to our MLFlow instance.</p>
@@ -871,7 +871,7 @@ cookieconsent.run({
 <span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">paste0</span>(<span class="st">"Out-of-sample accuracy is "</span>, accuracy, <span class="st">"%"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Out-of-sample accuracy is 80%</code></pre>
+<pre><code>Out-of-sample accuracy is 84%</code></pre>
 </div>
 </div>
 </section>
