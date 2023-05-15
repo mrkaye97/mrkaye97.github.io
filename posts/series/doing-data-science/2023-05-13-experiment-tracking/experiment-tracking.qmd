@@ -1,0 +1,95 @@
+---
+title: Experiment Tracking and Model Versioning
+subtitle: "Knowing what you've tried, and what's in production"
+author: Matt Kaye
+date: '2023-05-14'
+categories: [data science]
+toc: true
+toc-depth: 4
+callout-appearance: minimal
+code-annotations: hover
+---
+
+```{r, echo = FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE, cache = TRUE, fig.align = "center")
+
+Sys.setenv(
+  SITE_ROOT_DIR = rprojroot::find_root(
+  rprojroot::root_criterion(function(path) file.exists(file.path(path, "website.Rproj")), "has somefile")
+  )
+)
+
+pretty_print <- function(data) {
+  data |>
+    knitr::kable("html") |>
+    kableExtra::kable_styling(position = "center", full_width = FALSE)
+}
+```
+
+::: {.callout-note}
+This post is part of a series called [The Missing Semester of Your DS Education](https://matthewrkaye.com/series.html#the-missing-semester-of-your-ds-education).
+:::
+
+## Introduction
+
+I've started the past few posts by saying things along the lines of "When I first started my current job..." or "It wasn't until my _second_ data science job..." and going on about how it took me too long to learn something important. But not today! Today, I'll tell you a story. But first, some background context.
+
+Let's imagine that you work for a company whose website provides college guidance to high school students. You might have a page where a student can input their profile -- maybe their academic information like their GPA or their SAT scores, some demographic information, or a list of their extracurricular activities -- and then a second page where they can view information about different schools they might be interested in. A killer feature of that second page is the student being able to see their chances of being accepted at different schools based on the information in their profile. At CollegeVine we call this "Chancing," and it's a core part of our student experience.
+
+When we first started using machine learning for Chancing, we had a number of architectural questions to answer. Of course, there were questions about how the model would be deployed, how it would serve predictions to users, if we could cache predictions, how fast the code had to be, and so on. But this post will focus on the problem that, at first glance, I thought was the simplest: What version of the model is running in production? Over time, we've taken a few approaches to solving this problem. And so begins the story.
+
+## Model Versioning
+
+At first, we used an incrementing counter as the version of our chancing model, so we would identify different versions as `v1`, `v2`, and so on. Our assumption initially was that what was most important was being able to update a model (i.e. increment the version) and roll back to a previous model (i.e. decrement), and this versioning scheme allowed us to do that easily. But we quickly ran into some headaches. Notably, we'd find ourselves asking "Okay, Chancing v5 is in production. But when was it trained? And when did we ship it?" And so we soon outgrew our initial approach.
+
+After our first approach failed, our next idea was to use a timestamp like `20230514123456` (12:34 and 56 seconds on May 14th, 2023) as the model version. The timestamp would correspond to when the model was trained -- we were assuming we'd ship right after training -- and would still have all of the same properties as the incrementing counter from before (letting us upgrade and roll back easily) while also encoding extra information. We viewed this change as a [Pareto Improvement](https://www.investopedia.com/terms/p/paretoimprovement.asp#:~:text=A%20Pareto%20improvement%20is%20an,make%20any%20available%20Pareto%20improvement.). 
+
+::: {.callout-note}
+It's important to mention at this point that all of our modeling code is checked into Git. This means that we can, roughly speaking, see what the state of the world was at the time the model was trained.
+:::
+
+So now that we're able to not only upgrade and downgrade model versions quickly, but also know when the model was trained, it's problem solved. Right?
+
+Wrong. As it turns out, there was another pressing issue. Finding the state of the code when the model was trained was actually non-trivial, because, as I wrote [in my previous post on internal libraries](https://matthewrkaye.com/posts/series/doing-data-science/2023-04-01-library-code/library-code.html), our modeling code was living in a library. But our retraining job was loading a specific version of that library, which meant that we'd need to look through our Git history to find the state of the retraining job when the model was trained, and then find the version of the library the code was using, and then dig through our Git history again to uncover the logic in the library (ultimately the logic training the model) at the time. This is certainly possible, but it's not trivial.
+
+And so with that, we tried our next idea: Appending the library version to the timestamp, to get a model version like `20230514123456-1-2-3`, which would correspond to the model being trained at 12:34 and 56 seconds on May 14th, 2023, using library version `1.2.3`. This was another Pareto Improvement: Now we could upgrade and downgrade, we knew when the model was trained, _and_ we knew which library version the model was trained on. Amazing! 
+
+But at this point, I presume you're starting to realize that this approach didn't work either. And so were we. This was when we began to look for an off-the-shelf tool for this deceivingly challenging problem.
+
+## Enter MLFlow
+
+As it turns out, we're not the only ones to have this problem. At the highest level, we needed to figure out a way to version our models such that it was easy to determine what actually went into them -- the data, the hyperparameters we evaluated and which we selected, the features, and the rest of the code itself. We also needed a way to differentiate one model version from another. In particular, what made two different training runs of the same model different? Did the data change? Did the features change? Lastly, we wanted to be able to track a few other important aspects of the ML lifecycle:
+
+* When the model was in production from and to.
+* Any other parameters to the model, in addition to the hyperparameters, that were used on that training run.
+* Model diagnostics, like AUC or the Brier Skill Score, calibration plots, and miscellaneous sanity checks.
+* The data the model was trained on.
+
+To accomplish all of these goals and more, we turned to [MLFlow](https://mlflow.org/). MLFlow lets us catalog whatever we want about our model training runs. We save artifacts (a fancy word for files) to MLFlow containing our training data, the models we fit, the results of hyperparameter tuning, a bunch of diagnostic plots, test cases we dynamically generate, and so on. In addition, we log parameters like what high school graduation years we included in our data, or what version of our R package -- `mlchancing` -- was used in training the model. We log lots of metrics like AUC, the Brier Skill Score, and so on to keep track of the performance of the model at training time. We also log metrics like the mean and standard deviation of each feature in our model at training time, so we can evaluate data drift over time. 
+
+In addition to tracking models, metrics, artifacts, and so on, MLFlow also lets us create a new model version for a training run. When we create a model version, we can mark that version as either having no status, being in `staging`, being in `production`, or being `archived`. These statuses let us track what model is in production at any given time, and the model versions link back to the run that the model was trained on, so we can see all of the metrics, artifacts, etc. listed above by just clicking into the training run for any model version in the MLFlow UI.
+
+Lastly, MLFlow lets us log a Git commit as an attribute of the training run, which means we can click directly from the MLFlow UI to the state of our modeling code in GitHub at the time that our model was trained, which lets us more easily track down exactly what the state of the code was at the time.
+
+And here concludes my story. Since adopting MLFlow, our model versioning headaches have more or less subsided. We've been running MLFlow in production for about a year and a half now, and it's made running experiments on our models, tracking training runs, comparing metrics across different ideas we have, and keeping tabs on what's in production at any given point simple. It's not a perfect tool by any means, but it's solved most of our most painful problems.
+
+## Experiment Tracking, Model Registries, and MLOps
+
+Of course, MLFlow isn't the only tool out there. Broadly speaking, tools like MLFlow are often referred to as "experiment tracking" tools. Others in this category include [Weights & Biases](https://wandb.ai/site), [Neptune](https://neptune.ai/), and [Comet](https://www.comet.com/site/). Experiment tracking tools let you version different experiments you run, and store metadata like the training data, parameters, etc. on those experiments and training runs. These tools generally also provide a "model registry," which tends to be the component that handles the versioning of models.
+
+::: {.callout-note}
+As an important aside: There's a whole world of tools like these out there that make up the field of MLOps. Over the past few years, MLOps has been exploding as more and more companies face pains like ours when it comes to putting models into production. These pain points include everything from versioning to experimenting to deployment, so it's been very exciting to see all of the awesome new tooling that's being introduced every week.
+
+This also means that this post will likely become stale quickly.
+:::
+
+## Wrapping Up
+
+I'd like to wrap this post up with an important lesson I learned from our model versioning saga: If you're having a technical problem like model versioning that seems simple but is proving to be difficult, it's often a good idea to see what others are doing to solve that problem. Nowadays, I'd realize that model versioning must be a common problem, and think to myself "_Someone_ must have solved this problem. What do they do?" After all, every company providing any kind of machine learning product must have model versioning issues. 
+
+So in hindsight, we could've come across the world of MLOps far sooner had we taken a step back to consider the fact that we must not be the only ones solving this problem. But we didn't do that, and versioning became a thorn in our side instead. Hopefully our mistakes will help you take the step back that I wish I had. 
+
+Happy experimenting!
+
+
+

@@ -733,33 +733,33 @@ cookieconsent.run({
  </thead>
 <tbody>
   <tr>
-   <td style="text-align:right;"> 4.879 </td>
-   <td style="text-align:right;"> 1.654 </td>
+   <td style="text-align:right;"> 4.409 </td>
+   <td style="text-align:right;"> 3.053 </td>
    <td style="text-align:left;"> TRUE </td>
   </tr>
   <tr>
-   <td style="text-align:right;"> 4.682 </td>
-   <td style="text-align:right;"> 0.850 </td>
+   <td style="text-align:right;"> 5.584 </td>
+   <td style="text-align:right;"> 4.578 </td>
    <td style="text-align:left;"> TRUE </td>
   </tr>
   <tr>
-   <td style="text-align:right;"> 5.156 </td>
-   <td style="text-align:right;"> 3.168 </td>
+   <td style="text-align:right;"> 4.624 </td>
+   <td style="text-align:right;"> 1.505 </td>
    <td style="text-align:left;"> TRUE </td>
   </tr>
   <tr>
-   <td style="text-align:right;"> 5.018 </td>
-   <td style="text-align:right;"> 1.924 </td>
+   <td style="text-align:right;"> 3.125 </td>
+   <td style="text-align:right;"> 1.093 </td>
    <td style="text-align:left;"> TRUE </td>
   </tr>
   <tr>
-   <td style="text-align:right;"> 7.566 </td>
-   <td style="text-align:right;"> 0.254 </td>
+   <td style="text-align:right;"> 4.150 </td>
+   <td style="text-align:right;"> 6.857 </td>
    <td style="text-align:left;"> TRUE </td>
   </tr>
   <tr>
-   <td style="text-align:right;"> 4.634 </td>
-   <td style="text-align:right;"> 1.315 </td>
+   <td style="text-align:right;"> 5.918 </td>
+   <td style="text-align:right;"> 1.017 </td>
    <td style="text-align:left;"> TRUE </td>
   </tr>
 </tbody>
@@ -784,15 +784,15 @@ cookieconsent.run({
 <tbody>
   <tr>
    <td style="text-align:left;"> (Intercept) </td>
-   <td style="text-align:right;"> 9.300 </td>
+   <td style="text-align:right;"> 11.293 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> sepal_length </td>
-   <td style="text-align:right;"> -1.219 </td>
+   <td style="text-align:right;"> -1.681 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> petal_width </td>
-   <td style="text-align:right;"> -0.663 </td>
+   <td style="text-align:right;"> -0.536 </td>
   </tr>
 </tbody>
 </table>
@@ -806,7 +806,7 @@ cookieconsent.run({
 <span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">paste0</span>(<span class="st">"Model accuracy is "</span>, accuracy, <span class="st">"%"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Model accuracy is 83%</code></pre>
+<pre><code>Model accuracy is 88%</code></pre>
 </div>
 </div>
 <p>And that’s it – you have a simple retraining job. This is a very minimal example, but this general framework is very flexible and modular, and it makes up the foundation for how we write our retraining jobs at CollegeVine. You can plug and play all different kinds of feature engineering logic, logic to fetch raw data, metrics, etc. We also use <a href="https://mlflow.org/">MLFlow</a> for versioning models and tracking experiments, so our retraining jobs have lots of logging of artifacts, parameters, and metrics to our MLFlow instance.</p>
