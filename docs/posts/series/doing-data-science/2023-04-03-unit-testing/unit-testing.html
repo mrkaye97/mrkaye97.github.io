@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.2.475">
+<meta name="generator" content="quarto-1.3.353">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -20,9 +20,10 @@ div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
   width: 0.8em;
-  margin: 0 0.8em 0.2em -1.6em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
 pre > code.sourceCode { white-space: pre; position: relative; }
 pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
@@ -49,43 +50,13 @@ pre.numberSource code > span > a:first-child::before
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
     padding: 0 4px; width: 4em;
-    color: #aaaaaa;
   }
-pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
 div.sourceCode
   {   }
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-code span.al { color: #ff0000; font-weight: bold; } /* Alert */
-code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-code span.at { color: #7d9029; } /* Attribute */
-code span.bn { color: #40a070; } /* BaseN */
-code span.bu { color: #008000; } /* BuiltIn */
-code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-code span.ch { color: #4070a0; } /* Char */
-code span.cn { color: #880000; } /* Constant */
-code span.co { color: #60a0b0; font-style: italic; } /* Comment */
-code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-code span.do { color: #ba2121; font-style: italic; } /* Documentation */
-code span.dt { color: #902000; } /* DataType */
-code span.dv { color: #40a070; } /* DecVal */
-code span.er { color: #ff0000; font-weight: bold; } /* Error */
-code span.ex { } /* Extension */
-code span.fl { color: #40a070; } /* Float */
-code span.fu { color: #06287e; } /* Function */
-code span.im { color: #008000; font-weight: bold; } /* Import */
-code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
-code span.kw { color: #007020; font-weight: bold; } /* Keyword */
-code span.op { color: #666666; } /* Operator */
-code span.ot { color: #007020; } /* Other */
-code span.pp { color: #bc7a00; } /* Preprocessor */
-code span.sc { color: #4070a0; } /* SpecialChar */
-code span.ss { color: #bb6688; } /* SpecialString */
-code span.st { color: #4070a0; } /* String */
-code span.va { color: #19177c; } /* Variable */
-code span.vs { color: #4070a0; } /* VerbatimString */
-code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
 
@@ -160,10 +131,16 @@ cookieconsent.run({
 <link rel="stylesheet" href="../../../../styles.css">
 <meta property="og:title" content="Matt Kaye - Unit Testing Analytics Code">
 <meta property="og:description" content="How do you know your code actually works?">
+<meta property="og:image" content="https://www.matthewrkaye.com/posts/series/doing-data-science/2023-04-03-unit-testing/unit-testing_files/figure-html/unnamed-chunk-5-1.png">
 <meta property="og:site-name" content="Matt Kaye">
+<meta property="og:image:height" content="960">
+<meta property="og:image:width" content="1344">
 <meta name="twitter:title" content="Matt Kaye - Unit Testing Analytics Code">
 <meta name="twitter:description" content="How do you know your code actually works?">
-<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.matthewrkaye.com/posts/series/doing-data-science/2023-04-03-unit-testing/unit-testing_files/figure-html/unnamed-chunk-5-1.png">
+<meta name="twitter:image-height" content="960">
+<meta name="twitter:image-width" content="1344">
+<meta name="twitter:card" content="summary_large_image">
 </head>
 
 <body class="nav-fixed">
@@ -177,49 +154,50 @@ cookieconsent.run({
     <span class="navbar-title">Matt Kaye</span>
     </a>
   </div>
+            <div id="quarto-search" class="" title="Search"></div>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
   <span class="navbar-toggler-icon"></span>
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-blog" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-blog" role="button" data-bs-toggle="dropdown" aria-expanded="false" rel="" target="">
  <span class="menu-text">Blog</span>
     </a>
     <ul class="dropdown-menu" aria-labelledby="nav-menu-blog">    
         <li>
-    <a class="dropdown-item" href="../../../../posts.html">
+    <a class="dropdown-item" href="../../../../posts.html" rel="" target="">
  <span class="dropdown-text">Posts</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="../../../../series.html">
+    <a class="dropdown-item" href="../../../../series.html" rel="" target="">
  <span class="dropdown-text">Series</span></a>
   </li>  
     </ul>
   </li>
   <li class="nav-item">
-    <a class="nav-link" href="../../../../code.html">
+    <a class="nav-link" href="../../../../code.html" rel="" target="">
  <span class="menu-text">Code</span></a>
   </li>  
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-more" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-more" role="button" data-bs-toggle="dropdown" aria-expanded="false" rel="" target="">
  <span class="menu-text">More</span>
     </a>
     <ul class="dropdown-menu" aria-labelledby="nav-menu-more">    
         <li>
-    <a class="dropdown-item" href="../../../../my-three-favorite.html">
+    <a class="dropdown-item" href="../../../../my-three-favorite.html" rel="" target="">
  <span class="dropdown-text">My three favorite</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="../../../../stats-in-the-wild.html">
+    <a class="dropdown-item" href="../../../../stats-in-the-wild.html" rel="" target="">
  <span class="dropdown-text">Statistics in the wild</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="../../../../travel.html">
+    <a class="dropdown-item" href="../../../../travel.html" rel="" target="">
  <span class="dropdown-text">Going places</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="../../../../blogroll.html">
+    <a class="dropdown-item" href="../../../../blogroll.html" rel="" target="">
  <span class="dropdown-text">Blogroll</span></a>
   </li>  
     </ul>
@@ -227,12 +205,13 @@ cookieconsent.run({
 </ul>
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item compact">
-    <a class="nav-link" href="../../../../posts.xml"><i class="bi bi-rss" role="img">
+    <a class="nav-link" href="../../../../posts.xml" rel="" target=""><i class="bi bi-rss" role="img">
 </i> 
  <span class="menu-text"></span></a>
   </li>  
 </ul>
-              <div id="quarto-search" class="" title="Search"></div>
+            <div class="quarto-navbar-tools">
+</div>
           </div> <!-- /navcollapse -->
       </div> <!-- /container-fluid -->
     </nav>
@@ -334,10 +313,7 @@ cookieconsent.run({
 
 </header>
 
-<div class="cell">
-
-</div>
-<div class="callout-note callout callout-style-simple no-icon">
+<div class="callout callout-style-simple callout-note no-icon">
 <div class="callout-body d-flex">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
@@ -378,7 +354,7 @@ cookieconsent.run({
 <section id="case-study-feature-engineering" class="level2">
 <h2 class="anchored" data-anchor-id="case-study-feature-engineering">Case Study: Feature Engineering</h2>
 <p>Data scientists very often write feature engineering code. And as it turns out, feature engineering is a very common place where bugs can pop up unbeknownst to the code’s author.</p>
-<div class="callout-important callout callout-style-simple no-icon">
+<div class="callout callout-style-simple callout-important no-icon">
 <div class="callout-body d-flex">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
@@ -440,7 +416,7 @@ cookieconsent.run({
 </div>
 </div>
 <p>If you’re familiar with R, this should be expected. And you’re probably thinking to yourself that we just need to set <code>na.rm = TRUE</code>, and you’d be right! But this brings me to the first major point I’d like to make on how things can go wrong.</p>
-<div class="callout-important callout callout-style-simple no-icon">
+<div class="callout callout-style-simple callout-important no-icon">
 <div class="callout-body d-flex">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
@@ -487,55 +463,55 @@ cookieconsent.run({
 <span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span></span>
 <span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pretty_print</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-
-<table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
- <thead>
-  <tr>
-   <th style="text-align:right;"> player_id </th>
-   <th style="text-align:left;"> sex </th>
-   <th style="text-align:right;"> height </th>
-   <th style="text-align:right;"> height_std </th>
-  </tr>
- </thead>
+<table class="table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: right;" data-quarto-table-cell-role="th">player_id</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">sex</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">height</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">height_std</th>
+</tr>
+</thead>
 <tbody>
-  <tr>
-   <td style="text-align:right;"> 1 </td>
-   <td style="text-align:left;"> M </td>
-   <td style="text-align:right;"> 77 </td>
-   <td style="text-align:right;"> NaN </td>
-  </tr>
-  <tr>
-   <td style="text-align:right;"> 2 </td>
-   <td style="text-align:left;"> M </td>
-   <td style="text-align:right;"> 77 </td>
-   <td style="text-align:right;"> NaN </td>
-  </tr>
-  <tr>
-   <td style="text-align:right;"> 3 </td>
-   <td style="text-align:left;"> M </td>
-   <td style="text-align:right;"> 77 </td>
-   <td style="text-align:right;"> NaN </td>
-  </tr>
-  <tr>
-   <td style="text-align:right;"> 4 </td>
-   <td style="text-align:left;"> F </td>
-   <td style="text-align:right;"> 70 </td>
-   <td style="text-align:right;"> -1 </td>
-  </tr>
-  <tr>
-   <td style="text-align:right;"> 5 </td>
-   <td style="text-align:left;"> F </td>
-   <td style="text-align:right;"> 71 </td>
-   <td style="text-align:right;"> 0 </td>
-  </tr>
-  <tr>
-   <td style="text-align:right;"> 6 </td>
-   <td style="text-align:left;"> F </td>
-   <td style="text-align:right;"> 72 </td>
-   <td style="text-align:right;"> 1 </td>
-  </tr>
+<tr class="odd">
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">M</td>
+<td style="text-align: right;">77</td>
+<td style="text-align: right;">NaN</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">2</td>
+<td style="text-align: left;">M</td>
+<td style="text-align: right;">77</td>
+<td style="text-align: right;">NaN</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">3</td>
+<td style="text-align: left;">M</td>
+<td style="text-align: right;">77</td>
+<td style="text-align: right;">NaN</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">4</td>
+<td style="text-align: left;">F</td>
+<td style="text-align: right;">70</td>
+<td style="text-align: right;">-1</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">5</td>
+<td style="text-align: left;">F</td>
+<td style="text-align: right;">71</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">6</td>
+<td style="text-align: left;">F</td>
+<td style="text-align: right;">72</td>
+<td style="text-align: right;">1</td>
+</tr>
 </tbody>
 </table>
+
 
 </div>
 </div>
@@ -568,37 +544,37 @@ cookieconsent.run({
 <span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
 <span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pretty_print</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-
-<table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
- <thead>
-  <tr>
-   <th style="text-align:right;"> gdp </th>
-   <th style="text-align:right;"> population </th>
-   <th style="text-align:right;"> gdp_per_capita </th>
-   <th style="text-align:right;"> gdp_per_capita_std </th>
-  </tr>
- </thead>
+<table class="table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: right;" data-quarto-table-cell-role="th">gdp</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">population</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">gdp_per_capita</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">gdp_per_capita_std</th>
+</tr>
+</thead>
 <tbody>
-  <tr>
-   <td style="text-align:right;"> 1000 </td>
-   <td style="text-align:right;"> 0 </td>
-   <td style="text-align:right;"> Inf </td>
-   <td style="text-align:right;"> NaN </td>
-  </tr>
-  <tr>
-   <td style="text-align:right;"> 2000 </td>
-   <td style="text-align:right;"> 50 </td>
-   <td style="text-align:right;"> 40 </td>
-   <td style="text-align:right;"> NaN </td>
-  </tr>
-  <tr>
-   <td style="text-align:right;"> 3000 </td>
-   <td style="text-align:right;"> 100 </td>
-   <td style="text-align:right;"> 30 </td>
-   <td style="text-align:right;"> NaN </td>
-  </tr>
+<tr class="odd">
+<td style="text-align: right;">1000</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">Inf</td>
+<td style="text-align: right;">NaN</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">2000</td>
+<td style="text-align: right;">50</td>
+<td style="text-align: right;">40</td>
+<td style="text-align: right;">NaN</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">3000</td>
+<td style="text-align: right;">100</td>
+<td style="text-align: right;">30</td>
+<td style="text-align: right;">NaN</td>
+</tr>
 </tbody>
 </table>
+
 
 </div>
 </div>
@@ -620,43 +596,43 @@ cookieconsent.run({
 <span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span></span>
 <span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pretty_print</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-
-<table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
- <thead>
-  <tr>
-   <th style="text-align:right;"> group </th>
-   <th style="text-align:right;"> value </th>
-   <th style="text-align:right;"> value_std </th>
-  </tr>
- </thead>
+<table class="table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: right;" data-quarto-table-cell-role="th">group</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">value</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">value_std</th>
+</tr>
+</thead>
 <tbody>
-  <tr>
-   <td style="text-align:right;"> 1 </td>
-   <td style="text-align:right;"> 1 </td>
-   <td style="text-align:right;"> NA </td>
-  </tr>
-  <tr>
-   <td style="text-align:right;"> 2 </td>
-   <td style="text-align:right;"> 2 </td>
-   <td style="text-align:right;"> -0.7071068 </td>
-  </tr>
-  <tr>
-   <td style="text-align:right;"> 2 </td>
-   <td style="text-align:right;"> 3 </td>
-   <td style="text-align:right;"> 0.7071068 </td>
-  </tr>
-  <tr>
-   <td style="text-align:right;"> 3 </td>
-   <td style="text-align:right;"> 4 </td>
-   <td style="text-align:right;"> -0.7071068 </td>
-  </tr>
-  <tr>
-   <td style="text-align:right;"> 3 </td>
-   <td style="text-align:right;"> 5 </td>
-   <td style="text-align:right;"> 0.7071068 </td>
-  </tr>
+<tr class="odd">
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">NA</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">-0.7071068</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">0.7071068</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">-0.7071068</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">0.7071068</td>
+</tr>
 </tbody>
 </table>
+
 
 </div>
 </div>
@@ -672,7 +648,7 @@ cookieconsent.run({
 <section id="enter-testing" class="level2">
 <h2 class="anchored" data-anchor-id="enter-testing">Enter Testing</h2>
 <p>And with all of that: Back to testing. Testing is the only way to know that your code is actually doing what you think it’s doing, and writing tests is a great way to make guarantees about the ability of your code to handle some of these issues that we’ve discussed. Writing tests also lets you ensure that your implementation is correct, and it lets you refactor your code more easily by loudly alerting you if you’ve broken something, which should make you much more confident in the correctness of your implementation.</p>
-<div class="callout-note callout callout-style-simple no-icon">
+<div class="callout callout-style-simple callout-note no-icon">
 <div class="callout-body d-flex">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
@@ -876,9 +852,23 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     icon: icon
   };
   anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
   const clipboard = new window.ClipboardJS('.code-copy-button', {
-    target: function(trigger) {
-      return trigger.previousElementSibling;
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
     }
   });
   clipboard.on('success', function(e) {
@@ -943,6 +933,157 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       return note.innerHTML;
     });
   }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Handle positioning of the toggle
+      window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+      const annoteTargets = window.document.querySelectorAll('.code-annotation-anchor');
+      for (let i=0; i<annoteTargets.length; i++) {
+        const annoteTarget = annoteTargets[i];
+        const targetCell = annoteTarget.getAttribute("data-target-cell");
+        const targetAnnotation = annoteTarget.getAttribute("data-target-annotation");
+        const contentFn = () => {
+          const content = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          if (content) {
+            const tipContent = content.cloneNode(true);
+            tipContent.classList.add("code-annotation-tip-content");
+            return tipContent.outerHTML;
+          }
+        }
+        const config = {
+          allowHTML: true,
+          content: contentFn,
+          onShow: (instance) => {
+            selectCodeLines(instance.reference);
+            instance.reference.classList.add('code-annotation-active');
+            window.tippy.hideAll();
+          },
+          onHide: (instance) => {
+            unselectCodeLines();
+            instance.reference.classList.remove('code-annotation-active');
+          },
+          maxWidth: 300,
+          delay: [50, 0],
+          duration: [200, 0],
+          offset: [5, 10],
+          arrow: true,
+          appendTo: function(el) {
+            return el.parentElement.parentElement.parentElement;
+          },
+          interactive: true,
+          interactiveBorder: 10,
+          theme: 'quarto',
+          placement: 'right',
+          popperOptions: {
+            modifiers: [
+            {
+              name: 'flip',
+              options: {
+                flipVariations: false, // true by default
+                allowedAutoPlacements: ['right'],
+                fallbackPlacements: ['right', 'top', 'top-start', 'top-end'],
+              },
+            },
+            {
+              name: 'preventOverflow',
+              options: {
+                mainAxis: false,
+                altAxis: false
+              }
+            }
+            ]        
+          }      
+        };
+        window.tippy(annoteTarget, config); 
+      }
   const findCites = (el) => {
     const parentEl = el.parentElement;
     if (parentEl) {
@@ -988,7 +1129,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <footer class="footer">
   <div class="nav-footer">
     <div class="nav-footer-left"> Matt Kaye, 2023<br></div>   
-      <div class="nav-footer-center"><div class="cookie-consent-footer"><a href="#" id="open_preferences_center">Cookie Preferences</a></div></div>
+    <div class="nav-footer-center"><div class="cookie-consent-footer"><a href="#" id="open_preferences_center">Cookie Preferences</a></div></div>
     <div class="nav-footer-right">Built with <a href="https://quarto.org/">Quarto</a> and ❤<br></div>
   </div>
 </footer>

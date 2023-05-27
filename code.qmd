@@ -23,7 +23,7 @@ Open-Source Contributions
 
 Miscellaneous Side Projects
 -------------------------------------
-* A small Flask app for getting notified when companies you care about post jobs you're interested in lives at [jobcrawler.matthewrkaye.com](https://jobcrawler.matthewrkaye.com) (code is private for now). Feel free to use it!
+* A small Flask app for getting notified when companies you care about post jobs you're interested in lives at [jobcrawler.matthewrkaye.com](https://jobcrawler.matthewrkaye.com). Feel free to use it!
 * A writeup of my team's submission to the 2021 NFL Big Data Bowl lives on our [Github Pages site](https://hjmbigdatabowl.github.io/bdb2021/articles/submission.html).
 * An over-the-top (yet imperfect) R solution to one of our data science technical interview questions: (roughly) implement K-Means lives in my [ugly-kmeans repo](https://github.com/mrkaye97/ugly-kmeans).
 * The code behind a cursory exploration of the tail behavior of ESPN's college football win probably model lives in my [espn-cfb-win-prob repo] (https://github.com/mrkaye97/espn-cfb-win-prob).

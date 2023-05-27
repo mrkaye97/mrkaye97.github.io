@@ -1,4 +1,14 @@
 ---
+format:
+  html: 
+    toc: false
+    grid:
+      sidebar-width: 0px
+      body-width: 800px
+      margin-width: 0px
+      gutter-width: 1.5rem
+sidebar: false
+page-navigation: false
 about:
   template: jolla
   image: resources/headshot.jpg
@@ -22,6 +32,6 @@ about:
 
 # Hi! I'm <strong>Matt</strong>
 
-### I'm a data scientist at <a href="https://www.collegevine.com">CollegeVine</a>
+#### I'm a data scientist at <a href="https://www.collegevine.com">CollegeVine</a>
 
-### I care about doing better data science by leaning into domain knowledge and learning from software engineers
+#### I care about doing better data science by leaning into domain knowledge and learning from software engineers

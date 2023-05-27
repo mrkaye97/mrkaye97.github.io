@@ -1,6 +1,5 @@
 ---
 toc: false
-title: Statistics in the Wild
 callout-appearance: minimal
 ---
 

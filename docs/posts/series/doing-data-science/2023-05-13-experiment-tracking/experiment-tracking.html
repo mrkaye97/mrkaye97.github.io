@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.2.475">
+<meta name="generator" content="quarto-1.3.353">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -20,7 +20,7 @@ div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
   width: 0.8em;
-  margin: 0 0.8em 0.2em -1.6em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
 </style>
@@ -93,10 +93,10 @@ cookieconsent.run({
 
 <link rel="stylesheet" href="../../../../styles.css">
 <meta property="og:title" content="Matt Kaye - Experiment Tracking and Model Versioning">
-<meta property="og:description" content="Knowing what you've tried, and what's in production">
+<meta property="og:description" content="Knowing what you’ve tried, and what’s in production">
 <meta property="og:site-name" content="Matt Kaye">
 <meta name="twitter:title" content="Matt Kaye - Experiment Tracking and Model Versioning">
-<meta name="twitter:description" content="Knowing what you've tried, and what's in production">
+<meta name="twitter:description" content="Knowing what you’ve tried, and what’s in production">
 <meta name="twitter:card" content="summary">
 </head>
 
@@ -111,49 +111,50 @@ cookieconsent.run({
     <span class="navbar-title">Matt Kaye</span>
     </a>
   </div>
+            <div id="quarto-search" class="" title="Search"></div>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
   <span class="navbar-toggler-icon"></span>
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-blog" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-blog" role="button" data-bs-toggle="dropdown" aria-expanded="false" rel="" target="">
  <span class="menu-text">Blog</span>
     </a>
     <ul class="dropdown-menu" aria-labelledby="nav-menu-blog">    
         <li>
-    <a class="dropdown-item" href="../../../../posts.html">
+    <a class="dropdown-item" href="../../../../posts.html" rel="" target="">
  <span class="dropdown-text">Posts</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="../../../../series.html">
+    <a class="dropdown-item" href="../../../../series.html" rel="" target="">
  <span class="dropdown-text">Series</span></a>
   </li>  
     </ul>
   </li>
   <li class="nav-item">
-    <a class="nav-link" href="../../../../code.html">
+    <a class="nav-link" href="../../../../code.html" rel="" target="">
  <span class="menu-text">Code</span></a>
   </li>  
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-more" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-more" role="button" data-bs-toggle="dropdown" aria-expanded="false" rel="" target="">
  <span class="menu-text">More</span>
     </a>
     <ul class="dropdown-menu" aria-labelledby="nav-menu-more">    
         <li>
-    <a class="dropdown-item" href="../../../../my-three-favorite.html">
+    <a class="dropdown-item" href="../../../../my-three-favorite.html" rel="" target="">
  <span class="dropdown-text">My three favorite</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="../../../../stats-in-the-wild.html">
+    <a class="dropdown-item" href="../../../../stats-in-the-wild.html" rel="" target="">
  <span class="dropdown-text">Statistics in the wild</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="../../../../travel.html">
+    <a class="dropdown-item" href="../../../../travel.html" rel="" target="">
  <span class="dropdown-text">Going places</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="../../../../blogroll.html">
+    <a class="dropdown-item" href="../../../../blogroll.html" rel="" target="">
  <span class="dropdown-text">Blogroll</span></a>
   </li>  
     </ul>
@@ -161,12 +162,13 @@ cookieconsent.run({
 </ul>
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item compact">
-    <a class="nav-link" href="../../../../posts.xml"><i class="bi bi-rss" role="img">
+    <a class="nav-link" href="../../../../posts.xml" rel="" target=""><i class="bi bi-rss" role="img">
 </i> 
  <span class="menu-text"></span></a>
   </li>  
 </ul>
-              <div id="quarto-search" class="" title="Search"></div>
+            <div class="quarto-navbar-tools">
+</div>
           </div> <!-- /navcollapse -->
       </div> <!-- /container-fluid -->
     </nav>
@@ -250,10 +252,7 @@ cookieconsent.run({
 
 </header>
 
-<div class="cell">
-
-</div>
-<div class="callout-note callout callout-style-simple no-icon">
+<div class="callout callout-style-simple callout-note no-icon">
 <div class="callout-body d-flex">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
@@ -273,7 +272,7 @@ cookieconsent.run({
 <h2 class="anchored" data-anchor-id="model-versioning">Model Versioning</h2>
 <p>At first, we used an incrementing counter as the version of our chancing model, so we would identify different versions as <code>v1</code>, <code>v2</code>, and so on. Our assumption initially was that what was most important was being able to update a model (i.e.&nbsp;increment the version) and roll back to a previous model (i.e.&nbsp;decrement), and this versioning scheme allowed us to do that easily. But we quickly ran into some headaches. Notably, we’d find ourselves asking “Okay, Chancing v5 is in production. But when was it trained? And when did we ship it?” And so we soon outgrew our initial approach.</p>
 <p>After our first approach failed, our next idea was to use a timestamp like <code>20230514123456</code> (12:34 and 56 seconds on May 14th, 2023) as the model version. The timestamp would correspond to when the model was trained – we were assuming we’d ship right after training – and would still have all of the same properties as the incrementing counter from before (letting us upgrade and roll back easily) while also encoding extra information. We viewed this change as a <a href="https://www.investopedia.com/terms/p/paretoimprovement.asp#:~:text=A%20Pareto%20improvement%20is%20an,make%20any%20available%20Pareto%20improvement.">Pareto Improvement</a>.</p>
-<div class="callout-note callout callout-style-simple no-icon">
+<div class="callout callout-style-simple callout-note no-icon">
 <div class="callout-body d-flex">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
@@ -305,7 +304,7 @@ cookieconsent.run({
 <section id="experiment-tracking-model-registries-and-mlops" class="level2">
 <h2 class="anchored" data-anchor-id="experiment-tracking-model-registries-and-mlops">Experiment Tracking, Model Registries, and MLOps</h2>
 <p>Of course, MLFlow isn’t the only tool out there. Broadly speaking, tools like MLFlow are often referred to as “experiment tracking” tools. Others in this category include <a href="https://wandb.ai/site">Weights &amp; Biases</a>, <a href="https://neptune.ai/">Neptune</a>, and <a href="https://www.comet.com/site/">Comet</a>. Experiment tracking tools let you version different experiments you run, and store metadata like the training data, parameters, etc. on those experiments and training runs. These tools generally also provide a “model registry,” which tends to be the component that handles the versioning of models.</p>
-<div class="callout-note callout callout-style-simple no-icon">
+<div class="callout callout-style-simple callout-note no-icon">
 <div class="callout-body d-flex">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
@@ -354,9 +353,23 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     icon: icon
   };
   anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
   const clipboard = new window.ClipboardJS('.code-copy-button', {
-    target: function(trigger) {
-      return trigger.previousElementSibling;
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
     }
   });
   clipboard.on('success', function(e) {
@@ -421,6 +434,157 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       return note.innerHTML;
     });
   }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Handle positioning of the toggle
+      window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+      const annoteTargets = window.document.querySelectorAll('.code-annotation-anchor');
+      for (let i=0; i<annoteTargets.length; i++) {
+        const annoteTarget = annoteTargets[i];
+        const targetCell = annoteTarget.getAttribute("data-target-cell");
+        const targetAnnotation = annoteTarget.getAttribute("data-target-annotation");
+        const contentFn = () => {
+          const content = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          if (content) {
+            const tipContent = content.cloneNode(true);
+            tipContent.classList.add("code-annotation-tip-content");
+            return tipContent.outerHTML;
+          }
+        }
+        const config = {
+          allowHTML: true,
+          content: contentFn,
+          onShow: (instance) => {
+            selectCodeLines(instance.reference);
+            instance.reference.classList.add('code-annotation-active');
+            window.tippy.hideAll();
+          },
+          onHide: (instance) => {
+            unselectCodeLines();
+            instance.reference.classList.remove('code-annotation-active');
+          },
+          maxWidth: 300,
+          delay: [50, 0],
+          duration: [200, 0],
+          offset: [5, 10],
+          arrow: true,
+          appendTo: function(el) {
+            return el.parentElement.parentElement.parentElement;
+          },
+          interactive: true,
+          interactiveBorder: 10,
+          theme: 'quarto',
+          placement: 'right',
+          popperOptions: {
+            modifiers: [
+            {
+              name: 'flip',
+              options: {
+                flipVariations: false, // true by default
+                allowedAutoPlacements: ['right'],
+                fallbackPlacements: ['right', 'top', 'top-start', 'top-end'],
+              },
+            },
+            {
+              name: 'preventOverflow',
+              options: {
+                mainAxis: false,
+                altAxis: false
+              }
+            }
+            ]        
+          }      
+        };
+        window.tippy(annoteTarget, config); 
+      }
   const findCites = (el) => {
     const parentEl = el.parentElement;
     if (parentEl) {
@@ -466,7 +630,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <footer class="footer">
   <div class="nav-footer">
     <div class="nav-footer-left"> Matt Kaye, 2023<br></div>   
-      <div class="nav-footer-center"><div class="cookie-consent-footer"><a href="#" id="open_preferences_center">Cookie Preferences</a></div></div>
+    <div class="nav-footer-center"><div class="cookie-consent-footer"><a href="#" id="open_preferences_center">Cookie Preferences</a></div></div>
     <div class="nav-footer-right">Built with <a href="https://quarto.org/">Quarto</a> and ❤<br></div>
   </div>
 </footer>
