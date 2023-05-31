@@ -103,7 +103,8 @@ ul.task-list li input[type="checkbox"] {
 
     const options = {
       valueNames: ['listing-date','listing-title','listing-reading-time',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-title-sort'] }],
-      
+      page: 5,
+    pagination: { item: "<li class='page-item'><a class='page page-link' href='#'></a></li>" },
       searchColumns: ["listing-date","listing-title","listing-author"],
     };
 
@@ -347,12 +348,27 @@ Reading Time
 <span class="listing-reading-time">9 min</span>
 </td>
 </tr>
+<tr data-index="5" data-categories="data science,R,python" data-listing-date-sort="1685246400000" data-listing-file-modified-sort="1685503857216" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="10" data-listing-title-sort="Dependency Management" data-listing-filename-sort="renv-dependency-management.qmd" onclick="href = this.querySelector('a').getAttribute('href');
+ if (href) { window.location=href ; return false; }">
+<td>
+<span class="listing-date">May 28, 2023</span>
+</td>
+<td>
+<a href="./posts/series/doing-data-science/2023-05-27-renv-dependency-management/renv-dependency-management.html" class="title listing-title">Dependency Management</a>
+</td>
+<td>
+<span class="listing-reading-time">10 min</span>
+</td>
+</tr>
 </tbody>
 
 </table>
 <div class="listing-no-matching d-none">
 No matching items
 </div>
+<nav id="doing-data-science-pagination" class="listing-pagination" aria-label="Page Navigation">
+  <ul class="pagination"></ul>
+</nav>
 </div>
 </section>
 <section id="ab-testing" class="level2">

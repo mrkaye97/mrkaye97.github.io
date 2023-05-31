@@ -10,7 +10,461 @@
 <atom:link href="https://www.matthewrkaye.com/posts-r.xml" rel="self" type="application/rss+xml"/>
 <description>Matt Kaye&#39;s personal website</description>
 <generator>quarto-1.3.353</generator>
-<lastBuildDate>Mon, 24 Apr 2023 04:00:00 GMT</lastBuildDate>
+<lastBuildDate>Sun, 28 May 2023 04:00:00 GMT</lastBuildDate>
+<item>
+  <title>Dependency Management</title>
+  <dc:creator>Matt Kaye</dc:creator>
+  <link>https://www.matthewrkaye.com/posts/series/doing-data-science/2023-05-27-renv-dependency-management/renv-dependency-management.html</link>
+  <description><![CDATA[ 
+
+
+
+<div class="callout callout-style-simple callout-note no-icon">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-body-container">
+<p>This post is part of a series called <a href="https://matthewrkaye.com/series.html#the-missing-semester-of-your-ds-education">The Missing Semester of Your DS Education</a>.</p>
+</div>
+</div>
+</div>
+<section id="introduction" class="level2">
+<h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
+<p>When I was first learning to program, I’d face problems that would require (or at least were just made easier by using) library code. For instance, I learned about the Tidyverse the hard way my first summer in college when I was interning at a FinTech firm doing lots of data wrangling, because I had just finished spending the summer very hackily implementing <code>group_by</code> and <code>summarize</code> by hand using lots and lots of layers of nested for loops. That experience taught me an important lesson: I realized that thinking “Someone else must have solved this problem before” and then seeing what they’ve done is a very practical way to solve problems.</p>
+<p>And with that realization (that I could use libraries for data wrangling), I started writing lots of lines of code like this one:</p>
+<div class="sourceCode" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">install.packages</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"tidyverse"</span>)</span></code></pre></div>
+<p>or the not-quite-equivalent Python:</p>
+<div class="sourceCode" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">pip</span> install pandas</span></code></pre></div>
+<p>And as soon as I began doing that, I started running into one of the most common, if not <em>the</em> most common, source of headaches for new programmers: Dependency conflicts. I was getting errors like these:</p>
+<div class="sourceCode" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span> Error<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">:</span> package or namespace load failed <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">for</span> ‘foo’ <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">in</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">loadNamespace</span>(j <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> i[[1L]], </span>
+<span id="cb3-2"><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(lib.loc, <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">.libPaths</span>()), <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">versionCheck =</span> vI[[j]])<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">:</span></span>
+<span id="cb3-3">    namespace ‘bar’ <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.6</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">-1</span> is being loaded, but <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;=</span> <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.8</span> is required</span></code></pre></div>
+</section>
+<section id="whats-the-problem" class="level2">
+<h2 class="anchored" data-anchor-id="whats-the-problem">What’s the Problem?</h2>
+<p>At the time, I saw these types of errors and was frustrated. I didn’t understand them – why is a package requiring a specific version of another package? And I also thought there was a quick fix: I’d just install the required version of the dependency and everything would work again.</p>
+<p>Until I inevitably ran into the same problem again soon after, while trying to install some other dependency.</p>
+<p>At its core, I was experiencing my first foray into what might be considered a semi-pro version of <a href="https://en.wikipedia.org/wiki/Dependency_hell">dependency hell</a>. I thought I could “solve” my problem of incompatible dependencies with duct tape – installing the correct version in order to fix the immediate error – but that doesn’t actually work in practice, since the same issue is bound to come up again with another version of a different library, or in a different project, or on another day.</p>
+</section>
+<section id="dependency-resolution" class="level2">
+<h2 class="anchored" data-anchor-id="dependency-resolution">Dependency Resolution</h2>
+<p>In practice, this is a <em>dependency management</em> problem. And the basic story goes as follows.</p>
+<p>You start on your programming journey, and you want to use some great library – take <code>dplyr</code>, for example – for some of your work. So you <code>install.packages("dplyr")</code> and it installs the most recent version. Then you decide you’re interested in working with spatial data, so you install <code>sf</code> with <code>install.packages("sf")</code>. Next, you realize you need to work with Census data (what else are you going to be making maps of, after all?), so you <code>install.packages("tidycensus")</code> and with those three packages, you do your project.</p>
+<p>But then next week you have a homework assignment, which, entirely hypothetically, requires you to install some niche package like <code>rethinking</code>, so, of course, you <code>install.packages("rethinking")</code> and you do your homework.</p>
+<p>And then later that night, you get curious about seeing what the Elon Jet Tracker has been up to on Twitter, and so you install <code>rtweet</code>: <code>install.packages("rtweet")</code>, but this time, you get one of the errors above about a namespace clash.</p>
+<p>And so now, you’re at a block in the road. You can either upgrade or downgrade the dependency that’s clashing and risk one of your <em>other</em> projects breaking, or you can try to get around the problem another way, such as using an old version of <code>rtweet</code> or not using <code>rtweet</code> at all.</p>
+<p>This is the point at which former you – and former me – should have been thinking “someone must have solved this problem.”</p>
+</section>
+<section id="declaring-your-dependencies" class="level2">
+<h2 class="anchored" data-anchor-id="declaring-your-dependencies">Declaring Your Dependencies</h2>
+<p>The root cause of the errors in situations like these is that we have a dependency leakage problem. In the example I gave above, there were three separate “projects”: Your Census data analysis, your homework, and your keeping tabs on Elon’s jet. Those three projects don’t need to know about each other, and it’s actually a <em>problem</em> that they <em>do</em>. The issue is that in using <code>install.packages("...")</code> (or <code>pip install ...</code>) everywhere, you’re installing all of these packages <em>globally</em> on your machine. This means that <em>every</em> project you’re working on needs to use the <em>same</em> dependencies, even when the projects are separate.</p>
+<p>Above, I proposed the solution to this problem that I used to use, which was to just install the version of the package that was needed by the package I was trying to install, and continue on until I was inevitably frustrated by the issue once again, generally sooner rather than later. But there’s a battle-hardened way of solving this problem: Declaring your dependencies, and using a dependency isolation tool.</p>
+<p>In R, there’s the great <a href="https://rstudio.github.io/renv/articles/renv.html">renv</a> for this. In Python, I personally like <a href="https://python-poetry.org/">Poetry</a>, but <a href="https://docs.conda.io/en/latest/">Conda</a>, <a href="https://pipenv.pypa.io/en/latest/">pipenv</a>, or just a plain old <a href="https://docs.python.org/3/library/venv.html">virtualenv</a> would work just fine too. The key is that you want to be declaring the dependencies that your project needs in some kind of file (such as an <code>DESCRIPTION</code> file in R, or a <code>pyproject.toml</code> or a <code>requirements.txt</code> in Python, or a <code>Gemfile</code> in Ruby, and so on), and then preferably having a dependency manager like <code>renv</code> or <code>poetry</code> resolve those dependencies and save the result into a <em>lockfile</em>, like a <code>poetry.lock</code> or an <code>renv.lock</code>. Then, when you want to work on your project, or homework, or whatever, you restore the dependencies as they’re recorded in that lockfile. This means that whenever you want to run a project, you know exactly what versions of every dependency need to be installed. And at the same time, if you want to add a new dependency, your dependency manager can do its best to resolve conflicts between that new dependency and all of the other libraries in your lockfile.</p>
+</section>
+<section id="dependency-isolation" class="level2">
+<h2 class="anchored" data-anchor-id="dependency-isolation">Dependency Isolation</h2>
+<p>The other key piece to the puzzle is dependency <em>isolation</em>, which is the leakage problem from before. In an ideal world, the dependencies for your project should be “isolated”, meaning that they’re only installed in your <em>project</em> environment (the R project, the virtualenv, etc.) and <em>not</em> globally on your machine.</p>
+<p>Let’s take an example in R to see how dependency isolation works. Start by initializing a very simple R project by running the command below in a terminal.</p>
+<div class="sourceCode" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">mkdir</span> renv-test <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&amp;&amp;</span> <span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">\</span></span>
+<span id="cb4-2">  <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">cd</span> renv-test <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&amp;&amp;</span> <span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">\</span></span>
+<span id="cb4-3">  <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">echo</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"library(example)"</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;&gt;</span> test.R <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&amp;&amp;</span> <span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">\</span></span>
+<span id="cb4-4">  <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">Rscript</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-e</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"install.packages('renv', repos='http://cran.us.r-project.org'); renv::init()"</span> <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&amp;&amp;</span> <span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">\</span></span>
+<span id="cb4-5">  <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">Rscript</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-e</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"renv::install('mrkaye97/mrkaye97.github.io:posts/series/doing-data-science/2023-05-27-renv-dependency-management/example'); renv::snapshot()"</span> <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&amp;&amp;</span> <span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">\</span></span>
+<span id="cb4-6">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">cat</span> renv.lock</span></code></pre></div>
+<p>You should see some R output about installing packages, and then you should see something like this:</p>
+<div class="sourceCode" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb5-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">{</span></span>
+<span id="cb5-2">  <span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">"R"</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">:</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">{</span></span>
+<span id="cb5-3">    <span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">"Version"</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">:</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"4.1.2"</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">,</span></span>
+<span id="cb5-4">    <span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">"Repositories"</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">:</span> <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">[</span></span>
+<span id="cb5-5">      <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">{</span></span>
+<span id="cb5-6">        <span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">"Name"</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">:</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"CRAN"</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">,</span></span>
+<span id="cb5-7">        <span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">"URL"</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">:</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"https://cloud.r-project.org"</span></span>
+<span id="cb5-8">      <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">}</span></span>
+<span id="cb5-9">    <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">]</span></span>
+<span id="cb5-10">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">},</span></span>
+<span id="cb5-11">  <span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">"Packages"</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">:</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">{</span></span>
+<span id="cb5-12">    <span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">"example"</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">:</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">{</span></span>
+<span id="cb5-13">      <span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">"Package"</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">:</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"example"</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">,</span></span>
+<span id="cb5-14">      <span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">"Version"</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">:</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"0.1.0"</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">,</span></span>
+<span id="cb5-15">      <span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">"Source"</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">:</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"GitHub"</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">,</span></span>
+<span id="cb5-16">      <span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">"RemoteType"</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">:</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"github"</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">,</span></span>
+<span id="cb5-17">      <span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">"RemoteHost"</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">:</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"api.github.com"</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">,</span></span>
+<span id="cb5-18">      <span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">"RemoteUsername"</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">:</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"mrkaye97"</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">,</span></span>
+<span id="cb5-19">      <span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">"RemoteRepo"</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">:</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"mrkaye97.github.io"</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">,</span></span>
+<span id="cb5-20">      <span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">"RemoteSubdir"</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">:</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"posts/series/doing-data-science/2023-05-27-renv-dependency-management/example"</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">,</span></span>
+<span id="cb5-21">      <span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">"RemoteRef"</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">:</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"master"</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">,</span></span>
+<span id="cb5-22">      <span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">"RemoteSha"</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">:</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"a72bb805e175c77e7bb8a2f4fb11780b76807d4d"</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">,</span></span>
+<span id="cb5-23">      <span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">"Hash"</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">:</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"22d8e981dd94e2fab693636781631008"</span></span>
+<span id="cb5-24">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">},</span></span>
+<span id="cb5-25">    <span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">"renv"</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">:</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">{</span></span>
+<span id="cb5-26">      <span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">"Package"</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">:</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"renv"</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">,</span></span>
+<span id="cb5-27">      <span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">"Version"</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">:</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"0.17.3"</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">,</span></span>
+<span id="cb5-28">      <span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">"Source"</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">:</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Repository"</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">,</span></span>
+<span id="cb5-29">      <span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">"Repository"</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">:</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"CRAN"</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">,</span></span>
+<span id="cb5-30">      <span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">"Requirements"</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">:</span> <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">[</span></span>
+<span id="cb5-31">        <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"utils"</span></span>
+<span id="cb5-32">      <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">]</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">,</span></span>
+<span id="cb5-33">      <span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">"Hash"</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">:</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"4543b8cd233ae25c6aba8548be9e747e"</span></span>
+<span id="cb5-34">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">}</span></span>
+<span id="cb5-35">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">}</span></span>
+<span id="cb5-36"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">}</span></span></code></pre></div>
+<p>This last bit is the <code>renv</code> <em>lockfile</em>. It’s where all of the dependencies of your project are enumerated. Here, the project is trivial. We’re just installing <code>example</code>, which has no dependencies, so it’s the only thing (in addition to <code>renv</code> itself) that’s recorded in the lockfile. But this also generalizes to arbitrarily complicated projects and sets of dependencies. As you add more packages, the lockfile grows, but you can simply run <code>renv::restore()</code> to restore all of the dependencies for your project.</p>
+<p>Next, if you run the following, you should be able to use the package just fine:</p>
+<div class="sourceCode" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">Rscript</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-e</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"library(example); hello()"</span></span></code></pre></div>
+<p>And you’ll see:</p>
+<div class="sourceCode" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">[1]</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Hello, world!"</span></span></code></pre></div>
+<p>But then, try this:</p>
+<div class="sourceCode" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">cd</span> .. <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&amp;&amp;</span> <span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">\</span></span>
+<span id="cb8-2">  <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">Rscript</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-e</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"library(example); hello()"</span></span></code></pre></div>
+<p>Unless you have another package installed globally called <code>example</code> that does the same thing as my example package, you’ll see:</p>
+<div class="sourceCode" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1">Error <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">in</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(example) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">:</span> there is no package called ‘example’</span>
+<span id="cb9-2">Execution halted</span></code></pre></div>
+<p>But this time, this error is a feature, not a bug! This is an example of dependency isolation. When you’re inside of your <code>renv-test</code> project, you install the <code>example</code> package, record it in the lockfile, and can use it just fine. But as soon as you’re no longer inside of that project, this package is no longer available. This means that if you, for instance, start a new project that needs a different version of <code>example</code>, you don’t need to worry about this <code>renv-test</code> project being corrupted. The two projects are isolated from each other, so they can rely on separate sets of dependencies with no leakage from one to the other.</p>
+<div class="callout callout-style-simple callout-note no-icon">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-body-container">
+<p>As an aside, tools like <code>renv</code> and <code>pip</code> are also usually good at dependency <em>resolution</em>, meaning they can figure out which versions of the dependencies of the packages you want to use you should install in order to make sure that everything is compatible. If you’re interested, you can read about how <code>pip</code> does dependency resolution <a href="https://pip.pypa.io/en/stable/topics/dependency-resolution/">on their site</a>.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="other-resources" class="level2">
+<h2 class="anchored" data-anchor-id="other-resources">Other Resources</h2>
+<p>There are <em>tons</em> of amazing resources on managing dependencies. This is a problem that every software team needs to manage, so virtually every programming language will have at least one, if not many widely-used dependency management tools. Since this is such a common problem, there’s also a lot written (and spoken!) about it. A few resources I particularly like are <a href="https://www.youtube.com/watch?v=GwVx_pf2uz4&amp;t=6s&amp;ab_channel=PositPBC">David Aja’s RStudio::conf 2022 talk</a> about <code>renv</code> (which I was enthusiastically in the audience for!) and something he mentions, which is <a href="https://12factor.net/dependencies">The 12-Factor App</a>, which our team’s Head of Engineering recommended to me very soon after starting at CollegeVine.</p>
+</section>
+<section id="wrapping-up" class="level2">
+<h2 class="anchored" data-anchor-id="wrapping-up">Wrapping Up</h2>
+<p>David Aja’s talk on this topic was called “You Should Be Using <code>renv</code>,” and you should be. In the short run, it might feel like setting up the scaffolding for <code>renv</code> or <code>poetry</code> or whatever your tool of choice is adds too much overhead. But if you’re feeling that way, it’s important to keep in mind that it’s inevitable that you end up running into dependency issues, and it’ll be much harder to untangle them once you’re already in deep than it will be to build good habits from the get-go.</p>
+<p>You should be using <code>renv</code>.</p>
+
+
+</section>
+
+ ]]></description>
+  <category>data science</category>
+  <category>R</category>
+  <category>python</category>
+  <guid>https://www.matthewrkaye.com/posts/series/doing-data-science/2023-05-27-renv-dependency-management/renv-dependency-management.html</guid>
+  <pubDate>Sun, 28 May 2023 04:00:00 GMT</pubDate>
+</item>
 <item>
   <title>Pull Requests, Code Review, and The Art of Requesting Changes</title>
   <dc:creator>Matt Kaye</dc:creator>
@@ -2206,7 +2660,7 @@ font-style: inherit;">150</span></span>
 <span id="cb4-19">  )</span>
 <span id="cb4-20">})</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Test passed 🌈</code></pre>
+<pre><code>Test passed 🎊</code></pre>
 </div>
 </div>
 </section>
@@ -2596,7 +3050,7 @@ font-style: inherit;">10</span></span>
 <span id="cb11-26">  )</span>
 <span id="cb11-27">})</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Test passed 🥇</code></pre>
+<pre><code>Test passed 🥳</code></pre>
 </div>
 </div>
 </section>
@@ -2709,33 +3163,33 @@ font-style: inherit;">head</span>(features))</span></code></pre></div>
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: right;">5.012</td>
-<td style="text-align: right;">2.532</td>
+<td style="text-align: right;">6.609</td>
+<td style="text-align: right;">0.749</td>
 <td style="text-align: left;">TRUE</td>
 </tr>
 <tr class="even">
-<td style="text-align: right;">5.425</td>
-<td style="text-align: right;">5.014</td>
+<td style="text-align: right;">5.557</td>
+<td style="text-align: right;">2.572</td>
 <td style="text-align: left;">TRUE</td>
 </tr>
 <tr class="odd">
-<td style="text-align: right;">6.005</td>
-<td style="text-align: right;">1.897</td>
+<td style="text-align: right;">6.334</td>
+<td style="text-align: right;">1.066</td>
 <td style="text-align: left;">TRUE</td>
 </tr>
 <tr class="even">
-<td style="text-align: right;">5.092</td>
-<td style="text-align: right;">0.279</td>
+<td style="text-align: right;">5.913</td>
+<td style="text-align: right;">2.706</td>
 <td style="text-align: left;">TRUE</td>
 </tr>
 <tr class="odd">
-<td style="text-align: right;">3.881</td>
-<td style="text-align: right;">0.982</td>
+<td style="text-align: right;">6.371</td>
+<td style="text-align: right;">3.431</td>
 <td style="text-align: left;">TRUE</td>
 </tr>
 <tr class="even">
-<td style="text-align: right;">4.486</td>
-<td style="text-align: right;">0.859</td>
+<td style="text-align: right;">4.344</td>
+<td style="text-align: right;">1.518</td>
 <td style="text-align: left;">TRUE</td>
 </tr>
 </tbody>
@@ -2768,15 +3222,15 @@ font-style: inherit;">coef</span>(model))</span></code></pre></div>
 <tbody>
 <tr class="odd">
 <td style="text-align: left;">(Intercept)</td>
-<td style="text-align: right;">13.260</td>
+<td style="text-align: right;">17.452</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">sepal_length</td>
-<td style="text-align: right;">-1.686</td>
+<td style="text-align: right;">-1.927</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">petal_width</td>
-<td style="text-align: right;">-1.309</td>
+<td style="text-align: right;">-1.881</td>
 </tr>
 </tbody>
 </table>
@@ -2809,7 +3263,7 @@ font-style: inherit;">"Model accuracy is "</span>, accuracy, <span class="st" st
 background-color: null;
 font-style: inherit;">"%"</span>))</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Model accuracy is 87%</code></pre>
+<pre><code>Model accuracy is 91%</code></pre>
 </div>
 </div>
 <p>And that’s it – you have a simple retraining job. This is a very minimal example, but this general framework is very flexible and modular, and it makes up the foundation for how we write our retraining jobs at CollegeVine. You can plug and play all different kinds of feature engineering logic, logic to fetch raw data, metrics, etc. We also use <a href="https://mlflow.org/">MLFlow</a> for versioning models and tracking experiments, so our retraining jobs have lots of logging of artifacts, parameters, and metrics to our MLFlow instance.</p>
@@ -2972,7 +3426,7 @@ font-style: inherit;">"Out-of-sample accuracy is "</span>, accuracy, <span class
 background-color: null;
 font-style: inherit;">"%"</span>))</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Out-of-sample accuracy is 88%</code></pre>
+<pre><code>Out-of-sample accuracy is 76%</code></pre>
 </div>
 </div>
 </section>
@@ -4068,34 +4522,34 @@ font-style: inherit;">TRUE</span>)</span></code></pre></div>
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: left;">1</td>
-<td style="text-align: right;">32.4</td>
-<td style="text-align: right;">4</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: right;">18.7</td>
+<td style="text-align: right;">8</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">1</td>
-<td style="text-align: right;">19.2</td>
-<td style="text-align: right;">6</td>
-</tr>
-<tr class="odd">
 <td style="text-align: left;">0</td>
 <td style="text-align: right;">15.8</td>
 <td style="text-align: right;">8</td>
 </tr>
+<tr class="odd">
+<td style="text-align: left;">1</td>
+<td style="text-align: right;">21.4</td>
+<td style="text-align: right;">4</td>
+</tr>
 <tr class="even">
 <td style="text-align: left;">1</td>
-<td style="text-align: right;">22.8</td>
+<td style="text-align: right;">30.4</td>
 <td style="text-align: right;">4</td>
 </tr>
 <tr class="odd">
-<td style="text-align: left;">1</td>
-<td style="text-align: right;">22.8</td>
-<td style="text-align: right;">4</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: right;">19.2</td>
+<td style="text-align: right;">8</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">1</td>
-<td style="text-align: right;">18.1</td>
-<td style="text-align: right;">6</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: right;">16.4</td>
+<td style="text-align: right;">8</td>
 </tr>
 </tbody>
 </table>

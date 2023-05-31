@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.353">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Matt Kaye">
+<meta name="dcterms.date" content="2023-05-28">
+<meta name="description" content="Matt Kaye’s personal website.">
+
+<title>Matt Kaye - Dependency Management</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../../../">
+<link href="../../../../photos/favicon.png" rel="icon" type="image/png">
+<script src="../../../../site_libs/cookie-consent/cookie-consent.js"></script>
+<link href="../../../../site_libs/cookie-consent/cookie-consent.css" rel="stylesheet">
+<script src="../../../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-J4CH9BY1RY"></script>
+
+<script type="text/plain" cookie-consent="tracking">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-J4CH9BY1RY', { 'anonymize_ip': true});
+</script>
+
+<script type="text/javascript" charset="UTF-8">
+document.addEventListener('DOMContentLoaded', function () {
+cookieconsent.run({
+  "notice_banner_type":"simple",
+  "consent_type":"implied",
+  "palette":"light",
+  "language":"en",
+  "page_load_consent_levels":["strictly-necessary","functionality","tracking","targeting"],
+  "notice_banner_reject_button_hide":false,
+  "preferences_center_close_button_hide":false,
+  "website_name":""
+  });
+});
+</script> 
+  
+
+
+<link rel="stylesheet" href="../../../../styles.css">
+<meta property="og:title" content="Matt Kaye - Dependency Management">
+<meta property="og:description" content="You should be using poetry, or renv, or conda, or something similar">
+<meta property="og:site-name" content="Matt Kaye">
+<meta name="twitter:title" content="Matt Kaye - Dependency Management">
+<meta name="twitter:description" content="You should be using poetry, or renv, or conda, or something similar">
+<meta name="twitter:card" content="summary">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="../../../../index.html">
+    <span class="navbar-title">Matt Kaye</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-blog" role="button" data-bs-toggle="dropdown" aria-expanded="false" rel="" target="">
+ <span class="menu-text">Blog</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-blog">    
+        <li>
+    <a class="dropdown-item" href="../../../../posts.html" rel="" target="">
+ <span class="dropdown-text">Posts</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../../series.html" rel="" target="">
+ <span class="dropdown-text">Series</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="../../../../code.html" rel="" target="">
+ <span class="menu-text">Code</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-more" role="button" data-bs-toggle="dropdown" aria-expanded="false" rel="" target="">
+ <span class="menu-text">More</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-more">    
+        <li>
+    <a class="dropdown-item" href="../../../../my-three-favorite.html" rel="" target="">
+ <span class="dropdown-text">My three favorite</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../../stats-in-the-wild.html" rel="" target="">
+ <span class="dropdown-text">Statistics in the wild</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../../travel.html" rel="" target="">
+ <span class="dropdown-text">Going places</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../../blogroll.html" rel="" target="">
+ <span class="dropdown-text">Blogroll</span></a>
+  </li>  
+    </ul>
+  </li>
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="../../../../posts.xml" rel="" target=""><i class="bi bi-rss" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+</ul>
+            <div class="quarto-navbar-tools">
+</div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar"><div class="quarto-margin-header"><div class="margin-header-item">
+<style type="text/css">
+    #mc_embed_signup{background:#fff; clear:left; font:14px Helvetica,Arial,sans-serif;  width:100%;}
+</style>
+<div id="mc_embed_signup">
+    <form action="https://matthewrkaye.us18.list-manage.com/subscribe/post?u=ec09e4d843f1bd163969cd497&amp;id=57e1f0d88d&amp;f_id=00a914e7f0" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_self">
+        <div id="mc_embed_signup_scroll" {margin:0px;="" padding:0px;="" display:inline;}="">
+        <h2>Subscribe</h2>
+<div class="mc-field-group">
+
+    <input type="email" value="" name="EMAIL" class="required email" id="mce-EMAIL" placeholder="email address" required="">
+    <span id="mce-EMAIL-HELPERTEXT" class="helper_text"></span>
+</div>
+    <div id="mce-responses" class="clear foot">
+        <div class="response" id="mce-error-response" style="display:none"></div>
+        <div class="response" id="mce-success-response" style="display:none"></div>
+    </div>    <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+    <div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_ec09e4d843f1bd163969cd497_57e1f0d88d" tabindex="-1" value=""></div>
+        <div class="optionalParent">
+            <div class="clear foot">
+                <input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="button">
+            </div>
+        </div>
+    </div>
+</form>
+</div>
+</div></div>
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
+  <li><a href="#whats-the-problem" id="toc-whats-the-problem" class="nav-link" data-scroll-target="#whats-the-problem">What’s the Problem?</a></li>
+  <li><a href="#dependency-resolution" id="toc-dependency-resolution" class="nav-link" data-scroll-target="#dependency-resolution">Dependency Resolution</a></li>
+  <li><a href="#declaring-your-dependencies" id="toc-declaring-your-dependencies" class="nav-link" data-scroll-target="#declaring-your-dependencies">Declaring Your Dependencies</a></li>
+  <li><a href="#dependency-isolation" id="toc-dependency-isolation" class="nav-link" data-scroll-target="#dependency-isolation">Dependency Isolation</a></li>
+  <li><a href="#other-resources" id="toc-other-resources" class="nav-link" data-scroll-target="#other-resources">Other Resources</a></li>
+  <li><a href="#wrapping-up" id="toc-wrapping-up" class="nav-link" data-scroll-target="#wrapping-up">Wrapping Up</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Dependency Management</h1>
+<p class="subtitle lead">You should be using poetry, or renv, or conda, or something similar</p>
+  <div class="quarto-categories">
+    <div class="quarto-category">data science</div>
+    <div class="quarto-category">R</div>
+    <div class="quarto-category">python</div>
+  </div>
+  </div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Matt Kaye </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">May 28, 2023</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+</header>
+
+<div class="callout callout-style-simple callout-note no-icon">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-body-container">
+<p>This post is part of a series called <a href="https://matthewrkaye.com/series.html#the-missing-semester-of-your-ds-education">The Missing Semester of Your DS Education</a>.</p>
+</div>
+</div>
+</div>
+<section id="introduction" class="level2">
+<h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
+<p>When I was first learning to program, I’d face problems that would require (or at least were just made easier by using) library code. For instance, I learned about the Tidyverse the hard way my first summer in college when I was interning at a FinTech firm doing lots of data wrangling, because I had just finished spending the summer very hackily implementing <code>group_by</code> and <code>summarize</code> by hand using lots and lots of layers of nested for loops. That experience taught me an important lesson: I realized that thinking “Someone else must have solved this problem before” and then seeing what they’ve done is a very practical way to solve problems.</p>
+<p>And with that realization (that I could use libraries for data wrangling), I started writing lots of lines of code like this one:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"tidyverse"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>or the not-quite-equivalent Python:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install pandas</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>And as soon as I began doing that, I started running into one of the most common, if not <em>the</em> most common, source of headaches for new programmers: Dependency conflicts. I was getting errors like these:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="sc">&gt;</span> Error<span class="sc">:</span> package or namespace load failed <span class="cf">for</span> ‘foo’ <span class="cf">in</span> <span class="fu">loadNamespace</span>(j <span class="ot">&lt;-</span> i[[1L]], </span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="sc">&gt;</span> <span class="fu">c</span>(lib.loc, <span class="fu">.libPaths</span>()), <span class="at">versionCheck =</span> vI[[j]])<span class="sc">:</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    namespace ‘bar’ <span class="fl">0.6</span><span class="dv">-1</span> is being loaded, but <span class="sc">&gt;=</span> <span class="fl">0.8</span> is required</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="whats-the-problem" class="level2">
+<h2 class="anchored" data-anchor-id="whats-the-problem">What’s the Problem?</h2>
+<p>At the time, I saw these types of errors and was frustrated. I didn’t understand them – why is a package requiring a specific version of another package? And I also thought there was a quick fix: I’d just install the required version of the dependency and everything would work again.</p>
+<p>Until I inevitably ran into the same problem again soon after, while trying to install some other dependency.</p>
+<p>At its core, I was experiencing my first foray into what might be considered a semi-pro version of <a href="https://en.wikipedia.org/wiki/Dependency_hell">dependency hell</a>. I thought I could “solve” my problem of incompatible dependencies with duct tape – installing the correct version in order to fix the immediate error – but that doesn’t actually work in practice, since the same issue is bound to come up again with another version of a different library, or in a different project, or on another day.</p>
+</section>
+<section id="dependency-resolution" class="level2">
+<h2 class="anchored" data-anchor-id="dependency-resolution">Dependency Resolution</h2>
+<p>In practice, this is a <em>dependency management</em> problem. And the basic story goes as follows.</p>
+<p>You start on your programming journey, and you want to use some great library – take <code>dplyr</code>, for example – for some of your work. So you <code>install.packages("dplyr")</code> and it installs the most recent version. Then you decide you’re interested in working with spatial data, so you install <code>sf</code> with <code>install.packages("sf")</code>. Next, you realize you need to work with Census data (what else are you going to be making maps of, after all?), so you <code>install.packages("tidycensus")</code> and with those three packages, you do your project.</p>
+<p>But then next week you have a homework assignment, which, entirely hypothetically, requires you to install some niche package like <code>rethinking</code>, so, of course, you <code>install.packages("rethinking")</code> and you do your homework.</p>
+<p>And then later that night, you get curious about seeing what the Elon Jet Tracker has been up to on Twitter, and so you install <code>rtweet</code>: <code>install.packages("rtweet")</code>, but this time, you get one of the errors above about a namespace clash.</p>
+<p>And so now, you’re at a block in the road. You can either upgrade or downgrade the dependency that’s clashing and risk one of your <em>other</em> projects breaking, or you can try to get around the problem another way, such as using an old version of <code>rtweet</code> or not using <code>rtweet</code> at all.</p>
+<p>This is the point at which former you – and former me – should have been thinking “someone must have solved this problem.”</p>
+</section>
+<section id="declaring-your-dependencies" class="level2">
+<h2 class="anchored" data-anchor-id="declaring-your-dependencies">Declaring Your Dependencies</h2>
+<p>The root cause of the errors in situations like these is that we have a dependency leakage problem. In the example I gave above, there were three separate “projects”: Your Census data analysis, your homework, and your keeping tabs on Elon’s jet. Those three projects don’t need to know about each other, and it’s actually a <em>problem</em> that they <em>do</em>. The issue is that in using <code>install.packages("...")</code> (or <code>pip install ...</code>) everywhere, you’re installing all of these packages <em>globally</em> on your machine. This means that <em>every</em> project you’re working on needs to use the <em>same</em> dependencies, even when the projects are separate.</p>
+<p>Above, I proposed the solution to this problem that I used to use, which was to just install the version of the package that was needed by the package I was trying to install, and continue on until I was inevitably frustrated by the issue once again, generally sooner rather than later. But there’s a battle-hardened way of solving this problem: Declaring your dependencies, and using a dependency isolation tool.</p>
+<p>In R, there’s the great <a href="https://rstudio.github.io/renv/articles/renv.html">renv</a> for this. In Python, I personally like <a href="https://python-poetry.org/">Poetry</a>, but <a href="https://docs.conda.io/en/latest/">Conda</a>, <a href="https://pipenv.pypa.io/en/latest/">pipenv</a>, or just a plain old <a href="https://docs.python.org/3/library/venv.html">virtualenv</a> would work just fine too. The key is that you want to be declaring the dependencies that your project needs in some kind of file (such as an <code>DESCRIPTION</code> file in R, or a <code>pyproject.toml</code> or a <code>requirements.txt</code> in Python, or a <code>Gemfile</code> in Ruby, and so on), and then preferably having a dependency manager like <code>renv</code> or <code>poetry</code> resolve those dependencies and save the result into a <em>lockfile</em>, like a <code>poetry.lock</code> or an <code>renv.lock</code>. Then, when you want to work on your project, or homework, or whatever, you restore the dependencies as they’re recorded in that lockfile. This means that whenever you want to run a project, you know exactly what versions of every dependency need to be installed. And at the same time, if you want to add a new dependency, your dependency manager can do its best to resolve conflicts between that new dependency and all of the other libraries in your lockfile.</p>
+</section>
+<section id="dependency-isolation" class="level2">
+<h2 class="anchored" data-anchor-id="dependency-isolation">Dependency Isolation</h2>
+<p>The other key piece to the puzzle is dependency <em>isolation</em>, which is the leakage problem from before. In an ideal world, the dependencies for your project should be “isolated”, meaning that they’re only installed in your <em>project</em> environment (the R project, the virtualenv, etc.) and <em>not</em> globally on your machine.</p>
+<p>Let’s take an example in R to see how dependency isolation works. Start by initializing a very simple R project by running the command below in a terminal.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> renv-test <span class="kw">&amp;&amp;</span> <span class="dt">\</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="bu">cd</span> renv-test <span class="kw">&amp;&amp;</span> <span class="dt">\</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="bu">echo</span> <span class="st">"library(example)"</span> <span class="op">&gt;&gt;</span> test.R <span class="kw">&amp;&amp;</span> <span class="dt">\</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="ex">Rscript</span> <span class="at">-e</span> <span class="st">"install.packages('renv', repos='http://cran.us.r-project.org'); renv::init()"</span> <span class="kw">&amp;&amp;</span> <span class="dt">\</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="ex">Rscript</span> <span class="at">-e</span> <span class="st">"renv::install('mrkaye97/mrkaye97.github.io:posts/series/doing-data-science/2023-05-27-renv-dependency-management/example'); renv::snapshot()"</span> <span class="kw">&amp;&amp;</span> <span class="dt">\</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cat</span> renv.lock</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>You should see some R output about installing packages, and then you should see something like this:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"R"</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"Version"</span><span class="fu">:</span> <span class="st">"4.1.2"</span><span class="fu">,</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"Repositories"</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>      <span class="fu">{</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"Name"</span><span class="fu">:</span> <span class="st">"CRAN"</span><span class="fu">,</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"URL"</span><span class="fu">:</span> <span class="st">"https://cloud.r-project.org"</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>      <span class="fu">}</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    <span class="ot">]</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">},</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"Packages"</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"example"</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"Package"</span><span class="fu">:</span> <span class="st">"example"</span><span class="fu">,</span></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"Version"</span><span class="fu">:</span> <span class="st">"0.1.0"</span><span class="fu">,</span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"Source"</span><span class="fu">:</span> <span class="st">"GitHub"</span><span class="fu">,</span></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"RemoteType"</span><span class="fu">:</span> <span class="st">"github"</span><span class="fu">,</span></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"RemoteHost"</span><span class="fu">:</span> <span class="st">"api.github.com"</span><span class="fu">,</span></span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"RemoteUsername"</span><span class="fu">:</span> <span class="st">"mrkaye97"</span><span class="fu">,</span></span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"RemoteRepo"</span><span class="fu">:</span> <span class="st">"mrkaye97.github.io"</span><span class="fu">,</span></span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"RemoteSubdir"</span><span class="fu">:</span> <span class="st">"posts/series/doing-data-science/2023-05-27-renv-dependency-management/example"</span><span class="fu">,</span></span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"RemoteRef"</span><span class="fu">:</span> <span class="st">"master"</span><span class="fu">,</span></span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"RemoteSha"</span><span class="fu">:</span> <span class="st">"a72bb805e175c77e7bb8a2f4fb11780b76807d4d"</span><span class="fu">,</span></span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"Hash"</span><span class="fu">:</span> <span class="st">"22d8e981dd94e2fab693636781631008"</span></span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>    <span class="fu">},</span></span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"renv"</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"Package"</span><span class="fu">:</span> <span class="st">"renv"</span><span class="fu">,</span></span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"Version"</span><span class="fu">:</span> <span class="st">"0.17.3"</span><span class="fu">,</span></span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"Source"</span><span class="fu">:</span> <span class="st">"Repository"</span><span class="fu">,</span></span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"Repository"</span><span class="fu">:</span> <span class="st">"CRAN"</span><span class="fu">,</span></span>
+<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"Requirements"</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a>        <span class="st">"utils"</span></span>
+<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a>      <span class="ot">]</span><span class="fu">,</span></span>
+<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"Hash"</span><span class="fu">:</span> <span class="st">"4543b8cd233ae25c6aba8548be9e747e"</span></span>
+<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
+<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>This last bit is the <code>renv</code> <em>lockfile</em>. It’s where all of the dependencies of your project are enumerated. Here, the project is trivial. We’re just installing <code>example</code>, which has no dependencies, so it’s the only thing (in addition to <code>renv</code> itself) that’s recorded in the lockfile. But this also generalizes to arbitrarily complicated projects and sets of dependencies. As you add more packages, the lockfile grows, but you can simply run <code>renv::restore()</code> to restore all of the dependencies for your project.</p>
+<p>Next, if you run the following, you should be able to use the package just fine:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ex">Rscript</span> <span class="at">-e</span> <span class="st">"library(example); hello()"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>And you’ll see:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="ex">[1]</span> <span class="st">"Hello, world!"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>But then, try this:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> .. <span class="kw">&amp;&amp;</span> <span class="dt">\</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="ex">Rscript</span> <span class="at">-e</span> <span class="st">"library(example); hello()"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Unless you have another package installed globally called <code>example</code> that does the same thing as my example package, you’ll see:</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>Error <span class="cf">in</span> <span class="fu">library</span>(example) <span class="sc">:</span> there is no package called ‘example’</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>Execution halted</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>But this time, this error is a feature, not a bug! This is an example of dependency isolation. When you’re inside of your <code>renv-test</code> project, you install the <code>example</code> package, record it in the lockfile, and can use it just fine. But as soon as you’re no longer inside of that project, this package is no longer available. This means that if you, for instance, start a new project that needs a different version of <code>example</code>, you don’t need to worry about this <code>renv-test</code> project being corrupted. The two projects are isolated from each other, so they can rely on separate sets of dependencies with no leakage from one to the other.</p>
+<div class="callout callout-style-simple callout-note no-icon">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-body-container">
+<p>As an aside, tools like <code>renv</code> and <code>pip</code> are also usually good at dependency <em>resolution</em>, meaning they can figure out which versions of the dependencies of the packages you want to use you should install in order to make sure that everything is compatible. If you’re interested, you can read about how <code>pip</code> does dependency resolution <a href="https://pip.pypa.io/en/stable/topics/dependency-resolution/">on their site</a>.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="other-resources" class="level2">
+<h2 class="anchored" data-anchor-id="other-resources">Other Resources</h2>
+<p>There are <em>tons</em> of amazing resources on managing dependencies. This is a problem that every software team needs to manage, so virtually every programming language will have at least one, if not many widely-used dependency management tools. Since this is such a common problem, there’s also a lot written (and spoken!) about it. A few resources I particularly like are <a href="https://www.youtube.com/watch?v=GwVx_pf2uz4&amp;t=6s&amp;ab_channel=PositPBC">David Aja’s RStudio::conf 2022 talk</a> about <code>renv</code> (which I was enthusiastically in the audience for!) and something he mentions, which is <a href="https://12factor.net/dependencies">The 12-Factor App</a>, which our team’s Head of Engineering recommended to me very soon after starting at CollegeVine.</p>
+</section>
+<section id="wrapping-up" class="level2">
+<h2 class="anchored" data-anchor-id="wrapping-up">Wrapping Up</h2>
+<p>David Aja’s talk on this topic was called “You Should Be Using <code>renv</code>,” and you should be. In the short run, it might feel like setting up the scaffolding for <code>renv</code> or <code>poetry</code> or whatever your tool of choice is adds too much overhead. But if you’re feeling that way, it’s important to keep in mind that it’s inevitable that you end up running into dependency issues, and it’ll be much harder to untangle them once you’re already in deep than it will be to build good habits from the get-go.</p>
+<p>You should be using <code>renv</code>.</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Handle positioning of the toggle
+      window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+      const annoteTargets = window.document.querySelectorAll('.code-annotation-anchor');
+      for (let i=0; i<annoteTargets.length; i++) {
+        const annoteTarget = annoteTargets[i];
+        const targetCell = annoteTarget.getAttribute("data-target-cell");
+        const targetAnnotation = annoteTarget.getAttribute("data-target-annotation");
+        const contentFn = () => {
+          const content = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          if (content) {
+            const tipContent = content.cloneNode(true);
+            tipContent.classList.add("code-annotation-tip-content");
+            return tipContent.outerHTML;
+          }
+        }
+        const config = {
+          allowHTML: true,
+          content: contentFn,
+          onShow: (instance) => {
+            selectCodeLines(instance.reference);
+            instance.reference.classList.add('code-annotation-active');
+            window.tippy.hideAll();
+          },
+          onHide: (instance) => {
+            unselectCodeLines();
+            instance.reference.classList.remove('code-annotation-active');
+          },
+          maxWidth: 300,
+          delay: [50, 0],
+          duration: [200, 0],
+          offset: [5, 10],
+          arrow: true,
+          appendTo: function(el) {
+            return el.parentElement.parentElement.parentElement;
+          },
+          interactive: true,
+          interactiveBorder: 10,
+          theme: 'quarto',
+          placement: 'right',
+          popperOptions: {
+            modifiers: [
+            {
+              name: 'flip',
+              options: {
+                flipVariations: false, // true by default
+                allowedAutoPlacements: ['right'],
+                fallbackPlacements: ['right', 'top', 'top-start', 'top-end'],
+              },
+            },
+            {
+              name: 'preventOverflow',
+              options: {
+                mainAxis: false,
+                altAxis: false
+              }
+            }
+            ]        
+          }      
+        };
+        window.tippy(annoteTarget, config); 
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<script src="https://utteranc.es/client.js" repo="mrkaye97/mrkaye97.github.io" issue-term="pathname" theme="github-light" crossorigin="anonymous" async="">
+</script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left"> Matt Kaye, 2023<br></div>   
+    <div class="nav-footer-center"><div class="cookie-consent-footer"><a href="#" id="open_preferences_center">Cookie Preferences</a></div></div>
+    <div class="nav-footer-right">Built with <a href="https://quarto.org/">Quarto</a> and ❤<br></div>
+  </div>
+</footer>
+
+
+
+</body></html>
