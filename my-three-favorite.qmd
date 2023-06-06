@@ -6,10 +6,10 @@ toc: false
 *   **ALGORITHMS:** [Bogo Sort](https://en.wikipedia.org/wiki/Bogosort), [Logistic Regression](https://en.wikipedia.org/wiki/Logistic_regression), [Metropolis-Hastings](https://en.wikipedia.org/wiki/Metropolis%E2%80%93Hastings_algorithm)
 *   **ARTISTS (Musical, According to Spotify):** Bad Bunny, Imagine Dragons, Taylor Swift
 *   **AUTHORS:** Fredrik Backman, Khaled Hosseini, Sally Rooney
-*   **BEERS:** [Heady Topper](https://untappd.com/b/the-alchemist-heady-topper/4691) -- _The Alchemist_ , [King Sue](https://untappd.com/b/toppling-goliath-brewing-co-king-sue/594015) -- _Toppling Goliath_, [Very Green](https://untappd.com/b/tree-house-brewing-company-very-green/689944) -- _Tree House_
+*   **BEERS:** [Heady Topper](https://untappd.com/b/the-alchemist-heady-topper/4691), [King Sue](https://untappd.com/b/toppling-goliath-brewing-co-king-sue/594015), [Very Green](https://untappd.com/b/tree-house-brewing-company-very-green/689944)
 *   **BOOKS (Fiction):** [_The Kite Runner_](https://app.thestorygraph.com/books/6c6726eb-8580-4be7-ab60-5ccd073d7ae5), [_Neverwhere_](https://app.thestorygraph.com/books/148a1a01-1f5f-440e-8239-f641afa637e0), [_A Storm of Swords_](https://app.thestorygraph.com/books/ff263f0f-121e-41d2-b2ba-b261fc974cc3)
 *   **BOOKS (Non-Fiction):** [_Algorithms to Live By_](https://app.thestorygraph.com/books/b5d084fb-6417-4803-8a47-da827d3d7270), [_The Signal and the Noise_](https://app.thestorygraph.com/books/b771dbda-1528-4886-8814-b530b3a07431), [_Factfulness_](https://app.thestorygraph.com/books/dedebd43-d2f7-4f9e-8ee3-b73671df1311)
-*   **CITIES (American):** Boston, New York City, San Diego
+*   **CITIES (American):** Bozeman, Cambridge, New York City
 *   **CITIES (European):** Barcelona, Budapest, Stockholm
 *   **CITIES (Other):** Medellín, Oaxaca, Vancouver
 *   **COLLEGE COURSES:** Advanced Algorithms, Mathematical Structures, Price Theory
