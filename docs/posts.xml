@@ -10,7 +10,721 @@
 <atom:link href="https://www.matthewrkaye.com/posts.xml" rel="self" type="application/rss+xml"/>
 <description>Matt Kaye&#39;s personal website</description>
 <generator>quarto-1.3.353</generator>
-<lastBuildDate>Sun, 28 May 2023 04:00:00 GMT</lastBuildDate>
+<lastBuildDate>Tue, 06 Jun 2023 04:00:00 GMT</lastBuildDate>
+<item>
+  <title>A Gentle Introduction to Docker</title>
+  <dc:creator>Matt Kaye</dc:creator>
+  <link>https://www.matthewrkaye.com/posts/series/doing-data-science/2023-06-03-docker/docker.html</link>
+  <description><![CDATA[ 
+
+
+
+<div class="callout callout-style-simple callout-note no-icon">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-body-container">
+<p>This post is part of a series called <a href="https://matthewrkaye.com/series.html#the-missing-semester-of-your-ds-education">The Missing Semester of Your DS Education</a>.</p>
+</div>
+</div>
+</div>
+<section id="introduction" class="level2">
+<h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
+<p>If you’re doing data science work, it’s likely you’ll eventually come across a situation where you need to run your code somewhere else. Whether that “somewhere” is the machine of a teammate, an EC2 box, a pod in a Kubernetes cluster, a runner in your team’s CI/CD rig, on a Spark cluster, and so on depends greatly on the problem you’re solving. But the ultimate point is the same: Eventually, you’ll need to be able to package your code up, put it somewhere in the world other than your local machine, and have it run just like it has been for you.</p>
+</section>
+<section id="enter-docker" class="level2">
+<h2 class="anchored" data-anchor-id="enter-docker">Enter: Docker</h2>
+<p><a href="https://www.docker.com/">Docker</a> seems very complicated at first glance. And there’s a lot of jargon: Images, containers, volumes, and more, and that doesn’t even begin to cover the world of container orchestration: Docker-Compose, Kubernetes, and so on. But at its core, you can think of Docker as a little environment – not too unlike your local machine – that has a file system, configuration, etc. that’s packaged up into a magical box that you can run on any computer, anywhere. Or at least on computers that have Docker installed.</p>
+<p>It might be simplest to consider a small example.</p>
+<div class="callout callout-style-simple callout-note no-icon">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-body-container">
+<p>Note that to run the example that will follow, you’ll need to have Docker installed on your machine. All of the files necessary to run this example can be found <a href="https://github.com/mrkaye97/mrkaye97.github.io/posts/series/doing-data-science/2023-06-03-docker/docker-example">in my blog’s Github repo</a></p>
+<p>I’ll use R for the example I provide in this post, but note that the same principles apply if you’re doing your work in Python, or in any other programming language.</p>
+</div>
+</div>
+</div>
+<p>Let’s imagine we want to print “Hello from Docker!” from R. First, make a new directory called <code>docker-example</code> (or whatever you want to call it):</p>
+<div class="sourceCode" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">mkdir</span> docker-example <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&amp;&amp;</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">cd</span> docker-example</span></code></pre></div>
+<p>And then we might do something like the following:</p>
+<div class="sourceCode" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode dockerfile code-with-copy"><code class="sourceCode dockerfile"><span id="cb2-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">## Dockerfile</span></span>
+<span id="cb2-2"></span>
+<span id="cb2-3"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">FROM</span> rocker/r-ver:4.2.0</span>
+<span id="cb2-4"></span>
+<span id="cb2-5"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">CMD</span> [<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Rscript"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"-e"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"'Hello from Docker!'"</span>]</span></code></pre></div>
+<p>If you paste that into a file called <code>Dockerfile</code>, you can then run:</p>
+<div class="sourceCode" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">docker</span> build <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--tag</span> example .</span></code></pre></div>
+<p>Which will build the Docker image by running each command you’ve specified. Going line by line, those commands are:</p>
+<ol type="1">
+<li>Use the <code>rocker/r-ver:4.2.0</code> image as the <em>base</em> image. In Docker, base images are useful because they come with things (such as the R language) pre-installed, so you don’t need to install them yourself. <code>rocker/r-ver:4.2.0</code> ships with R version <code>4.2.0</code> pre-installed, which means you can run R as you would on your local.</li>
+<li>After declaring the base image, we specify a command to run when <code>docker run</code> is invoked. This command is simple – it just prints <code>Hello from Docker!</code>.</li>
+</ol>
+<p>Once the build has completed, you can:</p>
+<div class="sourceCode" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">docker</span> run example</span></code></pre></div>
+<p>and you should see:</p>
+<div class="sourceCode" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1">[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>] <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Hello from Docker!"</span></span></code></pre></div>
+<p>Tada 🎉! You just ran R in a Docker container. And since you have your code running in Docker, you could now run the same code on any other machine that supports Docker.</p>
+</section>
+<section id="more-complicated-builds" class="level2">
+<h2 class="anchored" data-anchor-id="more-complicated-builds">More Complicated Builds</h2>
+<p>Of course, this example was trivial. In the real world, our projects are much more complex. They have dependencies, they rely on environment variables, they have scripts that need to be run, and so on.</p>
+<section id="copying-files" class="level3">
+<h3 class="anchored" data-anchor-id="copying-files">Copying Files</h3>
+<p>Let’s start with running a script instead of running R from the command line as we have been.</p>
+<p>Create an R script called <code>example.R</code> that looks like this:</p>
+<div class="sourceCode" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><span class="do" style="color: #5E5E5E;
+background-color: null;
+font-style: italic;">## example.R</span></span>
+<span id="cb6-2"></span>
+<span id="cb6-3"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">print</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Hello from Docker!"</span>)</span></code></pre></div>
+<p>And then you can update the Dockerfile by adding a <code>COPY</code> command to copy the script into your image, as follows.</p>
+<div class="sourceCode" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode dockerfile code-with-copy"><code class="sourceCode dockerfile"><span id="cb7-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">## Dockerfile</span></span>
+<span id="cb7-2"></span>
+<span id="cb7-3"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">FROM</span> rocker/r-ver:4.2.0</span>
+<span id="cb7-4"></span>
+<span id="cb7-5"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">COPY</span> example.R example.R</span>
+<span id="cb7-6"></span>
+<span id="cb7-7"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">CMD</span> [<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Rscript"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"example.R"</span>]</span></code></pre></div>
+<p>The <code>COPY</code> command tells Docker that you want to take <code>example.R</code> and put it into your image at <code>/example.R</code>. You can also specify a file path in the image, but I’m just putting the files I copy in at the root.</p>
+<p>Finally, let’s build and run our Docker image again:</p>
+<div class="sourceCode" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">docker</span> build <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--tag</span> example .</span>
+<span id="cb8-2"></span>
+<span id="cb8-3"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">docker</span> run example</span></code></pre></div>
+<p>Amazing! You can see in the build logs that the <code>example.R</code> script was copied into the image:</p>
+<div class="sourceCode" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb9-1"> <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">=</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span> <span class="pp" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">[</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">2/3</span><span class="pp" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">]</span> COPY example.R example.R</span></code></pre></div>
+<p>and then running the image gives the same result as before:</p>
+<div class="sourceCode" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1">[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>] <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Hello from Docker!"</span></span></code></pre></div>
+</section>
+<section id="installing-dependencies" class="level3">
+<h3 class="anchored" data-anchor-id="installing-dependencies">Installing Dependencies</h3>
+<p>You’ll generally also need to install dependencies, which you can do using the <code>RUN</code> command. Let’s update the Dockerfile to install <code>glue</code>.</p>
+<div class="sourceCode" id="cb11" style="background: #f1f3f5;"><pre class="sourceCode dockerfile code-with-copy"><code class="sourceCode dockerfile"><span id="cb11-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">## Dockerfile</span></span>
+<span id="cb11-2"></span>
+<span id="cb11-3"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">FROM</span> rocker/r-ver:4.2.0</span>
+<span id="cb11-4"></span>
+<span id="cb11-5"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">COPY</span> example.R example.R</span>
+<span id="cb11-6"></span>
+<span id="cb11-7"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">RUN</span> <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">Rscript</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-e</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"install.packages('glue')"</span></span>
+<span id="cb11-8"></span>
+<span id="cb11-9"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">CMD</span> [<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Rscript"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"example.R"</span>]</span></code></pre></div>
+<p>Now, the third step in the build installs <code>glue</code>. And to show it works, we’ll use <code>glue</code> to do a bit of string interpolation, printing the R version that’s running from the <code>R_VERSION</code> environment variable. Update <code>example.R</code> as follows:</p>
+<div class="sourceCode" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><span class="do" style="color: #5E5E5E;
+background-color: null;
+font-style: italic;">## example.R</span></span>
+<span id="cb12-2"></span>
+<span id="cb12-3"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(glue)</span>
+<span id="cb12-4"></span>
+<span id="cb12-5"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">print</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">glue</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'Hello from Docker! I am running R version {Sys.getenv("R_VERSION")}'</span>))</span></code></pre></div>
+<p>Building and running again should give you some new output. First, you should see <code>glue</code> installing in the build logs:</p>
+<div class="sourceCode" id="cb13" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb13-1"> <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">=</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span> <span class="pp" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">[</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">3/3</span><span class="pp" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">]</span> RUN Rscript <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-e</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"install.packages('glue')"</span></span></code></pre></div>
+<p>And once you run the image, you should see:</p>
+<div class="sourceCode" id="cb14" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1">Hello from Docker<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">!</span> I am running R version <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">4</span>.<span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2.0</span>                                                                  </span></code></pre></div>
+<p>Woohoo! 🥳🥳</p>
+</section>
+<section id="using-renv" class="level3">
+<h3 class="anchored" data-anchor-id="using-renv">Using renv</h3>
+<p>But as I wrote about <a href="https://matthewrkaye.com/posts/series/doing-data-science/2023-05-27-renv-dependency-management/renv-dependency-management.html">in my last post</a>, having global dependency installs is usually a bad idea. So we probably don’t want to have an <code>install.packages()</code> as a <code>RUN</code> step in the Dockerfile. Instead, let’s use <code>renv</code> to manage our dependencies.</p>
+<p>From the command line, run:</p>
+<div class="sourceCode" id="cb15" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb15-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">Rscript</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-e</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"renv::init()"</span></span></code></pre></div>
+<p>Since you already are using <code>glue</code> in your project, this will generate a lockfile that looks something like this:</p>
+<div class="sourceCode" id="cb16" style="background: #f1f3f5;"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb16-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">{</span></span>
+<span id="cb16-2">  <span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">"R"</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">:</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">{</span></span>
+<span id="cb16-3">    <span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">"Version"</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">:</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"4.2.0"</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">,</span></span>
+<span id="cb16-4">    <span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">"Repositories"</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">:</span> <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">[</span></span>
+<span id="cb16-5">      <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">{</span></span>
+<span id="cb16-6">        <span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">"Name"</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">:</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"CRAN"</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">,</span></span>
+<span id="cb16-7">        <span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">"URL"</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">:</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"https://cloud.r-project.org"</span></span>
+<span id="cb16-8">      <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">}</span></span>
+<span id="cb16-9">    <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">]</span></span>
+<span id="cb16-10">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">},</span></span>
+<span id="cb16-11">  <span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">"Packages"</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">:</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">{</span></span>
+<span id="cb16-12">    <span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">"glue"</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">:</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">{</span></span>
+<span id="cb16-13">      <span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">"Package"</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">:</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"glue"</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">,</span></span>
+<span id="cb16-14">      <span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">"Version"</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">:</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"1.6.2"</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">,</span></span>
+<span id="cb16-15">      <span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">"Source"</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">:</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Repository"</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">,</span></span>
+<span id="cb16-16">      <span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">"Repository"</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">:</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"CRAN"</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">,</span></span>
+<span id="cb16-17">      <span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">"Requirements"</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">:</span> <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">[</span></span>
+<span id="cb16-18">        <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"R"</span><span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">,</span></span>
+<span id="cb16-19">        <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"methods"</span></span>
+<span id="cb16-20">      <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">]</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">,</span></span>
+<span id="cb16-21">      <span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">"Hash"</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">:</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"4f2596dfb05dac67b9dc558e5c6fba2e"</span></span>
+<span id="cb16-22">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">},</span></span>
+<span id="cb16-23">    <span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">"renv"</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">:</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">{</span></span>
+<span id="cb16-24">      <span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">"Package"</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">:</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"renv"</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">,</span></span>
+<span id="cb16-25">      <span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">"Version"</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">:</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"0.17.3"</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">,</span></span>
+<span id="cb16-26">      <span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">"Source"</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">:</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Repository"</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">,</span></span>
+<span id="cb16-27">      <span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">"Repository"</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">:</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"CRAN"</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">,</span></span>
+<span id="cb16-28">      <span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">"Requirements"</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">:</span> <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">[</span></span>
+<span id="cb16-29">        <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"utils"</span></span>
+<span id="cb16-30">      <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">]</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">,</span></span>
+<span id="cb16-31">      <span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">"Hash"</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">:</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"4543b8cd233ae25c6aba8548be9e747e"</span></span>
+<span id="cb16-32">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">}</span></span>
+<span id="cb16-33">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">}</span></span>
+<span id="cb16-34"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">}</span></span></code></pre></div>
+<div class="callout callout-style-simple callout-warning no-icon">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-body-container">
+<p>It’s important to keep the version of R you’re running in your Docker containers in sync with what you have on local. I’m using <code>4.2.0</code> in my Docker image, which I defined with <code>FROM rocker/r-ver:4.2.0</code>, and that version is the same version that’s recorded in my <code>renv.lock</code> file. In Python, you might use a tool like <code>pyenv</code> for managing Python versions.</p>
+</div>
+</div>
+</div>
+<p>Now that we have <code>renv</code> set up, we can update the Dockerfile a bit more:</p>
+<div class="sourceCode" id="cb17" style="background: #f1f3f5;"><pre class="sourceCode dockerfile code-with-copy"><code class="sourceCode dockerfile"><span id="cb17-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">## Dockerfile</span></span>
+<span id="cb17-2"></span>
+<span id="cb17-3"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">FROM</span> rocker/r-ver:4.2.0</span>
+<span id="cb17-4"></span>
+<span id="cb17-5"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">COPY</span> example.R example.R</span>
+<span id="cb17-6"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">COPY</span> renv /renv</span>
+<span id="cb17-7"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">COPY</span> .Rprofile .Rprofile</span>
+<span id="cb17-8"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">COPY</span> renv.lock renv.lock</span>
+<span id="cb17-9"></span>
+<span id="cb17-10"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">RUN</span> <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">Rscript</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-e</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"renv::restore()"</span></span>
+<span id="cb17-11"></span>
+<span id="cb17-12"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">CMD</span> [<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Rscript"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"example.R"</span>]</span></code></pre></div>
+<p>Now, we’re copying all of the <code>renv</code> scaffolding into the image. And instead of running <code>install.packages(...)</code>, we’ve replaced that line with <code>renv::restore()</code> which will look at the lockfile and install packages as they’re defined. Rebuilding and running the image again will give you the same result as before.</p>
+<p>Now that we have a script running in Docker and are using <code>renv</code> to declare and install dependencies, let’s move on to…</p>
+</section>
+<section id="environment-variables" class="level3">
+<h3 class="anchored" data-anchor-id="environment-variables">Environment Variables</h3>
+<p>Sometimes we need environment variables like a Github token or a database URL, either to install our dependencies or to run our code. Depending on when the variable will be used, we can either specify it at <em>build</em> time (as a build arg) or a <em>run</em> time. Generally, it’s a good idea to only specify build args that you really need at build time.</p>
+<section id="build-time-config" class="level4">
+<h4 class="anchored" data-anchor-id="build-time-config">Build Time Config</h4>
+<p>For instance, if your build requires downloading a package from a private Github repository (for which you need to have a <code>GITHUB_PAT</code> set), then you would specify your <code>GITHUB_PAT</code> as a build arg). Let’s try that:</p>
+<div class="sourceCode" id="cb18" style="background: #f1f3f5;"><pre class="sourceCode dockerfile code-with-copy"><code class="sourceCode dockerfile"><span id="cb18-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">## Dockerfile</span></span>
+<span id="cb18-2"></span>
+<span id="cb18-3"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">FROM</span> rocker/r-ver:4.2.0</span>
+<span id="cb18-4"></span>
+<span id="cb18-5"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">ARG</span> GITHUB_PAT</span>
+<span id="cb18-6"></span>
+<span id="cb18-7"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">## Note: don't actually do this</span></span>
+<span id="cb18-8"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">## It's just for the sake of example</span></span>
+<span id="cb18-9"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">RUN</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">echo</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">$GITHUB_PAT</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span></span>
+<span id="cb18-10"></span>
+<span id="cb18-11"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">COPY</span> example.R example.R</span>
+<span id="cb18-12"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">COPY</span> renv /renv</span>
+<span id="cb18-13"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">COPY</span> .Rprofile .Rprofile</span>
+<span id="cb18-14"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">COPY</span> renv.lock renv.lock</span>
+<span id="cb18-15"></span>
+<span id="cb18-16"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">RUN</span> <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">Rscript</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-e</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"renv::restore()"</span></span>
+<span id="cb18-17"></span>
+<span id="cb18-18"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">CMD</span> [<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Rscript"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"example.R"</span>]</span></code></pre></div>
+<p>Now, the second line adds a build arg using <code>ARG</code>. Next, run the build:</p>
+<div class="sourceCode" id="cb19" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb19-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">docker</span> build <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--tag</span> example <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--build-arg</span> GITHUB_PAT=foobar .</span></code></pre></div>
+<p>You should see the following in the logs:</p>
+<div class="sourceCode" id="cb20" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb20-1"> <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">=</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span> <span class="pp" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">[</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">2/7</span><span class="pp" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">]</span> RUN echo <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"foobar"</span> </span></code></pre></div>
+<p>This means that your variable <code>GITHUB_PAT</code> has been successfully set, and can be used at build time for whatever it’s needed for.</p>
+<div class="callout callout-style-simple callout-important no-icon">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-body-container">
+<p>This is just an example, but it’s important that you don’t expose secrets in your build like I’ve done here. If you’re using (e.g.) a token as a build arg, make sure it’s not printed in plain text to your logs.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="runtime-config" class="level4">
+<h4 class="anchored" data-anchor-id="runtime-config">Runtime Config</h4>
+<p>Other times, you want config to be available at container runtime. For instance, if you’re running a web app, you might not need to be able to connect to your production database when you’re building the image that houses your app. But you need to be able to connect when the container boots up. To achieve this, use <code>--env</code> (or <code>--env-file</code>). We’ll update our <code>example.R</code> a bit to show how this works.</p>
+<div class="sourceCode" id="cb21" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><span class="do" style="color: #5E5E5E;
+background-color: null;
+font-style: italic;">## example.R</span></span>
+<span id="cb21-2"></span>
+<span id="cb21-3"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(glue)</span>
+<span id="cb21-4"></span>
+<span id="cb21-5"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">print</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">glue</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'Github PAT: {Sys.getenv("GITHUB_PAT")}'</span>))</span>
+<span id="cb21-6"></span>
+<span id="cb21-7"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">print</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">glue</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'Database URL: {Sys.getenv("DATABASE_URL")}'</span>))</span>
+<span id="cb21-8"></span>
+<span id="cb21-9"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">print</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">glue</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'Hello from Docker! I am running R version {Sys.getenv("R_VERSION")}.'</span>))</span></code></pre></div>
+<p>And then, let’s rebuild:</p>
+<div class="sourceCode" id="cb22" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb22-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">docker</span> build <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--tag</span> example <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--build-arg</span> GITHUB_PAT=foobar .</span></code></pre></div>
+<p>and now we’ll run our image, but this time with the <code>--env</code> flag:</p>
+<div class="sourceCode" id="cb23" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb23-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">docker</span> run <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--env</span> DATABASE_URL=loremipsum example</span></code></pre></div>
+<p>This tells Docker that you want to pass the environment variable <code>DATABASE_URL=loremipsum</code> into the container running your <code>example</code> image when the container boots up.</p>
+<p>And after running, you’ll see something like this:</p>
+<div class="sourceCode" id="cb24" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1">Github PAT<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">:</span> </span>
+<span id="cb24-2">Database URL<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">:</span> loremipsum</span>
+<span id="cb24-3">Hello from Docker<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">!</span> I am running R version <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">4</span>.<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span>.<span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.</span></span></code></pre></div>
+<p>There are a few things to note here.</p>
+<ol type="1">
+<li>The <code>GITHUB_PAT</code> that you set as a build arg is no longer accessible at runtime. It’s only accessible at <em>build</em> time.</li>
+<li>The <code>DATABASE_URL</code> we provided with the <code>--env</code> flag is now accessible as an environment variable named <code>DATABASE_URL</code></li>
+</ol>
+<div class="callout callout-style-simple callout-note no-icon">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-body-container">
+<p>Very often, container orchestration platforms like Heroku, Digital Ocean, AWS Batch, etc. will allow you to specify environment variables via their CLI or UI, which they will then inject into your container for you when it boots up.</p>
+</div>
+</div>
+</div>
+</section>
+</section>
+</section>
+<section id="advanced-topics" class="level2">
+<h2 class="anchored" data-anchor-id="advanced-topics">Advanced Topics</h2>
+<p>This post is intended to be a gentle introduction to Docker, but there’s a lot that’s missing. I’d like to quickly address a couple more topics that have been helpful to me and our team as we’ve relied more and more heavily on Docker.</p>
+<section id="custom-base-images" class="level3">
+<h3 class="anchored" data-anchor-id="custom-base-images">Custom Base Images</h3>
+<p>You might have noticed that your builds take longer as they <em>do</em> more. For instance, the <code>glue</code> install, even though <code>glue</code> is extremely lightweight, takes a few seconds. If you have many dependencies (R dependencies, C dependencies, etc.), building an image for your project can get prohibitively slow. For us in the past, builds have taken over an hour just restoring the dependencies recorded in the lockfile.</p>
+<p>A convenient way around this is to install some “base” dependencies that you’ll update rarely and use often into a <em>base image</em>, which you then push to a repository like <a href="https://hub.docker.com/">Docker Hub</a> and then use as your base image in the <code>FROM ...</code> line of your Dockerfile for any particular project. This prevents you from needing to install the same, unchanged dependencies over and over again.</p>
+<p>We’ve had a lot of success using this strategy on a few particular fronts:</p>
+<ol type="1">
+<li>Making sure we’re using the same version of R everywhere is simple if we define the R version in one place with a <code>FROM rocker/r-ver:4.2.0</code> in our base image (which is called <code>collegevine/r-prod-base</code>), and then we use <code>FROM collegevine/r-prod-base</code> as the base image for all of our other Docker builds.</li>
+<li>Installing Linux dependencies, such as <code>curl</code>, <code>unzip</code>, etc. which we’re happy keeping on a single version can happen once in the base image, and then every downstream image can rely on those same dependencies.</li>
+<li>Installing CLIs like the AWS CLI, which again, really doesn’t need to happen on every build.</li>
+</ol>
+</section>
+<section id="ci-cd" class="level3">
+<h3 class="anchored" data-anchor-id="ci-cd">CI / CD</h3>
+<p>The other time-saving strategy we’ve greatly benefited from is aggressive caching R packages in our CI / CD process. <code>renv</code> has <a href="https://rstudio.github.io/renv/articles/ci.html">great docs on using it within a CI / CD rig</a> which I would highly recommend.</p>
+<p>At a high level, what we do is <code>renv::restore()</code> in the CI itself (before running the <code>docker build ...</code>), which installs all of the packages our project needs. Then we <code>COPY</code> the cache of packages into our image, so that they’re available <em>inside</em> of the image. This means we don’t need to reinstall every dependency on every build, and has probably sped up our image build times by 100x.</p>
+</section>
+</section>
+<section id="wrapping-up" class="level2">
+<h2 class="anchored" data-anchor-id="wrapping-up">Wrapping Up</h2>
+<p>I hope this post has demystified Docker a bit and helped clarify some of the basics of Docker and how it’s used. At the highest level, Docker lets you package up your code so that it can be run anywhere, whether that’s on your machine, on the machine of a coworker, in a CI/CD tool, on a cloud server like an EC2 box, or anywhere else. All you need to do is <code>build</code> and <code>push</code> your image!</p>
+
+
+</section>
+
+ ]]></description>
+  <category>R</category>
+  <category>data science</category>
+  <guid>https://www.matthewrkaye.com/posts/series/doing-data-science/2023-06-03-docker/docker.html</guid>
+  <pubDate>Tue, 06 Jun 2023 04:00:00 GMT</pubDate>
+</item>
 <item>
   <title>Dependency Management</title>
   <dc:creator>Matt Kaye</dc:creator>
@@ -2816,7 +3530,7 @@ font-style: inherit;">150</span></span>
 <span id="cb4-19">  )</span>
 <span id="cb4-20">})</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Test passed 🎊</code></pre>
+<pre><code>Test passed 😀</code></pre>
 </div>
 </div>
 </section>
@@ -3206,7 +3920,7 @@ font-style: inherit;">10</span></span>
 <span id="cb11-26">  )</span>
 <span id="cb11-27">})</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Test passed 🥳</code></pre>
+<pre><code>Test passed 🎊</code></pre>
 </div>
 </div>
 </section>
@@ -3319,33 +4033,33 @@ font-style: inherit;">head</span>(features))</span></code></pre></div>
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: right;">6.609</td>
-<td style="text-align: right;">0.749</td>
+<td style="text-align: right;">5.438</td>
+<td style="text-align: right;">2.641</td>
 <td style="text-align: left;">TRUE</td>
 </tr>
 <tr class="even">
-<td style="text-align: right;">5.557</td>
-<td style="text-align: right;">2.572</td>
+<td style="text-align: right;">4.095</td>
+<td style="text-align: right;">1.269</td>
 <td style="text-align: left;">TRUE</td>
 </tr>
 <tr class="odd">
-<td style="text-align: right;">6.334</td>
-<td style="text-align: right;">1.066</td>
+<td style="text-align: right;">4.388</td>
+<td style="text-align: right;">1.186</td>
 <td style="text-align: left;">TRUE</td>
 </tr>
 <tr class="even">
-<td style="text-align: right;">5.913</td>
-<td style="text-align: right;">2.706</td>
+<td style="text-align: right;">4.132</td>
+<td style="text-align: right;">2.594</td>
 <td style="text-align: left;">TRUE</td>
 </tr>
 <tr class="odd">
-<td style="text-align: right;">6.371</td>
-<td style="text-align: right;">3.431</td>
+<td style="text-align: right;">4.961</td>
+<td style="text-align: right;">4.974</td>
 <td style="text-align: left;">TRUE</td>
 </tr>
 <tr class="even">
-<td style="text-align: right;">4.344</td>
-<td style="text-align: right;">1.518</td>
+<td style="text-align: right;">6.482</td>
+<td style="text-align: right;">5.171</td>
 <td style="text-align: left;">TRUE</td>
 </tr>
 </tbody>
@@ -3378,15 +4092,15 @@ font-style: inherit;">coef</span>(model))</span></code></pre></div>
 <tbody>
 <tr class="odd">
 <td style="text-align: left;">(Intercept)</td>
-<td style="text-align: right;">17.452</td>
+<td style="text-align: right;">5.864</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">sepal_length</td>
-<td style="text-align: right;">-1.927</td>
+<td style="text-align: right;">-0.712</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">petal_width</td>
-<td style="text-align: right;">-1.881</td>
+<td style="text-align: right;">-0.602</td>
 </tr>
 </tbody>
 </table>
@@ -3419,7 +4133,7 @@ font-style: inherit;">"Model accuracy is "</span>, accuracy, <span class="st" st
 background-color: null;
 font-style: inherit;">"%"</span>))</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Model accuracy is 91%</code></pre>
+<pre><code>Model accuracy is 75%</code></pre>
 </div>
 </div>
 <p>And that’s it – you have a simple retraining job. This is a very minimal example, but this general framework is very flexible and modular, and it makes up the foundation for how we write our retraining jobs at CollegeVine. You can plug and play all different kinds of feature engineering logic, logic to fetch raw data, metrics, etc. We also use <a href="https://mlflow.org/">MLFlow</a> for versioning models and tracking experiments, so our retraining jobs have lots of logging of artifacts, parameters, and metrics to our MLFlow instance.</p>
@@ -3582,7 +4296,7 @@ font-style: inherit;">"Out-of-sample accuracy is "</span>, accuracy, <span class
 background-color: null;
 font-style: inherit;">"%"</span>))</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Out-of-sample accuracy is 76%</code></pre>
+<pre><code>Out-of-sample accuracy is 84%</code></pre>
 </div>
 </div>
 </section>
@@ -4733,33 +5447,33 @@ font-style: inherit;">TRUE</span>)</span></code></pre></div>
 <tbody>
 <tr class="odd">
 <td style="text-align: left;">0</td>
+<td style="text-align: right;">14.3</td>
+<td style="text-align: right;">8</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">0</td>
 <td style="text-align: right;">18.7</td>
 <td style="text-align: right;">8</td>
 </tr>
-<tr class="even">
-<td style="text-align: left;">0</td>
-<td style="text-align: right;">15.8</td>
-<td style="text-align: right;">8</td>
-</tr>
 <tr class="odd">
 <td style="text-align: left;">1</td>
-<td style="text-align: right;">21.4</td>
+<td style="text-align: right;">22.8</td>
 <td style="text-align: right;">4</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">1</td>
-<td style="text-align: right;">30.4</td>
+<td style="text-align: right;">22.8</td>
 <td style="text-align: right;">4</td>
 </tr>
 <tr class="odd">
-<td style="text-align: left;">0</td>
-<td style="text-align: right;">19.2</td>
-<td style="text-align: right;">8</td>
+<td style="text-align: left;">1</td>
+<td style="text-align: right;">24.4</td>
+<td style="text-align: right;">4</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">0</td>
-<td style="text-align: right;">16.4</td>
-<td style="text-align: right;">8</td>
+<td style="text-align: left;">1</td>
+<td style="text-align: right;">17.8</td>
+<td style="text-align: right;">6</td>
 </tr>
 </tbody>
 </table>
@@ -7327,789 +8041,6 @@ font-style: inherit;">head</span>(predictions)</span></code></pre></div>
   <category>R</category>
   <guid>https://www.matthewrkaye.com/posts/2021-02-07-what-s-new-in-slackr-2-1-0/index.html</guid>
   <pubDate>Sun, 07 Feb 2021 05:00:00 GMT</pubDate>
-</item>
-<item>
-  <title>A Gentle Introduction to Markov Chains and MCMC</title>
-  <dc:creator>Matt Kaye</dc:creator>
-  <link>https://www.matthewrkaye.com/posts/2021-01-13-a-gentle-introduction-to-markov-chains-and-mcmc/index.html</link>
-  <description><![CDATA[ 
-
-
-
-<section id="introduction" class="level1">
-<h1>Introduction</h1>
-<p>Every other Friday at work we have a meeting called All Hands. During the first half of All Hands a member of the team gives a presentation, which is split up into two pieces: A personal presentation – your favorite food, TV shows, books, etc. – and a mini-lesson, which can be about any topic of interest that’s unrelated to work. Yesterday it was my turn, and I gave my mini-lesson on Markov Chains and Markov Chain Monte Carlo. This post memorializes what I covered.</p>
-</section>
-<section id="markov-chains" class="level1">
-<h1>Markov Chains</h1>
-<p>First, what is a Markov Chain? It’s easiest to break it down into it’s component parts. A <strong>Markov Chain</strong> is a <em>chain</em>, or sequence of events, that follow the Markov Property. And the Markov Property is pretty intuitive: The <strong>Markov Property</strong> says that the next state in a sequence (chain) is only dependent on the current state. Statisticians would call this “memorylessness,” and we can write out the property in its true mathematical form below, where <img src="https://latex.codecogs.com/png.latex?X"> is a random variable and <img src="https://latex.codecogs.com/png.latex?x%5C_%7Bt%7D"> is the probability distribution that <img src="https://latex.codecogs.com/png.latex?X"> takes on at time <img src="https://latex.codecogs.com/png.latex?t">.</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0Ap(x_%7Bt+1%7D%20%7C%20x_%7Bt%7D,%20x_%7Bt-1%7D,%20x_%7Bt-2%7D,%20..%20x_%7B0%7D)%20=%20p(x_%7Bt+1%7D%20%7C%20x_%7Bt%7D)%0A"></p>
-<p>In plain English, all this definition is saying is that if you are following the Markov Property, then where you go next is only determined by where you are now, and how you got to where you are has no impact. At the end of my talk, one of my coworkers commented that this property is actually quite beautiful in a real-world sense, and I feel the same way. It certainly could have been the example of a guiding principle that I choose to follow that I used in my personal presentation.</p>
-<p>So, now that we know what a Markov Chain is, let’s walk through an example. The most commonly seen type of Markov Chain is called a <em>random walk</em>. Simply, a <strong>random walk</strong> is a Markov Chain where the next state is just determined by the current state plus some random noise. I’ve coded up an example below:</p>
-<div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><span class="do" style="color: #5E5E5E;
-background-color: null;
-font-style: italic;">## library(purrr)</span></span>
-<span id="cb1-2"><span class="do" style="color: #5E5E5E;
-background-color: null;
-font-style: italic;">## library(magrittr)</span></span>
-<span id="cb1-3"><span class="do" style="color: #5E5E5E;
-background-color: null;
-font-style: italic;">## library(ggplot2)</span></span>
-<span id="cb1-4"></span>
-<span id="cb1-5">randomly_walk <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="cf" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">function</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">.ix =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">c</span>(), <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">n_steps =</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">100</span>) {</span>
-<span id="cb1-6">  results <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">numeric</span>(n_steps)</span>
-<span id="cb1-7">  <span class="cf" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">for</span> (i <span class="cf" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">in</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span><span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">:</span>(n_steps<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">-1</span>)) {</span>
-<span id="cb1-8">    results[i <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span>] <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> results[i] <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">rnorm</span>(<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">0</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span>)</span>
-<span id="cb1-9">  }</span>
-<span id="cb1-10">  </span>
-<span id="cb1-11">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">return</span>(results)</span>
-<span id="cb1-12">}</span>
-<span id="cb1-13"></span>
-<span id="cb1-14">(</span>
-<span id="cb1-15">  random_walk <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">randomly_walk</span>() <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">%&gt;%</span></span>
-<span id="cb1-16">    <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">tibble</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">position =</span> .)</span>
-<span id="cb1-17">)</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 100 × 1
-   position
-      &lt;dbl&gt;
- 1   0     
- 2  -1.13  
- 3   1.52  
- 4  -0.0912
- 5  -0.348 
- 6  -1.66  
- 7  -0.884 
- 8  -0.491 
- 9   0.179 
-10  -0.812 
-# … with 90 more rows</code></pre>
-</div>
-</div>
-<p>That table shows a random walk with 100 steps, generated by adding standard normal noise to the position after each step. Let’s plot it and see what it looks like.</p>
-<div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1">random_walk <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">%&gt;%</span></span>
-<span id="cb3-2">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">rownames_to_column</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">var =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">'time'</span>) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">%&gt;%</span></span>
-<span id="cb3-3">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">mutate</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">time =</span> time <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">%&gt;%</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">as.numeric</span>()) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">%&gt;%</span></span>
-<span id="cb3-4">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">ggplot</span>(<span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">aes</span>(time, position)) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb3-5">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">geom_line</span>() <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb3-6">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">theme_minimal</span>()</span></code></pre></div>
-<div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="https://www.matthewrkaye.com/posts/2021-01-13-a-gentle-introduction-to-markov-chains-and-mcmc/static/rmarkdown-libsunnamed-chunk-3-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>Cool! The walk starts at 0, and then jumps around randomly a bunch until <img src="https://latex.codecogs.com/png.latex?t=100">. It’ll be more interesting once we simulate 20 random walks.</p>
-<div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1">n_steps <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">500</span></span>
-<span id="cb4-2">n_chains <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">20</span></span>
-<span id="cb4-3">twenty_walks <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">map</span>(</span>
-<span id="cb4-4">  <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span><span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">:</span>n_chains, </span>
-<span id="cb4-5">  randomly_walk,</span>
-<span id="cb4-6">  n_steps</span>
-<span id="cb4-7">) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">%&gt;%</span></span>
-<span id="cb4-8">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">tibble</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">position =</span> .) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">%&gt;%</span></span>
-<span id="cb4-9">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">unnest</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">cols =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">c</span>(position)) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">%&gt;%</span></span>
-<span id="cb4-10">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">mutate</span>(</span>
-<span id="cb4-11">    <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">time =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">rep</span>(<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span><span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">:</span>n_steps, n_chains),</span>
-<span id="cb4-12">    <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">walk =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">map</span>(<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span><span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">:</span>n_chains, rep, n_steps) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">%&gt;%</span> </span>
-<span id="cb4-13">      <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">unlist</span>() <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">%&gt;%</span> </span>
-<span id="cb4-14">      <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">as.factor</span>()</span>
-<span id="cb4-15">  )</span>
-<span id="cb4-16"></span>
-<span id="cb4-17">twenty_walks <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">%&gt;%</span></span>
-<span id="cb4-18">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">ggplot</span>() <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb4-19">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">aes</span>(time, position, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">color =</span> walk) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb4-20">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">geom_line</span>() <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb4-21">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">theme_minimal</span>() <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span> </span>
-<span id="cb4-22">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">theme</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">legend.position =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">'none'</span>)</span></code></pre></div>
-<div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="https://www.matthewrkaye.com/posts/2021-01-13-a-gentle-introduction-to-markov-chains-and-mcmc/static/rmarkdown-libsunnamed-chunk-4-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>So, what’s going on here? It basically looks how we’d expect. At any given time point, the mean position of the 20 is about zero, but the standard deviation of those positions goes up over time. Specifically, at any given time <img src="https://latex.codecogs.com/png.latex?t">, the standard deviation of the positions should be roughly equal to <img src="https://latex.codecogs.com/png.latex?%5Csqrt%20t">, because of how the variance is compounding. Remember, these random walks are Markov Chains because at every time <img src="https://latex.codecogs.com/png.latex?t">, I defined the position <img src="https://latex.codecogs.com/png.latex?y%5C_%7Bt+1%7D"> to be <img src="https://latex.codecogs.com/png.latex?y%5C_%7Bt%7D%20+%20%5Cmathcal%7BN%7D(0,%201)">, or the the next position is the current position plus a standard normal noise (i.e.&nbsp;zero-centered with unit variance).</p>
-<p>Cool, so now we have an idea of what a Markov Chain is and how a random walk is an example of one. Now, why do we care? What kinds of problems can we solve with Markov Chains? It turns out that one thing we can use them to do is to calculate intractable integrals. What does this mean? Well, remembering back to a calculus class once upon a time, we know if we have some function <img src="https://latex.codecogs.com/png.latex?f(x)%20=%202x">, we can integrate that function by following a one of a couple of rules. In this case, that rule is to raise the coefficient in front of the <img src="https://latex.codecogs.com/png.latex?x"> to turn it into a power, such that the new exponent equals the old one plus one, and the new coefficient equals the old one divided by the new exponent. For <img src="https://latex.codecogs.com/png.latex?f(x)">, we find <img src="https://latex.codecogs.com/png.latex?F(x)%20=%20%5Cint%20f(x)%20=%20x%5E%7B2%7D%20+%20c">, where <img src="https://latex.codecogs.com/png.latex?c"> is a constant. However, in many applications, such as Bayesian statistics, we run into functions of hundreds or thousands of parameters that are intractable to integrate. In other words, even really, really powerful calculators can’t integrate them: there are just too many parameters. So, we’re stuck. How do we integrate a function that even a super powerful calculator can’t? In steps Markov Chain Monte Carlo, coming to the rescue.</p>
-</section>
-<section id="markov-chain-monte-carlo" class="level1">
-<h1>Markov Chain Monte Carlo</h1>
-<p>It turns out that we can use Markov Chains to approximate the integral in cases where we can’t calculate it directly. This is an incredible powerful discovery, and one that we’ve only been able to really take advantage of in the past twenty or so years, as computing power has grown exponentially. So, how do we actually do it? Let’s frame it as a simple problem that’s isomorphic to the actual problem at hand.</p>
-<p>Imagine you are the ruler of an island kingdom, which has four islands. Island 1 has population 1, Island 2 has population 2, Island 3 has population 3, and Island 4 has population 4. And, imagine that you want to spend time on each island proportional to the percentage of the total population of your kingdom that it makes up. In other words, you want to spend 10% of your time on Island 1, and so on. But, you have a problem: You don’t know how to add. Imagine that the only mathematical operation you know how to do is divide. Can you figure out a way to spend your time how you want without being able to calculate the total population of your kingdom?</p>
-<p>Most likely, how you’d solve this problem isn’t immediately obvious, but there are a few brilliant algorithms that help us achieve our goal. One of them is proposed to you by two of your friends, Metropolis and Hastings. I’ve coded up their suggestion below:</p>
-<div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1">run_rwmh <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="cf" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">function</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">n_iters =</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1000</span>, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">island_populations =</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span><span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">:</span><span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">4</span>) {</span>
-<span id="cb5-2">  locations <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">numeric</span>(n_iters)</span>
-<span id="cb5-3">  </span>
-<span id="cb5-4">  <span class="do" style="color: #5E5E5E;
-background-color: null;
-font-style: italic;">## randomly choose an island to start on</span></span>
-<span id="cb5-5">  locations[<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span>] <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">sample</span>(island_populations, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span>)</span>
-<span id="cb5-6"></span>
-<span id="cb5-7">  <span class="cf" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">for</span> (i <span class="cf" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">in</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span><span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">:</span>(n_iters<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">-1</span>)) {</span>
-<span id="cb5-8">    </span>
-<span id="cb5-9">    <span class="do" style="color: #5E5E5E;
-background-color: null;
-font-style: italic;">## propose a new island to go to</span></span>
-<span id="cb5-10">    proposal_island <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">sample</span>(<span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">setdiff</span>(island_populations, locations[i]), <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span>) </span>
-<span id="cb5-11">    </span>
-<span id="cb5-12">    <span class="do" style="color: #5E5E5E;
-background-color: null;
-font-style: italic;">## if that island has more people, always go</span></span>
-<span id="cb5-13">    <span class="cf" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">if</span> (proposal_island <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">&gt;</span> locations[i]) {</span>
-<span id="cb5-14">      locations[i <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span>] <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> proposal_island</span>
-<span id="cb5-15">    } <span class="cf" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">else</span> {</span>
-<span id="cb5-16">      <span class="do" style="color: #5E5E5E;
-background-color: null;
-font-style: italic;">## if it has fewer people, flip a coin with probability</span></span>
-<span id="cb5-17">      <span class="do" style="color: #5E5E5E;
-background-color: null;
-font-style: italic;">##   proportional to the ratio of the populations to</span></span>
-<span id="cb5-18">      <span class="do" style="color: #5E5E5E;
-background-color: null;
-font-style: italic;">##   decide whether to go or stay</span></span>
-<span id="cb5-19">      acceptance_probability <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> proposal_island <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">/</span> locations[i]</span>
-<span id="cb5-20">      locations[i <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span>] <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> </span>
-<span id="cb5-21">        <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">sample</span>(</span>
-<span id="cb5-22">          <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">c</span>(proposal_island, locations[i]), <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span>, </span>
-<span id="cb5-23">          <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">prob =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">c</span>(acceptance_probability, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span> <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">-</span> acceptance_probability)</span>
-<span id="cb5-24">        )</span>
-<span id="cb5-25">    }</span>
-<span id="cb5-26">  }</span>
-<span id="cb5-27">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">return</span>(locations)</span>
-<span id="cb5-28">}</span></code></pre></div>
-</div>
-<p>Here’s the algorithm your friends propose:</p>
-<ol type="1">
-<li>Pick a random island to start on.</li>
-<li>On each day, randomly select a new island to go to (the <strong>proposal island</strong>).</li>
-<li>Do one of the following, depending on the populations of the islands:
-<ol type="1">
-<li>If the proposal island has more people than the current island, go to the proposal island.</li>
-<li>If it has fewer people, then flip a coin with probability equal to the proposal island’s population divided by the current island’s. If the coin comes up heads, go to the proposal island.</li>
-</ol></li>
-<li>Do it again a bunch of times.</li>
-</ol>
-<p>So, how does this algorithm perform? Let’s try it out!</p>
-<div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">run_rwmh</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">n_iters =</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">10</span>) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">%&gt;%</span></span>
-<span id="cb6-2">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">tibble</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">island =</span> .) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">%&gt;%</span></span>
-<span id="cb6-3">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">group_by</span>(island) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">%&gt;%</span></span>
-<span id="cb6-4">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">summarize</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">days_spent =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">n</span>(), <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">.groups =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">'drop'</span>) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">%&gt;%</span></span>
-<span id="cb6-5">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">mutate</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">day_proportion =</span> days_spent <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">/</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">sum</span>(days_spent))</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 4 × 3
-  island days_spent day_proportion
-   &lt;dbl&gt;      &lt;int&gt;          &lt;dbl&gt;
-1      1          1            0.1
-2      2          1            0.1
-3      3          3            0.3
-4      4          5            0.5</code></pre>
-</div>
-</div>
-<p>Unsurprisingly, with only 10 iterations the algorithm does not perform particularly well. But what about if we give it a lot more time? Let’s try 10,000 iterations.</p>
-<div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1">some_islands <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">run_rwmh</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">n_iters =</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">10000</span>) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">%&gt;%</span></span>
-<span id="cb8-2">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">tibble</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">island =</span> .) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">%&gt;%</span></span>
-<span id="cb8-3">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">group_by</span>(island) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">%&gt;%</span></span>
-<span id="cb8-4">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">summarize</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">days_spent =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">n</span>(), <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">.groups =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">'drop'</span>) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">%&gt;%</span></span>
-<span id="cb8-5">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">mutate</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">day_proportion =</span> days_spent <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">/</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">sum</span>(days_spent),</span>
-<span id="cb8-6">         <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">error_margin =</span> day_proportion <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">/</span> (island <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">/</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">sum</span>(island)) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">-</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span>)</span>
-<span id="cb8-7"></span>
-<span id="cb8-8">mean_error_margin <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">mean</span>(some_islands<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">$</span>error_margin)</span>
-<span id="cb8-9">sd_error_margin <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">sd</span>(some_islands<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">$</span>error_margin)</span>
-<span id="cb8-10">some_islands</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 4 × 4
-  island days_spent day_proportion error_margin
-   &lt;dbl&gt;      &lt;int&gt;          &lt;dbl&gt;        &lt;dbl&gt;
-1      1       1000          0.1        0      
-2      2       1958          0.196     -0.0210 
-3      3       3063          0.306      0.0210 
-4      4       3979          0.398     -0.00525</code></pre>
-</div>
-</div>
-<p>Much better! After 10,000 iterations, we’re spending almost the exact proportion of time on each island that we want to be, as evidenced by the tiny error margins. In addition, the standard deviation of the error margins is 0.01735, which is tiny. That’s awesome! But what about if the system is more complex? Like, what if we had 100 islands?</p>
-<div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1">more_islands <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">run_rwmh</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">n_iters =</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">10000</span>, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">island_populations =</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span><span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">:</span><span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">100</span>) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">%&gt;%</span></span>
-<span id="cb10-2">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">tibble</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">island =</span> .) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">%&gt;%</span></span>
-<span id="cb10-3">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">group_by</span>(island) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">%&gt;%</span></span>
-<span id="cb10-4">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">summarize</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">days_spent =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">n</span>(), <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">.groups =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">'drop'</span>) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">%&gt;%</span></span>
-<span id="cb10-5">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">mutate</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">day_proportion =</span> days_spent <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">/</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">sum</span>(days_spent),</span>
-<span id="cb10-6">         <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">error_margin =</span> day_proportion <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">/</span> (island <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">/</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">sum</span>(island)) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">-</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span>)</span>
-<span id="cb10-7"></span>
-<span id="cb10-8">mean_error_margin <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">mean</span>(more_islands<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">$</span>error_margin)</span>
-<span id="cb10-9">sd_error_margin <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">sd</span>(more_islands<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">$</span>error_margin)</span>
-<span id="cb10-10">more_islands</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 100 × 4
-   island days_spent day_proportion error_margin
-    &lt;dbl&gt;      &lt;int&gt;          &lt;dbl&gt;        &lt;dbl&gt;
- 1      1          1         0.0001      -0.495 
- 2      2          8         0.0008       1.02  
- 3      3          9         0.0009       0.515 
- 4      4         19         0.0019       1.40  
- 5      5          8         0.0008      -0.192 
- 6      6         13         0.0013       0.0942
- 7      7         14         0.0014       0.0100
- 8      8         11         0.0011      -0.306 
- 9      9         19         0.0019       0.0661
-10     10         28         0.0028       0.414 
-# … with 90 more rows</code></pre>
-</div>
-</div>
-<p>No problem! Even with the extra islands, the mean error margin is still zero, and the standard deviation of the error margins is 0.23184, which is also small, but not as small as the simpler system. It’s true that a more complex system (i.e.&nbsp;more islands) would mean that we need more iterations to converge in probability to the proportions we’re shooting for, but the algorithm will still work with enough time. Let’s try running it one more time on the complex system, but this time with a million iterations.</p>
-<div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1">more_iters <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">run_rwmh</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">n_iters =</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1000000</span>, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">island_populations =</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span><span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">:</span><span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">100</span>) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">%&gt;%</span></span>
-<span id="cb12-2">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">tibble</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">island =</span> .) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">%&gt;%</span></span>
-<span id="cb12-3">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">group_by</span>(island) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">%&gt;%</span></span>
-<span id="cb12-4">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">summarize</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">days_spent =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">n</span>(), <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">.groups =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">'drop'</span>) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">%&gt;%</span></span>
-<span id="cb12-5">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">mutate</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">day_proportion =</span> days_spent <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">/</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">sum</span>(days_spent),</span>
-<span id="cb12-6">         <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">error_margin =</span> day_proportion <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">/</span> (island <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">/</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">sum</span>(island)) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">-</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span>)</span>
-<span id="cb12-7"></span>
-<span id="cb12-8">mean_error_margin <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">mean</span>(more_iters<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">$</span>error_margin)</span>
-<span id="cb12-9">sd_error_margin <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">sd</span>(more_iters<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">$</span>error_margin)</span>
-<span id="cb12-10">more_iters</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 100 × 4
-   island days_spent day_proportion error_margin
-    &lt;dbl&gt;      &lt;int&gt;          &lt;dbl&gt;        &lt;dbl&gt;
- 1      1        199       0.000199      0.00495
- 2      2        432       0.000432      0.0908 
- 3      3        614       0.000614      0.0336 
- 4      4        726       0.000726     -0.0834 
- 5      5        985       0.000985     -0.00515
- 6      6       1157       0.00116      -0.0262 
- 7      7       1409       0.00141       0.0165 
- 8      8       1601       0.00160       0.0106 
- 9      9       1695       0.00170      -0.0489 
-10     10       1952       0.00195      -0.0142 
-# … with 90 more rows</code></pre>
-</div>
-</div>
-<p>Looks like that did the trick! The standard deviation of the error margins fell to 0.02015, just as we expected.</p>
-<p>This algorithm is called the Metropolis-Hastings Algorithm, and it’s one of many in the class of Markov Chain Monte Carlo algorithms. Some others are the Gibbs Sampler and Hamiltonian Monte Carlo, both of which are frequently used in Bayesian statistics for estimating the parameters of regression models with hundreds of thousands of parameters. In short, these algorithms allow us to solve problems that were literally impossible to solve only two decades ago or so, which is an amazing feat!</p>
-</section>
-<section id="recap" class="level1">
-<h1>Recap</h1>
-<ul>
-<li>Markov Chains are not that scary! They’re just a memoryless sequence of events, meaning that where you came from doesn’t impact where you go next.</li>
-<li>Markov Chain Monte Carlo algorithms like the Metropolis-Hastings can be quite simple, and let us solve impossibly hard problems.</li>
-</ul>
-
-
-</section>
-
- ]]></description>
-  <category>data science</category>
-  <guid>https://www.matthewrkaye.com/posts/2021-01-13-a-gentle-introduction-to-markov-chains-and-mcmc/index.html</guid>
-  <pubDate>Wed, 13 Jan 2021 05:00:00 GMT</pubDate>
 </item>
 </channel>
 </rss>

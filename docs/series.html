@@ -103,8 +103,7 @@ ul.task-list li input[type="checkbox"] {
 
     const options = {
       valueNames: ['listing-date','listing-title','listing-reading-time',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-title-sort'] }],
-      page: 5,
-    pagination: { item: "<li class='page-item'><a class='page page-link' href='#'></a></li>" },
+      
       searchColumns: ["listing-date","listing-title","listing-author"],
     };
 
@@ -360,15 +359,24 @@ Reading Time
 <span class="listing-reading-time">10 min</span>
 </td>
 </tr>
+<tr data-index="6" data-categories="R,data science" data-listing-date-sort="1686024000000" data-listing-file-modified-sort="1686090392940" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="12" data-listing-title-sort="A Gentle Introduction to Docker" data-listing-filename-sort="docker.qmd" onclick="href = this.querySelector('a').getAttribute('href');
+ if (href) { window.location=href ; return false; }">
+<td>
+<span class="listing-date">Jun 6, 2023</span>
+</td>
+<td>
+<a href="./posts/series/doing-data-science/2023-06-03-docker/docker.html" class="title listing-title">A Gentle Introduction to Docker</a>
+</td>
+<td>
+<span class="listing-reading-time">12 min</span>
+</td>
+</tr>
 </tbody>
 
 </table>
 <div class="listing-no-matching d-none">
 No matching items
 </div>
-<nav id="doing-data-science-pagination" class="listing-pagination" aria-label="Page Navigation">
-  <ul class="pagination"></ul>
-</nav>
 </div>
 </section>
 <section id="ab-testing" class="level2">

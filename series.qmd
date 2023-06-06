@@ -21,7 +21,7 @@ listing:
     sort-ui: false
     filter-ui: false
     fields: [date, title, reading-time]
-    page-size: 5
+    page-size: 10
     table-hover: true
     table-striped: true
     categories: false

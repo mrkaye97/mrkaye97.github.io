@@ -1,0 +1,31 @@
+---
+title: Doing Data Science
+subtitle: What does a data science project actually take?
+author: Matt Kaye
+date: '2023-06-01'
+categories: [data science]
+toc: true
+toc-depth: 4
+callout-appearance: minimal
+code-annotations: hover
+draft: true
+---
+
+::: {.callout-note}
+This post is part of a series called [The Missing Semester of Your DS Education](https://matthewrkaye.com/series.html#the-missing-semester-of-your-ds-education).
+:::
+
+## Introduction
+
+This post is something I've wanted to write for a long time, but never quite knew how to. I wasn't sure where to start, and it was bound to turn into a rambling jumble of not-so-useful things I've learned along the way.
+
+But to some extent, this post is the encapsulation of this series I've just written: [The Missing Semester of Your DS Education](https://matthewrkaye.com/series.html#the-missing-semester-of-your-ds-education). And so I thought: What better time than now?
+
+## A Harmless Interview Question
+
+This whole series, and this post in particular, stems from an interview question that I got when I was interviewing for what ultimately was my first data science job, doing analytics work in the Baltimore Orioles front office. I was in a room surrounded by something like six data scientists who would ultimately become my teammates and one of them, Mike Weis, asked me the following (paraphrased) question: "What are the steps that you go through when doing an analytics project?"
+
+I immediately thought I knew the answer, and confidently jumped into some explanation about how first there's exploratory data analysis (EDA) to figure out what's what in your data. Once you've finished your EDA, you do the feature engineering, and then you do the model fitting - of course not forgetting about cross validation! And finally, you do diagnostics on the model, like checking the accuracy or the MSE. I went on to emphasize how important those diagnostics were - and how smart and knowledgeable I was, because I almost certainly was convinced that most people wouldn't go the extra yard and would just stop at fitting the model! - and went on about how I'd look into the results myself, and then get other people to look into them as well, and so on, until we were sure that everything was _just_ right.
+
+With hindsight and experience, I've realized that the answer I gave is probably a very common one coming from junior data and analytics people, especially those just out of college or graduate school, who have done lots of learning about data science in the classroom or in a research setting. And if you've read the other posts in this series, you probably have a hunch for what this one is going to be about: What nuance was my answer missing?
+
