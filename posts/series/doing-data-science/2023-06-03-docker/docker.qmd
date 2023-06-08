@@ -26,7 +26,7 @@ If you're doing data science work, it's likely you'll eventually come across a s
 It might be simplest to consider a small example.
 
 ::: {.callout-note}
-Note that to run the example that will follow, you'll need to have Docker installed on your machine. All of the files necessary to run this example can be found [in my blog's Github repo](https://github.com/mrkaye97/mrkaye97.github.io/posts/series/doing-data-science/2023-06-03-docker/docker-example)
+Note that to run the example that will follow, you'll need to have Docker installed on your machine. All of the files necessary to run this example can be found [in my blog's Github repo](https://github.com/mrkaye97/mrkaye97.github.io/tree/master/posts/series/doing-data-science/2023-06-03-docker/docker-example)
 
 I'll use R for the example I provide in this post, but note that the same principles apply if you're doing your work in Python, or in any other programming language.
 :::
