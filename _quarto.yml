@@ -34,8 +34,6 @@ website:
         menu:
           - text: "My three favorite"
             file: my-three-favorite.qmd
-          - text: "Statistics in the wild"
-            file: stats-in-the-wild.qmd
           - text: "Going places"
             file: travel.qmd
           - text: "Blogroll"
