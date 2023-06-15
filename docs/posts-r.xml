@@ -3374,7 +3374,7 @@ font-style: inherit;">150</span></span>
 <span id="cb4-19">  )</span>
 <span id="cb4-20">})</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Test passed 🥳</code></pre>
+<pre><code>Test passed 🥇</code></pre>
 </div>
 </div>
 </section>
@@ -3764,7 +3764,7 @@ font-style: inherit;">10</span></span>
 <span id="cb11-26">  )</span>
 <span id="cb11-27">})</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Test passed 🌈</code></pre>
+<pre><code>Test passed 🥳</code></pre>
 </div>
 </div>
 </section>
@@ -3877,33 +3877,33 @@ font-style: inherit;">head</span>(features))</span></code></pre></div>
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: right;">3.487</td>
-<td style="text-align: right;">3.409</td>
+<td style="text-align: right;">5.260</td>
+<td style="text-align: right;">0.868</td>
 <td style="text-align: left;">TRUE</td>
 </tr>
 <tr class="even">
-<td style="text-align: right;">3.859</td>
-<td style="text-align: right;">1.081</td>
+<td style="text-align: right;">5.307</td>
+<td style="text-align: right;">1.297</td>
 <td style="text-align: left;">TRUE</td>
 </tr>
 <tr class="odd">
-<td style="text-align: right;">6.764</td>
-<td style="text-align: right;">1.073</td>
+<td style="text-align: right;">4.078</td>
+<td style="text-align: right;">3.505</td>
 <td style="text-align: left;">TRUE</td>
 </tr>
 <tr class="even">
-<td style="text-align: right;">4.445</td>
-<td style="text-align: right;">0.735</td>
+<td style="text-align: right;">3.678</td>
+<td style="text-align: right;">1.393</td>
 <td style="text-align: left;">TRUE</td>
 </tr>
 <tr class="odd">
-<td style="text-align: right;">6.249</td>
-<td style="text-align: right;">1.950</td>
+<td style="text-align: right;">4.739</td>
+<td style="text-align: right;">1.597</td>
 <td style="text-align: left;">TRUE</td>
 </tr>
 <tr class="even">
-<td style="text-align: right;">6.187</td>
-<td style="text-align: right;">2.584</td>
+<td style="text-align: right;">3.329</td>
+<td style="text-align: right;">2.272</td>
 <td style="text-align: left;">TRUE</td>
 </tr>
 </tbody>
@@ -3936,15 +3936,15 @@ font-style: inherit;">coef</span>(model))</span></code></pre></div>
 <tbody>
 <tr class="odd">
 <td style="text-align: left;">(Intercept)</td>
-<td style="text-align: right;">12.652</td>
+<td style="text-align: right;">10.810</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">sepal_length</td>
-<td style="text-align: right;">-1.606</td>
+<td style="text-align: right;">-1.443</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">petal_width</td>
-<td style="text-align: right;">-1.041</td>
+<td style="text-align: right;">-0.742</td>
 </tr>
 </tbody>
 </table>
@@ -3977,7 +3977,7 @@ font-style: inherit;">"Model accuracy is "</span>, accuracy, <span class="st" st
 background-color: null;
 font-style: inherit;">"%"</span>))</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Model accuracy is 90%</code></pre>
+<pre><code>Model accuracy is 85%</code></pre>
 </div>
 </div>
 <p>And that’s it – you have a simple retraining job. This is a very minimal example, but this general framework is very flexible and modular, and it makes up the foundation for how we write our retraining jobs at CollegeVine. You can plug and play all different kinds of feature engineering logic, logic to fetch raw data, metrics, etc. We also use <a href="https://mlflow.org/">MLFlow</a> for versioning models and tracking experiments, so our retraining jobs have lots of logging of artifacts, parameters, and metrics to our MLFlow instance.</p>
@@ -4140,7 +4140,7 @@ font-style: inherit;">"Out-of-sample accuracy is "</span>, accuracy, <span class
 background-color: null;
 font-style: inherit;">"%"</span>))</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Out-of-sample accuracy is 84%</code></pre>
+<pre><code>Out-of-sample accuracy is 82%</code></pre>
 </div>
 </div>
 </section>
@@ -5236,34 +5236,34 @@ font-style: inherit;">TRUE</span>)</span></code></pre></div>
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: left;">1</td>
-<td style="text-align: right;">30.4</td>
-<td style="text-align: right;">4</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: right;">10.4</td>
+<td style="text-align: right;">8</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">0</td>
-<td style="text-align: right;">13.3</td>
+<td style="text-align: right;">16.4</td>
 <td style="text-align: right;">8</td>
 </tr>
 <tr class="odd">
-<td style="text-align: left;">1</td>
-<td style="text-align: right;">33.9</td>
-<td style="text-align: right;">4</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: right;">19.2</td>
+<td style="text-align: right;">8</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">0</td>
+<td style="text-align: right;">18.7</td>
+<td style="text-align: right;">8</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">0</td>
+<td style="text-align: right;">14.7</td>
+<td style="text-align: right;">8</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">0</td>
 <td style="text-align: right;">15.0</td>
 <td style="text-align: right;">8</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">1</td>
-<td style="text-align: right;">32.4</td>
-<td style="text-align: right;">4</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">0</td>
-<td style="text-align: right;">26.0</td>
-<td style="text-align: right;">4</td>
 </tr>
 </tbody>
 </table>

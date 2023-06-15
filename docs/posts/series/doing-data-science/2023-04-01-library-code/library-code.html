@@ -183,10 +183,6 @@ cookieconsent.run({
  <span class="dropdown-text">My three favorite</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="../../../../stats-in-the-wild.html" rel="" target="">
- <span class="dropdown-text">Statistics in the wild</span></a>
-  </li>  
-        <li>
     <a class="dropdown-item" href="../../../../travel.html" rel="" target="">
  <span class="dropdown-text">Going places</span></a>
   </li>  
@@ -457,7 +453,7 @@ cookieconsent.run({
 <span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>  )</span>
 <span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Test passed 🥳</code></pre>
+<pre><code>Test passed 🥇</code></pre>
 </div>
 </div>
 </section>
@@ -609,7 +605,7 @@ cookieconsent.run({
 <span id="cb11-26"><a href="#cb11-26" aria-hidden="true" tabindex="-1"></a>  )</span>
 <span id="cb11-27"><a href="#cb11-27" aria-hidden="true" tabindex="-1"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Test passed 🌈</code></pre>
+<pre><code>Test passed 🥳</code></pre>
 </div>
 </div>
 </section>
@@ -702,33 +698,33 @@ cookieconsent.run({
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: right;">3.487</td>
-<td style="text-align: right;">3.409</td>
+<td style="text-align: right;">5.260</td>
+<td style="text-align: right;">0.868</td>
 <td style="text-align: left;">TRUE</td>
 </tr>
 <tr class="even">
-<td style="text-align: right;">3.859</td>
-<td style="text-align: right;">1.081</td>
+<td style="text-align: right;">5.307</td>
+<td style="text-align: right;">1.297</td>
 <td style="text-align: left;">TRUE</td>
 </tr>
 <tr class="odd">
-<td style="text-align: right;">6.764</td>
-<td style="text-align: right;">1.073</td>
+<td style="text-align: right;">4.078</td>
+<td style="text-align: right;">3.505</td>
 <td style="text-align: left;">TRUE</td>
 </tr>
 <tr class="even">
-<td style="text-align: right;">4.445</td>
-<td style="text-align: right;">0.735</td>
+<td style="text-align: right;">3.678</td>
+<td style="text-align: right;">1.393</td>
 <td style="text-align: left;">TRUE</td>
 </tr>
 <tr class="odd">
-<td style="text-align: right;">6.249</td>
-<td style="text-align: right;">1.950</td>
+<td style="text-align: right;">4.739</td>
+<td style="text-align: right;">1.597</td>
 <td style="text-align: left;">TRUE</td>
 </tr>
 <tr class="even">
-<td style="text-align: right;">6.187</td>
-<td style="text-align: right;">2.584</td>
+<td style="text-align: right;">3.329</td>
+<td style="text-align: right;">2.272</td>
 <td style="text-align: left;">TRUE</td>
 </tr>
 </tbody>
@@ -753,15 +749,15 @@ cookieconsent.run({
 <tbody>
 <tr class="odd">
 <td style="text-align: left;">(Intercept)</td>
-<td style="text-align: right;">12.652</td>
+<td style="text-align: right;">10.810</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">sepal_length</td>
-<td style="text-align: right;">-1.606</td>
+<td style="text-align: right;">-1.443</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">petal_width</td>
-<td style="text-align: right;">-1.041</td>
+<td style="text-align: right;">-0.742</td>
 </tr>
 </tbody>
 </table>
@@ -776,7 +772,7 @@ cookieconsent.run({
 <span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">paste0</span>(<span class="st">"Model accuracy is "</span>, accuracy, <span class="st">"%"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Model accuracy is 90%</code></pre>
+<pre><code>Model accuracy is 85%</code></pre>
 </div>
 </div>
 <p>And that’s it – you have a simple retraining job. This is a very minimal example, but this general framework is very flexible and modular, and it makes up the foundation for how we write our retraining jobs at CollegeVine. You can plug and play all different kinds of feature engineering logic, logic to fetch raw data, metrics, etc. We also use <a href="https://mlflow.org/">MLFlow</a> for versioning models and tracking experiments, so our retraining jobs have lots of logging of artifacts, parameters, and metrics to our MLFlow instance.</p>
@@ -841,7 +837,7 @@ cookieconsent.run({
 <span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">paste0</span>(<span class="st">"Out-of-sample accuracy is "</span>, accuracy, <span class="st">"%"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Out-of-sample accuracy is 84%</code></pre>
+<pre><code>Out-of-sample accuracy is 82%</code></pre>
 </div>
 </div>
 </section>
