@@ -10,7 +10,305 @@
 <atom:link href="https://www.matthewrkaye.com/posts.xml" rel="self" type="application/rss+xml"/>
 <description>Matt Kaye&#39;s personal website</description>
 <generator>quarto-1.3.353</generator>
-<lastBuildDate>Tue, 06 Jun 2023 04:00:00 GMT</lastBuildDate>
+<lastBuildDate>Wed, 21 Jun 2023 04:00:00 GMT</lastBuildDate>
+<item>
+  <title>How Can Someone Else Use My Model?</title>
+  <dc:creator>Matt Kaye</dc:creator>
+  <link>https://www.matthewrkaye.com/posts/series/doing-data-science/2023-06-20-how-can-others-use-my-model/how-can-others-use-my-model.html</link>
+  <description><![CDATA[ 
+
+
+
+<div class="callout callout-style-simple callout-note no-icon">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-body-container">
+<p>This post is part of a series called <a href="https://matthewrkaye.com/series.html#the-missing-semester-of-your-ds-education">The Missing Semester of Your DS Education</a>.</p>
+</div>
+</div>
+</div>
+<section id="introduction" class="level2">
+<h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
+<p>At this point in this series, I’ve discussed a lot of aspects of putting machine learning into production. I’ve gone over <a href="https://matthewrkaye.com/posts/series/doing-data-science/2023-05-06-workflow-orchestration/workflow-orchestration.html">workflow orchestration</a> for retraining and monitoring models, <a href="https://matthewrkaye.com/posts/series/doing-data-science/2023-04-03-unit-testing/unit-testing.html">unit testing</a> for ensuring that your code is correct, <a href="https://matthewrkaye.com/posts/series/doing-data-science/2023-05-13-experiment-tracking/experiment-tracking.html">experiment tracking and model versioning</a> for keeping track of what’s actually running in production at any given time, and <a href="https://matthewrkaye.com/posts/series/doing-data-science/2023-05-27-renv-dependency-management/renv-dependency-management.html">dependency management</a> and <a href="https://matthewrkaye.com/posts/series/doing-data-science/2023-06-03-docker/docker.html">Docker</a> for packaging up your analytical code.</p>
+<p>The last of the nuts and bolts that I’ve yet to go through is how <em>other</em> people - teammates, clients, users, etc. - will actually <em>use</em> your model.</p>
+</section>
+<section id="types-of-inference" class="level2">
+<h2 class="anchored" data-anchor-id="types-of-inference">Types of Inference</h2>
+<p>In very broad strokes, there are two types of “inference” (read: ways of making predictions) that you’ll encounter: Online and batch. In short, “online” means that your model is making predictions in real-time and serving those predictions to whoever the user of your model is. For instance, if you have a widget on your website that lets a student increase or decrease their GPA and see how their chances of admission to Carleton College change, then the process of them sliding the slider, the new GPA being sent to your model, and your model returning a new prediction of that student’s chances is an example of online inference.</p>
+<p>Batch inference is what you might think of as “offline” inference: You make predictions for many people, items, etc. at one time and store them somewhere to be accessed by users. For instance, if you had individual pages with information on any given school and wanted to show a few recommended schools in a section entitled “Students who like X school also like” you might be okay with only recomputing those most similar schools once per day, or once per week, or so on. So in that case, you’d have some job - orchestrated by your workflow orchestration tool of choice - that would create the lists of similar schools for each school, and then would store those lists somewhere for them to be ingested and eventually used on your school pages. Then, once the lists are ingested, the recommendations are static until the job next runs to update them again.</p>
+<p>This post will cover online inference, and a common way that a consumer of your model’s predictions might communicate with that model: A REST API.</p>
+</section>
+<section id="apis-and-rest" class="level2">
+<h2 class="anchored" data-anchor-id="apis-and-rest">APIs and REST</h2>
+<p>An Application Programming Interface (API) is a fancy acronym for something that I might best describe as an agreement between you and somebody else about what they provide and how you will use it. For instance, you might have used a public API like that of the <a href="https://www.census.gov/data/developers/data-sets.html">Census</a> for programmatically pulling population statistics, income statistics, and so on, or <a href="https://developer.twitter.com/en/docs/twitter-api">Twitter</a> for doing the same for tweets.</p>
+<p>The basic principle is that an API lets you interact with <em>something</em>, such as data (in the case of Twitter and the Census) or a machine learning model, as long as you comply with the API’s “contract.” If a model lives behind an API, you can make a “request” to that API, and assuming that you’ve correctly provided all the necessary fields, added the correct request headers, etc., the API will hold up its end of the bargain and return the prediction you asked for.</p>
+<p>Very often, you’ll hear talk of REST or “RESTful” APIs. At their core, a REST API is just an API that follows REST standards, including having a uniform interface, being stateless, and so on. I’m no expert on REST, so I’ll defer to a <a href="https://aws.amazon.com/what-is/restful-api/">great explainer by the AWS team</a> for more details.</p>
+</section>
+<section id="plumber" class="level2">
+<h2 class="anchored" data-anchor-id="plumber">Plumber</h2>
+<div class="callout callout-style-simple callout-note no-icon">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-body-container">
+<p>The examples in the remainder of this post will use <a href="https://www.rplumber.io/">Plumber</a> to demonstrate a simple REST API.</p>
+<p>Unfortunately, I cannot in good faith recommend using Plumber or R itself in any sort of high-load or high-throughput production system for reasons that are beyond the scope of this post, and would strongly encourage considering a Python framework like <a href="https://fastapi.tiangolo.com/">FastAPI</a> instead.</p>
+</div>
+</div>
+</div>
+<p>In R, the <a href="https://www.rplumber.io/">Plumber</a> package provides a friendly set of tools for building and deploying APIs of your own. All you need in the most simple case is an R script like this:</p>
+<div class="sourceCode" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(plumber)</span>
+<span id="cb1-2"></span>
+<span id="cb1-3"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">pr</span>() <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span></span>
+<span id="cb1-4">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">pr_get</span>(</span>
+<span id="cb1-5">    <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"/hello"</span>,</span>
+<span id="cb1-6">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">function</span>() <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Hello world!"</span>,</span>
+<span id="cb1-7">    <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">serializer =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">serializer_unboxed_json</span>()</span>
+<span id="cb1-8">  ) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span></span>
+<span id="cb1-9">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">pr_run</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">port =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">9807</span>)</span></code></pre></div>
+<p>Running that R code will open up a Swagger UI that shows the endpoint you defined at <code>/hello</code> that will look like this:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://www.matthewrkaye.com/posts/series/doing-data-science/2023-06-20-how-can-others-use-my-model/plumber-example/swagger-ui-basic.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+<p>You can use the Swagger UI to make a request to your API and see the result, which is the <code>Hello world!</code> that we expected:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://www.matthewrkaye.com/posts/series/doing-data-science/2023-06-20-how-can-others-use-my-model/plumber-example/swagger-ui-expanded.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+<p>You can also use <code>curl</code> (or <code>httr</code> or similar) to make requests to your API from the command line, from R, or from any other language of your choosing as follows:</p>
+<div class="sourceCode" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">curl</span> http://127.0.0.1:8080/hello</span></code></pre></div>
+<p>This request will return:</p>
+<pre><code>"Hello world!"</code></pre>
+</section>
+<section id="a-more-involved-example" class="level2">
+<h2 class="anchored" data-anchor-id="a-more-involved-example">A More Involved Example</h2>
+<p>Now that we can successfully talk to our API, let’s imagine we wanted to make predictions from a model that predicts someone’s weight given their height. For the purposes of this example, our “model” is just going to take the height and multiply it by pi, which will return a terrible prediction, but a prediction nonetheless. This is actually an important note about APIs: This trivial example - multiplying by pi - is actually the whole <em>point</em> of having an API. From the consumer of an API’s point of view, whatever is happening behind the scenes is just that: Behind the scenes. The client needs no knowledge of how your API is actually going about figuring out what it should be returning to you. All the client knows is that there’s a contract: If they give you something, you process that thing and give them back what they asked for.</p>
+<p>With this in mind, let’s add a <code>/predict</code> endpoint to our service above to predict someone’s weight based on their height.</p>
+<div class="sourceCode" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(plumber)</span>
+<span id="cb4-2"></span>
+<span id="cb4-3"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">pr</span>() <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span></span>
+<span id="cb4-4">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">pr_get</span>(</span>
+<span id="cb4-5">    <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"/hello"</span>,</span>
+<span id="cb4-6">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">function</span>() <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Hello world!"</span>,</span>
+<span id="cb4-7">    <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">serializer =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">serializer_unboxed_json</span>()</span>
+<span id="cb4-8">  ) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span></span>
+<span id="cb4-9">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">pr_get</span>(</span>
+<span id="cb4-10">    <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"/predict"</span>,</span>
+<span id="cb4-11">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">function</span>(height) <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">as.numeric</span>(height) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span> pi,</span>
+<span id="cb4-12">    <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">serializer =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">serializer_unboxed_json</span>()</span>
+<span id="cb4-13">  ) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span></span>
+<span id="cb4-14">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">pr_run</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">port =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">9807</span>)</span></code></pre></div>
+<p>Now we can call our <code>/predict</code> endpoint with a query parameter <code>height</code> indicating the height of the person. Let’s call our prediction endpoint with a height of 5:</p>
+<div class="sourceCode" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">curl</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"http://127.0.0.1:9807/predict?height=5"</span></span>
+<span id="cb5-2"></span>
+<span id="cb5-3"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">15.708</span></span></code></pre></div>
+<p>Great! It gives back <code>15.708</code>, which is indeed equal to <code>5 * pi</code>.</p>
+<p>Again, the actual computation here isn’t really the point. Multiplying the height by pi is indeed a terrible way to predict someone’s weight, but the key takeaway is that from the client’s point of view, the computation is a black box. As long as you don’t make any changes to how the client is supposed to interact with your API - these types of changes are called “breaking” changes, and you should be very, very careful making them - you can arbitrarily change the guts of your API and have the client be none the wiser. This means that you could multiply the height by <code>e</code> instead of by pi, or you could swap in a machine learning model and call its <code>predict</code> method from inside of the endpoint. For instance, you could do something like this:</p>
+<div class="sourceCode" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(plumber)</span>
+<span id="cb6-2"></span>
+<span id="cb6-3"><span class="do" style="color: #5E5E5E;
+background-color: null;
+font-style: italic;">## </span><span class="al" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">NOTE</span><span class="do" style="color: #5E5E5E;
+background-color: null;
+font-style: italic;">: </span></span>
+<span id="cb6-4"><span class="do" style="color: #5E5E5E;
+background-color: null;
+font-style: italic;">## This assumes you have a model whose</span></span>
+<span id="cb6-5"><span class="do" style="color: #5E5E5E;
+background-color: null;
+font-style: italic;">## predict method takes a single-column</span></span>
+<span id="cb6-6"><span class="do" style="color: #5E5E5E;
+background-color: null;
+font-style: italic;">## dataframe (with `height` as the column).</span></span>
+<span id="cb6-7"><span class="do" style="color: #5E5E5E;
+background-color: null;
+font-style: italic;">## living at `path/to/model.rds`</span></span>
+<span id="cb6-8">model <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">readRDS</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"path/to/model.rds"</span>)</span>
+<span id="cb6-9"></span>
+<span id="cb6-10"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">pr</span>() <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span></span>
+<span id="cb6-11">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">pr_get</span>(</span>
+<span id="cb6-12">    <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"/hello"</span>,</span>
+<span id="cb6-13">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">function</span>() <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Hello world!"</span>,</span>
+<span id="cb6-14">    <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">serializer =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">serializer_unboxed_json</span>()</span>
+<span id="cb6-15">  ) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span></span>
+<span id="cb6-16">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">pr_get</span>(</span>
+<span id="cb6-17">    <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"/predict"</span>,</span>
+<span id="cb6-18">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">function</span>(height) <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">predict</span>(model, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">newdata =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">data.frame</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">height =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">as.numeric</span>(height))),</span>
+<span id="cb6-19">    <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">serializer =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">serializer_unboxed_json</span>()</span>
+<span id="cb6-20">  ) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span></span>
+<span id="cb6-21">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">pr_run</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">port =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">9807</span>)</span></code></pre></div>
+<p>In this example, we first load our model into memory at API boot time, and then it’s accessible to our <code>/predict</code> endpoint whenever it’s called by clients. You can extend this basic setup to be arbitrarily complex: Many models, many endpoints, helper code, tests, etc. but the basic premise is always the same: Declare a way for an outside client to use your model by providing an API contract, and then respond to requests for predictions from your model based on whatever inputs you need by taking those inputs, doing any data munging or feature engineering you need to do, running the prediction, doing post-processing or anything else, and returning the response to the client.</p>
+</section>
+<section id="deployment" class="level2">
+<h2 class="anchored" data-anchor-id="deployment">Deployment</h2>
+<p>“But wait!” you think. “<code>pr_run</code> on my local machine is only accessible via <code>localhost</code>. What about if someone outside of my machine wants to access my model?”</p>
+<p>Great question! You need to deploy your API somewhere <em>outside</em> of your local machine and accessible over the internet so that clients can use your model. There are a number of ways to achieve this, and discussing individual hosting platforms and how to get your code running on them is a bit of a rabbit hole beyond the scope of this post. There are a number of ways of deploying your code into production systems. One thing you can do is wrap up your API in Docker, and then ship it basically anywhere that runs Docker containers (read: basically anywhere). But how you go about shipping your code to production is ultimately a decision that needs to be made based on your team and the problem you’re solving, among other factors. There’s certainly no single right way to go about it.</p>
+<div class="callout callout-style-simple callout-note no-icon">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-body-container">
+<p>For a bit more on this, I <a href="http://localhost:4321/posts/series/doing-data-science/2023-06-03-docker/docker.html">wrote about Docker in my last post</a>, and Plumber <a href="https://www.rplumber.io/articles/hosting.html#docker">has great documentation</a> on how to use Docker to deploy a Plumber API.</p>
+</div>
+</div>
+</div>
+<p>If you do ultimately decide to use Docker, you’ll have a solution that works roughly the same whether you’re working in Plumber, Flask, FastAPI, or another framework. You’d build your API, package it up in a Docker image, and ship that image to some place out in the world that can run said image for you. Then, once it’s there, you can call it just as you would any public-facing API!</p>
+</section>
+<section id="wrapping-up" class="level2">
+<h2 class="anchored" data-anchor-id="wrapping-up">Wrapping Up</h2>
+<p>This post was the last nuts and bolts, mechanical post in this series about doing data science. And it felt like a good place to wrap up: Going over how models actually get used by consumers in the real world at a very high level.</p>
+<p>The deployment, monitoring, and performance of APIs in production systems has been written about and done over and over again by lots of people far more qualified than I am to educate others on it. Notably, virtually every software developer working on the back end of any website or similar service has worked in production systems that are far more complicated than anything I’ve worked in, so I’ll defer lots of the technical details and best practices to them in favor of giving a hopefully helpful, minimal example here about how to achieve a similar goal, but for serving predictions from machine learning models.</p>
+<p>At this point, I’ve discussed most of the end-to-end process that we follow for shipping ML products: Starting with the basics of how we structure, test, and review code, to how we run that code in Airflow to train and monitor models, to how we use Docker to deploy APIs in production. There’s lots I’ve missed and didn’t cover, but my hope was that by this point, I’d have achieved one of my main goals in writing this series: To give aspiring data scientists a brief, gentle introduction to some of the tools and processes that we lean on to operationalize our data science work.</p>
+
+
+</section>
+
+ ]]></description>
+  <category>data science</category>
+  <category>R</category>
+  <category>python</category>
+  <guid>https://www.matthewrkaye.com/posts/series/doing-data-science/2023-06-20-how-can-others-use-my-model/how-can-others-use-my-model.html</guid>
+  <pubDate>Wed, 21 Jun 2023 04:00:00 GMT</pubDate>
+</item>
 <item>
   <title>A Gentle Introduction to Docker</title>
   <dc:creator>Matt Kaye</dc:creator>
@@ -3530,7 +3828,7 @@ font-style: inherit;">150</span></span>
 <span id="cb4-19">  )</span>
 <span id="cb4-20">})</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Test passed 🥇</code></pre>
+<pre><code>Test passed 😀</code></pre>
 </div>
 </div>
 </section>
@@ -3920,7 +4218,7 @@ font-style: inherit;">10</span></span>
 <span id="cb11-26">  )</span>
 <span id="cb11-27">})</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Test passed 🥳</code></pre>
+<pre><code>Test passed 🎊</code></pre>
 </div>
 </div>
 </section>
@@ -4033,33 +4331,33 @@ font-style: inherit;">head</span>(features))</span></code></pre></div>
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: right;">5.260</td>
-<td style="text-align: right;">0.868</td>
+<td style="text-align: right;">6.937</td>
+<td style="text-align: right;">1.570</td>
 <td style="text-align: left;">TRUE</td>
 </tr>
 <tr class="even">
-<td style="text-align: right;">5.307</td>
-<td style="text-align: right;">1.297</td>
+<td style="text-align: right;">3.884</td>
+<td style="text-align: right;">2.792</td>
 <td style="text-align: left;">TRUE</td>
 </tr>
 <tr class="odd">
-<td style="text-align: right;">4.078</td>
-<td style="text-align: right;">3.505</td>
+<td style="text-align: right;">4.667</td>
+<td style="text-align: right;">2.152</td>
 <td style="text-align: left;">TRUE</td>
 </tr>
 <tr class="even">
-<td style="text-align: right;">3.678</td>
-<td style="text-align: right;">1.393</td>
+<td style="text-align: right;">4.527</td>
+<td style="text-align: right;">3.242</td>
 <td style="text-align: left;">TRUE</td>
 </tr>
 <tr class="odd">
-<td style="text-align: right;">4.739</td>
-<td style="text-align: right;">1.597</td>
+<td style="text-align: right;">6.942</td>
+<td style="text-align: right;">1.555</td>
 <td style="text-align: left;">TRUE</td>
 </tr>
 <tr class="even">
-<td style="text-align: right;">3.329</td>
-<td style="text-align: right;">2.272</td>
+<td style="text-align: right;">6.269</td>
+<td style="text-align: right;">3.101</td>
 <td style="text-align: left;">TRUE</td>
 </tr>
 </tbody>
@@ -4092,15 +4390,15 @@ font-style: inherit;">coef</span>(model))</span></code></pre></div>
 <tbody>
 <tr class="odd">
 <td style="text-align: left;">(Intercept)</td>
-<td style="text-align: right;">10.810</td>
+<td style="text-align: right;">9.830</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">sepal_length</td>
-<td style="text-align: right;">-1.443</td>
+<td style="text-align: right;">-1.064</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">petal_width</td>
-<td style="text-align: right;">-0.742</td>
+<td style="text-align: right;">-1.240</td>
 </tr>
 </tbody>
 </table>
@@ -4133,7 +4431,7 @@ font-style: inherit;">"Model accuracy is "</span>, accuracy, <span class="st" st
 background-color: null;
 font-style: inherit;">"%"</span>))</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Model accuracy is 85%</code></pre>
+<pre><code>Model accuracy is 86%</code></pre>
 </div>
 </div>
 <p>And that’s it – you have a simple retraining job. This is a very minimal example, but this general framework is very flexible and modular, and it makes up the foundation for how we write our retraining jobs at CollegeVine. You can plug and play all different kinds of feature engineering logic, logic to fetch raw data, metrics, etc. We also use <a href="https://mlflow.org/">MLFlow</a> for versioning models and tracking experiments, so our retraining jobs have lots of logging of artifacts, parameters, and metrics to our MLFlow instance.</p>
@@ -4296,7 +4594,7 @@ font-style: inherit;">"Out-of-sample accuracy is "</span>, accuracy, <span class
 background-color: null;
 font-style: inherit;">"%"</span>))</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Out-of-sample accuracy is 82%</code></pre>
+<pre><code>Out-of-sample accuracy is 92%</code></pre>
 </div>
 </div>
 </section>
@@ -5446,33 +5744,33 @@ font-style: inherit;">TRUE</span>)</span></code></pre></div>
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: left;">0</td>
-<td style="text-align: right;">10.4</td>
-<td style="text-align: right;">8</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">0</td>
-<td style="text-align: right;">16.4</td>
-<td style="text-align: right;">8</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">0</td>
-<td style="text-align: right;">19.2</td>
-<td style="text-align: right;">8</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">0</td>
-<td style="text-align: right;">18.7</td>
-<td style="text-align: right;">8</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">0</td>
-<td style="text-align: right;">14.7</td>
-<td style="text-align: right;">8</td>
+<td style="text-align: left;">1</td>
+<td style="text-align: right;">17.8</td>
+<td style="text-align: right;">6</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">0</td>
 <td style="text-align: right;">15.0</td>
+<td style="text-align: right;">8</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">0</td>
+<td style="text-align: right;">15.8</td>
+<td style="text-align: right;">8</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">1</td>
+<td style="text-align: right;">21.4</td>
+<td style="text-align: right;">6</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">1</td>
+<td style="text-align: right;">32.4</td>
+<td style="text-align: right;">4</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">0</td>
+<td style="text-align: right;">15.2</td>
 <td style="text-align: right;">8</td>
 </tr>
 </tbody>
@@ -7984,63 +8282,6 @@ font-style: inherit;">head</span>(predictions)</span></code></pre></div>
   <category>data science</category>
   <guid>https://www.matthewrkaye.com/posts/2021-02-11-highlights-from-rstudio-global/index.html</guid>
   <pubDate>Thu, 11 Feb 2021 05:00:00 GMT</pubDate>
-</item>
-<item>
-  <title>What’s New in slackr 2.1.0</title>
-  <dc:creator>Matt Kaye</dc:creator>
-  <link>https://www.matthewrkaye.com/posts/2021-02-07-what-s-new-in-slackr-2-1-0/index.html</link>
-  <description><![CDATA[ 
-
-
-
-<section id="introduction" class="level2">
-<h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
-<p><code>slackr 2.1.0+</code> is live! There are a whole bunch of exciting changes that we (mostly <a href="https://github.com/andrie">Andrie de Vries</a> and I) have made to improve the package a bunch.</p>
-</section>
-<section id="changes" class="level2">
-<h2 class="anchored" data-anchor-id="changes">Changes</h2>
-<p>Here are some of the things that are new in <code>slackr 2.1.0+</code>. For more info on the package, check out the <a href="https://github.com/mrkaye97/slackr">Github repo</a> and the <a href="https://mrkaye97.github.io/slackr/index.html">pkgdown site</a>.</p>
-<section id="ease-of-use-improvements" class="level3">
-<h3 class="anchored" data-anchor-id="ease-of-use-improvements">Ease of Use Improvements</h3>
-<ul>
-<li>We’ve dramatically improved error messaging, so long gone are the days of errors like <code>No 'id' column found in 'x'</code>! Now, error messages should be far more helpful, with some hints about what might be going wrong.</li>
-<li>We’ve updated the package documentation significantly, so now there’s a far more informative <a href="https://github.com/mrkaye97/slackr">README</a>, some vignettes, and a <a href="https://mrkaye97.github.io/slackr/index.html">pkgdown site</a>.</li>
-<li>We’ve more clearly described the different use cases for <code>slackr</code>, in order to better help users set up <code>slackr</code> in a way that makes sense for them.</li>
-</ul>
-</section>
-<section id="new-features" class="level3">
-<h3 class="anchored" data-anchor-id="new-features">New Features</h3>
-<ul>
-<li>We’ve fixed a bunch of bugs that were preventing things like <code>icon_emoji</code> and <code>username</code> from working, so those are fixed now!</li>
-<li>We’ve brought back some old functions that were removed in <code>slackr 2.0.0</code>: <code>slackr_history()</code> and <code>slackr_delete()</code>. See the docs for descriptions of what these functions can do.</li>
-</ul>
-</section>
-<section id="back-end-changes" class="level3">
-<h3 class="anchored" data-anchor-id="back-end-changes">Back-End Changes</h3>
-<p>We’ve made a ton of changes for how <code>slackr</code> interacts with the Slack API:</p>
-<ul>
-<li>We now allow paging, which is especially helpful when you have a workspace of more than 1000 channels.</li>
-<li>We cache requests to get lists of channels and users so that we don’t need to repeat common API calls. This speeds up calls to <code>slackr_***()</code> and limits how often you need to actually hit the API.</li>
-<li>We’ve gotten rid of a really nasty implementation of channel caching (writing a local cache to the disk) in favor of the method described above.</li>
-<li>We’ve factored out API calls into a separate function, which makes the package easier to understand and test.</li>
-<li>Speaking of testing, we’ve implemented a whole bunch of unit tests, and will be working on more.</li>
-</ul>
-</section>
-<section id="deprecations" class="level3">
-<h3 class="anchored" data-anchor-id="deprecations">Deprecations</h3>
-<ul>
-<li>We’ve deprecated a bunch of camel case functions in favor of their snake case counterparts for simplicity. Don’t worry! These are soft-deprecated for now. They won’t go away fully until a future version of <code>slackr</code></li>
-<li>We’ve deprecated <code>text_slackr</code> in favor of <code>slackr_msg</code>, since they do basically the same thing.</li>
-</ul>
-
-
-</section>
-</section>
-
- ]]></description>
-  <category>R</category>
-  <guid>https://www.matthewrkaye.com/posts/2021-02-07-what-s-new-in-slackr-2-1-0/index.html</guid>
-  <pubDate>Sun, 07 Feb 2021 05:00:00 GMT</pubDate>
 </item>
 </channel>
 </rss>

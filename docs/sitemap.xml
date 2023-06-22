@@ -2,122 +2,126 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://www.matthewrkaye.com/my-three-favorite.html</loc>
-    <lastmod>2023-06-15T20:56:44.723Z</lastmod>
+    <lastmod>2023-06-22T02:02:54.723Z</lastmod>
   </url>
   <url>
     <loc>https://www.matthewrkaye.com/posts/series/doing-data-science/2023-05-13-experiment-tracking/experiment-tracking.html</loc>
-    <lastmod>2023-06-15T20:56:46.539Z</lastmod>
+    <lastmod>2023-06-22T02:02:56.061Z</lastmod>
   </url>
   <url>
     <loc>https://www.matthewrkaye.com/posts/series/doing-data-science/2023-04-01-library-code/library-code.html</loc>
-    <lastmod>2023-06-15T20:56:51.443Z</lastmod>
+    <lastmod>2023-06-22T02:03:00.251Z</lastmod>
   </url>
   <url>
     <loc>https://www.matthewrkaye.com/posts/series/doing-data-science/2023-04-03-unit-testing/unit-testing.html</loc>
-    <lastmod>2023-06-15T20:56:53.412Z</lastmod>
+    <lastmod>2023-06-22T02:03:02.449Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.matthewrkaye.com/posts/series/doing-data-science/2023-06-20-how-can-others-use-my-model/how-can-others-use-my-model.html</loc>
+    <lastmod>2023-06-22T02:03:03.411Z</lastmod>
   </url>
   <url>
     <loc>https://www.matthewrkaye.com/posts/series/doing-data-science/2023-04-14-code-review/code-review.html</loc>
-    <lastmod>2023-06-15T20:56:55.063Z</lastmod>
+    <lastmod>2023-06-22T02:03:05.440Z</lastmod>
   </url>
   <url>
     <loc>https://www.matthewrkaye.com/posts/series/doing-data-science/2023-05-06-workflow-orchestration/workflow-orchestration.html</loc>
-    <lastmod>2023-06-15T20:56:56.266Z</lastmod>
+    <lastmod>2023-06-22T02:03:06.769Z</lastmod>
   </url>
   <url>
     <loc>https://www.matthewrkaye.com/posts/series/doing-data-science/2023-05-27-renv-dependency-management/renv-dependency-management.html</loc>
-    <lastmod>2023-06-15T20:56:57.679Z</lastmod>
+    <lastmod>2023-06-22T02:03:08.483Z</lastmod>
   </url>
   <url>
     <loc>https://www.matthewrkaye.com/posts/series/doing-data-science/2023-06-03-docker/docker.html</loc>
-    <lastmod>2023-06-15T20:56:58.614Z</lastmod>
+    <lastmod>2023-06-22T02:03:09.554Z</lastmod>
   </url>
   <url>
     <loc>https://www.matthewrkaye.com/posts/series/a-b-testing/2022-04-10-running-a-b-tests/index.html</loc>
-    <lastmod>2023-06-15T20:57:00.165Z</lastmod>
+    <lastmod>2023-06-22T02:03:10.050Z</lastmod>
   </url>
   <url>
     <loc>https://www.matthewrkaye.com/posts/series/a-b-testing/2022-04-10-calling-a-b-tests/index.html</loc>
-    <lastmod>2023-06-15T20:57:01.160Z</lastmod>
+    <lastmod>2023-06-22T02:03:10.620Z</lastmod>
   </url>
   <url>
     <loc>https://www.matthewrkaye.com/posts/series/a-b-testing/2022-03-25-a-b-testing-a-primer/index.html</loc>
-    <lastmod>2023-06-15T20:57:02.066Z</lastmod>
+    <lastmod>2023-06-22T02:03:11.153Z</lastmod>
   </url>
   <url>
     <loc>https://www.matthewrkaye.com/posts/series/a-b-testing/2022-04-17-sequential-testing/index.html</loc>
-    <lastmod>2023-06-15T20:57:02.602Z</lastmod>
+    <lastmod>2023-06-22T02:03:11.786Z</lastmod>
   </url>
   <url>
     <loc>https://www.matthewrkaye.com/posts/2021-12-22-notes-on-hiring-data-analysts-scientists/index.html</loc>
-    <lastmod>2023-06-15T20:57:03.446Z</lastmod>
+    <lastmod>2023-06-22T02:03:12.979Z</lastmod>
   </url>
   <url>
     <loc>https://www.matthewrkaye.com/posts/2021-06-08-working-with-your-fitbit-data-in-r/index.html</loc>
-    <lastmod>2023-06-15T20:57:04.495Z</lastmod>
+    <lastmod>2023-06-22T02:03:14.067Z</lastmod>
   </url>
   <url>
     <loc>https://www.matthewrkaye.com/posts/2023-03-09-on-auc-roc/index.html</loc>
-    <lastmod>2023-06-15T20:57:06.926Z</lastmod>
+    <lastmod>2023-06-22T02:03:16.970Z</lastmod>
   </url>
   <url>
     <loc>https://www.matthewrkaye.com/posts/2021-12-26-deploying-mlflow-on-heroku-with-heroku-postgres-s3-and-nginx-for-basic-auth/index.html</loc>
-    <lastmod>2023-06-15T20:57:07.682Z</lastmod>
+    <lastmod>2023-06-22T02:03:18.004Z</lastmod>
   </url>
   <url>
     <loc>https://www.matthewrkaye.com/posts/2021-01-10-what-i-ve-been-drinking-in-quarantine/index.html</loc>
-    <lastmod>2023-06-15T20:57:08.652Z</lastmod>
+    <lastmod>2023-06-22T02:03:19.001Z</lastmod>
   </url>
   <url>
     <loc>https://www.matthewrkaye.com/posts/2021-02-07-what-s-new-in-slackr-2-1-0/index.html</loc>
-    <lastmod>2023-06-15T20:57:09.063Z</lastmod>
+    <lastmod>2023-06-22T02:03:19.607Z</lastmod>
   </url>
   <url>
     <loc>https://www.matthewrkaye.com/posts/2023-01-09-exploring-the-tail-behavior-of-espn-s-win-probability-model/index.html</loc>
-    <lastmod>2023-06-15T20:57:09.671Z</lastmod>
+    <lastmod>2023-06-22T02:03:20.497Z</lastmod>
   </url>
   <url>
     <loc>https://www.matthewrkaye.com/posts/2023-03-25-balancing-classes/balancing-classes.html</loc>
-    <lastmod>2023-06-15T20:57:11.531Z</lastmod>
+    <lastmod>2023-06-22T02:03:22.617Z</lastmod>
   </url>
   <url>
     <loc>https://www.matthewrkaye.com/posts/2023-03-20-metrics-calibration/calibration.html</loc>
-    <lastmod>2023-06-15T20:57:12.126Z</lastmod>
+    <lastmod>2023-06-22T02:03:23.662Z</lastmod>
   </url>
   <url>
     <loc>https://www.matthewrkaye.com/posts/2021-01-07-our-2021-big-data-bowl-submission/index.html</loc>
-    <lastmod>2023-06-15T20:57:13.271Z</lastmod>
+    <lastmod>2023-06-22T02:03:24.886Z</lastmod>
   </url>
   <url>
     <loc>https://www.matthewrkaye.com/posts/2021-01-13-a-gentle-introduction-to-markov-chains-and-mcmc/index.html</loc>
-    <lastmod>2023-06-15T20:57:14.161Z</lastmod>
+    <lastmod>2023-06-22T02:03:25.717Z</lastmod>
   </url>
   <url>
     <loc>https://www.matthewrkaye.com/posts/2021-02-11-highlights-from-rstudio-global/index.html</loc>
-    <lastmod>2023-06-15T20:57:14.587Z</lastmod>
+    <lastmod>2023-06-22T02:03:26.134Z</lastmod>
   </url>
   <url>
     <loc>https://www.matthewrkaye.com/series.html</loc>
-    <lastmod>2023-06-15T20:57:15.613Z</lastmod>
+    <lastmod>2023-06-22T02:03:27.457Z</lastmod>
   </url>
   <url>
     <loc>https://www.matthewrkaye.com/code.html</loc>
-    <lastmod>2023-06-15T20:57:15.991Z</lastmod>
+    <lastmod>2023-06-22T02:03:27.765Z</lastmod>
   </url>
   <url>
     <loc>https://www.matthewrkaye.com/travel.html</loc>
-    <lastmod>2023-06-15T20:57:16.376Z</lastmod>
+    <lastmod>2023-06-22T02:03:28.257Z</lastmod>
   </url>
   <url>
     <loc>https://www.matthewrkaye.com/index.html</loc>
-    <lastmod>2023-06-15T20:57:17.371Z</lastmod>
+    <lastmod>2023-06-22T02:03:29.342Z</lastmod>
   </url>
   <url>
     <loc>https://www.matthewrkaye.com/blogroll.html</loc>
-    <lastmod>2023-06-15T20:57:18.094Z</lastmod>
+    <lastmod>2023-06-22T02:03:30.169Z</lastmod>
   </url>
   <url>
     <loc>https://www.matthewrkaye.com/posts.html</loc>
-    <lastmod>2023-06-15T20:57:20.103Z</lastmod>
+    <lastmod>2023-06-22T02:03:32.485Z</lastmod>
   </url>
 </urlset>
