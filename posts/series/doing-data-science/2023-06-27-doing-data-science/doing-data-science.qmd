@@ -2,7 +2,7 @@
 title: Doing Data Science
 subtitle: What does a data science project actually take?
 author: Matt Kaye
-date: '2023-06-01'
+date: '2023-06-27'
 categories: [data science]
 toc: true
 toc-depth: 4
@@ -23,7 +23,7 @@ But to some extent, this post is the encapsulation of this series I've just writ
 
 ## A Harmless Interview Question
 
-This whole series, and this post in particular, stems from an interview question that I got when I was interviewing for what ultimately was my first data science job, doing analytics work in the Baltimore Orioles front office. I was in a room surrounded by something like six data scientists who would ultimately become my teammates and one of them, Mike Weis, asked me the following (paraphrased) question: "What are the steps that you go through when doing an analytics project?"
+This whole series, and this post in particular, stems from an interview question that I got when I was interviewing for what ultimately was my first data science job, doing analytics work in the Baltimore Orioles front office. I was in a room surrounded by something like six data scientists who would ultimately become my teammates and one of them asked me the following (paraphrased) question: "What are the steps that you go through when doing an analytics project?"
 
 I immediately thought I knew the answer, and confidently jumped into some explanation about how first there's exploratory data analysis (EDA) to figure out what's what in your data. Once you've finished your EDA, you do the feature engineering, and then you do the model fitting - of course not forgetting about cross validation! And finally, you do diagnostics on the model, like checking the accuracy or the MSE. I went on to emphasize how important those diagnostics were - and how smart and knowledgeable I was, because I almost certainly was convinced that most people wouldn't go the extra yard and would just stop at fitting the model! - and went on about how I'd look into the results myself, and then get other people to look into them as well, and so on, until we were sure that everything was _just_ right.
 

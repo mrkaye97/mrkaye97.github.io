@@ -19,6 +19,7 @@
   {
     "listing": "/posts.html",
     "items": [
+      "/posts/2023-06-29-lessons-learned-from-running-r-in-production/lessons-learned-from-running-r-in-production.html",
       "/posts/series/doing-data-science/2023-06-20-how-can-others-use-my-model/how-can-others-use-my-model.html",
       "/posts/series/doing-data-science/2023-06-03-docker/docker.html",
       "/posts/series/doing-data-science/2023-05-27-renv-dependency-management/renv-dependency-management.html",
