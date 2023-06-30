@@ -319,7 +319,24 @@ But there's a larger point here, that maybe is an undertone of this whole post, 
 I hope that R can have that same focus on production, some day.
 
 
+## Addenda
 
+There have been a few points that have come up in discussion as this post has circulated through some communities online, so I'd like to add some thoughts to address some of those. I very much appreciate all of the attention this post has gotten!
 
+### Plumber vs. R Itself
+
+This post is about R in production, but it's also about Plumber. I recognize that I conflate Plumber and R throughout this post, and that many of the points here are comparing, for example, Plumber and FastAPI. That wasn't exactly my intention. Especially when it comes to web servers, there are two points I'd like to emphasize.
+
+First, the reason I seem to be conflating Plumber (a library) and R (a language) is that Plumber is the only viable, widely used API framework in R. So, to some extent, that means that problems with Plumber _are_ problems with R, since there really aren't viable alternatives, at least to my knowledge.
+
+Second, FastAPI is only one alternative, but the point I was trying to make was broader: _Every_ web framework that I'm aware of utilizes some kind of concurrent web server, a la Uvicorn, Gunicorn, or Puma. So while these points about the lack of a battle-hardened, concurrent web server implementation in Plumber apply when comparing it to FastAPI, they also apply when comparing it to Flask or Django, which you'd run behind Gunicorn or similar, Rails, which you'd run behind Puma or similar, Rocket (in Rust), which ships with its own multi-threaded, asynchronous server, and so on. At its core, this really isn't a comparison of Plumber and FastAPI: It's a comparison of Plumber and every other web framework that I am aware of.
+
+### Performance Gains From Adopting FastAPI
+
+I made a comment about a 5x improvement in throughput by switching to FastAPI:
+
+> we got about a 5x speedup in how long it took to process requests
+
+I should have added a clarifying point: This 5x improvement was achieved _even after accounting for scaling down from four instances of a Plumber service to a single instance of a FastAPI service with four workers._ So it wasn't the case that the throughput improvement was due to concurrency, as the number of "workers" in some sense remained the same.
 
 

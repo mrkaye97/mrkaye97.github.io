@@ -420,7 +420,7 @@ font-style: inherit;">4</span>), <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"milliseconds"</span>)</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] "Mean runtime: 0.7482 milliseconds"</code></pre>
+<pre><code>[1] "Mean runtime: 0.8278 milliseconds"</code></pre>
 </div>
 </div>
 <p>Now, let’s try the same in Python:</p>
@@ -480,7 +480,7 @@ background-color: null;
 font-style: inherit;">"milliseconds"</span></span>
 <span id="cb28-12">)</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Mean runtime: 0.1166 milliseconds</code></pre>
+<pre><code>Mean runtime: 0.1226 milliseconds</code></pre>
 </div>
 </div>
 <p>In this particular case, Python’s JSON serialization runs 6-7x faster than R’s. And if you’re thinking “that’s only one millisecond, though!” you’d be right. But the general principle is important even if the magnitude of the issue in this particular case is not.</p>
@@ -755,8 +755,26 @@ font-style: inherit;">'daemon off;'</span></span></code></pre></div>
 <p>Once upon a time, I’d hoped that this post would’ve been something of a love letter to R: A story of triumph, where we figured out how to tweak and tune and architect <em>just</em> right, and got a stable, fast R service running in production to prove all of the doubters and dogmatic Pythoners wrong. But unfortunately, it didn’t turn out that way. So my hope in writing this post was to expose some more of the nuts and bolts for why I won’t be trying to run R in production again, or at least not in the short term. I don’t believe in sweeping statements like “R isn’t built for production” since I don’t actually know what they mean, and they’re not helpful for getting to the root of the problem with R. But as I discovered, “R doesn’t have an equivalent of Gunicorn or Puma” is a very legitimate flaw with R that makes it very difficult – not impossible, but very difficult – to run R in production.</p>
 <p>But there’s a larger point here, that maybe is an undertone of this whole post, and to some degree all of the conversation about R vs.&nbsp;Python for production. The reality is that lots of software teams are running Python in production, which means that Python and its community are focused on building tooling in Python to service that use case. To my knowledge, there aren’t many teams running R in production, and so the focus and will doesn’t seem to be there in the same way it is for Python. And maybe that’s what matters most at the end of the day: Python is a safer choice since more people are using it, which means it continues to be worked on more, which makes it faster, and safer, and so on. And the cycle continues.</p>
 <p>I hope that R can have that same focus on production, some day.</p>
+</section>
+<section id="addenda" class="level2">
+<h2 class="anchored" data-anchor-id="addenda">Addenda</h2>
+<p>There have been a few points that have come up in discussion as this post has circulated through some communities online, so I’d like to add some thoughts to address some of those. I very much appreciate all of the attention this post has gotten!</p>
+<section id="plumber-vs.-r-itself" class="level3">
+<h3 class="anchored" data-anchor-id="plumber-vs.-r-itself">Plumber vs.&nbsp;R Itself</h3>
+<p>This post is about R in production, but it’s also about Plumber. I recognize that I conflate Plumber and R throughout this post, and that many of the points here are comparing, for example, Plumber and FastAPI. That wasn’t exactly my intention. Especially when it comes to web servers, there are two points I’d like to emphasize.</p>
+<p>First, the reason I seem to be conflating Plumber (a library) and R (a language) is that Plumber is the only viable, widely used API framework in R. So, to some extent, that means that problems with Plumber <em>are</em> problems with R, since there really aren’t viable alternatives, at least to my knowledge.</p>
+<p>Second, FastAPI is only one alternative, but the point I was trying to make was broader: <em>Every</em> web framework that I’m aware of utilizes some kind of concurrent web server, a la Uvicorn, Gunicorn, or Puma. So while these points about the lack of a battle-hardened, concurrent web server implementation in Plumber apply when comparing it to FastAPI, they also apply when comparing it to Flask or Django, which you’d run behind Gunicorn or similar, Rails, which you’d run behind Puma or similar, Rocket (in Rust), which ships with its own multi-threaded, asynchronous server, and so on. At its core, this really isn’t a comparison of Plumber and FastAPI: It’s a comparison of Plumber and every other web framework that I am aware of.</p>
+</section>
+<section id="performance-gains-from-adopting-fastapi" class="level3">
+<h3 class="anchored" data-anchor-id="performance-gains-from-adopting-fastapi">Performance Gains From Adopting FastAPI</h3>
+<p>I made a comment about a 5x improvement in throughput by switching to FastAPI:</p>
+<blockquote class="blockquote">
+<p>we got about a 5x speedup in how long it took to process requests</p>
+</blockquote>
+<p>I should have added a clarifying point: This 5x improvement was achieved <em>even after accounting for scaling down from four instances of a Plumber service to a single instance of a FastAPI service with four workers.</em> So it wasn’t the case that the throughput improvement was due to concurrency, as the number of “workers” in some sense remained the same.</p>
 
 
+</section>
 </section>
 
  ]]></description>
