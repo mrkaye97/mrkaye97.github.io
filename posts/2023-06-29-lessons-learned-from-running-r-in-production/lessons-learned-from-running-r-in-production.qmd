@@ -368,7 +368,7 @@ function(n) {
 }
 ```
 
-This attempts to stop processing the request if the API receives a value for `n` that is not an integer. Unfortunately, it doesn't work. And ironically, the reason why it doesn't work is because of R's type system. If you run this API and make a request to `/double`  with `n=foobar`, you'll get the following response:
+This attempts to stop processing the request if the API receives a value for `n` that is not an integer. Unfortunately, it doesn't work. And ironically, the reason why it doesn't work is because of Plumber not enforcing types. If you run this API and make a request to `/double`  with `n=foobar`, you'll get the following response:
 
 ```json
 curl "http://127.0.0.1:7012/double?n=foobar" | jq
