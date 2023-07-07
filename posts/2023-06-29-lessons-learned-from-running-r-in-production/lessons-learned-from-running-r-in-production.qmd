@@ -351,5 +351,145 @@ Using a tool like Valve, similarly, costs an innovation token, and it's not one 
 
 Ultimately, as data scientists, we get paid to deliver business value. We don't get paid to work out weird kinks in an uncommonly used library, or any other version of fitting square pegs into round holes. And so my view is that in cases like this, the boring technology -- read: the one that everyone else uses -- tends to be the one that ultimately lets us do what we get paid to do. This is the crux of the sadness I felt in moving from R to FastAPI: I was making a conscious choice to give up something that I love in the name of pragmatism, which is never an easy call to make.
 
+## Types and `stopifnot`
 
+One proposed fix for the "R doesn't do a good job of handling types" issues that I outlined above is to use something like this to check types:
+
+```r
+#* Double a number
+#*
+#* @param n:int The number to double
+#*
+#* @get /double
+function(n) {
+  stopifnot(is.integer(n))
+  
+  n * 2
+}
+```
+
+This attempts to stop processing the request if the API receives a value for `n` that is not an integer. Unfortunately, it doesn't work. And ironically, the reason why it doesn't work is because of R's type system. If you run this API and make a request to `/double`  with `n=foobar`, you'll get the following response:
+
+```json
+curl "http://127.0.0.1:7012/double?n=foobar" | jq
+
+{
+  "error": "500 - Internal server error",
+  "message": "Error in (function (n) : is.integer(n) is not TRUE\n"
+}
+```
+
+But if you make the request with `n=2`, which you would expect to return 4, you'll get the same error:
+
+```json
+curl "http://127.0.0.1:7012/double?n=2" | jq
+
+{
+  "error": "500 - Internal server error",
+  "message": "Error in (function (n) : is.integer(n) is not TRUE\n"
+}
+```
+
+There are three major problems here. 
+
+### Parsing Integer-ish Variables
+
+The first is that query parameters in Plumber are treated as strings and need to be coerced to other types, since Plumber doesn't enforce the types as defined. This means that `is.integer(n)` will _always_ return `FALSE`, no matter what value is provided. To get this to work, you'd need to do something like this: `is.integer(as.integer(n))`. But this also doesn't work, since `is.integer(as.integer("foo"))` returns `TRUE`. So this means that what we actually need to do is add _yet another_ type check. Something like this would work, but look how cumbersome it is:
+
+```r
+#* Double a number
+#*
+#* @param n:int The number to double
+#*
+#* @get /double
+function(n) {
+  n <- as.integer(n)
+  
+  stopifnot(is.integer(n) && !is.na(n))
+  
+  n * 2
+}
+```
+
+Let's run this code for a few examples:
+
+```{r, error = TRUE}
+n1 <- "2"
+n2 <- "foo"
+n3 <- "2,3"
+
+double <- function(n) {
+  n <- as.integer(n)
+  
+  stopifnot(is.integer(n) && !is.na(n))
+  
+  n * 2
+}
+
+double(n1)
+double(n2)
+double(n3)
+```
+
+Great! That works. It's just ugly since we now need to handle both the integer case and the `NA` case, but it's not the end of the world.
+
+### HTTP Status Codes
+
+The second problem with the original `stopifnot` approach is that the API returns an HTTP 500 error -- which generally means that something went wrong on the server side, unrelated to the client's request -- instead of an HTTP 400, which should be used for indicating bad parameter values. There's lots of documentation on what HTTP status codes to return to the client for different request outcomes. Here's one [from Mozilla](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400). In this case, the `500` indicates that the server did something wrong, and, aside from reading the error message, the client has no way of knowing what happened.
+
+To fix this, we'd need to add a custom implementation of some logic that's _similar_ to `stopifnot`, but not exactly the same. The key is that `stopifnot` aborts the request, forcing an `HTTP 500`. If we want to return `4XX` instead, we need to short-circuit the processing that happens in the endpoint. 
+
+::: {.callout-note}
+Something to note is that if you're working in a production service, error handling is something you need to have anyways. So I wouldn't consider this to be too much overhead, but the amount of additional overhead is compounded by Plumber's lack of proper tooling for these types of problems out of the box.
+:::
+
+Something like this might work as a quick fix:
+
+```r
+error_400 <- function(res, msg) {
+  code <- 400L
+
+  res$status <- code
+  res$body <- list(
+    status_code = code,
+    message = msg
+  )
+}
+
+#* Double a number
+#*
+#* @param n:int The number to double
+#* @serializer unboxedJSON
+#*
+#* @get /double
+function(req, res, n) {
+  n <- as.integer(n)
+  if (!is.integer(n) || is.na(n)) {
+    error_400(res, "N must be an integer.")
+  } else {
+    return(n * 2)
+  }
+}
+```
+
+In practice, you'd want something much more robust than this. Some helpful examples for structuring Plumber errors are laid out [in this post](https://unconj.ca/blog/structured-errors-in-plumber-apis.html). But if we run the API now, let's see how our error looks.
+
+```json
+curl "http://127.0.0.1:7012/double?n=foobar" | jq
+
+{
+  "status_code": 400,
+  "message": "N must be an integer."
+}
+```
+
+Much better.
+
+### Stack Traces and R Errors
+
+And that brings me to the last issue: The error message the client gets back from the API is an _R error_, which is a problem. We don't want to return stack traces or errors that expose too much of the guts of the API to the client, as those could be used by a malicious actor to perform an attack. But secondly, and maybe more importantly: Not everyone speaks R, and so returning an R error is not helpful. The point of an API is to abstract away the R, Python, or any other implementation details from the client, and returning R errors does not achieve that goal. 
+
+Instead, we want two things. First, we want to return an HTTP 4XX to the client to indicate that they did something wrong. And second, we want the error message they get back to indicate _what_ they did wrong. Note that I achieved that in the changes I made above. Now, if the client supplies `n=foobar`, they get back an error message with a `400` status code and a message telling them that N must be an integer, so they know what they did wrong and how to fix it. 
+
+Suspiciously, after all of this additional implementation to handle types and provide helpful errors, the Plumber service returns errors that look similar to what FastAPI gives out of the box, which is largely the point I'm trying to make in this post. While yes, it is certainly possible to handle all of these issues in Plumber and program around them, other frameworks give you them for free, and I generally don't want to spend my time working out kinks in R's already shoddy type system and in Plumber itself, when I could get the same from some type hints in the corresponding FastAPI code, and then get back to providing real value. That's just my preference.
 
