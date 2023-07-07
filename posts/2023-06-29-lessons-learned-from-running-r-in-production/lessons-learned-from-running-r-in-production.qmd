@@ -351,7 +351,7 @@ Using a tool like Valve, similarly, costs an innovation token, and it's not one 
 
 Ultimately, as data scientists, we get paid to deliver business value. We don't get paid to work out weird kinks in an uncommonly used library, or any other version of fitting square pegs into round holes. And so my view is that in cases like this, the boring technology -- read: the one that everyone else uses -- tends to be the one that ultimately lets us do what we get paid to do. This is the crux of the sadness I felt in moving from R to FastAPI: I was making a conscious choice to give up something that I love in the name of pragmatism, which is never an easy call to make.
 
-## Types and `stopifnot`
+### Types and `stopifnot`
 
 One proposed fix for the "R doesn't do a good job of handling types" issues that I outlined above is to use something like this to check types:
 
@@ -392,7 +392,7 @@ curl "http://127.0.0.1:7012/double?n=2" | jq
 
 There are three major problems here. 
 
-### Parsing Integer-ish Variables
+#### Parsing Integer-ish Variables
 
 The first is that query parameters in Plumber are treated as strings and need to be coerced to other types, since Plumber doesn't enforce the types as defined. This means that `is.integer(n)` will _always_ return `FALSE`, no matter what value is provided. To get this to work, you'd need to do something like this: `is.integer(as.integer(n))`. But this also doesn't work, since `is.integer(as.integer("foo"))` returns `TRUE`. So this means that what we actually need to do is add _yet another_ type check. Something like this would work, but look how cumbersome it is:
 
@@ -433,7 +433,7 @@ double(n3)
 
 Great! That works. It's just ugly since we now need to handle both the integer case and the `NA` case, but it's not the end of the world.
 
-### HTTP Status Codes
+#### HTTP Status Codes
 
 The second problem with the original `stopifnot` approach is that the API returns an HTTP 500 error -- which generally means that something went wrong on the server side, unrelated to the client's request -- instead of an HTTP 400, which should be used for indicating bad parameter values. There's lots of documentation on what HTTP status codes to return to the client for different request outcomes. Here's one [from Mozilla](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400). In this case, the `500` indicates that the server did something wrong, and, aside from reading the error message, the client has no way of knowing what happened.
 
@@ -485,7 +485,7 @@ curl "http://127.0.0.1:7012/double?n=foobar" | jq
 
 Much better.
 
-### Stack Traces and R Errors
+#### Stack Traces and R Errors
 
 And that brings me to the last issue: The error message the client gets back from the API is an _R error_, which is a problem. We don't want to return stack traces or errors that expose too much of the guts of the API to the client, as those could be used by a malicious actor to perform an attack. But secondly, and maybe more importantly: Not everyone speaks R, and so returning an R error is not helpful. The point of an API is to abstract away the R, Python, or any other implementation details from the client, and returning R errors does not achieve that goal. 
 
