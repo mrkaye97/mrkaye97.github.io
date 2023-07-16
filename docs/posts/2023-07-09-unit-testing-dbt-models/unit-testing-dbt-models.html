@@ -1,0 +1,1104 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.353">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Matt Kaye">
+<meta name="dcterms.date" content="2023-07-09">
+<meta name="description" content="Matt Kaye’s personal website.">
+
+<title>Matt Kaye - Unit Testing dbt Models</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../photos/favicon.png" rel="icon" type="image/png">
+<script src="../../site_libs/cookie-consent/cookie-consent.js"></script>
+<link href="../../site_libs/cookie-consent/cookie-consent.css" rel="stylesheet">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-J4CH9BY1RY"></script>
+
+<script type="text/plain" cookie-consent="tracking">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-J4CH9BY1RY', { 'anonymize_ip': true});
+</script>
+
+<script type="text/javascript" charset="UTF-8">
+document.addEventListener('DOMContentLoaded', function () {
+cookieconsent.run({
+  "notice_banner_type":"simple",
+  "consent_type":"implied",
+  "palette":"light",
+  "language":"en",
+  "page_load_consent_levels":["strictly-necessary","functionality","tracking","targeting"],
+  "notice_banner_reject_button_hide":false,
+  "preferences_center_close_button_hide":false,
+  "website_name":""
+  });
+});
+</script> 
+  
+
+
+<link rel="stylesheet" href="../../styles.css">
+<meta property="og:title" content="Matt Kaye - Unit Testing dbt Models">
+<meta property="og:description" content="Letting yourself sleep at night by ensuring your SQL is correct">
+<meta property="og:site-name" content="Matt Kaye">
+<meta name="twitter:title" content="Matt Kaye - Unit Testing dbt Models">
+<meta name="twitter:description" content="Letting yourself sleep at night by ensuring your SQL is correct">
+<meta name="twitter:card" content="summary">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Matt Kaye</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-blog" role="button" data-bs-toggle="dropdown" aria-expanded="false" rel="" target="">
+ <span class="menu-text">Blog</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-blog">    
+        <li>
+    <a class="dropdown-item" href="../../posts.html" rel="" target="">
+ <span class="dropdown-text">Posts</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../series.html" rel="" target="">
+ <span class="dropdown-text">Series</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="../../code.html" rel="" target="">
+ <span class="menu-text">Code</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-more" role="button" data-bs-toggle="dropdown" aria-expanded="false" rel="" target="">
+ <span class="menu-text">More</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-more">    
+        <li>
+    <a class="dropdown-item" href="../../my-three-favorite.html" rel="" target="">
+ <span class="dropdown-text">My three favorite</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../travel.html" rel="" target="">
+ <span class="dropdown-text">Going places</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../blogroll.html" rel="" target="">
+ <span class="dropdown-text">Blogroll</span></a>
+  </li>  
+    </ul>
+  </li>
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="../../posts.xml" rel="" target=""><i class="bi bi-rss" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+</ul>
+            <div class="quarto-navbar-tools">
+</div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar"><div class="quarto-margin-header"><div class="margin-header-item">
+<style type="text/css">
+    #mc_embed_signup{background:#fff; clear:left; font:14px Helvetica,Arial,sans-serif;  width:100%;}
+</style>
+<div id="mc_embed_signup">
+    <form action="https://matthewrkaye.us18.list-manage.com/subscribe/post?u=ec09e4d843f1bd163969cd497&amp;id=57e1f0d88d&amp;f_id=00a914e7f0" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_self">
+        <div id="mc_embed_signup_scroll" {margin:0px;="" padding:0px;="" display:inline;}="">
+        <h2>Subscribe</h2>
+<div class="mc-field-group">
+
+    <input type="email" value="" name="EMAIL" class="required email" id="mce-EMAIL" placeholder="email address" required="">
+    <span id="mce-EMAIL-HELPERTEXT" class="helper_text"></span>
+</div>
+    <div id="mce-responses" class="clear foot">
+        <div class="response" id="mce-error-response" style="display:none"></div>
+        <div class="response" id="mce-success-response" style="display:none"></div>
+    </div>    <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+    <div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_ec09e4d843f1bd163969cd497_57e1f0d88d" tabindex="-1" value=""></div>
+        <div class="optionalParent">
+            <div class="clear foot">
+                <input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="button">
+            </div>
+        </div>
+    </div>
+</form>
+</div>
+</div></div>
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
+  <li><a href="#tests-in-dbt" id="toc-tests-in-dbt" class="nav-link" data-scroll-target="#tests-in-dbt">Tests in dbt</a></li>
+  <li><a href="#unit-testing" id="toc-unit-testing" class="nav-link" data-scroll-target="#unit-testing">Unit Testing</a></li>
+  <li><a href="#unit-testing-sql" id="toc-unit-testing-sql" class="nav-link" data-scroll-target="#unit-testing-sql">Unit Testing <em>SQL</em></a></li>
+  <li><a href="#dbt-pytest" id="toc-dbt-pytest" class="nav-link" data-scroll-target="#dbt-pytest">dbt + pytest</a>
+  <ul>
+  <li><a href="#background" id="toc-background" class="nav-link" data-scroll-target="#background">Background</a></li>
+  <li><a href="#our-framework" id="toc-our-framework" class="nav-link" data-scroll-target="#our-framework">Our Framework</a>
+  <ul class="collapse">
+  <li><a href="#the-conftest-file" id="toc-the-conftest-file" class="nav-link" data-scroll-target="#the-conftest-file">The <code>conftest</code> File</a></li>
+  <li><a href="#the-tests" id="toc-the-tests" class="nav-link" data-scroll-target="#the-tests">The Tests</a></li>
+  </ul></li>
+  <li><a href="#a-more-complicated-example" id="toc-a-more-complicated-example" class="nav-link" data-scroll-target="#a-more-complicated-example">A More Complicated Example</a>
+  <ul class="collapse">
+  <li><a href="#sessionization" id="toc-sessionization" class="nav-link" data-scroll-target="#sessionization">Sessionization</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#wrapping-up" id="toc-wrapping-up" class="nav-link" data-scroll-target="#wrapping-up">Wrapping Up</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Unit Testing dbt Models</h1>
+<p class="subtitle lead">Letting yourself sleep at night by ensuring your SQL is correct</p>
+  <div class="quarto-categories">
+    <div class="quarto-category">dbt</div>
+    <div class="quarto-category">analytics engineering</div>
+    <div class="quarto-category">python</div>
+  </div>
+  </div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Matt Kaye </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">July 9, 2023</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+</header>
+
+<section id="introduction" class="level2">
+<h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
+<p>Our team adopted <a href="https://www.getdbt.com/">dbt</a> about a year ago, and it’s become an integral part of our data stack. dbt is a major component of the so-called “<a href="https://www.fivetran.com/blog/what-is-the-modern-data-stack">modern data stack</a>” and has exploded onto the scene in the past few years.</p>
+<p>The basic gist is this: You use an ELT tool like <a href="https://www.fivetran.com/">Fivetran</a> or <a href="https://airbyte.com/">Airbyte</a> to ingest raw data from any number of sources – think a Postgres database, a <a href="https://www.salesforce.com/">Salesforce</a> instance, <a href="https://segment.com/">Segment</a> or a similar analytics platform, or a product management tool like <a href="https://app.asana.com/">Asana</a>, among many, many others – into your data warehouse (Redshift, Snowflake, etc.). Then, you use dbt to transform the raw data in the warehouse into a format that’s friendly for downstream users like data scientists and analysts, so that they can generate insights more quickly and with a higher degree of confidence.</p>
+<p>dbt is the transformation tool (the “T” in “ELT”) in that stack: It runs SQL inside of your data warehouse and abstracts away the often boilerplate DDL code, so that you can focus on writing transformations as <code>SELECT</code> statements and spend your time on driving business value. dbt also allows you to easily write documentation and tests, write macros for often-reused code, and so on. The testing bit of dbt is what this post will focus on. In short, dbt sells itself as a tool that lets you bring software engineering best practices to ELT pipelines.</p>
+<div class="callout callout-style-simple callout-warning no-icon">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-body-container">
+<p>If you’re not familiar with dbt, I would recommend reading some of <a href="https://docs.getdbt.com/">their documentation</a> before continuing this post. It will not cover many dbt basics.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="tests-in-dbt" class="level2">
+<h2 class="anchored" data-anchor-id="tests-in-dbt">Tests in dbt</h2>
+<p><a href="https://docs.getdbt.com/docs/build/tests">dbt has lots of support for tests</a>. It ships with a few – uniqueness, not-null, enums, and “relationships” (which test foreign key relationships) – out of the box. All you need to do is add a line like the following to one of your <code>schema.yml</code> files where a model is defined, as follows:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode yml code-with-copy"><code class="sourceCode yaml"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">## schema.yml</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">version</span><span class="kw">:</span><span class="at"> </span><span class="dv">2</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">models</span><span class="kw">:</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> fct_pageviews</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">columns</span><span class="kw">:</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> event_id</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">tests</span><span class="kw">:</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="kw">-</span><span class="at"> unique</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="kw">-</span><span class="at"> not_null</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> user_id</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">tests</span><span class="kw">:</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="kw">-</span><span class="at"> not_null</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="at">      ...</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>This bit of yaml does a few things: It defines a table called <code>fct_pageviews</code>, that has at least two columns: the <code>event_id</code> and the <code>user_id</code>. The <code>event_id</code> column has both a <code>unique</code> and a <code>not_null</code> test, and the <code>user_id</code> also must be non-null (but not unique, since users can view many pages).</p>
+<p>These tests are great, since they enforce a number of data quality expectations that we want to make sure are followed when shipping data to production. Since dbt generates a DAG from the tests and models you define, you can run these tests upstream of production and catch any failures before they hit production.</p>
+<p>dbt makes it easy to write <a href="https://docs.getdbt.com/docs/build/tests#generic-tests">arbitrary tests</a> as macros, which you can then add to a yaml file to apply to a model. You can also use a package like <a href="https://github.com/calogica/dbt-expectations">dbt-expectations</a> to greatly expand upon dbt’s built-in testing capabilities. In conjunction, all of these testing capabilities should give you lots of confidence that the data you’re shipping to production meets virtually any data quality bar you can set.</p>
+<p>But this post doesn’t end here, so what’s wrong? It’s simple: These tests, useful as they may be, are not unit tests.</p>
+</section>
+<section id="unit-testing" class="level2">
+<h2 class="anchored" data-anchor-id="unit-testing">Unit Testing</h2>
+<p>A <a href="https://learn.microsoft.com/en-us/visualstudio/test/unit-test-basics?view=vs-2022">unit test</a> is a test that checks the correctness of a single <em>unit</em> of code. Generally, you would try to test the smallest components you can to ensure that each individual component of a larger codebase is doing what is expected of it. For instance, if you have the following method that adds two numbers:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> add(x: <span class="bu">float</span>, y: <span class="bu">float</span>) <span class="op">-&gt;</span> <span class="bu">float</span>:</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> x <span class="op">+</span> y</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>You could write the following tests:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> test_add():</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="co">## Commutativity</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="cf">assert</span> add(<span class="dv">1</span>, <span class="dv">2</span>) <span class="op">==</span> add(<span class="dv">2</span>, <span class="dv">1</span>)  </span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="co">## Associativity</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  <span class="cf">assert</span> add(<span class="dv">1</span>, add(<span class="dv">2</span>, <span class="dv">3</span>)) <span class="op">==</span> add(add(<span class="dv">1</span>, <span class="dv">2</span>), <span class="dv">3</span>)</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>  <span class="co">## Correctness</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  <span class="cf">assert</span> add(<span class="dv">2</span>, <span class="dv">2</span>) <span class="op">==</span> <span class="dv">4</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>  <span class="cf">assert</span> add(<span class="dv">2</span>, <span class="op">-</span><span class="dv">10</span>) <span class="op">==</span> <span class="op">-</span><span class="dv">8</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>  <span class="cf">assert</span> add(<span class="fl">2.5</span>, <span class="fl">3.5</span>) <span class="op">==</span> <span class="dv">6</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>These are some very basic tests you might write to ensure that your <code>add</code> method is correctly adding the two numbers you supply it. Of course, these tests are not exhaustive, but you get the idea.</p>
+</section>
+<section id="unit-testing-sql" class="level2">
+<h2 class="anchored" data-anchor-id="unit-testing-sql">Unit Testing <em>SQL</em></h2>
+<p>Writing unit tests for SQL code – in dbt or otherwise – is much less common that writing unit tests for application code, for instance. In fact, until I started working on unit testing our dbt models (the topic of this post), I had never seen <em>any</em> unit tests for SQL logic. There’s also relatively little written about best practices for unit testing in dbt, and I’ve often heard and seen the data quality checks outlined a bit above mistaken for unit tests. This is unfortunate, since they’re two entirely separate aspects to any data pipeline: Unit tests check that your SQL is correct and does what you think it does, and data quality checks ensure that the data flowing through your system meets your expectations. <em>Both</em> of these types of tests should be important parts of your ELT pipelines.</p>
+<p>The trickiest part of unit testing SQL queries is the actual mechanics of it. Unit testing SQL requires seeding data into a database, then running a query, and then comparing the results of that query on the seed data to some expectations. For instance, consider the following query that selects page views from the previous week using the <code>fct_pageviews</code> table we defined above:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> event_id, user_id, page_viewed_at</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> fct_pageviews</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> page_viewed_at <span class="op">&gt;</span> (GETDATE() <span class="op">-</span> <span class="dt">INTERVAL</span> <span class="st">'7 days'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Of course, this query is trivial. But you might imagine wanting to write a unit test that checks if the oldest page view occurred less than seven days ago. You might write some SQL like this to achieve that:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">WITH</span> <span class="kw">query</span> <span class="kw">AS</span> (</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">SELECT</span> event_id, user_id, page_viewed_at</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="kw">FROM</span> fct_pageviews</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="kw">WHERE</span> page_viewed_at <span class="op">&gt;</span> (GETDATE() <span class="op">-</span> <span class="dt">INTERVAL</span> <span class="st">'7 days'</span>)</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="fu">MIN</span>(page_viewed_at) <span class="op">&gt;</span> <span class="st">'some date'</span> <span class="kw">AS</span> test_passed</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> <span class="kw">query</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>You could also, for instance, pull your query result into R and run the assertions from there:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>conn <span class="ot">&lt;-</span> DBI<span class="sc">::</span><span class="fu">dbConnect</span>(<span class="st">"some"</span>, <span class="st">"credentials"</span>)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>result <span class="ot">&lt;-</span> DBI<span class="sc">::</span><span class="fu">dbGetQuery</span>(</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  conn,</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="st">"</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="st">  SELECT event_id, user_id, page_viewed_at</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="st">  FROM fct_pageviews</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="st">  WHERE page_viewed_at &gt; (GETDATE() - INTERVAL '7 days')</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="st">  "</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>checkmate<span class="sc">::</span><span class="fu">assert_true</span>(<span class="fu">min</span>(result<span class="sc">$</span>page_viewed_at) <span class="sc">&gt;</span> <span class="st">"some date"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>But now you need to determine how to actually run the assertion and what to do if it fails. Not only that, but you probably don’t want to be running unit tests against production data. It would be better, for instance, to seed some data into your database to run the test against. Some seed data might look like this:</p>
+<div>
+<table class="table">
+<thead>
+<tr class="header">
+<th style="text-align: center;">event_id</th>
+<th style="text-align: center;">user_id</th>
+<th style="text-align: center;">page_viewed_at</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">2023-07-01 23:59:59</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">2023-07-02 00:01:01</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Then, after running the SQL, you might expect the following:</p>
+<div>
+<table class="table">
+<thead>
+<tr class="header">
+<th style="text-align: center;">event_id</th>
+<th style="text-align: center;">user_id</th>
+<th style="text-align: center;">page_viewed_at</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">2023-07-01 23:59:59</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>If that’s your expectation, you could write assertions like:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co">## assume x is a data frame with the result of the query</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> <span class="bu">len</span>(x) <span class="op">==</span> <span class="dv">1</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> x[<span class="st">"page_viewed_at"</span>][<span class="dv">0</span>] <span class="op">==</span> <span class="st">"2023-07-01 23:59:59"</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="co">## and so on</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>This approach could actually work quite well! If you have a query to test, you can strategically create seed data for individual test cases to test different bits of the logic.</p>
+<p>So now, the question is: How do we actually implement and orchestrate these types of tests within dbt?</p>
+</section>
+<section id="dbt-pytest" class="level2">
+<h2 class="anchored" data-anchor-id="dbt-pytest">dbt + pytest</h2>
+<p>dbt actually has a lesser-known feature that does exactly what we want, which leverages <a href="https://docs.pytest.org/en/latest/how-to/fixtures.html#how-to-fixtures">pytest fixtures</a>. The long-and-short of it is this: dbt <a href="https://docs.getdbt.com/guides/dbt-ecosystem/adapter-development/4-testing-a-new-adapter">provides a framework for adapter developers to test their adapters</a>, and we can jerry-rig the same framework to let us test our models!</p>
+<section id="background" class="level3">
+<h3 class="anchored" data-anchor-id="background">Background</h3>
+<p>Before getting into the nuts and bolts, there’s some important context to include here.</p>
+<p>We use <a href="https://aws.amazon.com/redshift/">Redshift</a> as our data warehouse. But for testing, we don’t want to make a ton of round trips to a Redshift cluster to set up the tests, seed raw data, run transformations and queries, and clean up at the end. Doing all of that would dramatically slow down the testing process, and it’d also be expensive. Unfortunately, we also can’t run Redshift locally (like you can MySQL, for instance). So our hands are tied.</p>
+<p>Or are they? Redshift, fortunately, is a fork of Postgres 8, and shares a lot of user-facing features with Postgres, even if the guts of how it works are completely different. This, in combination with the <a href="https://docs.getdbt.com/reference/dbt-jinja-functions/cross-database-macros">handy cross-database macros that dbt provides</a> let us solve our performance problems from above. Instead of using Redshift for our unit tests, we use Postgres instead. We can run Postgres locally, it’s easy to spin up and down on local and in a CI/CD environment, and it’s fast: Our test suite runs some 100x faster against a local Postgres instance than it does against Redshift. This is a massive win.</p>
+<p>In short: We have a bash script that runs our unit tests, and it does four things:</p>
+<ol type="1">
+<li>Sets up environment variables that we need for running Postgres and dbt</li>
+<li>Start up Postgres in Docker with <code>docker run postgres ...</code></li>
+<li>Run our unit test suite with <code>poetry run pytest ...</code></li>
+<li>Spin down Postgres with <code>docker stop ...</code></li>
+</ol>
+<p>And that’s it! We can run the exact same script on local and in CI.</p>
+<div class="callout callout-style-simple callout-note no-icon">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-body-container">
+<p>We run Postgres in Docker as follows:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> run <span class="dt">\</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">--name</span> dbt_test_postgres <span class="dt">\</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">-p</span> <span class="va">$TEST_DB_PORT</span>:5432 <span class="dt">\</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">-e</span> POSTGRES_PASSWORD=<span class="va">$TEST_DB_PASSWORD</span> <span class="dt">\</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">-e</span> POSTGRES_USER=<span class="va">$TEST_DB_USER</span> <span class="dt">\</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">-e</span> POSTGRES_DB=<span class="va">$TEST_DB_NAME</span> <span class="dt">\</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">-d</span> <span class="dt">\</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>    postgres:11</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+<p>Now that you have a sense for the infrastructure, on to the tests themselves.</p>
+</section>
+<section id="our-framework" class="level3">
+<h3 class="anchored" data-anchor-id="our-framework">Our Framework</h3>
+<p>Since the dbt documentation is so great, I would recommend starting there for getting a sense for how to use dbt to test your models. But since it’s not exactly geared towards this particular use case, I’ll start by explaining a bit how we organize unit tests for our dbt models.</p>
+<p>It’s actually quite simple: At the top level in our dbt project, we have a <code>unit-tests</code> directory. The contents of that directory look like this:</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>.</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>├── README.md</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>├── common</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>├── conftest.py</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>├── poetry.lock</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>├── pyproject.toml</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>└── tests</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>A few notes:</p>
+<ol type="1">
+<li>We use <a href="https://python-poetry.org/">Poetry</a> for managing dependencies, so our unit testing rig is a very basic Poetry project. We only have a few dependencies defined: <code>pytest</code>, <code>dbt-postgres</code>, <code>pandas</code>, and <code>sqlalchemy</code>.</li>
+<li>We have the tests themselves living inside of <code>tests/</code>.</li>
+<li>We have shared helper code living inside of <code>common/</code>.</li>
+<li>We have a script at the top level of our dbt project that runs our tests, as described above.</li>
+</ol>
+<section id="the-conftest-file" class="level4">
+<h4 class="anchored" data-anchor-id="the-conftest-file">The <code>conftest</code> File</h4>
+<p>Let’s start with the <code>conftest.py</code> file, which looks like this:</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co">## conftest.py</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pytest</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Import the standard functional fixtures as a plugin</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Note: fixtures with session scope need to be local</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>pytest_plugins <span class="op">=</span> [<span class="st">"dbt.tests.fixtures.project"</span>]</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="co"># The profile dictionary, used to write out profiles.yml</span></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a><span class="co"># dbt will supply a unique schema per test, so we do not specify "schema" here</span></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a><span class="at">@pytest.fixture</span>(scope<span class="op">=</span><span class="st">"class"</span>)</span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> dbt_profile_target():</span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> {</span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>        <span class="st">"type"</span>: <span class="st">"postgres"</span>,</span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>        <span class="st">"dbname"</span>: os.environ.get(<span class="st">"TEST_DB_NAME"</span>),</span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>        <span class="st">"threads"</span>: <span class="dv">8</span>,</span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>        <span class="st">"host"</span>: <span class="st">"localhost"</span>,</span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>        <span class="st">"port"</span>: <span class="bu">int</span>(os.environ.get(<span class="st">"TEST_DB_PORT"</span>)),</span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a>        <span class="st">"user"</span>: os.environ.get(<span class="st">"TEST_DB_USER"</span>),</span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a>        <span class="st">"password"</span>: os.environ.get(<span class="st">"TEST_DB_PASSWORD"</span>)</span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a>    }</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>What we’re doing here is pretty simple. First, we import the plugin we need for running dbt with pytest, as <a href="https://docs.getdbt.com/guides/dbt-ecosystem/adapter-development/4-testing-a-new-adapter#set-up-and-configure-pytest">is recommended in the docs</a>. Next, we add a pytest fixture that represents the <code>profiles.yml</code> you’d find at the root of a dbt project, where we specify connection details to our Postgres test database. And that’s it!</p>
+</section>
+<section id="the-tests" class="level4">
+<h4 class="anchored" data-anchor-id="the-tests">The Tests</h4>
+<p>Once the <code>conftest.py</code> file is set up, the basic process is to add a new test at a path inside of <code>tests/</code> that matches the location of the corresponding model you’re testing inside of <code>models/</code>. For instance, if you have <code>models/int/int_users.sql</code>, then you would also have <code>tests/int/test_int_users.py</code>. Let’s imagine we have a model called <code>stg_users</code> that our <code>int_users</code> selects from, and one of the transformations we want to do in the intermediate layer is remove any internal users. Maybe our SQL looks like this:</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- int_users.sql</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="op">*</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> {{ <span class="fu">ref</span>(<span class="ot">"stg_users"</span>) }}</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> <span class="kw">NOT</span> is_internal</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Great! Now let’s test it.</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co">## tests/int/test_int_users.py</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pytest</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> dbt.tests.util <span class="im">import</span> run_dbt</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a><span class="co">## Importing helper code from `common`</span></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a><span class="co">## </span></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a><span class="co">## * `load_sql` that returns a string with the </span></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a><span class="co">##     SQL for a model based on the model's name</span></span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a><span class="co">## * `connect_to_test_db` makes a connection to our </span></span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a><span class="co">##     Postgres test database so that we can query it</span></span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a><span class="co">##     from pandas</span></span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a><span class="co">## * `convert_dicts_to_csv` writes a list of Python dictionaries</span></span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a><span class="co">##     representing rows in a table to a CSV string.</span></span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> common <span class="im">import</span> load_sql, connect_to_test_db, convert_dicts_to_csv</span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a>MODEL_NAME <span class="op">=</span> <span class="st">"int_users"</span></span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a>mock_stg_users <span class="op">=</span> convert_dicts_to_csv([</span>
+<span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a>    {<span class="st">"user_id"</span>: <span class="dv">1</span>, <span class="st">"is_internal"</span>: <span class="va">True</span>, <span class="st">"created_at"</span>: <span class="st">"2023-04-13 00:00:00"</span>},</span>
+<span id="cb12-24"><a href="#cb12-24" aria-hidden="true" tabindex="-1"></a>    {<span class="st">"user_id"</span>: <span class="dv">2</span>, <span class="st">"is_internal"</span>: <span class="va">False</span>, <span class="st">"created_at"</span>: <span class="st">"2023-04-14 00:00:00"</span>},</span>
+<span id="cb12-25"><a href="#cb12-25" aria-hidden="true" tabindex="-1"></a>    {<span class="st">"user_id"</span>: <span class="dv">3</span>, <span class="st">"is_internal"</span>: <span class="va">False</span>, <span class="st">"created_at"</span>: <span class="st">"2023-04-15 00:00:00"</span>}</span>
+<span id="cb12-26"><a href="#cb12-26" aria-hidden="true" tabindex="-1"></a>])</span>
+<span id="cb12-27"><a href="#cb12-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-28"><a href="#cb12-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-29"><a href="#cb12-29" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> TestIntUsers():</span>
+<span id="cb12-30"><a href="#cb12-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-31"><a href="#cb12-31" aria-hidden="true" tabindex="-1"></a>    <span class="at">@pytest.fixture</span>(scope<span class="op">=</span><span class="st">"class"</span>)</span>
+<span id="cb12-32"><a href="#cb12-32" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> seeds(<span class="va">self</span>):</span>
+<span id="cb12-33"><a href="#cb12-33" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> {<span class="st">"stg_users"</span>: mock_stg_users}</span>
+<span id="cb12-34"><a href="#cb12-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-35"><a href="#cb12-35" aria-hidden="true" tabindex="-1"></a>    <span class="at">@pytest.fixture</span>(scope<span class="op">=</span><span class="st">"class"</span>)</span>
+<span id="cb12-36"><a href="#cb12-36" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> models(<span class="va">self</span>):</span>
+<span id="cb12-37"><a href="#cb12-37" aria-hidden="true" tabindex="-1"></a>        <span class="co">## See comment in imports for note on this method</span></span>
+<span id="cb12-38"><a href="#cb12-38" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> {<span class="st">"actual.sql"</span>: load_sql(MODEL_NAME)}</span>
+<span id="cb12-39"><a href="#cb12-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-40"><a href="#cb12-40" aria-hidden="true" tabindex="-1"></a>    <span class="at">@pytest.fixture</span>(scope<span class="op">=</span><span class="st">"class"</span>)</span>
+<span id="cb12-41"><a href="#cb12-41" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> actual(<span class="va">self</span>):</span>
+<span id="cb12-42"><a href="#cb12-42" aria-hidden="true" tabindex="-1"></a>        build_result <span class="op">=</span> run_dbt([<span class="st">"build"</span>])</span>
+<span id="cb12-43"><a href="#cb12-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-44"><a href="#cb12-44" aria-hidden="true" tabindex="-1"></a>        <span class="co">## Extract the temporary schema generated by dbt + pytest</span></span>
+<span id="cb12-45"><a href="#cb12-45" aria-hidden="true" tabindex="-1"></a>        schema <span class="op">=</span> build_result.results[<span class="dv">0</span>].node.schema</span>
+<span id="cb12-46"><a href="#cb12-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-47"><a href="#cb12-47" aria-hidden="true" tabindex="-1"></a>        <span class="co">## See comment in imports for note on this method</span></span>
+<span id="cb12-48"><a href="#cb12-48" aria-hidden="true" tabindex="-1"></a>        engine <span class="op">=</span> connect_to_test_db()</span>
+<span id="cb12-49"><a href="#cb12-49" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-50"><a href="#cb12-50" aria-hidden="true" tabindex="-1"></a>        actual <span class="op">=</span> pd.read_sql(</span>
+<span id="cb12-51"><a href="#cb12-51" aria-hidden="true" tabindex="-1"></a>            sql <span class="op">=</span> <span class="ss">f"SELECT * FROM </span><span class="sc">{</span>schema<span class="sc">}</span><span class="ss">.actual ORDER BY user_id"</span>,</span>
+<span id="cb12-52"><a href="#cb12-52" aria-hidden="true" tabindex="-1"></a>            con <span class="op">=</span> engine</span>
+<span id="cb12-53"><a href="#cb12-53" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb12-54"><a href="#cb12-54" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-55"><a href="#cb12-55" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> actual</span>
+<span id="cb12-56"><a href="#cb12-56" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-57"><a href="#cb12-57" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> test_int_users_dimensions(<span class="va">self</span>, project, actual):</span>
+<span id="cb12-58"><a href="#cb12-58" aria-hidden="true" tabindex="-1"></a>        <span class="cf">assert</span> actual.shape <span class="op">=</span> (<span class="dv">2</span>, <span class="dv">3</span>)</span>
+<span id="cb12-59"><a href="#cb12-59" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb12-60"><a href="#cb12-60" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> test_user_ids(<span class="va">self</span>, project, actual):</span>
+<span id="cb12-61"><a href="#cb12-61" aria-hidden="true" tabindex="-1"></a>        <span class="cf">assert</span> actual[<span class="st">"user_id"</span>].to_list() <span class="op">==</span> [<span class="dv">1</span>, <span class="dv">2</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>And that’s it! Since <code>actual</code> is a Pandas DataFrame, you can write arbitrary assertions using whatever Python logic you please. Then, you just need to run <code>pytest</code> (or <code>poetry run pytest</code>, in our case) to run your test suite, assuming that you have Postgres running in the background already. If you don’t, you’ll need to spin it up first.</p>
+</section>
+</section>
+<section id="a-more-complicated-example" class="level3">
+<h3 class="anchored" data-anchor-id="a-more-complicated-example">A More Complicated Example</h3>
+<p>Let’s get into a more complicated example, since the value of unit testing isn’t in testing trivial cases like above.</p>
+<section id="sessionization" class="level4">
+<h4 class="anchored" data-anchor-id="sessionization">Sessionization</h4>
+<p>A very common task for an analytics engineer is “sessionizing” events. In other words, converting actions that users take – such as viewing pages – into some notion of a <em>session</em> on a site. For example, if a user visits your site both today and tomorrow, you might consider those two visits to be separate sessions.</p>
+<p>But some user tracking tools don’t give you sessions for free. Instead, you need to create them. Let’s imagine we have a table called <code>stg_pageviews</code> that comes from <a href="https://segment.com/">Segment</a>, which you might use for event tracking. The table has the following columns: <code>event_id</code>, which uniquely identifies each page view, <code>url</code>, which is the URL of the page viewed, <code>anonymous_id</code>, which is Segment’s user ID that works for both anonymous and logged-in users, and <code>timestamp</code>, which is the timestamp of when the user viewed the page. Then, we might create sessions as follows</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- int_sessions.sql</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="co">-- Set the max session idle time, in minutes</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>{% <span class="kw">set</span> max_session_idle_time_minutes <span class="op">=</span> <span class="dv">30</span> %}</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="co">-- First, we figure out how long passes between each (consecutive) pair</span></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a><span class="co">-- of page views for a user.</span></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a><span class="kw">WITH</span> pageviews_with_previous <span class="kw">AS</span> (</span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>    <span class="kw">SELECT</span></span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>        event_id,</span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>        url,</span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>        anonymous_id,</span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>        <span class="dt">timestamp</span>,</span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>        <span class="fu">LAG</span>(<span class="dt">timestamp</span>, <span class="dv">1</span>) <span class="kw">OVER</span>(</span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>            <span class="kw">PARTITION</span> <span class="kw">BY</span> anonymous_id</span>
+<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a>            <span class="kw">ORDER</span> <span class="kw">BY</span> <span class="dt">timestamp</span></span>
+<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a>        ) <span class="kw">AS</span> previous_timestamp</span>
+<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a>    <span class="kw">FROM</span> {{ <span class="fu">ref</span>(<span class="ot">"stg_pageviews"</span>) }}</span>
+<span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a>),</span>
+<span id="cb13-21"><a href="#cb13-21" aria-hidden="true" tabindex="-1"></a>new_session_labels <span class="kw">AS</span> (</span>
+<span id="cb13-22"><a href="#cb13-22" aria-hidden="true" tabindex="-1"></a>    <span class="kw">SELECT</span></span>
+<span id="cb13-23"><a href="#cb13-23" aria-hidden="true" tabindex="-1"></a>        event_id,</span>
+<span id="cb13-24"><a href="#cb13-24" aria-hidden="true" tabindex="-1"></a>        url,</span>
+<span id="cb13-25"><a href="#cb13-25" aria-hidden="true" tabindex="-1"></a>        anonymous_id,</span>
+<span id="cb13-26"><a href="#cb13-26" aria-hidden="true" tabindex="-1"></a>        <span class="dt">timestamp</span>,</span>
+<span id="cb13-27"><a href="#cb13-27" aria-hidden="true" tabindex="-1"></a>        <span class="cf">CASE</span></span>
+<span id="cb13-28"><a href="#cb13-28" aria-hidden="true" tabindex="-1"></a>            <span class="co">-- If the previous page was viewed less than `max_session_idle_time_minutes` ago</span></span>
+<span id="cb13-29"><a href="#cb13-29" aria-hidden="true" tabindex="-1"></a>            <span class="co">-- then it should be considered part of a new session</span></span>
+<span id="cb13-30"><a href="#cb13-30" aria-hidden="true" tabindex="-1"></a>            <span class="cf">WHEN</span> {{ datediff(<span class="ot">"previous_timestamp"</span>, <span class="ot">"timestamp"</span>, <span class="ot">"minute"</span>) }} <span class="op">&lt;=</span> {{ max_session_idle_time_minutes }} <span class="cf">THEN</span> <span class="dv">0</span></span>
+<span id="cb13-31"><a href="#cb13-31" aria-hidden="true" tabindex="-1"></a>            <span class="cf">ELSE</span> <span class="dv">1</span></span>
+<span id="cb13-32"><a href="#cb13-32" aria-hidden="true" tabindex="-1"></a>        <span class="cf">END</span> <span class="kw">AS</span> new_session</span>
+<span id="cb13-33"><a href="#cb13-33" aria-hidden="true" tabindex="-1"></a>    <span class="kw">FROM</span> pageviews_with_previous</span>
+<span id="cb13-34"><a href="#cb13-34" aria-hidden="true" tabindex="-1"></a>),</span>
+<span id="cb13-35"><a href="#cb13-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-36"><a href="#cb13-36" aria-hidden="true" tabindex="-1"></a><span class="co">-- Next, we create the session by taking a cumulative sum of the `new_session` values.</span></span>
+<span id="cb13-37"><a href="#cb13-37" aria-hidden="true" tabindex="-1"></a><span class="co">--</span></span>
+<span id="cb13-38"><a href="#cb13-38" aria-hidden="true" tabindex="-1"></a><span class="co">-- The basic idea is that `new_session` is 1 if {{ max_session_idle_time_minutes }} have</span></span>
+<span id="cb13-39"><a href="#cb13-39" aria-hidden="true" tabindex="-1"></a><span class="co">--  passed since the last page view, and zero otherwise. That means that if you view</span></span>
+<span id="cb13-40"><a href="#cb13-40" aria-hidden="true" tabindex="-1"></a><span class="co">--  three pages one after another in quick succession, the first one will get a value of 1</span></span>
+<span id="cb13-41"><a href="#cb13-41" aria-hidden="true" tabindex="-1"></a><span class="co">--  for `new_session` since it's the first pageview _ever_ for you, and the others</span></span>
+<span id="cb13-42"><a href="#cb13-42" aria-hidden="true" tabindex="-1"></a><span class="co">--  get a value of zero, since not enough time has passed since your last page view.</span></span>
+<span id="cb13-43"><a href="#cb13-43" aria-hidden="true" tabindex="-1"></a><span class="co">--  If you then leave for an hour, come back, and view one page, that page gets a `new_session`</span></span>
+<span id="cb13-44"><a href="#cb13-44" aria-hidden="true" tabindex="-1"></a><span class="co">--  value of one. And then you do it again, and the newest page view also gets a `new_session`</span></span>
+<span id="cb13-45"><a href="#cb13-45" aria-hidden="true" tabindex="-1"></a><span class="co">--  value of one.</span></span>
+<span id="cb13-46"><a href="#cb13-46" aria-hidden="true" tabindex="-1"></a><span class="co">--</span></span>
+<span id="cb13-47"><a href="#cb13-47" aria-hidden="true" tabindex="-1"></a><span class="co">-- Then, when we do the cumulative sum over `new_session`, all of the values for a single "session"</span></span>
+<span id="cb13-48"><a href="#cb13-48" aria-hidden="true" tabindex="-1"></a><span class="co">-- are 1 until we hit the fourth row (where there's another `new_session` value of 1) at which point</span></span>
+<span id="cb13-49"><a href="#cb13-49" aria-hidden="true" tabindex="-1"></a><span class="co">-- the cumulative sum becomes 2. And then we hit the next row, and it becomes 3.</span></span>
+<span id="cb13-50"><a href="#cb13-50" aria-hidden="true" tabindex="-1"></a><span class="co">--</span></span>
+<span id="cb13-51"><a href="#cb13-51" aria-hidden="true" tabindex="-1"></a><span class="co">-- Here's an example of how it looks for the example above:</span></span>
+<span id="cb13-52"><a href="#cb13-52" aria-hidden="true" tabindex="-1"></a><span class="co">--</span></span>
+<span id="cb13-53"><a href="#cb13-53" aria-hidden="true" tabindex="-1"></a><span class="co">-- event_id     time     new_session  session_id</span></span>
+<span id="cb13-54"><a href="#cb13-54" aria-hidden="true" tabindex="-1"></a><span class="co">--    1          00:00:00       1           1</span></span>
+<span id="cb13-55"><a href="#cb13-55" aria-hidden="true" tabindex="-1"></a><span class="co">--    2          00:00:10       0           1</span></span>
+<span id="cb13-56"><a href="#cb13-56" aria-hidden="true" tabindex="-1"></a><span class="co">--    3          00:00:20       0           1</span></span>
+<span id="cb13-57"><a href="#cb13-57" aria-hidden="true" tabindex="-1"></a><span class="co">--    4          08:00:00       1           2</span></span>
+<span id="cb13-58"><a href="#cb13-58" aria-hidden="true" tabindex="-1"></a><span class="co">--    5          14:00:00       1           3</span></span>
+<span id="cb13-59"><a href="#cb13-59" aria-hidden="true" tabindex="-1"></a>session_numbers <span class="kw">AS</span> (</span>
+<span id="cb13-60"><a href="#cb13-60" aria-hidden="true" tabindex="-1"></a>    <span class="kw">SELECT</span></span>
+<span id="cb13-61"><a href="#cb13-61" aria-hidden="true" tabindex="-1"></a>        <span class="op">*</span>,</span>
+<span id="cb13-62"><a href="#cb13-62" aria-hidden="true" tabindex="-1"></a>        <span class="fu">SUM</span>(new_session) <span class="kw">OVER</span>(</span>
+<span id="cb13-63"><a href="#cb13-63" aria-hidden="true" tabindex="-1"></a>            <span class="kw">PARTITION</span> <span class="kw">BY</span> anonymous_id</span>
+<span id="cb13-64"><a href="#cb13-64" aria-hidden="true" tabindex="-1"></a>            <span class="kw">ORDER</span> <span class="kw">BY</span> <span class="dt">timestamp</span></span>
+<span id="cb13-65"><a href="#cb13-65" aria-hidden="true" tabindex="-1"></a>            <span class="kw">ROWS</span> <span class="kw">BETWEEN</span> <span class="kw">UNBOUNDED</span> <span class="kw">PRECEDING</span> <span class="kw">AND</span> <span class="kw">CURRENT</span> <span class="kw">ROW</span></span>
+<span id="cb13-66"><a href="#cb13-66" aria-hidden="true" tabindex="-1"></a>        ) <span class="kw">AS</span> session_number</span>
+<span id="cb13-67"><a href="#cb13-67" aria-hidden="true" tabindex="-1"></a>    <span class="kw">FROM</span> new_session_labels</span>
+<span id="cb13-68"><a href="#cb13-68" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb13-69"><a href="#cb13-69" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-70"><a href="#cb13-70" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span></span>
+<span id="cb13-71"><a href="#cb13-71" aria-hidden="true" tabindex="-1"></a>    {{ dbt_utils.generate_surrogate_key([<span class="st">'anonymous_id'</span>, <span class="st">'session_number'</span>]) }} <span class="kw">AS</span> session_id,</span>
+<span id="cb13-72"><a href="#cb13-72" aria-hidden="true" tabindex="-1"></a>    event_id,</span>
+<span id="cb13-73"><a href="#cb13-73" aria-hidden="true" tabindex="-1"></a>    url,</span>
+<span id="cb13-74"><a href="#cb13-74" aria-hidden="true" tabindex="-1"></a>    <span class="dt">timestamp</span></span>
+<span id="cb13-75"><a href="#cb13-75" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> session_numbers</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Hopefully the comments in the code help with following along. The goal here at the end of the day is to create a table that we can join back to the page views table with our newly created sessions. Then we can use sessions to easily analyze things like conversion rates, bounce rates, common landing and exit pages, and so on.</p>
+<p>But this isn’t a blog post about sessionization, it’s about testing. So let’s write some tests!</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co">## tests/int/test_int_sessions.py</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pytest</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> dbt.tests.util <span class="im">import</span> run_dbt</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> common <span class="im">import</span> load_sql, convert_dicts_to_csv, connect_to_test_db</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>MODEL_NAME <span class="op">=</span> <span class="st">"int_sessions"</span></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>mock_stg_pageviews <span class="op">=</span> convert_dicts_to_csv([</span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>    {<span class="st">"event_id"</span>: <span class="dv">1</span>, <span class="st">"url"</span>: <span class="st">"www.example.com"</span>, <span class="st">"anonymous_id"</span>: <span class="st">"foobar"</span>, <span class="st">"timestamp"</span>: <span class="st">"2023-04-13 15:00:31"</span>},</span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>    {<span class="st">"event_id"</span>: <span class="dv">2</span>, <span class="st">"url"</span>: <span class="st">"www.example.com/foo/bar"</span>, <span class="st">"anonymous_id"</span>: <span class="st">"foobar"</span>, <span class="st">"timestamp"</span>: <span class="st">"2023-04-13 15:00:41"</span>},</span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>    {<span class="st">"event_id"</span>: <span class="dv">3</span>, <span class="st">"url"</span>: <span class="st">"www.example.com/baz"</span>, <span class="st">"anonymous_id"</span>: <span class="st">"foobar"</span>, <span class="st">"timestamp"</span>: <span class="st">"2023-04-13 15:00:59"</span>},</span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>    {<span class="st">"event_id"</span>: <span class="dv">4</span>, <span class="st">"url"</span>: <span class="st">"www.example.com"</span>, <span class="st">"anonymous_id"</span>: <span class="st">"foobar"</span>, <span class="st">"timestamp"</span>: <span class="st">"2023-04-13 16:00:00"</span>},</span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a>    {<span class="st">"event_id"</span>: <span class="dv">5</span>, <span class="st">"url"</span>: <span class="st">"www.example.com/baz"</span>, <span class="st">"anonymous_id"</span>: <span class="st">"foobar"</span>, <span class="st">"timestamp"</span>: <span class="st">"2023-04-13 17:00:00"</span>},</span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a>    {<span class="st">"event_id"</span>: <span class="dv">6</span>, <span class="st">"url"</span>: <span class="st">"www.example.com/baz"</span>, <span class="st">"anonymous_id"</span>: <span class="st">"foobar"</span>, <span class="st">"timestamp"</span>: <span class="st">"2023-04-13 17:29:59"</span>},</span>
+<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a>    {<span class="st">"event_id"</span>: <span class="dv">7</span>, <span class="st">"url"</span>: <span class="st">"www.example.com/baz"</span>, <span class="st">"anonymous_id"</span>: <span class="st">"foobar"</span>, <span class="st">"timestamp"</span>: <span class="st">"2023-04-13 18:00:00"</span>},</span>
+<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a>])</span>
+<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a>expected <span class="op">=</span> pd.DataFrame([{<span class="st">"event_id"</span>: i} <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>, <span class="dv">8</span>)])</span>
+<span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-22"><a href="#cb14-22" aria-hidden="true" tabindex="-1"></a>actual <span class="op">=</span> load_sql(MODEL_NAME)</span>
+<span id="cb14-23"><a href="#cb14-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-24"><a href="#cb14-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-25"><a href="#cb14-25" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> TestIntSessions():</span>
+<span id="cb14-26"><a href="#cb14-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">@pytest.fixture</span>(scope<span class="op">=</span><span class="st">"class"</span>)</span>
+<span id="cb14-27"><a href="#cb14-27" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> seeds(<span class="va">self</span>):</span>
+<span id="cb14-28"><a href="#cb14-28" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> {</span>
+<span id="cb14-29"><a href="#cb14-29" aria-hidden="true" tabindex="-1"></a>            <span class="st">"stg_pageviews.csv"</span>: mock_stg_pageviews</span>
+<span id="cb14-30"><a href="#cb14-30" aria-hidden="true" tabindex="-1"></a>        }</span>
+<span id="cb14-31"><a href="#cb14-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-32"><a href="#cb14-32" aria-hidden="true" tabindex="-1"></a>    <span class="at">@pytest.fixture</span>(scope<span class="op">=</span><span class="st">"class"</span>)</span>
+<span id="cb14-33"><a href="#cb14-33" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> models(<span class="va">self</span>):</span>
+<span id="cb14-34"><a href="#cb14-34" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> {</span>
+<span id="cb14-35"><a href="#cb14-35" aria-hidden="true" tabindex="-1"></a>            <span class="st">"actual.sql"</span>: actual</span>
+<span id="cb14-36"><a href="#cb14-36" aria-hidden="true" tabindex="-1"></a>        }</span>
+<span id="cb14-37"><a href="#cb14-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-38"><a href="#cb14-38" aria-hidden="true" tabindex="-1"></a>    <span class="at">@pytest.fixture</span>(scope<span class="op">=</span><span class="st">"class"</span>)</span>
+<span id="cb14-39"><a href="#cb14-39" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> packages(<span class="va">self</span>):</span>
+<span id="cb14-40"><a href="#cb14-40" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="st">"""</span></span>
+<span id="cb14-41"><a href="#cb14-41" aria-hidden="true" tabindex="-1"></a><span class="st">        packages:</span></span>
+<span id="cb14-42"><a href="#cb14-42" aria-hidden="true" tabindex="-1"></a><span class="st">          - package: dbt-labs/dbt_utils</span></span>
+<span id="cb14-43"><a href="#cb14-43" aria-hidden="true" tabindex="-1"></a><span class="st">            version: "1.0.0"</span></span>
+<span id="cb14-44"><a href="#cb14-44" aria-hidden="true" tabindex="-1"></a><span class="st">        """</span></span>
+<span id="cb14-45"><a href="#cb14-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-46"><a href="#cb14-46" aria-hidden="true" tabindex="-1"></a>    <span class="at">@pytest.fixture</span>(scope<span class="op">=</span><span class="st">"class"</span>)</span>
+<span id="cb14-47"><a href="#cb14-47" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> actual(<span class="va">self</span>):</span>
+<span id="cb14-48"><a href="#cb14-48" aria-hidden="true" tabindex="-1"></a>        run_dbt([<span class="st">"deps"</span>])</span>
+<span id="cb14-49"><a href="#cb14-49" aria-hidden="true" tabindex="-1"></a>        build_result <span class="op">=</span> run_dbt([<span class="st">"build"</span>])</span>
+<span id="cb14-50"><a href="#cb14-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-51"><a href="#cb14-51" aria-hidden="true" tabindex="-1"></a>        schema <span class="op">=</span> build_result.results[<span class="dv">0</span>].node.schema</span>
+<span id="cb14-52"><a href="#cb14-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-53"><a href="#cb14-53" aria-hidden="true" tabindex="-1"></a>        engine <span class="op">=</span> connect_to_test_db()</span>
+<span id="cb14-54"><a href="#cb14-54" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-55"><a href="#cb14-55" aria-hidden="true" tabindex="-1"></a>        actual <span class="op">=</span> pd.read_sql(</span>
+<span id="cb14-56"><a href="#cb14-56" aria-hidden="true" tabindex="-1"></a>            sql <span class="op">=</span> <span class="ss">f"SELECT * FROM </span><span class="sc">{</span>schema<span class="sc">}</span><span class="ss">.actual ORDER BY event_id"</span>,</span>
+<span id="cb14-57"><a href="#cb14-57" aria-hidden="true" tabindex="-1"></a>            con <span class="op">=</span> engine</span>
+<span id="cb14-58"><a href="#cb14-58" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb14-59"><a href="#cb14-59" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-60"><a href="#cb14-60" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> actual</span>
+<span id="cb14-61"><a href="#cb14-61" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-62"><a href="#cb14-62" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> extract_session_id(<span class="va">self</span>, actual):</span>
+<span id="cb14-63"><a href="#cb14-63" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> actual[<span class="st">"session_id"</span>].tolist()</span>
+<span id="cb14-64"><a href="#cb14-64" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-65"><a href="#cb14-65" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> test_event_ids_are_unmodified_by_model(<span class="va">self</span>, project, actual):</span>
+<span id="cb14-66"><a href="#cb14-66" aria-hidden="true" tabindex="-1"></a>        <span class="co">## Test that the pageview IDs and the landing pages match our expectations</span></span>
+<span id="cb14-67"><a href="#cb14-67" aria-hidden="true" tabindex="-1"></a>        <span class="cf">assert</span> actual[<span class="st">"event_id"</span>].tolist() <span class="op">==</span> expected[<span class="st">"event_id"</span>].tolist()</span>
+<span id="cb14-68"><a href="#cb14-68" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-69"><a href="#cb14-69" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> test_first_session_correctly_created(<span class="va">self</span>, project, actual):</span>
+<span id="cb14-70"><a href="#cb14-70" aria-hidden="true" tabindex="-1"></a>        session_ids <span class="op">=</span> <span class="va">self</span>.extract_session_id(actual)</span>
+<span id="cb14-71"><a href="#cb14-71" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-72"><a href="#cb14-72" aria-hidden="true" tabindex="-1"></a>        <span class="co">## In the data above, there should be four unique sessions created.</span></span>
+<span id="cb14-73"><a href="#cb14-73" aria-hidden="true" tabindex="-1"></a>        <span class="co">## They should correspond to page views 1-3, page view 4, page views 5-6, and page view 7</span></span>
+<span id="cb14-74"><a href="#cb14-74" aria-hidden="true" tabindex="-1"></a>        <span class="co">## The first three rows should all be the same session</span></span>
+<span id="cb14-75"><a href="#cb14-75" aria-hidden="true" tabindex="-1"></a>        <span class="cf">assert</span> session_ids[<span class="dv">0</span>] <span class="op">==</span> session_ids[<span class="dv">1</span>]</span>
+<span id="cb14-76"><a href="#cb14-76" aria-hidden="true" tabindex="-1"></a>        <span class="cf">assert</span> session_ids[<span class="dv">1</span>] <span class="op">==</span> session_ids[<span class="dv">2</span>]</span>
+<span id="cb14-77"><a href="#cb14-77" aria-hidden="true" tabindex="-1"></a>        <span class="cf">assert</span> session_ids[<span class="dv">0</span>] <span class="op">==</span> session_ids[<span class="dv">2</span>]</span>
+<span id="cb14-78"><a href="#cb14-78" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-79"><a href="#cb14-79" aria-hidden="true" tabindex="-1"></a>        <span class="co">## The rest of the rows should be different sessions</span></span>
+<span id="cb14-80"><a href="#cb14-80" aria-hidden="true" tabindex="-1"></a>        <span class="cf">assert</span> session_ids[<span class="dv">0</span>] <span class="kw">not</span> <span class="kw">in</span> session_ids[<span class="dv">3</span>:]</span>
+<span id="cb14-81"><a href="#cb14-81" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-82"><a href="#cb14-82" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> test_second_session_one_row(<span class="va">self</span>, project, actual):</span>
+<span id="cb14-83"><a href="#cb14-83" aria-hidden="true" tabindex="-1"></a>        session_ids <span class="op">=</span> <span class="va">self</span>.extract_session_id(actual)</span>
+<span id="cb14-84"><a href="#cb14-84" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-85"><a href="#cb14-85" aria-hidden="true" tabindex="-1"></a>        <span class="co">## The fourth row should be its own session</span></span>
+<span id="cb14-86"><a href="#cb14-86" aria-hidden="true" tabindex="-1"></a>        <span class="cf">assert</span> session_ids[<span class="dv">3</span>] <span class="kw">not</span> <span class="kw">in</span> session_ids[:<span class="dv">3</span>]</span>
+<span id="cb14-87"><a href="#cb14-87" aria-hidden="true" tabindex="-1"></a>        <span class="cf">assert</span> session_ids[<span class="dv">3</span>] <span class="kw">not</span> <span class="kw">in</span> session_ids[<span class="dv">4</span>:]</span>
+<span id="cb14-88"><a href="#cb14-88" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-89"><a href="#cb14-89" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> test_twenty_nine_min_fifty_nine_seconds_later_is_same_session(<span class="va">self</span>, project, actual):</span>
+<span id="cb14-90"><a href="#cb14-90" aria-hidden="true" tabindex="-1"></a>        session_ids <span class="op">=</span> <span class="va">self</span>.extract_session_id(actual)</span>
+<span id="cb14-91"><a href="#cb14-91" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-92"><a href="#cb14-92" aria-hidden="true" tabindex="-1"></a>        <span class="co"># ## The fifth and sixth rows should be their own session</span></span>
+<span id="cb14-93"><a href="#cb14-93" aria-hidden="true" tabindex="-1"></a>        <span class="cf">assert</span> session_ids[<span class="dv">4</span>] <span class="op">==</span> session_ids[<span class="dv">5</span>]</span>
+<span id="cb14-94"><a href="#cb14-94" aria-hidden="true" tabindex="-1"></a>        <span class="cf">assert</span> session_ids[<span class="dv">4</span>] <span class="kw">not</span> <span class="kw">in</span> session_ids[:<span class="dv">4</span>]</span>
+<span id="cb14-95"><a href="#cb14-95" aria-hidden="true" tabindex="-1"></a>        <span class="cf">assert</span> session_ids[<span class="dv">4</span>] <span class="kw">not</span> <span class="kw">in</span> session_ids[<span class="dv">6</span>:]</span>
+<span id="cb14-96"><a href="#cb14-96" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-97"><a href="#cb14-97" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> test_thirty_minutes_and_one_second_later_is_new_session(<span class="va">self</span>, project, actual):</span>
+<span id="cb14-98"><a href="#cb14-98" aria-hidden="true" tabindex="-1"></a>        session_ids <span class="op">=</span> <span class="va">self</span>.extract_session_id(actual)</span>
+<span id="cb14-99"><a href="#cb14-99" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-100"><a href="#cb14-100" aria-hidden="true" tabindex="-1"></a>        <span class="co"># ## The seventh row should be its own session</span></span>
+<span id="cb14-101"><a href="#cb14-101" aria-hidden="true" tabindex="-1"></a>        <span class="cf">assert</span> session_ids[<span class="dv">6</span>] <span class="kw">not</span> <span class="kw">in</span> session_ids[:<span class="dv">6</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>That was a lot of code to process, but the basic gist is the same as before: First, we define some “seed” data in stringified CSV (converted from a list of dictionaries) that we load into our database. We then run our dbt model on the seed data, we query the result, and we run assertions against the result to guarantee that our code is actually behaving how we want.</p>
+<p>Note that in the spirit of unit testing, we can get very granular here. For instance, in these tests we’re checking things like individual session IDs for pageviews that occurred one second before and after a specified timestamp being different from each other, and that different users have different session IDs, and so on. This is of course just an example, but you can make this logic as involved as you like. At the end of the day, the goal is to help you sleep at night with the knowledge that your code, which might be feeding into ML models, underpinning business decisions, and so on, is <em>correct</em>.</p>
+</section>
+</section>
+</section>
+<section id="wrapping-up" class="level2">
+<h2 class="anchored" data-anchor-id="wrapping-up">Wrapping Up</h2>
+<p>This was a bit of an in the weeds, technical post. The goal was to shed some light on something that, from what I’ve heard, not many people are talking about, and likely even fewer are actually <em>doing</em>. My hope is that every analytics engineering team will write unit tests for their dbt pipelines, and my goal in writing this post was to make setting up your test suite more approachable. The main takeaway is this: Since dbt plays so nicely with pytest, it should be fast and simple to get your unit test suite off the ground! And once you’re in the habit of writing unit tests, you can have significantly more confidence in the correctness of the SQL that’s running in your dbt builds. After all: dbt sells itself as bringing software engineering practices to data pipelines, and unit testing is maybe the best of those best practices.</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Handle positioning of the toggle
+      window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+      const annoteTargets = window.document.querySelectorAll('.code-annotation-anchor');
+      for (let i=0; i<annoteTargets.length; i++) {
+        const annoteTarget = annoteTargets[i];
+        const targetCell = annoteTarget.getAttribute("data-target-cell");
+        const targetAnnotation = annoteTarget.getAttribute("data-target-annotation");
+        const contentFn = () => {
+          const content = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          if (content) {
+            const tipContent = content.cloneNode(true);
+            tipContent.classList.add("code-annotation-tip-content");
+            return tipContent.outerHTML;
+          }
+        }
+        const config = {
+          allowHTML: true,
+          content: contentFn,
+          onShow: (instance) => {
+            selectCodeLines(instance.reference);
+            instance.reference.classList.add('code-annotation-active');
+            window.tippy.hideAll();
+          },
+          onHide: (instance) => {
+            unselectCodeLines();
+            instance.reference.classList.remove('code-annotation-active');
+          },
+          maxWidth: 300,
+          delay: [50, 0],
+          duration: [200, 0],
+          offset: [5, 10],
+          arrow: true,
+          appendTo: function(el) {
+            return el.parentElement.parentElement.parentElement;
+          },
+          interactive: true,
+          interactiveBorder: 10,
+          theme: 'quarto',
+          placement: 'right',
+          popperOptions: {
+            modifiers: [
+            {
+              name: 'flip',
+              options: {
+                flipVariations: false, // true by default
+                allowedAutoPlacements: ['right'],
+                fallbackPlacements: ['right', 'top', 'top-start', 'top-end'],
+              },
+            },
+            {
+              name: 'preventOverflow',
+              options: {
+                mainAxis: false,
+                altAxis: false
+              }
+            }
+            ]        
+          }      
+        };
+        window.tippy(annoteTarget, config); 
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<script src="https://utteranc.es/client.js" repo="mrkaye97/mrkaye97.github.io" issue-term="pathname" theme="github-light" crossorigin="anonymous" async="">
+</script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left"> Matt Kaye, 2023<br></div>   
+    <div class="nav-footer-center"><div class="cookie-consent-footer"><a href="#" id="open_preferences_center">Cookie Preferences</a></div></div>
+    <div class="nav-footer-right">Built with <a href="https://quarto.org/">Quarto</a> and ❤<br></div>
+  </div>
+</footer>
+
+
+
+</body></html>

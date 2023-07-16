@@ -480,7 +480,7 @@ cookieconsent.run({
 <span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a><span class="fu">paste</span>(<span class="st">"Mean runtime:"</span>, <span class="fu">round</span>(<span class="fu">summary</span>(result)<span class="sc">$</span>mean, <span class="dv">4</span>), <span class="st">"milliseconds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] "Mean runtime: 0.7124 milliseconds"</code></pre>
+<pre><code>[1] "Mean runtime: 0.7279 milliseconds"</code></pre>
 </div>
 </div>
 <p>Now, let’s try the same in Python:</p>
@@ -498,7 +498,7 @@ cookieconsent.run({
 <span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a>  <span class="st">"milliseconds"</span></span>
 <span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Mean runtime: 0.1178 milliseconds</code></pre>
+<pre><code>Mean runtime: 0.1222 milliseconds</code></pre>
 </div>
 </div>
 <p>In this particular case, Python’s JSON serialization runs 6-7x faster than R’s. And if you’re thinking “that’s only one millisecond, though!” you’d be right. But the general principle is important even if the magnitude of the issue in this particular case is not.</p>

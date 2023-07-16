@@ -470,7 +470,7 @@ cookieconsent.run({
 <p>Sometimes we need environment variables like a Github token or a database URL, either to install our dependencies or to run our code. Depending on when the variable will be used, we can either specify it at <em>build</em> time (as a build arg) or a <em>run</em> time. Generally, it’s a good idea to only specify build args that you really need at build time.</p>
 <section id="build-time-config" class="level4">
 <h4 class="anchored" data-anchor-id="build-time-config">Build Time Config</h4>
-<p>For instance, if your build requires downloading a package from a private Github repository (for which you need to have a <code>GITHUB_PAT</code> set), then you would specify your <code>GITHUB_PAT</code> as a build arg). Let’s try that:</p>
+<p>For instance, if your build requires downloading a package from a private Github repository (for which you need to have a <code>GITHUB_PAT</code> set), then you would specify your <code>GITHUB_PAT</code> as a build arg. Let’s try that:</p>
 <div class="sourceCode" id="cb18"><pre class="sourceCode dockerfile code-with-copy"><code class="sourceCode dockerfile"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co">## Dockerfile</span></span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> rocker/r-ver:4.2.0</span>

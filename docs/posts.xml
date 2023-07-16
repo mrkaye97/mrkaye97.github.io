@@ -10,7 +10,1658 @@
 <atom:link href="https://www.matthewrkaye.com/posts.xml" rel="self" type="application/rss+xml"/>
 <description>Matt Kaye&#39;s personal website</description>
 <generator>quarto-1.3.353</generator>
-<lastBuildDate>Thu, 29 Jun 2023 04:00:00 GMT</lastBuildDate>
+<lastBuildDate>Sun, 09 Jul 2023 04:00:00 GMT</lastBuildDate>
+<item>
+  <title>Unit Testing dbt Models</title>
+  <dc:creator>Matt Kaye</dc:creator>
+  <link>https://www.matthewrkaye.com/posts/2023-07-09-unit-testing-dbt-models/unit-testing-dbt-models.html</link>
+  <description><![CDATA[ 
+
+
+
+<section id="introduction" class="level2">
+<h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
+<p>Our team adopted <a href="https://www.getdbt.com/">dbt</a> about a year ago, and it’s become an integral part of our data stack. dbt is a major component of the so-called “<a href="https://www.fivetran.com/blog/what-is-the-modern-data-stack">modern data stack</a>” and has exploded onto the scene in the past few years.</p>
+<p>The basic gist is this: You use an ELT tool like <a href="https://www.fivetran.com/">Fivetran</a> or <a href="https://airbyte.com/">Airbyte</a> to ingest raw data from any number of sources – think a Postgres database, a <a href="https://www.salesforce.com/">Salesforce</a> instance, <a href="https://segment.com/">Segment</a> or a similar analytics platform, or a product management tool like <a href="https://app.asana.com/">Asana</a>, among many, many others – into your data warehouse (Redshift, Snowflake, etc.). Then, you use dbt to transform the raw data in the warehouse into a format that’s friendly for downstream users like data scientists and analysts, so that they can generate insights more quickly and with a higher degree of confidence.</p>
+<p>dbt is the transformation tool (the “T” in “ELT”) in that stack: It runs SQL inside of your data warehouse and abstracts away the often boilerplate DDL code, so that you can focus on writing transformations as <code>SELECT</code> statements and spend your time on driving business value. dbt also allows you to easily write documentation and tests, write macros for often-reused code, and so on. The testing bit of dbt is what this post will focus on. In short, dbt sells itself as a tool that lets you bring software engineering best practices to ELT pipelines.</p>
+<div class="callout callout-style-simple callout-warning no-icon">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-body-container">
+<p>If you’re not familiar with dbt, I would recommend reading some of <a href="https://docs.getdbt.com/">their documentation</a> before continuing this post. It will not cover many dbt basics.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="tests-in-dbt" class="level2">
+<h2 class="anchored" data-anchor-id="tests-in-dbt">Tests in dbt</h2>
+<p><a href="https://docs.getdbt.com/docs/build/tests">dbt has lots of support for tests</a>. It ships with a few – uniqueness, not-null, enums, and “relationships” (which test foreign key relationships) – out of the box. All you need to do is add a line like the following to one of your <code>schema.yml</code> files where a model is defined, as follows:</p>
+<div class="sourceCode" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode yml code-with-copy"><code class="sourceCode yaml"><span id="cb1-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">## schema.yml</span></span>
+<span id="cb1-2"></span>
+<span id="cb1-3"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">version</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> </span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span></span>
+<span id="cb1-4"></span>
+<span id="cb1-5"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">models</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span></span>
+<span id="cb1-6"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">  </span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">name</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> fct_pageviews</span></span>
+<span id="cb1-7"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">    </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">columns</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span></span>
+<span id="cb1-8"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">      </span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">name</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> event_id</span></span>
+<span id="cb1-9"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">        </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">tests</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span></span>
+<span id="cb1-10"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">          </span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> unique</span></span>
+<span id="cb1-11"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">          </span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> not_null</span></span>
+<span id="cb1-12"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">      </span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">name</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> user_id</span></span>
+<span id="cb1-13"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">        </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">tests</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span></span>
+<span id="cb1-14"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">          </span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> not_null</span></span>
+<span id="cb1-15"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">      ...</span></span></code></pre></div>
+<p>This bit of yaml does a few things: It defines a table called <code>fct_pageviews</code>, that has at least two columns: the <code>event_id</code> and the <code>user_id</code>. The <code>event_id</code> column has both a <code>unique</code> and a <code>not_null</code> test, and the <code>user_id</code> also must be non-null (but not unique, since users can view many pages).</p>
+<p>These tests are great, since they enforce a number of data quality expectations that we want to make sure are followed when shipping data to production. Since dbt generates a DAG from the tests and models you define, you can run these tests upstream of production and catch any failures before they hit production.</p>
+<p>dbt makes it easy to write <a href="https://docs.getdbt.com/docs/build/tests#generic-tests">arbitrary tests</a> as macros, which you can then add to a yaml file to apply to a model. You can also use a package like <a href="https://github.com/calogica/dbt-expectations">dbt-expectations</a> to greatly expand upon dbt’s built-in testing capabilities. In conjunction, all of these testing capabilities should give you lots of confidence that the data you’re shipping to production meets virtually any data quality bar you can set.</p>
+<p>But this post doesn’t end here, so what’s wrong? It’s simple: These tests, useful as they may be, are not unit tests.</p>
+</section>
+<section id="unit-testing" class="level2">
+<h2 class="anchored" data-anchor-id="unit-testing">Unit Testing</h2>
+<p>A <a href="https://learn.microsoft.com/en-us/visualstudio/test/unit-test-basics?view=vs-2022">unit test</a> is a test that checks the correctness of a single <em>unit</em> of code. Generally, you would try to test the smallest components you can to ensure that each individual component of a larger codebase is doing what is expected of it. For instance, if you have the following method that adds two numbers:</p>
+<div class="sourceCode" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">def</span> add(x: <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">float</span>, y: <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">float</span>) <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-&gt;</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">float</span>:</span>
+<span id="cb2-2">  <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">return</span> x <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> y</span></code></pre></div>
+<p>You could write the following tests:</p>
+<div class="sourceCode" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">def</span> test_add():</span>
+<span id="cb3-2"></span>
+<span id="cb3-3">  <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">## Commutativity</span></span>
+<span id="cb3-4">  <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">assert</span> add(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span>) <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> add(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>)  </span>
+<span id="cb3-5">  </span>
+<span id="cb3-6">  <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">## Associativity</span></span>
+<span id="cb3-7">  <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">assert</span> add(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>, add(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">3</span>)) <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> add(add(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span>), <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">3</span>)</span>
+<span id="cb3-8">  </span>
+<span id="cb3-9">  <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">## Correctness</span></span>
+<span id="cb3-10">  <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">assert</span> add(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span>) <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">4</span></span>
+<span id="cb3-11">  <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">assert</span> add(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span>, <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">10</span>) <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">8</span></span>
+<span id="cb3-12">  <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">assert</span> add(<span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2.5</span>, <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">3.5</span>) <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">6</span></span></code></pre></div>
+<p>These are some very basic tests you might write to ensure that your <code>add</code> method is correctly adding the two numbers you supply it. Of course, these tests are not exhaustive, but you get the idea.</p>
+</section>
+<section id="unit-testing-sql" class="level2">
+<h2 class="anchored" data-anchor-id="unit-testing-sql">Unit Testing <em>SQL</em></h2>
+<p>Writing unit tests for SQL code – in dbt or otherwise – is much less common that writing unit tests for application code, for instance. In fact, until I started working on unit testing our dbt models (the topic of this post), I had never seen <em>any</em> unit tests for SQL logic. There’s also relatively little written about best practices for unit testing in dbt, and I’ve often heard and seen the data quality checks outlined a bit above mistaken for unit tests. This is unfortunate, since they’re two entirely separate aspects to any data pipeline: Unit tests check that your SQL is correct and does what you think it does, and data quality checks ensure that the data flowing through your system meets your expectations. <em>Both</em> of these types of tests should be important parts of your ELT pipelines.</p>
+<p>The trickiest part of unit testing SQL queries is the actual mechanics of it. Unit testing SQL requires seeding data into a database, then running a query, and then comparing the results of that query on the seed data to some expectations. For instance, consider the following query that selects page views from the previous week using the <code>fct_pageviews</code> table we defined above:</p>
+<div class="sourceCode" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb4-1"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">SELECT</span> event_id, user_id, page_viewed_at</span>
+<span id="cb4-2"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">FROM</span> fct_pageviews</span>
+<span id="cb4-3"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">WHERE</span> page_viewed_at <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span> (GETDATE() <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span> <span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">INTERVAL</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'7 days'</span>)</span></code></pre></div>
+<p>Of course, this query is trivial. But you might imagine wanting to write a unit test that checks if the oldest page view occurred less than seven days ago. You might write some SQL like this to achieve that:</p>
+<div class="sourceCode" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb5-1"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">WITH</span> <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">query</span> <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">AS</span> (</span>
+<span id="cb5-2">  <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">SELECT</span> event_id, user_id, page_viewed_at</span>
+<span id="cb5-3">  <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">FROM</span> fct_pageviews</span>
+<span id="cb5-4">  <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">WHERE</span> page_viewed_at <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span> (GETDATE() <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span> <span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">INTERVAL</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'7 days'</span>)</span>
+<span id="cb5-5">)</span>
+<span id="cb5-6"></span>
+<span id="cb5-7"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">SELECT</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">MIN</span>(page_viewed_at) <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'some date'</span> <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">AS</span> test_passed</span>
+<span id="cb5-8"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">FROM</span> <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">query</span></span></code></pre></div>
+<p>You could also, for instance, pull your query result into R and run the assertions from there:</p>
+<div class="sourceCode" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1">conn <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> DBI<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">dbConnect</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"some"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"credentials"</span>)</span>
+<span id="cb6-2"></span>
+<span id="cb6-3">result <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> DBI<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">dbGetQuery</span>(</span>
+<span id="cb6-4">  conn,</span>
+<span id="cb6-5">  <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span></span>
+<span id="cb6-6"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">  SELECT event_id, user_id, page_viewed_at</span></span>
+<span id="cb6-7"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">  FROM fct_pageviews</span></span>
+<span id="cb6-8"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">  WHERE page_viewed_at &gt; (GETDATE() - INTERVAL '7 days')</span></span>
+<span id="cb6-9"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">  "</span></span>
+<span id="cb6-10">)</span>
+<span id="cb6-11"></span>
+<span id="cb6-12">checkmate<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">assert_true</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">min</span>(result<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>page_viewed_at) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"some date"</span>)</span></code></pre></div>
+<p>But now you need to determine how to actually run the assertion and what to do if it fails. Not only that, but you probably don’t want to be running unit tests against production data. It would be better, for instance, to seed some data into your database to run the test against. Some seed data might look like this:</p>
+<div>
+<table class="table">
+<thead>
+<tr class="header">
+<th style="text-align: center;">event_id</th>
+<th style="text-align: center;">user_id</th>
+<th style="text-align: center;">page_viewed_at</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">2023-07-01 23:59:59</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">2023-07-02 00:01:01</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Then, after running the SQL, you might expect the following:</p>
+<div>
+<table class="table">
+<thead>
+<tr class="header">
+<th style="text-align: center;">event_id</th>
+<th style="text-align: center;">user_id</th>
+<th style="text-align: center;">page_viewed_at</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">2023-07-01 23:59:59</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>If that’s your expectation, you could write assertions like:</p>
+<div class="sourceCode" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">## assume x is a data frame with the result of the query</span></span>
+<span id="cb7-2"></span>
+<span id="cb7-3"><span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">assert</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">len</span>(x) <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span></span>
+<span id="cb7-4"><span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">assert</span> x[<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"page_viewed_at"</span>][<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>] <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"2023-07-01 23:59:59"</span></span>
+<span id="cb7-5"></span>
+<span id="cb7-6"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">## and so on</span></span></code></pre></div>
+<p>This approach could actually work quite well! If you have a query to test, you can strategically create seed data for individual test cases to test different bits of the logic.</p>
+<p>So now, the question is: How do we actually implement and orchestrate these types of tests within dbt?</p>
+</section>
+<section id="dbt-pytest" class="level2">
+<h2 class="anchored" data-anchor-id="dbt-pytest">dbt + pytest</h2>
+<p>dbt actually has a lesser-known feature that does exactly what we want, which leverages <a href="https://docs.pytest.org/en/latest/how-to/fixtures.html#how-to-fixtures">pytest fixtures</a>. The long-and-short of it is this: dbt <a href="https://docs.getdbt.com/guides/dbt-ecosystem/adapter-development/4-testing-a-new-adapter">provides a framework for adapter developers to test their adapters</a>, and we can jerry-rig the same framework to let us test our models!</p>
+<section id="background" class="level3">
+<h3 class="anchored" data-anchor-id="background">Background</h3>
+<p>Before getting into the nuts and bolts, there’s some important context to include here.</p>
+<p>We use <a href="https://aws.amazon.com/redshift/">Redshift</a> as our data warehouse. But for testing, we don’t want to make a ton of round trips to a Redshift cluster to set up the tests, seed raw data, run transformations and queries, and clean up at the end. Doing all of that would dramatically slow down the testing process, and it’d also be expensive. Unfortunately, we also can’t run Redshift locally (like you can MySQL, for instance). So our hands are tied.</p>
+<p>Or are they? Redshift, fortunately, is a fork of Postgres 8, and shares a lot of user-facing features with Postgres, even if the guts of how it works are completely different. This, in combination with the <a href="https://docs.getdbt.com/reference/dbt-jinja-functions/cross-database-macros">handy cross-database macros that dbt provides</a> let us solve our performance problems from above. Instead of using Redshift for our unit tests, we use Postgres instead. We can run Postgres locally, it’s easy to spin up and down on local and in a CI/CD environment, and it’s fast: Our test suite runs some 100x faster against a local Postgres instance than it does against Redshift. This is a massive win.</p>
+<p>In short: We have a bash script that runs our unit tests, and it does four things:</p>
+<ol type="1">
+<li>Sets up environment variables that we need for running Postgres and dbt</li>
+<li>Start up Postgres in Docker with <code>docker run postgres ...</code></li>
+<li>Run our unit test suite with <code>poetry run pytest ...</code></li>
+<li>Spin down Postgres with <code>docker stop ...</code></li>
+</ol>
+<p>And that’s it! We can run the exact same script on local and in CI.</p>
+<div class="callout callout-style-simple callout-note no-icon">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-body-container">
+<p>We run Postgres in Docker as follows:</p>
+<div class="sourceCode" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">docker</span> run <span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">\</span></span>
+<span id="cb8-2">    <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--name</span> dbt_test_postgres <span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">\</span></span>
+<span id="cb8-3">    <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-p</span> <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">$TEST_DB_PORT</span>:5432 <span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">\</span></span>
+<span id="cb8-4">    <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-e</span> POSTGRES_PASSWORD=<span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">$TEST_DB_PASSWORD</span> <span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">\</span></span>
+<span id="cb8-5">    <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-e</span> POSTGRES_USER=<span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">$TEST_DB_USER</span> <span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">\</span></span>
+<span id="cb8-6">    <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-e</span> POSTGRES_DB=<span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">$TEST_DB_NAME</span> <span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">\</span></span>
+<span id="cb8-7">    <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-d</span> <span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">\</span></span>
+<span id="cb8-8">    postgres:11</span></code></pre></div>
+</div>
+</div>
+</div>
+<p>Now that you have a sense for the infrastructure, on to the tests themselves.</p>
+</section>
+<section id="our-framework" class="level3">
+<h3 class="anchored" data-anchor-id="our-framework">Our Framework</h3>
+<p>Since the dbt documentation is so great, I would recommend starting there for getting a sense for how to use dbt to test your models. But since it’s not exactly geared towards this particular use case, I’ll start by explaining a bit how we organize unit tests for our dbt models.</p>
+<p>It’s actually quite simple: At the top level in our dbt project, we have a <code>unit-tests</code> directory. The contents of that directory look like this:</p>
+<div class="sourceCode" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb9-1">.</span>
+<span id="cb9-2">├── README.md</span>
+<span id="cb9-3">├── common</span>
+<span id="cb9-4">├── conftest.py</span>
+<span id="cb9-5">├── poetry.lock</span>
+<span id="cb9-6">├── pyproject.toml</span>
+<span id="cb9-7">└── tests</span></code></pre></div>
+<p>A few notes:</p>
+<ol type="1">
+<li>We use <a href="https://python-poetry.org/">Poetry</a> for managing dependencies, so our unit testing rig is a very basic Poetry project. We only have a few dependencies defined: <code>pytest</code>, <code>dbt-postgres</code>, <code>pandas</code>, and <code>sqlalchemy</code>.</li>
+<li>We have the tests themselves living inside of <code>tests/</code>.</li>
+<li>We have shared helper code living inside of <code>common/</code>.</li>
+<li>We have a script at the top level of our dbt project that runs our tests, as described above.</li>
+</ol>
+<section id="the-conftest-file" class="level4">
+<h4 class="anchored" data-anchor-id="the-conftest-file">The <code>conftest</code> File</h4>
+<p>Let’s start with the <code>conftest.py</code> file, which looks like this:</p>
+<div class="sourceCode" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">## conftest.py</span></span>
+<span id="cb10-2"></span>
+<span id="cb10-3"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> pytest</span>
+<span id="cb10-4"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> os</span>
+<span id="cb10-5"></span>
+<span id="cb10-6"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Import the standard functional fixtures as a plugin</span></span>
+<span id="cb10-7"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Note: fixtures with session scope need to be local</span></span>
+<span id="cb10-8">pytest_plugins <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> [<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"dbt.tests.fixtures.project"</span>]</span>
+<span id="cb10-9"></span>
+<span id="cb10-10"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># The profile dictionary, used to write out profiles.yml</span></span>
+<span id="cb10-11"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># dbt will supply a unique schema per test, so we do not specify "schema" here</span></span>
+<span id="cb10-12"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">@pytest.fixture</span>(scope<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"class"</span>)</span>
+<span id="cb10-13"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">def</span> dbt_profile_target():</span>
+<span id="cb10-14">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">return</span> {</span>
+<span id="cb10-15">        <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"type"</span>: <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"postgres"</span>,</span>
+<span id="cb10-16">        <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"dbname"</span>: os.environ.get(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"TEST_DB_NAME"</span>),</span>
+<span id="cb10-17">        <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"threads"</span>: <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">8</span>,</span>
+<span id="cb10-18">        <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"host"</span>: <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"localhost"</span>,</span>
+<span id="cb10-19">        <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"port"</span>: <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">int</span>(os.environ.get(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"TEST_DB_PORT"</span>)),</span>
+<span id="cb10-20">        <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"user"</span>: os.environ.get(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"TEST_DB_USER"</span>),</span>
+<span id="cb10-21">        <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"password"</span>: os.environ.get(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"TEST_DB_PASSWORD"</span>)</span>
+<span id="cb10-22">    }</span></code></pre></div>
+<p>What we’re doing here is pretty simple. First, we import the plugin we need for running dbt with pytest, as <a href="https://docs.getdbt.com/guides/dbt-ecosystem/adapter-development/4-testing-a-new-adapter#set-up-and-configure-pytest">is recommended in the docs</a>. Next, we add a pytest fixture that represents the <code>profiles.yml</code> you’d find at the root of a dbt project, where we specify connection details to our Postgres test database. And that’s it!</p>
+</section>
+<section id="the-tests" class="level4">
+<h4 class="anchored" data-anchor-id="the-tests">The Tests</h4>
+<p>Once the <code>conftest.py</code> file is set up, the basic process is to add a new test at a path inside of <code>tests/</code> that matches the location of the corresponding model you’re testing inside of <code>models/</code>. For instance, if you have <code>models/int/int_users.sql</code>, then you would also have <code>tests/int/test_int_users.py</code>. Let’s imagine we have a model called <code>stg_users</code> that our <code>int_users</code> selects from, and one of the transformations we want to do in the intermediate layer is remove any internal users. Maybe our SQL looks like this:</p>
+<div class="sourceCode" id="cb11" style="background: #f1f3f5;"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb11-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-- int_users.sql</span></span>
+<span id="cb11-2"></span>
+<span id="cb11-3"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">SELECT</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span></span>
+<span id="cb11-4"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">FROM</span> {{ <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ref</span>(<span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">"stg_users"</span>) }}</span>
+<span id="cb11-5"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">WHERE</span> <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">NOT</span> is_internal</span></code></pre></div>
+<p>Great! Now let’s test it.</p>
+<div class="sourceCode" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">## tests/int/test_int_users.py</span></span>
+<span id="cb12-2"></span>
+<span id="cb12-3"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> pytest</span>
+<span id="cb12-4"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> pandas <span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">as</span> pd</span>
+<span id="cb12-5"></span>
+<span id="cb12-6"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">from</span> dbt.tests.util <span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> run_dbt</span>
+<span id="cb12-7"></span>
+<span id="cb12-8"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">## Importing helper code from `common`</span></span>
+<span id="cb12-9"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">## </span></span>
+<span id="cb12-10"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">## * `load_sql` that returns a string with the </span></span>
+<span id="cb12-11"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">##     SQL for a model based on the model's name</span></span>
+<span id="cb12-12"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">## * `connect_to_test_db` makes a connection to our </span></span>
+<span id="cb12-13"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">##     Postgres test database so that we can query it</span></span>
+<span id="cb12-14"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">##     from pandas</span></span>
+<span id="cb12-15"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">## * `convert_dicts_to_csv` writes a list of Python dictionaries</span></span>
+<span id="cb12-16"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">##     representing rows in a table to a CSV string.</span></span>
+<span id="cb12-17"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">from</span> common <span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> load_sql, connect_to_test_db, convert_dicts_to_csv</span>
+<span id="cb12-18"></span>
+<span id="cb12-19">MODEL_NAME <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"int_users"</span></span>
+<span id="cb12-20"></span>
+<span id="cb12-21"></span>
+<span id="cb12-22">mock_stg_users <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> convert_dicts_to_csv([</span>
+<span id="cb12-23">    {<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"user_id"</span>: <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"is_internal"</span>: <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">True</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"created_at"</span>: <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"2023-04-13 00:00:00"</span>},</span>
+<span id="cb12-24">    {<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"user_id"</span>: <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"is_internal"</span>: <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">False</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"created_at"</span>: <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"2023-04-14 00:00:00"</span>},</span>
+<span id="cb12-25">    {<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"user_id"</span>: <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">3</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"is_internal"</span>: <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">False</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"created_at"</span>: <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"2023-04-15 00:00:00"</span>}</span>
+<span id="cb12-26">])</span>
+<span id="cb12-27"></span>
+<span id="cb12-28"></span>
+<span id="cb12-29"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">class</span> TestIntUsers():</span>
+<span id="cb12-30"></span>
+<span id="cb12-31">    <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">@pytest.fixture</span>(scope<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"class"</span>)</span>
+<span id="cb12-32">    <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">def</span> seeds(<span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>):</span>
+<span id="cb12-33">        <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">return</span> {<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"stg_users"</span>: mock_stg_users}</span>
+<span id="cb12-34"></span>
+<span id="cb12-35">    <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">@pytest.fixture</span>(scope<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"class"</span>)</span>
+<span id="cb12-36">    <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">def</span> models(<span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>):</span>
+<span id="cb12-37">        <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">## See comment in imports for note on this method</span></span>
+<span id="cb12-38">        <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">return</span> {<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"actual.sql"</span>: load_sql(MODEL_NAME)}</span>
+<span id="cb12-39"></span>
+<span id="cb12-40">    <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">@pytest.fixture</span>(scope<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"class"</span>)</span>
+<span id="cb12-41">    <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">def</span> actual(<span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>):</span>
+<span id="cb12-42">        build_result <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> run_dbt([<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"build"</span>])</span>
+<span id="cb12-43"></span>
+<span id="cb12-44">        <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">## Extract the temporary schema generated by dbt + pytest</span></span>
+<span id="cb12-45">        schema <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> build_result.results[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>].node.schema</span>
+<span id="cb12-46"></span>
+<span id="cb12-47">        <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">## See comment in imports for note on this method</span></span>
+<span id="cb12-48">        engine <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> connect_to_test_db()</span>
+<span id="cb12-49"></span>
+<span id="cb12-50">        actual <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> pd.read_sql(</span>
+<span id="cb12-51">            sql <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">f"SELECT * FROM </span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span>schema<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">}</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">.actual ORDER BY user_id"</span>,</span>
+<span id="cb12-52">            con <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> engine</span>
+<span id="cb12-53">        )</span>
+<span id="cb12-54"></span>
+<span id="cb12-55">        <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">return</span> actual</span>
+<span id="cb12-56"></span>
+<span id="cb12-57">    <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">def</span> test_int_users_dimensions(<span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>, project, actual):</span>
+<span id="cb12-58">        <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">assert</span> actual.shape <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> (<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">3</span>)</span>
+<span id="cb12-59">      </span>
+<span id="cb12-60">    <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">def</span> test_user_ids(<span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>, project, actual):</span>
+<span id="cb12-61">        <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">assert</span> actual[<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"user_id"</span>].to_list() <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> [<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span>]</span></code></pre></div>
+<p>And that’s it! Since <code>actual</code> is a Pandas DataFrame, you can write arbitrary assertions using whatever Python logic you please. Then, you just need to run <code>pytest</code> (or <code>poetry run pytest</code>, in our case) to run your test suite, assuming that you have Postgres running in the background already. If you don’t, you’ll need to spin it up first.</p>
+</section>
+</section>
+<section id="a-more-complicated-example" class="level3">
+<h3 class="anchored" data-anchor-id="a-more-complicated-example">A More Complicated Example</h3>
+<p>Let’s get into a more complicated example, since the value of unit testing isn’t in testing trivial cases like above.</p>
+<section id="sessionization" class="level4">
+<h4 class="anchored" data-anchor-id="sessionization">Sessionization</h4>
+<p>A very common task for an analytics engineer is “sessionizing” events. In other words, converting actions that users take – such as viewing pages – into some notion of a <em>session</em> on a site. For example, if a user visits your site both today and tomorrow, you might consider those two visits to be separate sessions.</p>
+<p>But some user tracking tools don’t give you sessions for free. Instead, you need to create them. Let’s imagine we have a table called <code>stg_pageviews</code> that comes from <a href="https://segment.com/">Segment</a>, which you might use for event tracking. The table has the following columns: <code>event_id</code>, which uniquely identifies each page view, <code>url</code>, which is the URL of the page viewed, <code>anonymous_id</code>, which is Segment’s user ID that works for both anonymous and logged-in users, and <code>timestamp</code>, which is the timestamp of when the user viewed the page. Then, we might create sessions as follows</p>
+<div class="sourceCode" id="cb13" style="background: #f1f3f5;"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb13-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-- int_sessions.sql</span></span>
+<span id="cb13-2"></span>
+<span id="cb13-3"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-- Set the max session idle time, in minutes</span></span>
+<span id="cb13-4">{% <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">set</span> max_session_idle_time_minutes <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">30</span> %}</span>
+<span id="cb13-5"></span>
+<span id="cb13-6"></span>
+<span id="cb13-7"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-- First, we figure out how long passes between each (consecutive) pair</span></span>
+<span id="cb13-8"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-- of page views for a user.</span></span>
+<span id="cb13-9"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">WITH</span> pageviews_with_previous <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">AS</span> (</span>
+<span id="cb13-10">    <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">SELECT</span></span>
+<span id="cb13-11">        event_id,</span>
+<span id="cb13-12">        url,</span>
+<span id="cb13-13">        anonymous_id,</span>
+<span id="cb13-14">        <span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">timestamp</span>,</span>
+<span id="cb13-15">        <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">LAG</span>(<span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">timestamp</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>) <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">OVER</span>(</span>
+<span id="cb13-16">            <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">PARTITION</span> <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">BY</span> anonymous_id</span>
+<span id="cb13-17">            <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">ORDER</span> <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">BY</span> <span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">timestamp</span></span>
+<span id="cb13-18">        ) <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">AS</span> previous_timestamp</span>
+<span id="cb13-19">    <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">FROM</span> {{ <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ref</span>(<span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">"stg_pageviews"</span>) }}</span>
+<span id="cb13-20">),</span>
+<span id="cb13-21">new_session_labels <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">AS</span> (</span>
+<span id="cb13-22">    <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">SELECT</span></span>
+<span id="cb13-23">        event_id,</span>
+<span id="cb13-24">        url,</span>
+<span id="cb13-25">        anonymous_id,</span>
+<span id="cb13-26">        <span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">timestamp</span>,</span>
+<span id="cb13-27">        <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">CASE</span></span>
+<span id="cb13-28">            <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-- If the previous page was viewed less than `max_session_idle_time_minutes` ago</span></span>
+<span id="cb13-29">            <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-- then it should be considered part of a new session</span></span>
+<span id="cb13-30">            <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">WHEN</span> {{ datediff(<span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">"previous_timestamp"</span>, <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">"timestamp"</span>, <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">"minute"</span>) }} <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;=</span> {{ max_session_idle_time_minutes }} <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">THEN</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span></span>
+<span id="cb13-31">            <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">ELSE</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span></span>
+<span id="cb13-32">        <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">END</span> <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">AS</span> new_session</span>
+<span id="cb13-33">    <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">FROM</span> pageviews_with_previous</span>
+<span id="cb13-34">),</span>
+<span id="cb13-35"></span>
+<span id="cb13-36"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-- Next, we create the session by taking a cumulative sum of the `new_session` values.</span></span>
+<span id="cb13-37"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">--</span></span>
+<span id="cb13-38"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-- The basic idea is that `new_session` is 1 if {{ max_session_idle_time_minutes }} have</span></span>
+<span id="cb13-39"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">--  passed since the last page view, and zero otherwise. That means that if you view</span></span>
+<span id="cb13-40"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">--  three pages one after another in quick succession, the first one will get a value of 1</span></span>
+<span id="cb13-41"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">--  for `new_session` since it's the first pageview _ever_ for you, and the others</span></span>
+<span id="cb13-42"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">--  get a value of zero, since not enough time has passed since your last page view.</span></span>
+<span id="cb13-43"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">--  If you then leave for an hour, come back, and view one page, that page gets a `new_session`</span></span>
+<span id="cb13-44"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">--  value of one. And then you do it again, and the newest page view also gets a `new_session`</span></span>
+<span id="cb13-45"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">--  value of one.</span></span>
+<span id="cb13-46"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">--</span></span>
+<span id="cb13-47"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-- Then, when we do the cumulative sum over `new_session`, all of the values for a single "session"</span></span>
+<span id="cb13-48"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-- are 1 until we hit the fourth row (where there's another `new_session` value of 1) at which point</span></span>
+<span id="cb13-49"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-- the cumulative sum becomes 2. And then we hit the next row, and it becomes 3.</span></span>
+<span id="cb13-50"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">--</span></span>
+<span id="cb13-51"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-- Here's an example of how it looks for the example above:</span></span>
+<span id="cb13-52"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">--</span></span>
+<span id="cb13-53"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-- event_id     time     new_session  session_id</span></span>
+<span id="cb13-54"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">--    1          00:00:00       1           1</span></span>
+<span id="cb13-55"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">--    2          00:00:10       0           1</span></span>
+<span id="cb13-56"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">--    3          00:00:20       0           1</span></span>
+<span id="cb13-57"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">--    4          08:00:00       1           2</span></span>
+<span id="cb13-58"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">--    5          14:00:00       1           3</span></span>
+<span id="cb13-59">session_numbers <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">AS</span> (</span>
+<span id="cb13-60">    <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">SELECT</span></span>
+<span id="cb13-61">        <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span>,</span>
+<span id="cb13-62">        <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">SUM</span>(new_session) <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">OVER</span>(</span>
+<span id="cb13-63">            <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">PARTITION</span> <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">BY</span> anonymous_id</span>
+<span id="cb13-64">            <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">ORDER</span> <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">BY</span> <span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">timestamp</span></span>
+<span id="cb13-65">            <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">ROWS</span> <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">BETWEEN</span> <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">UNBOUNDED</span> <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">PRECEDING</span> <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">AND</span> <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">CURRENT</span> <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">ROW</span></span>
+<span id="cb13-66">        ) <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">AS</span> session_number</span>
+<span id="cb13-67">    <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">FROM</span> new_session_labels</span>
+<span id="cb13-68">)</span>
+<span id="cb13-69"></span>
+<span id="cb13-70"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">SELECT</span></span>
+<span id="cb13-71">    {{ dbt_utils.generate_surrogate_key([<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'anonymous_id'</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'session_number'</span>]) }} <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">AS</span> session_id,</span>
+<span id="cb13-72">    event_id,</span>
+<span id="cb13-73">    url,</span>
+<span id="cb13-74">    <span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">timestamp</span></span>
+<span id="cb13-75"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">FROM</span> session_numbers</span></code></pre></div>
+<p>Hopefully the comments in the code help with following along. The goal here at the end of the day is to create a table that we can join back to the page views table with our newly created sessions. Then we can use sessions to easily analyze things like conversion rates, bounce rates, common landing and exit pages, and so on.</p>
+<p>But this isn’t a blog post about sessionization, it’s about testing. So let’s write some tests!</p>
+<div class="sourceCode" id="cb14" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">## tests/int/test_int_sessions.py</span></span>
+<span id="cb14-2"></span>
+<span id="cb14-3"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> pytest</span>
+<span id="cb14-4"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> pandas <span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">as</span> pd</span>
+<span id="cb14-5"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">from</span> dbt.tests.util <span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> run_dbt</span>
+<span id="cb14-6"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">from</span> common <span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> load_sql, convert_dicts_to_csv, connect_to_test_db</span>
+<span id="cb14-7"></span>
+<span id="cb14-8">MODEL_NAME <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"int_sessions"</span></span>
+<span id="cb14-9"></span>
+<span id="cb14-10">mock_stg_pageviews <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> convert_dicts_to_csv([</span>
+<span id="cb14-11">    {<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"event_id"</span>: <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"url"</span>: <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"www.example.com"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"anonymous_id"</span>: <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"foobar"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"timestamp"</span>: <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"2023-04-13 15:00:31"</span>},</span>
+<span id="cb14-12">    {<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"event_id"</span>: <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"url"</span>: <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"www.example.com/foo/bar"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"anonymous_id"</span>: <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"foobar"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"timestamp"</span>: <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"2023-04-13 15:00:41"</span>},</span>
+<span id="cb14-13">    {<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"event_id"</span>: <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">3</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"url"</span>: <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"www.example.com/baz"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"anonymous_id"</span>: <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"foobar"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"timestamp"</span>: <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"2023-04-13 15:00:59"</span>},</span>
+<span id="cb14-14">    {<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"event_id"</span>: <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">4</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"url"</span>: <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"www.example.com"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"anonymous_id"</span>: <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"foobar"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"timestamp"</span>: <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"2023-04-13 16:00:00"</span>},</span>
+<span id="cb14-15">    {<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"event_id"</span>: <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">5</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"url"</span>: <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"www.example.com/baz"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"anonymous_id"</span>: <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"foobar"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"timestamp"</span>: <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"2023-04-13 17:00:00"</span>},</span>
+<span id="cb14-16">    {<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"event_id"</span>: <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">6</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"url"</span>: <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"www.example.com/baz"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"anonymous_id"</span>: <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"foobar"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"timestamp"</span>: <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"2023-04-13 17:29:59"</span>},</span>
+<span id="cb14-17">    {<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"event_id"</span>: <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">7</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"url"</span>: <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"www.example.com/baz"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"anonymous_id"</span>: <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"foobar"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"timestamp"</span>: <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"2023-04-13 18:00:00"</span>},</span>
+<span id="cb14-18">])</span>
+<span id="cb14-19"></span>
+<span id="cb14-20">expected <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> pd.DataFrame([{<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"event_id"</span>: i} <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">for</span> i <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">in</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">range</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">8</span>)])</span>
+<span id="cb14-21"></span>
+<span id="cb14-22">actual <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> load_sql(MODEL_NAME)</span>
+<span id="cb14-23"></span>
+<span id="cb14-24"></span>
+<span id="cb14-25"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">class</span> TestIntSessions():</span>
+<span id="cb14-26">    <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">@pytest.fixture</span>(scope<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"class"</span>)</span>
+<span id="cb14-27">    <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">def</span> seeds(<span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>):</span>
+<span id="cb14-28">        <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">return</span> {</span>
+<span id="cb14-29">            <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"stg_pageviews.csv"</span>: mock_stg_pageviews</span>
+<span id="cb14-30">        }</span>
+<span id="cb14-31"></span>
+<span id="cb14-32">    <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">@pytest.fixture</span>(scope<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"class"</span>)</span>
+<span id="cb14-33">    <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">def</span> models(<span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>):</span>
+<span id="cb14-34">        <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">return</span> {</span>
+<span id="cb14-35">            <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"actual.sql"</span>: actual</span>
+<span id="cb14-36">        }</span>
+<span id="cb14-37"></span>
+<span id="cb14-38">    <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">@pytest.fixture</span>(scope<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"class"</span>)</span>
+<span id="cb14-39">    <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">def</span> packages(<span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>):</span>
+<span id="cb14-40">        <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">return</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"""</span></span>
+<span id="cb14-41"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">        packages:</span></span>
+<span id="cb14-42"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">          - package: dbt-labs/dbt_utils</span></span>
+<span id="cb14-43"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">            version: "1.0.0"</span></span>
+<span id="cb14-44"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">        """</span></span>
+<span id="cb14-45"></span>
+<span id="cb14-46">    <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">@pytest.fixture</span>(scope<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"class"</span>)</span>
+<span id="cb14-47">    <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">def</span> actual(<span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>):</span>
+<span id="cb14-48">        run_dbt([<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"deps"</span>])</span>
+<span id="cb14-49">        build_result <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> run_dbt([<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"build"</span>])</span>
+<span id="cb14-50"></span>
+<span id="cb14-51">        schema <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> build_result.results[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>].node.schema</span>
+<span id="cb14-52"></span>
+<span id="cb14-53">        engine <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> connect_to_test_db()</span>
+<span id="cb14-54"></span>
+<span id="cb14-55">        actual <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> pd.read_sql(</span>
+<span id="cb14-56">            sql <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">f"SELECT * FROM </span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span>schema<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">}</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">.actual ORDER BY event_id"</span>,</span>
+<span id="cb14-57">            con <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> engine</span>
+<span id="cb14-58">        )</span>
+<span id="cb14-59"></span>
+<span id="cb14-60">        <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">return</span> actual</span>
+<span id="cb14-61"></span>
+<span id="cb14-62">    <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">def</span> extract_session_id(<span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>, actual):</span>
+<span id="cb14-63">        <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">return</span> actual[<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"session_id"</span>].tolist()</span>
+<span id="cb14-64"></span>
+<span id="cb14-65">    <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">def</span> test_event_ids_are_unmodified_by_model(<span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>, project, actual):</span>
+<span id="cb14-66">        <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">## Test that the pageview IDs and the landing pages match our expectations</span></span>
+<span id="cb14-67">        <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">assert</span> actual[<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"event_id"</span>].tolist() <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> expected[<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"event_id"</span>].tolist()</span>
+<span id="cb14-68"></span>
+<span id="cb14-69">    <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">def</span> test_first_session_correctly_created(<span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>, project, actual):</span>
+<span id="cb14-70">        session_ids <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>.extract_session_id(actual)</span>
+<span id="cb14-71"></span>
+<span id="cb14-72">        <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">## In the data above, there should be four unique sessions created.</span></span>
+<span id="cb14-73">        <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">## They should correspond to page views 1-3, page view 4, page views 5-6, and page view 7</span></span>
+<span id="cb14-74">        <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">## The first three rows should all be the same session</span></span>
+<span id="cb14-75">        <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">assert</span> session_ids[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>] <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> session_ids[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>]</span>
+<span id="cb14-76">        <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">assert</span> session_ids[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>] <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> session_ids[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span>]</span>
+<span id="cb14-77">        <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">assert</span> session_ids[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>] <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> session_ids[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span>]</span>
+<span id="cb14-78"></span>
+<span id="cb14-79">        <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">## The rest of the rows should be different sessions</span></span>
+<span id="cb14-80">        <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">assert</span> session_ids[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>] <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">not</span> <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">in</span> session_ids[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">3</span>:]</span>
+<span id="cb14-81"></span>
+<span id="cb14-82">    <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">def</span> test_second_session_one_row(<span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>, project, actual):</span>
+<span id="cb14-83">        session_ids <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>.extract_session_id(actual)</span>
+<span id="cb14-84"></span>
+<span id="cb14-85">        <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">## The fourth row should be its own session</span></span>
+<span id="cb14-86">        <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">assert</span> session_ids[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">3</span>] <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">not</span> <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">in</span> session_ids[:<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">3</span>]</span>
+<span id="cb14-87">        <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">assert</span> session_ids[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">3</span>] <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">not</span> <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">in</span> session_ids[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">4</span>:]</span>
+<span id="cb14-88"></span>
+<span id="cb14-89">    <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">def</span> test_twenty_nine_min_fifty_nine_seconds_later_is_same_session(<span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>, project, actual):</span>
+<span id="cb14-90">        session_ids <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>.extract_session_id(actual)</span>
+<span id="cb14-91"></span>
+<span id="cb14-92">        <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># ## The fifth and sixth rows should be their own session</span></span>
+<span id="cb14-93">        <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">assert</span> session_ids[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">4</span>] <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> session_ids[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">5</span>]</span>
+<span id="cb14-94">        <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">assert</span> session_ids[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">4</span>] <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">not</span> <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">in</span> session_ids[:<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">4</span>]</span>
+<span id="cb14-95">        <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">assert</span> session_ids[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">4</span>] <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">not</span> <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">in</span> session_ids[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">6</span>:]</span>
+<span id="cb14-96"></span>
+<span id="cb14-97">    <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">def</span> test_thirty_minutes_and_one_second_later_is_new_session(<span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>, project, actual):</span>
+<span id="cb14-98">        session_ids <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>.extract_session_id(actual)</span>
+<span id="cb14-99"></span>
+<span id="cb14-100">        <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># ## The seventh row should be its own session</span></span>
+<span id="cb14-101">        <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">assert</span> session_ids[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">6</span>] <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">not</span> <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">in</span> session_ids[:<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">6</span>]</span></code></pre></div>
+<p>That was a lot of code to process, but the basic gist is the same as before: First, we define some “seed” data in stringified CSV (converted from a list of dictionaries) that we load into our database. We then run our dbt model on the seed data, we query the result, and we run assertions against the result to guarantee that our code is actually behaving how we want.</p>
+<p>Note that in the spirit of unit testing, we can get very granular here. For instance, in these tests we’re checking things like individual session IDs for pageviews that occurred one second before and after a specified timestamp being different from each other, and that different users have different session IDs, and so on. This is of course just an example, but you can make this logic as involved as you like. At the end of the day, the goal is to help you sleep at night with the knowledge that your code, which might be feeding into ML models, underpinning business decisions, and so on, is <em>correct</em>.</p>
+</section>
+</section>
+</section>
+<section id="wrapping-up" class="level2">
+<h2 class="anchored" data-anchor-id="wrapping-up">Wrapping Up</h2>
+<p>This was a bit of an in the weeds, technical post. The goal was to shed some light on something that, from what I’ve heard, not many people are talking about, and likely even fewer are actually <em>doing</em>. My hope is that every analytics engineering team will write unit tests for their dbt pipelines, and my goal in writing this post was to make setting up your test suite more approachable. The main takeaway is this: Since dbt plays so nicely with pytest, it should be fast and simple to get your unit test suite off the ground! And once you’re in the habit of writing unit tests, you can have significantly more confidence in the correctness of the SQL that’s running in your dbt builds. After all: dbt sells itself as bringing software engineering practices to data pipelines, and unit testing is maybe the best of those best practices.</p>
+
+
+</section>
+
+ ]]></description>
+  <category>dbt</category>
+  <category>analytics engineering</category>
+  <category>python</category>
+  <guid>https://www.matthewrkaye.com/posts/2023-07-09-unit-testing-dbt-models/unit-testing-dbt-models.html</guid>
+  <pubDate>Sun, 09 Jul 2023 04:00:00 GMT</pubDate>
+</item>
 <item>
   <title>Lessons Learned From Running R in Production</title>
   <dc:creator>Matt Kaye</dc:creator>
@@ -420,7 +2071,7 @@ font-style: inherit;">4</span>), <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"milliseconds"</span>)</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] "Mean runtime: 0.8223 milliseconds"</code></pre>
+<pre><code>[1] "Mean runtime: 0.7279 milliseconds"</code></pre>
 </div>
 </div>
 <p>Now, let’s try the same in Python:</p>
@@ -480,7 +2131,7 @@ background-color: null;
 font-style: inherit;">"milliseconds"</span></span>
 <span id="cb28-12">)</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Mean runtime: 0.1546 milliseconds</code></pre>
+<pre><code>Mean runtime: 0.1222 milliseconds</code></pre>
 </div>
 </div>
 <p>In this particular case, Python’s JSON serialization runs 6-7x faster than R’s. And if you’re thinking “that’s only one millisecond, though!” you’d be right. But the general principle is important even if the magnitude of the issue in this particular case is not.</p>
@@ -781,9 +2432,8 @@ font-style: inherit;">'daemon off;'</span></span></code></pre></div>
 <p>Using a tool like Valve, similarly, costs an innovation token, and it’s not one that I’d be willing to spend. If virtually nobody is using Valve in production, it’s not on CRAN, and the documentation is sparse, it’ll be an order of magnitude harder to follow best practices (if they even exist) and fix issues that will inevitably come up in using it. In my view, this is a non-starter. To some degree, a theme of this whole post has been that using R itself in production costs an innovation token, and spending another one on Valve when you could just as easily use Flask, FastAPI, or some similar framework is a choice that I, personally, would not feel comfortable making. That’s not to say that Valve wouldn’t <em>work</em> or do what’s advertised on the tin, or anything like that. It’s just that when something inevitably goes wrong, I feel much more comfortable in my ability to find the solution to the problem when it’s a Flask problem or a FastAPI problem as opposed to if it’s a Valve problem.</p>
 <p>Ultimately, as data scientists, we get paid to deliver business value. We don’t get paid to work out weird kinks in an uncommonly used library, or any other version of fitting square pegs into round holes. And so my view is that in cases like this, the boring technology – read: the one that everyone else uses – tends to be the one that ultimately lets us do what we get paid to do. This is the crux of the sadness I felt in moving from R to FastAPI: I was making a conscious choice to give up something that I love in the name of pragmatism, which is never an easy call to make.</p>
 </section>
-</section>
-<section id="types-and-stopifnot" class="level2">
-<h2 class="anchored" data-anchor-id="types-and-stopifnot">Types and <code>stopifnot</code></h2>
+<section id="types-and-stopifnot" class="level3">
+<h3 class="anchored" data-anchor-id="types-and-stopifnot">Types and <code>stopifnot</code></h3>
 <p>One proposed fix for the “R doesn’t do a good job of handling types” issues that I outlined above is to use something like this to check types:</p>
 <div class="sourceCode" id="cb32" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><span class="co" style="color: #5E5E5E;
 background-color: null;
@@ -815,7 +2465,7 @@ font-style: inherit;">*</span> <span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">2</span></span>
 <span id="cb32-10">}</span></code></pre></div>
-<p>This attempts to stop processing the request if the API receives a value for <code>n</code> that is not an integer. Unfortunately, it doesn’t work. And ironically, the reason why it doesn’t work is because of R’s type system. If you run this API and make a request to <code>/double</code> with <code>n=foobar</code>, you’ll get the following response:</p>
+<p>This attempts to stop processing the request if the API receives a value for <code>n</code> that is not an integer. Unfortunately, it doesn’t work. And ironically, the reason why it doesn’t work is because of Plumber not enforcing types. If you run this API and make a request to <code>/double</code> with <code>n=foobar</code>, you’ll get the following response:</p>
 <div class="sourceCode" id="cb33" style="background: #f1f3f5;"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb33-1"><span class="er" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">curl</span> <span class="er" style="color: #AD0000;
@@ -890,8 +2540,8 @@ font-style: inherit;">"</span></span>
 background-color: null;
 font-style: inherit;">}</span></span></code></pre></div>
 <p>There are three major problems here.</p>
-<section id="parsing-integer-ish-variables" class="level3">
-<h3 class="anchored" data-anchor-id="parsing-integer-ish-variables">Parsing Integer-ish Variables</h3>
+<section id="parsing-integer-ish-variables" class="level4">
+<h4 class="anchored" data-anchor-id="parsing-integer-ish-variables">Parsing Integer-ish Variables</h4>
 <p>The first is that query parameters in Plumber are treated as strings and need to be coerced to other types, since Plumber doesn’t enforce the types as defined. This means that <code>is.integer(n)</code> will <em>always</em> return <code>FALSE</code>, no matter what value is provided. To get this to work, you’d need to do something like this: <code>is.integer(as.integer(n))</code>. But this also doesn’t work, since <code>is.integer(as.integer("foo"))</code> returns <code>TRUE</code>. So this means that what we actually need to do is add <em>yet another</em> type check. Something like this would work, but look how cumbersome it is:</p>
 <div class="sourceCode" id="cb35" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><span class="co" style="color: #5E5E5E;
 background-color: null;
@@ -1010,8 +2660,8 @@ font-style: inherit;">double</span>(n3)</span></code></pre></div>
 </div>
 <p>Great! That works. It’s just ugly since we now need to handle both the integer case and the <code>NA</code> case, but it’s not the end of the world.</p>
 </section>
-<section id="http-status-codes" class="level3">
-<h3 class="anchored" data-anchor-id="http-status-codes">HTTP Status Codes</h3>
+<section id="http-status-codes" class="level4">
+<h4 class="anchored" data-anchor-id="http-status-codes">HTTP Status Codes</h4>
 <p>The second problem with the original <code>stopifnot</code> approach is that the API returns an HTTP 500 error – which generally means that something went wrong on the server side, unrelated to the client’s request – instead of an HTTP 400, which should be used for indicating bad parameter values. There’s lots of documentation on what HTTP status codes to return to the client for different request outcomes. Here’s one <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400">from Mozilla</a>. In this case, the <code>500</code> indicates that the server did something wrong, and, aside from reading the error message, the client has no way of knowing what happened.</p>
 <p>To fix this, we’d need to add a custom implementation of some logic that’s <em>similar</em> to <code>stopifnot</code>, but not exactly the same. The key is that <code>stopifnot</code> aborts the request, forcing an <code>HTTP 500</code>. If we want to return <code>4XX</code> instead, we need to short-circuit the processing that happens in the endpoint.</p>
 <div class="callout callout-style-simple callout-note no-icon">
@@ -1144,13 +2794,14 @@ background-color: null;
 font-style: inherit;">}</span></span></code></pre></div>
 <p>Much better.</p>
 </section>
-<section id="stack-traces-and-r-errors" class="level3">
-<h3 class="anchored" data-anchor-id="stack-traces-and-r-errors">Stack Traces and R Errors</h3>
+<section id="stack-traces-and-r-errors" class="level4">
+<h4 class="anchored" data-anchor-id="stack-traces-and-r-errors">Stack Traces and R Errors</h4>
 <p>And that brings me to the last issue: The error message the client gets back from the API is an <em>R error</em>, which is a problem. We don’t want to return stack traces or errors that expose too much of the guts of the API to the client, as those could be used by a malicious actor to perform an attack. But secondly, and maybe more importantly: Not everyone speaks R, and so returning an R error is not helpful. The point of an API is to abstract away the R, Python, or any other implementation details from the client, and returning R errors does not achieve that goal.</p>
 <p>Instead, we want two things. First, we want to return an HTTP 4XX to the client to indicate that they did something wrong. And second, we want the error message they get back to indicate <em>what</em> they did wrong. Note that I achieved that in the changes I made above. Now, if the client supplies <code>n=foobar</code>, they get back an error message with a <code>400</code> status code and a message telling them that N must be an integer, so they know what they did wrong and how to fix it.</p>
 <p>Suspiciously, after all of this additional implementation to handle types and provide helpful errors, the Plumber service returns errors that look similar to what FastAPI gives out of the box, which is largely the point I’m trying to make in this post. While yes, it is certainly possible to handle all of these issues in Plumber and program around them, other frameworks give you them for free, and I generally don’t want to spend my time working out kinks in R’s already shoddy type system and in Plumber itself, when I could get the same from some type hints in the corresponding FastAPI code, and then get back to providing real value. That’s just my preference.</p>
 
 
+</section>
 </section>
 </section>
 
@@ -1961,7 +3612,7 @@ font-style: inherit;">"example.R"</span>]</span></code></pre></div>
 <p>Sometimes we need environment variables like a Github token or a database URL, either to install our dependencies or to run our code. Depending on when the variable will be used, we can either specify it at <em>build</em> time (as a build arg) or a <em>run</em> time. Generally, it’s a good idea to only specify build args that you really need at build time.</p>
 <section id="build-time-config" class="level4">
 <h4 class="anchored" data-anchor-id="build-time-config">Build Time Config</h4>
-<p>For instance, if your build requires downloading a package from a private Github repository (for which you need to have a <code>GITHUB_PAT</code> set), then you would specify your <code>GITHUB_PAT</code> as a build arg). Let’s try that:</p>
+<p>For instance, if your build requires downloading a package from a private Github repository (for which you need to have a <code>GITHUB_PAT</code> set), then you would specify your <code>GITHUB_PAT</code> as a build arg. Let’s try that:</p>
 <div class="sourceCode" id="cb18" style="background: #f1f3f5;"><pre class="sourceCode dockerfile code-with-copy"><code class="sourceCode dockerfile"><span id="cb18-1"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">## Dockerfile</span></span>
@@ -4977,7 +6628,7 @@ font-style: inherit;">150</span></span>
 <span id="cb4-19">  )</span>
 <span id="cb4-20">})</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Test passed 🥇</code></pre>
+<pre><code>Test passed 🎉</code></pre>
 </div>
 </div>
 </section>
@@ -5480,33 +7131,33 @@ font-style: inherit;">head</span>(features))</span></code></pre></div>
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: right;">3.799</td>
-<td style="text-align: right;">1.842</td>
+<td style="text-align: right;">6.288</td>
+<td style="text-align: right;">2.617</td>
 <td style="text-align: left;">TRUE</td>
 </tr>
 <tr class="even">
-<td style="text-align: right;">4.855</td>
-<td style="text-align: right;">2.051</td>
+<td style="text-align: right;">4.991</td>
+<td style="text-align: right;">1.811</td>
 <td style="text-align: left;">TRUE</td>
 </tr>
 <tr class="odd">
-<td style="text-align: right;">3.565</td>
-<td style="text-align: right;">1.681</td>
+<td style="text-align: right;">5.019</td>
+<td style="text-align: right;">3.662</td>
 <td style="text-align: left;">TRUE</td>
 </tr>
 <tr class="even">
-<td style="text-align: right;">3.167</td>
-<td style="text-align: right;">3.165</td>
+<td style="text-align: right;">3.908</td>
+<td style="text-align: right;">1.800</td>
 <td style="text-align: left;">TRUE</td>
 </tr>
 <tr class="odd">
-<td style="text-align: right;">6.941</td>
-<td style="text-align: right;">1.033</td>
+<td style="text-align: right;">4.856</td>
+<td style="text-align: right;">0.500</td>
 <td style="text-align: left;">TRUE</td>
 </tr>
 <tr class="even">
-<td style="text-align: right;">5.908</td>
-<td style="text-align: right;">0.838</td>
+<td style="text-align: right;">4.402</td>
+<td style="text-align: right;">1.275</td>
 <td style="text-align: left;">TRUE</td>
 </tr>
 </tbody>
@@ -5539,15 +7190,15 @@ font-style: inherit;">coef</span>(model))</span></code></pre></div>
 <tbody>
 <tr class="odd">
 <td style="text-align: left;">(Intercept)</td>
-<td style="text-align: right;">13.665</td>
+<td style="text-align: right;">9.532</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">sepal_length</td>
-<td style="text-align: right;">-1.464</td>
+<td style="text-align: right;">-1.322</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">petal_width</td>
-<td style="text-align: right;">-1.677</td>
+<td style="text-align: right;">-0.578</td>
 </tr>
 </tbody>
 </table>
@@ -5580,7 +7231,7 @@ font-style: inherit;">"Model accuracy is "</span>, accuracy, <span class="st" st
 background-color: null;
 font-style: inherit;">"%"</span>))</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Model accuracy is 91%</code></pre>
+<pre><code>Model accuracy is 81%</code></pre>
 </div>
 </div>
 <p>And that’s it – you have a simple retraining job. This is a very minimal example, but this general framework is very flexible and modular, and it makes up the foundation for how we write our retraining jobs at CollegeVine. You can plug and play all different kinds of feature engineering logic, logic to fetch raw data, metrics, etc. We also use <a href="https://mlflow.org/">MLFlow</a> for versioning models and tracking experiments, so our retraining jobs have lots of logging of artifacts, parameters, and metrics to our MLFlow instance.</p>
@@ -6893,34 +8544,34 @@ font-style: inherit;">TRUE</span>)</span></code></pre></div>
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: left;">0</td>
+<td style="text-align: left;">1</td>
 <td style="text-align: right;">19.2</td>
-<td style="text-align: right;">8</td>
+<td style="text-align: right;">6</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">1</td>
-<td style="text-align: right;">33.9</td>
-<td style="text-align: right;">4</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: right;">21.0</td>
+<td style="text-align: right;">6</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">0</td>
-<td style="text-align: right;">15.5</td>
-<td style="text-align: right;">8</td>
+<td style="text-align: right;">26.0</td>
+<td style="text-align: right;">4</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">0</td>
-<td style="text-align: right;">14.3</td>
+<td style="text-align: right;">17.3</td>
 <td style="text-align: right;">8</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">0</td>
-<td style="text-align: right;">18.7</td>
-<td style="text-align: right;">8</td>
+<td style="text-align: right;">21.0</td>
+<td style="text-align: right;">6</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">1</td>
-<td style="text-align: right;">21.4</td>
-<td style="text-align: right;">4</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: right;">15.0</td>
+<td style="text-align: right;">8</td>
 </tr>
 </tbody>
 </table>
@@ -8102,1294 +9753,6 @@ font-style: inherit;">"my-first-experiment"</span>)</span></code></pre></div>
   <category>hiring</category>
   <guid>https://www.matthewrkaye.com/posts/2021-12-22-notes-on-hiring-data-analysts-scientists/index.html</guid>
   <pubDate>Wed, 22 Dec 2021 05:00:00 GMT</pubDate>
-</item>
-<item>
-  <title>Working With Your Fitbit Data in R</title>
-  <dc:creator>Matt Kaye</dc:creator>
-  <link>https://www.matthewrkaye.com/posts/2021-06-08-working-with-your-fitbit-data-in-r/index.html</link>
-  <description><![CDATA[ 
-
-
-
-<section id="note-this-post-was-updated-as-of-3252023-for-fitbitr-v0.3.0" class="level3">
-<h3 class="anchored" data-anchor-id="note-this-post-was-updated-as-of-3252023-for-fitbitr-v0.3.0">Note: This post was updated as of 3/25/2023 for <code>fitbitr v0.3.0</code></h3>
-</section>
-<section id="introduction" class="level2">
-<h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
-<p><code>fitbitr 0.1.0</code> is now available on CRAN! You can install it with</p>
-<div class="sourceCode" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">install.packages</span>(<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"fitbitr"</span>)</span></code></pre></div>
-<p>or you can get the latest dev version with</p>
-<div class="sourceCode" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><span class="do" style="color: #5E5E5E;
-background-color: null;
-font-style: italic;">## install.packages("devtools")</span></span>
-<span id="cb2-2">devtools<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">install_github</span>(<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"mrkaye97/fitbitr"</span>)</span></code></pre></div>
-<p><code>fitbitr</code> makes it easy to pull your Fitbit data into R and use it for whatever interests you: personal projects, visualization, medical purposes, etc.</p>
-<p>This post shows how you might use <code>fitbitr</code> to pull and visualize some of your data.</p>
-</section>
-<section id="sleep" class="level2">
-<h2 class="anchored" data-anchor-id="sleep">Sleep</h2>
-<p>First, you should either generate a new token with <code>generate_token()</code> or load a cached token with <code>load_cached_token()</code>.</p>
-<div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">library</span>(fitbitr)</span>
-<span id="cb3-2"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">library</span>(lubridate)</span>
-<span id="cb3-3"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">library</span>(tidyverse)</span>
-<span id="cb3-4"></span>
-<span id="cb3-5"><span class="do" style="color: #5E5E5E;
-background-color: null;
-font-style: italic;">## Dates to use throughout post</span></span>
-<span id="cb3-6">start <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">as_date</span>(<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"2020-01-01"</span>)</span>
-<span id="cb3-7">end <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">as_date</span>(<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"2021-10-18"</span>)</span>
-<span id="cb3-8"></span>
-<span id="cb3-9"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">generate_fitbitr_token</span>()</span></code></pre></div>
-</div>
-<p>And then you can start pulling your data!</p>
-<div class="cell" data-layout-align="center" data-hash="index_cache/html/unnamed-chunk-4_2f14a0443cc6b122ece6398ada43397c">
-<div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1">sleep <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">get_sleep_summary</span>(</span>
-<span id="cb4-2">  <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">start_date =</span> end <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">-</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">months</span>(<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">3</span>),</span>
-<span id="cb4-3">  <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">end_date =</span> end</span>
-<span id="cb4-4">)</span>
-<span id="cb4-5"></span>
-<span id="cb4-6"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">head</span>(sleep)</span></code></pre></div>
-<div class="cell-output-display">
-<table class="table table-sm table-striped small" data-quarto-postprocess="true">
-<thead>
-<tr class="header">
-<th style="text-align: right;" data-quarto-table-cell-role="th">log_id</th>
-<th style="text-align: left;" data-quarto-table-cell-role="th">date</th>
-<th style="text-align: left;" data-quarto-table-cell-role="th">start_time</th>
-<th style="text-align: left;" data-quarto-table-cell-role="th">end_time</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">duration</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">efficiency</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">minutes_to_fall_asleep</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">minutes_asleep</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">minutes_awake</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">minutes_after_wakeup</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">time_in_bed</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: right;">34207402675</td>
-<td style="text-align: left;">2021-10-18</td>
-<td style="text-align: left;">2021-10-17 23:01:00</td>
-<td style="text-align: left;">2021-10-18 06:30:00</td>
-<td style="text-align: right;">26940000</td>
-<td style="text-align: right;">91</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">391</td>
-<td style="text-align: right;">58</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">449</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">34193579435</td>
-<td style="text-align: left;">2021-10-17</td>
-<td style="text-align: left;">2021-10-16 23:03:30</td>
-<td style="text-align: left;">2021-10-17 08:11:00</td>
-<td style="text-align: right;">32820000</td>
-<td style="text-align: right;">95</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">472</td>
-<td style="text-align: right;">75</td>
-<td style="text-align: right;">4</td>
-<td style="text-align: right;">547</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">34183584553</td>
-<td style="text-align: left;">2021-10-16</td>
-<td style="text-align: left;">2021-10-15 22:46:30</td>
-<td style="text-align: left;">2021-10-16 06:57:30</td>
-<td style="text-align: right;">29460000</td>
-<td style="text-align: right;">94</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">424</td>
-<td style="text-align: right;">67</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">491</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">34174304493</td>
-<td style="text-align: left;">2021-10-15</td>
-<td style="text-align: left;">2021-10-14 23:50:00</td>
-<td style="text-align: left;">2021-10-15 08:20:30</td>
-<td style="text-align: right;">30600000</td>
-<td style="text-align: right;">94</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">438</td>
-<td style="text-align: right;">72</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">510</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">34159751655</td>
-<td style="text-align: left;">2021-10-14</td>
-<td style="text-align: left;">2021-10-13 23:34:00</td>
-<td style="text-align: left;">2021-10-14 09:18:00</td>
-<td style="text-align: right;">35040000</td>
-<td style="text-align: right;">98</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">524</td>
-<td style="text-align: right;">60</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">584</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">34146865838</td>
-<td style="text-align: left;">2021-10-13</td>
-<td style="text-align: left;">2021-10-12 23:50:00</td>
-<td style="text-align: left;">2021-10-13 08:32:30</td>
-<td style="text-align: right;">31320000</td>
-<td style="text-align: right;">94</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">461</td>
-<td style="text-align: right;">61</td>
-<td style="text-align: right;">1</td>
-<td style="text-align: right;">522</td>
-</tr>
-</tbody>
-</table>
-
-
-</div>
-</div>
-<p>Once you’ve loaded some data, you can visualize it!</p>
-<div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">library</span>(zoo)</span>
-<span id="cb5-2"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">library</span>(scales)</span>
-<span id="cb5-3"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">library</span>(ggthemes)</span>
-<span id="cb5-4"></span>
-<span id="cb5-5">sleep <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> sleep <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">%&gt;%</span></span>
-<span id="cb5-6">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">mutate</span>(</span>
-<span id="cb5-7">   <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">date =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">as_date</span>(date),</span>
-<span id="cb5-8">   <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">start_time =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">as_datetime</span>(start_time),</span>
-<span id="cb5-9">   <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">end_time =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">as_datetime</span>(end_time),</span>
-<span id="cb5-10">   <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">sh =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">ifelse</span>(<span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">hour</span>(start_time) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">&lt;</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">8</span>, <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">hour</span>(start_time) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">24</span>, <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">hour</span>(start_time)), <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">#create numeric times</span></span>
-<span id="cb5-11">   <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">sm =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">minute</span>(start_time),</span>
-<span id="cb5-12">   <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">st =</span> sh <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span> sm<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">/</span><span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">60</span>,</span>
-<span id="cb5-13">   <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">eh =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">hour</span>(end_time),</span>
-<span id="cb5-14">   <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">em =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">minute</span>(end_time),</span>
-<span id="cb5-15">   <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">et =</span> eh <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span> em<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">/</span><span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">60</span>,</span>
-<span id="cb5-16">   <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">mst =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">rollmean</span>(st, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">7</span>, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">fill =</span> <span class="cn" style="color: #8f5902;
-background-color: null;
-font-style: inherit;">NA</span>), <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">#create moving averages</span></span>
-<span id="cb5-17">   <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">met =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">rollmean</span>(et, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">7</span>, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">fill =</span> <span class="cn" style="color: #8f5902;
-background-color: null;
-font-style: inherit;">NA</span>),</span>
-<span id="cb5-18">   <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">year =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">year</span>(start_time)</span>
-<span id="cb5-19">)</span>
-<span id="cb5-20"></span>
-<span id="cb5-21">sleep <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">%&gt;%</span></span>
-<span id="cb5-22">    <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">ggplot</span>(<span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">x =</span> date)) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb5-23">    <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">geom_line</span>(<span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">y =</span> et), <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">color =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">'coral'</span>, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">alpha =</span> .<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">3</span>, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">na.rm =</span> T) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb5-24">    <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">geom_line</span>(<span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">y =</span> st), <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">color =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">'dodgerblue'</span>, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">alpha =</span> .<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">3</span>, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">na.rm =</span> T) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb5-25">    <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">geom_line</span>(<span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">y =</span> met), <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">color =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">'coral'</span>, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">na.rm =</span> T) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb5-26">    <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">geom_line</span>(<span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">y =</span> mst), <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">color =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">'dodgerblue'</span>, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">na.rm =</span> T) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb5-27">    <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">scale_y_continuous</span>(</span>
-<span id="cb5-28">      <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">breaks =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">seq</span>(<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">0</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">30</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">2</span>),</span>
-<span id="cb5-29">      <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">labels =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">trans_format</span>(</span>
-<span id="cb5-30">        <span class="cf" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">function</span>(x) <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">ifelse</span>(x <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">&gt;</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">23</span>, x <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">-</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">24</span>, x), </span>
-<span id="cb5-31">        <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">format =</span> scales<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">comma_format</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">suffix =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">":00"</span>, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">accuracy =</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span>)</span>
-<span id="cb5-32">      )</span>
-<span id="cb5-33">    ) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb5-34">    <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">labs</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">x =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Date"</span>, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">y =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">'Time'</span>) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb5-35">    <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">theme_fivethirtyeight</span>() <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb5-36">    <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">scale_x_date</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">date_breaks =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">'1 month'</span>, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">date_labels =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">'%b'</span>, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">expand =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">c</span>(<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">0</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">0</span>)) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb5-37">    <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">facet_grid</span>(. <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">~</span> year, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">space =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">'free'</span>, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">scales =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">'free_x'</span>, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">switch =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">'x'</span>) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb5-38">    <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">theme</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">panel.spacing.x =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">unit</span>(<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">0</span>,<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"line"</span>), <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">strip.placement =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"outside"</span>)</span></code></pre></div>
-<div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="https://www.matthewrkaye.com/posts/2021-06-08-working-with-your-fitbit-data-in-r/static/rmarkdown-libsunnamed-chunk-5-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>This bit of code makes a nicely formatted plot of the times you went to sleep and woke up over the past three months. You can also use <code>fitbitr</code> to expand the time window with a little help from <code>purrr</code> (the Fitbit API rate limits you, so you can’t request data for infinitely long windows in a single request).</p>
-<div class="cell" data-layout-align="center" data-hash="index_cache/html/unnamed-chunk-6_af35efd52163eeefe06857cbd3a33893">
-<div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><span class="do" style="color: #5E5E5E;
-background-color: null;
-font-style: italic;">## Pull three months of data</span></span>
-<span id="cb6-2">sleep <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">map_dfr</span>(</span>
-<span id="cb6-3">  <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">3</span><span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">:</span><span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">0</span>,</span>
-<span id="cb6-4">  <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">~</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">sleep_summary</span>(</span>
-<span id="cb6-5">    end <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">-</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">months</span>(.x), </span>
-<span id="cb6-6">    end <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">-</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">months</span>(.x) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">months</span>(<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span>)</span>
-<span id="cb6-7">  )</span>
-<span id="cb6-8">)</span></code></pre></div>
-</div>
-<p>After pulling the data, we can use the same code again to visualize it.</p>
-<div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1">sleep <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> sleep <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">%&gt;%</span></span>
-<span id="cb7-2">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">mutate</span>(</span>
-<span id="cb7-3">   <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">date =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">as_date</span>(date),</span>
-<span id="cb7-4">   <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">start_time =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">as_datetime</span>(start_time),</span>
-<span id="cb7-5">   <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">end_time =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">as_datetime</span>(end_time),</span>
-<span id="cb7-6">   <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">sh =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">ifelse</span>(<span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">hour</span>(start_time) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">&lt;</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">8</span>, <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">hour</span>(start_time) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">24</span>, <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">hour</span>(start_time)), <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">#create numeric times</span></span>
-<span id="cb7-7">   <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">sm =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">minute</span>(start_time),</span>
-<span id="cb7-8">   <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">st =</span> sh <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span> sm<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">/</span><span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">60</span>,</span>
-<span id="cb7-9">   <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">eh =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">hour</span>(end_time),</span>
-<span id="cb7-10">   <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">em =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">minute</span>(end_time),</span>
-<span id="cb7-11">   <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">et =</span> eh <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span> em<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">/</span><span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">60</span>,</span>
-<span id="cb7-12">   <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">mst =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">rollmean</span>(st, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">7</span>, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">fill =</span> <span class="cn" style="color: #8f5902;
-background-color: null;
-font-style: inherit;">NA</span>), <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">#create moving averages</span></span>
-<span id="cb7-13">   <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">met =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">rollmean</span>(et, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">7</span>, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">fill =</span> <span class="cn" style="color: #8f5902;
-background-color: null;
-font-style: inherit;">NA</span>),</span>
-<span id="cb7-14">   <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">year =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">year</span>(start_time)</span>
-<span id="cb7-15">) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">%&gt;%</span></span>
-<span id="cb7-16">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">distinct</span>()</span>
-<span id="cb7-17"></span>
-<span id="cb7-18">sleep <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">%&gt;%</span></span>
-<span id="cb7-19">    <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">ggplot</span>(<span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">x =</span> date)) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb7-20">    <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">geom_line</span>(<span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">y =</span> et), <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">color =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">'coral'</span>, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">alpha =</span> .<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">3</span>, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">na.rm =</span> T) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb7-21">    <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">geom_line</span>(<span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">y =</span> st), <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">color =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">'dodgerblue'</span>, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">alpha =</span> .<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">3</span>, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">na.rm =</span> T) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb7-22">    <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">geom_line</span>(<span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">y =</span> met), <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">color =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">'coral'</span>, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">na.rm =</span> T) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb7-23">    <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">geom_line</span>(<span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">y =</span> mst), <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">color =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">'dodgerblue'</span>, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">na.rm =</span> T) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb7-24">    <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">scale_y_continuous</span>(</span>
-<span id="cb7-25">      <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">breaks =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">seq</span>(<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">0</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">30</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">2</span>),</span>
-<span id="cb7-26">      <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">labels =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">trans_format</span>(</span>
-<span id="cb7-27">        <span class="cf" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">function</span>(x) <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">ifelse</span>(x <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">&gt;</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">23</span>, x <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">-</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">24</span>, x), </span>
-<span id="cb7-28">        <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">format =</span> scales<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">comma_format</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">suffix =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">":00"</span>, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">accuracy =</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span>)</span>
-<span id="cb7-29">      )</span>
-<span id="cb7-30">    ) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb7-31">    <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">labs</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">x =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Date"</span>, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">y =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">'Time'</span>) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb7-32">    <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">theme_fivethirtyeight</span>() <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb7-33">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">scale_x_date</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">date_breaks =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">'1 month'</span>, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">date_labels =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">'%b'</span>, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">expand =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">c</span>(<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">0</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">0</span>)) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb7-34">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">facet_grid</span>(. <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">~</span> year, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">space =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">'free'</span>, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">scales =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">'free_x'</span>, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">switch =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">'x'</span>) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb7-35">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">theme</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">panel.spacing.x =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">unit</span>(<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">0</span>,<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"line"</span>), <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">strip.placement =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"outside"</span>)</span></code></pre></div>
-<div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="https://www.matthewrkaye.com/posts/2021-06-08-working-with-your-fitbit-data-in-r/static/rmarkdown-libsunnamed-chunk-7-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
-</section>
-<section id="heart-rate-and-steps" class="level2">
-<h2 class="anchored" data-anchor-id="heart-rate-and-steps">Heart Rate and Steps</h2>
-<p>You can also pull your heart rate data with <code>fitbitr</code>. Maybe we’re curious about seeing how the number of minutes spent in the “fat burn,” “cardio,” and “peak” zones correlates with the number of steps taken that day. Let’s find out!</p>
-<div class="cell" data-layout-align="center" data-hash="index_cache/html/unnamed-chunk-8_df41135438270860bd7e0fd1091a4efa">
-<div class="sourceCode cell-code" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1">hr <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">map_dfr</span>(</span>
-<span id="cb8-2">  <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">3</span><span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">:</span><span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">0</span>,</span>
-<span id="cb8-3">  <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">~</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">heart_rate_zones</span>(</span>
-<span id="cb8-4">    end <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">-</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">months</span>(.x), </span>
-<span id="cb8-5">    end <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">-</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">months</span>(.x) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">months</span>(<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span>)</span>
-<span id="cb8-6">  )</span>
-<span id="cb8-7">)</span>
-<span id="cb8-8"></span>
-<span id="cb8-9">steps <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">map_dfr</span>(</span>
-<span id="cb8-10">  <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">3</span><span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">:</span><span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">0</span>,</span>
-<span id="cb8-11">  <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">~</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">steps</span>(</span>
-<span id="cb8-12">    end <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">-</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">months</span>(.x), </span>
-<span id="cb8-13">    end <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">-</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">months</span>(.x) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">months</span>(<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span>)</span>
-<span id="cb8-14">  )</span>
-<span id="cb8-15">)</span></code></pre></div>
-</div>
-<p>First, we can examine the heart rate data:</p>
-<div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">head</span>(hr)</span></code></pre></div>
-<div class="cell-output-display">
-<table class="table table-sm table-striped small" data-quarto-postprocess="true">
-<thead>
-<tr class="header">
-<th style="text-align: left;" data-quarto-table-cell-role="th">date</th>
-<th style="text-align: left;" data-quarto-table-cell-role="th">zone</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">min_hr</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">max_hr</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">minutes_in_zone</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">calories_out</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: left;">2021-07-18</td>
-<td style="text-align: left;">Out of Range</td>
-<td style="text-align: right;">30</td>
-<td style="text-align: right;">113</td>
-<td style="text-align: right;">1440</td>
-<td style="text-align: right;">2530.16460</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">2021-07-18</td>
-<td style="text-align: left;">Fat Burn</td>
-<td style="text-align: right;">113</td>
-<td style="text-align: right;">141</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0.00000</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">2021-07-18</td>
-<td style="text-align: left;">Cardio</td>
-<td style="text-align: right;">141</td>
-<td style="text-align: right;">176</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0.00000</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">2021-07-18</td>
-<td style="text-align: left;">Peak</td>
-<td style="text-align: right;">176</td>
-<td style="text-align: right;">220</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0.00000</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">2021-07-19</td>
-<td style="text-align: left;">Out of Range</td>
-<td style="text-align: right;">30</td>
-<td style="text-align: right;">113</td>
-<td style="text-align: right;">1408</td>
-<td style="text-align: right;">2689.45124</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">2021-07-19</td>
-<td style="text-align: left;">Fat Burn</td>
-<td style="text-align: right;">113</td>
-<td style="text-align: right;">141</td>
-<td style="text-align: right;">9</td>
-<td style="text-align: right;">86.59917</td>
-</tr>
-</tbody>
-</table>
-
-
-</div>
-</div>
-<p>and the steps data:</p>
-<div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">head</span>(steps)</span></code></pre></div>
-<div class="cell-output-display">
-<table class="table table-sm table-striped small" data-quarto-postprocess="true">
-<thead>
-<tr class="header">
-<th style="text-align: left;" data-quarto-table-cell-role="th">date</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">steps</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: left;">2021-07-18</td>
-<td style="text-align: right;">5620</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">2021-07-19</td>
-<td style="text-align: right;">7537</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">2021-07-20</td>
-<td style="text-align: right;">5513</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">2021-07-21</td>
-<td style="text-align: right;">9014</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">2021-07-22</td>
-<td style="text-align: right;">10883</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">2021-07-23</td>
-<td style="text-align: right;">2975</td>
-</tr>
-</tbody>
-</table>
-
-
-</div>
-</div>
-<p>Now, let’s plot them against each other.</p>
-<div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb11" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1">df <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> hr <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">%&gt;%</span></span>
-<span id="cb11-2">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">filter</span>(zone <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">!=</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Out of Range"</span>) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">%&gt;%</span></span>
-<span id="cb11-3">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">group_by</span>(date) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">%&gt;%</span></span>
-<span id="cb11-4">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">summarize</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">total_minutes =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">sum</span>(minutes_in_zone), <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">.groups =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"drop"</span>) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">%&gt;%</span></span>
-<span id="cb11-5">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">inner_join</span>(steps, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">by =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"date"</span>)</span>
-<span id="cb11-6">  </span>
-<span id="cb11-7">df <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">%&gt;%</span></span>
-<span id="cb11-8">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">mutate</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">steps =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">as.numeric</span>(steps)) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">%&gt;%</span></span>
-<span id="cb11-9">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">filter</span>(<span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">log</span>(total_minutes) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">&gt;</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span>) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">%&gt;%</span></span>
-<span id="cb11-10">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">ggplot</span>(</span>
-<span id="cb11-11">    <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">aes</span>(</span>
-<span id="cb11-12">      steps,</span>
-<span id="cb11-13">      total_minutes</span>
-<span id="cb11-14">    )</span>
-<span id="cb11-15">  ) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb11-16">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">geom_point</span>() <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb11-17">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">geom_smooth</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">method =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"lm"</span>, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">se =</span> F) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb11-18">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">scale_x_log10</span>() <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb11-19">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">scale_y_log10</span>()</span></code></pre></div>
-<div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="https://www.matthewrkaye.com/posts/2021-06-08-working-with-your-fitbit-data-in-r/static/rmarkdown-libsunnamed-chunk-11-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>Or maybe it’d be interesting to predict your zone minutes from your steps:</p>
-<div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1">predictions <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> df <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">%&gt;%</span></span>
-<span id="cb12-2">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">mutate</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">steps =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">as.numeric</span>(steps)) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">%&gt;%</span></span>
-<span id="cb12-3">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">lm</span>(total_minutes <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">~</span> steps, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">data =</span> .) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">%&gt;%</span></span>
-<span id="cb12-4">  broom<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">tidy</span>() <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">%&gt;%</span></span>
-<span id="cb12-5">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">mutate</span>(<span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">across</span>(<span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">where</span>(is.numeric), round, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">5</span>))</span>
-<span id="cb12-6"></span>
-<span id="cb12-7"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">head</span>(predictions)</span></code></pre></div>
-<div class="cell-output-display">
-<table class="table table-sm table-striped small" data-quarto-postprocess="true">
-<thead>
-<tr class="header">
-<th style="text-align: left;" data-quarto-table-cell-role="th">term</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">estimate</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">std.error</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">statistic</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">p.value</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: left;">(Intercept)</td>
-<td style="text-align: right;">23.09761</td>
-<td style="text-align: right;">5.77502</td>
-<td style="text-align: right;">3.99957</td>
-<td style="text-align: right;">0.00011</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">steps</td>
-<td style="text-align: right;">0.00252</td>
-<td style="text-align: right;">0.00056</td>
-<td style="text-align: right;">4.52922</td>
-<td style="text-align: right;">0.00001</td>
-</tr>
-</tbody>
-</table>
-
-
-</div>
-</div>
-</section>
-<section id="wrapping-up" class="level2">
-<h2 class="anchored" data-anchor-id="wrapping-up">Wrapping Up</h2>
-<p>And that’s it! Hopefully this helped show how <code>fitbitr</code> makes pulling your data easy, and gets you curious about the insights you can glean from your own data. The Fitbit API gives you access to so much interesting information about yourself, your habits, your fitness, and so much more, and <code>fitbitr</code> is just meant to be a door into that gold mine.</p>
-
-
-</section>
-
- ]]></description>
-  <category>R</category>
-  <category>data science</category>
-  <guid>https://www.matthewrkaye.com/posts/2021-06-08-working-with-your-fitbit-data-in-r/index.html</guid>
-  <pubDate>Tue, 08 Jun 2021 04:00:00 GMT</pubDate>
 </item>
 </channel>
 </rss>

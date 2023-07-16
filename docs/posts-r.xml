@@ -420,7 +420,7 @@ font-style: inherit;">4</span>), <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"milliseconds"</span>)</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] "Mean runtime: 0.8223 milliseconds"</code></pre>
+<pre><code>[1] "Mean runtime: 0.7279 milliseconds"</code></pre>
 </div>
 </div>
 <p>Now, let’s try the same in Python:</p>
@@ -480,7 +480,7 @@ background-color: null;
 font-style: inherit;">"milliseconds"</span></span>
 <span id="cb28-12">)</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Mean runtime: 0.1546 milliseconds</code></pre>
+<pre><code>Mean runtime: 0.1222 milliseconds</code></pre>
 </div>
 </div>
 <p>In this particular case, Python’s JSON serialization runs 6-7x faster than R’s. And if you’re thinking “that’s only one millisecond, though!” you’d be right. But the general principle is important even if the magnitude of the issue in this particular case is not.</p>
@@ -781,9 +781,8 @@ font-style: inherit;">'daemon off;'</span></span></code></pre></div>
 <p>Using a tool like Valve, similarly, costs an innovation token, and it’s not one that I’d be willing to spend. If virtually nobody is using Valve in production, it’s not on CRAN, and the documentation is sparse, it’ll be an order of magnitude harder to follow best practices (if they even exist) and fix issues that will inevitably come up in using it. In my view, this is a non-starter. To some degree, a theme of this whole post has been that using R itself in production costs an innovation token, and spending another one on Valve when you could just as easily use Flask, FastAPI, or some similar framework is a choice that I, personally, would not feel comfortable making. That’s not to say that Valve wouldn’t <em>work</em> or do what’s advertised on the tin, or anything like that. It’s just that when something inevitably goes wrong, I feel much more comfortable in my ability to find the solution to the problem when it’s a Flask problem or a FastAPI problem as opposed to if it’s a Valve problem.</p>
 <p>Ultimately, as data scientists, we get paid to deliver business value. We don’t get paid to work out weird kinks in an uncommonly used library, or any other version of fitting square pegs into round holes. And so my view is that in cases like this, the boring technology – read: the one that everyone else uses – tends to be the one that ultimately lets us do what we get paid to do. This is the crux of the sadness I felt in moving from R to FastAPI: I was making a conscious choice to give up something that I love in the name of pragmatism, which is never an easy call to make.</p>
 </section>
-</section>
-<section id="types-and-stopifnot" class="level2">
-<h2 class="anchored" data-anchor-id="types-and-stopifnot">Types and <code>stopifnot</code></h2>
+<section id="types-and-stopifnot" class="level3">
+<h3 class="anchored" data-anchor-id="types-and-stopifnot">Types and <code>stopifnot</code></h3>
 <p>One proposed fix for the “R doesn’t do a good job of handling types” issues that I outlined above is to use something like this to check types:</p>
 <div class="sourceCode" id="cb32" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><span class="co" style="color: #5E5E5E;
 background-color: null;
@@ -815,7 +814,7 @@ font-style: inherit;">*</span> <span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">2</span></span>
 <span id="cb32-10">}</span></code></pre></div>
-<p>This attempts to stop processing the request if the API receives a value for <code>n</code> that is not an integer. Unfortunately, it doesn’t work. And ironically, the reason why it doesn’t work is because of R’s type system. If you run this API and make a request to <code>/double</code> with <code>n=foobar</code>, you’ll get the following response:</p>
+<p>This attempts to stop processing the request if the API receives a value for <code>n</code> that is not an integer. Unfortunately, it doesn’t work. And ironically, the reason why it doesn’t work is because of Plumber not enforcing types. If you run this API and make a request to <code>/double</code> with <code>n=foobar</code>, you’ll get the following response:</p>
 <div class="sourceCode" id="cb33" style="background: #f1f3f5;"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb33-1"><span class="er" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">curl</span> <span class="er" style="color: #AD0000;
@@ -890,8 +889,8 @@ font-style: inherit;">"</span></span>
 background-color: null;
 font-style: inherit;">}</span></span></code></pre></div>
 <p>There are three major problems here.</p>
-<section id="parsing-integer-ish-variables" class="level3">
-<h3 class="anchored" data-anchor-id="parsing-integer-ish-variables">Parsing Integer-ish Variables</h3>
+<section id="parsing-integer-ish-variables" class="level4">
+<h4 class="anchored" data-anchor-id="parsing-integer-ish-variables">Parsing Integer-ish Variables</h4>
 <p>The first is that query parameters in Plumber are treated as strings and need to be coerced to other types, since Plumber doesn’t enforce the types as defined. This means that <code>is.integer(n)</code> will <em>always</em> return <code>FALSE</code>, no matter what value is provided. To get this to work, you’d need to do something like this: <code>is.integer(as.integer(n))</code>. But this also doesn’t work, since <code>is.integer(as.integer("foo"))</code> returns <code>TRUE</code>. So this means that what we actually need to do is add <em>yet another</em> type check. Something like this would work, but look how cumbersome it is:</p>
 <div class="sourceCode" id="cb35" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><span class="co" style="color: #5E5E5E;
 background-color: null;
@@ -1010,8 +1009,8 @@ font-style: inherit;">double</span>(n3)</span></code></pre></div>
 </div>
 <p>Great! That works. It’s just ugly since we now need to handle both the integer case and the <code>NA</code> case, but it’s not the end of the world.</p>
 </section>
-<section id="http-status-codes" class="level3">
-<h3 class="anchored" data-anchor-id="http-status-codes">HTTP Status Codes</h3>
+<section id="http-status-codes" class="level4">
+<h4 class="anchored" data-anchor-id="http-status-codes">HTTP Status Codes</h4>
 <p>The second problem with the original <code>stopifnot</code> approach is that the API returns an HTTP 500 error – which generally means that something went wrong on the server side, unrelated to the client’s request – instead of an HTTP 400, which should be used for indicating bad parameter values. There’s lots of documentation on what HTTP status codes to return to the client for different request outcomes. Here’s one <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400">from Mozilla</a>. In this case, the <code>500</code> indicates that the server did something wrong, and, aside from reading the error message, the client has no way of knowing what happened.</p>
 <p>To fix this, we’d need to add a custom implementation of some logic that’s <em>similar</em> to <code>stopifnot</code>, but not exactly the same. The key is that <code>stopifnot</code> aborts the request, forcing an <code>HTTP 500</code>. If we want to return <code>4XX</code> instead, we need to short-circuit the processing that happens in the endpoint.</p>
 <div class="callout callout-style-simple callout-note no-icon">
@@ -1144,13 +1143,14 @@ background-color: null;
 font-style: inherit;">}</span></span></code></pre></div>
 <p>Much better.</p>
 </section>
-<section id="stack-traces-and-r-errors" class="level3">
-<h3 class="anchored" data-anchor-id="stack-traces-and-r-errors">Stack Traces and R Errors</h3>
+<section id="stack-traces-and-r-errors" class="level4">
+<h4 class="anchored" data-anchor-id="stack-traces-and-r-errors">Stack Traces and R Errors</h4>
 <p>And that brings me to the last issue: The error message the client gets back from the API is an <em>R error</em>, which is a problem. We don’t want to return stack traces or errors that expose too much of the guts of the API to the client, as those could be used by a malicious actor to perform an attack. But secondly, and maybe more importantly: Not everyone speaks R, and so returning an R error is not helpful. The point of an API is to abstract away the R, Python, or any other implementation details from the client, and returning R errors does not achieve that goal.</p>
 <p>Instead, we want two things. First, we want to return an HTTP 4XX to the client to indicate that they did something wrong. And second, we want the error message they get back to indicate <em>what</em> they did wrong. Note that I achieved that in the changes I made above. Now, if the client supplies <code>n=foobar</code>, they get back an error message with a <code>400</code> status code and a message telling them that N must be an integer, so they know what they did wrong and how to fix it.</p>
 <p>Suspiciously, after all of this additional implementation to handle types and provide helpful errors, the Plumber service returns errors that look similar to what FastAPI gives out of the box, which is largely the point I’m trying to make in this post. While yes, it is certainly possible to handle all of these issues in Plumber and program around them, other frameworks give you them for free, and I generally don’t want to spend my time working out kinks in R’s already shoddy type system and in Plumber itself, when I could get the same from some type hints in the corresponding FastAPI code, and then get back to providing real value. That’s just my preference.</p>
 
 
+</section>
 </section>
 </section>
 
@@ -1961,7 +1961,7 @@ font-style: inherit;">"example.R"</span>]</span></code></pre></div>
 <p>Sometimes we need environment variables like a Github token or a database URL, either to install our dependencies or to run our code. Depending on when the variable will be used, we can either specify it at <em>build</em> time (as a build arg) or a <em>run</em> time. Generally, it’s a good idea to only specify build args that you really need at build time.</p>
 <section id="build-time-config" class="level4">
 <h4 class="anchored" data-anchor-id="build-time-config">Build Time Config</h4>
-<p>For instance, if your build requires downloading a package from a private Github repository (for which you need to have a <code>GITHUB_PAT</code> set), then you would specify your <code>GITHUB_PAT</code> as a build arg). Let’s try that:</p>
+<p>For instance, if your build requires downloading a package from a private Github repository (for which you need to have a <code>GITHUB_PAT</code> set), then you would specify your <code>GITHUB_PAT</code> as a build arg. Let’s try that:</p>
 <div class="sourceCode" id="cb18" style="background: #f1f3f5;"><pre class="sourceCode dockerfile code-with-copy"><code class="sourceCode dockerfile"><span id="cb18-1"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">## Dockerfile</span></span>
@@ -4821,7 +4821,7 @@ font-style: inherit;">150</span></span>
 <span id="cb4-19">  )</span>
 <span id="cb4-20">})</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Test passed 🥇</code></pre>
+<pre><code>Test passed 🎉</code></pre>
 </div>
 </div>
 </section>
@@ -5324,33 +5324,33 @@ font-style: inherit;">head</span>(features))</span></code></pre></div>
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: right;">3.799</td>
-<td style="text-align: right;">1.842</td>
+<td style="text-align: right;">6.288</td>
+<td style="text-align: right;">2.617</td>
 <td style="text-align: left;">TRUE</td>
 </tr>
 <tr class="even">
-<td style="text-align: right;">4.855</td>
-<td style="text-align: right;">2.051</td>
+<td style="text-align: right;">4.991</td>
+<td style="text-align: right;">1.811</td>
 <td style="text-align: left;">TRUE</td>
 </tr>
 <tr class="odd">
-<td style="text-align: right;">3.565</td>
-<td style="text-align: right;">1.681</td>
+<td style="text-align: right;">5.019</td>
+<td style="text-align: right;">3.662</td>
 <td style="text-align: left;">TRUE</td>
 </tr>
 <tr class="even">
-<td style="text-align: right;">3.167</td>
-<td style="text-align: right;">3.165</td>
+<td style="text-align: right;">3.908</td>
+<td style="text-align: right;">1.800</td>
 <td style="text-align: left;">TRUE</td>
 </tr>
 <tr class="odd">
-<td style="text-align: right;">6.941</td>
-<td style="text-align: right;">1.033</td>
+<td style="text-align: right;">4.856</td>
+<td style="text-align: right;">0.500</td>
 <td style="text-align: left;">TRUE</td>
 </tr>
 <tr class="even">
-<td style="text-align: right;">5.908</td>
-<td style="text-align: right;">0.838</td>
+<td style="text-align: right;">4.402</td>
+<td style="text-align: right;">1.275</td>
 <td style="text-align: left;">TRUE</td>
 </tr>
 </tbody>
@@ -5383,15 +5383,15 @@ font-style: inherit;">coef</span>(model))</span></code></pre></div>
 <tbody>
 <tr class="odd">
 <td style="text-align: left;">(Intercept)</td>
-<td style="text-align: right;">13.665</td>
+<td style="text-align: right;">9.532</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">sepal_length</td>
-<td style="text-align: right;">-1.464</td>
+<td style="text-align: right;">-1.322</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">petal_width</td>
-<td style="text-align: right;">-1.677</td>
+<td style="text-align: right;">-0.578</td>
 </tr>
 </tbody>
 </table>
@@ -5424,7 +5424,7 @@ font-style: inherit;">"Model accuracy is "</span>, accuracy, <span class="st" st
 background-color: null;
 font-style: inherit;">"%"</span>))</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Model accuracy is 91%</code></pre>
+<pre><code>Model accuracy is 81%</code></pre>
 </div>
 </div>
 <p>And that’s it – you have a simple retraining job. This is a very minimal example, but this general framework is very flexible and modular, and it makes up the foundation for how we write our retraining jobs at CollegeVine. You can plug and play all different kinds of feature engineering logic, logic to fetch raw data, metrics, etc. We also use <a href="https://mlflow.org/">MLFlow</a> for versioning models and tracking experiments, so our retraining jobs have lots of logging of artifacts, parameters, and metrics to our MLFlow instance.</p>
@@ -6683,34 +6683,34 @@ font-style: inherit;">TRUE</span>)</span></code></pre></div>
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: left;">0</td>
+<td style="text-align: left;">1</td>
 <td style="text-align: right;">19.2</td>
-<td style="text-align: right;">8</td>
+<td style="text-align: right;">6</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">1</td>
-<td style="text-align: right;">33.9</td>
-<td style="text-align: right;">4</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: right;">21.0</td>
+<td style="text-align: right;">6</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">0</td>
-<td style="text-align: right;">15.5</td>
-<td style="text-align: right;">8</td>
+<td style="text-align: right;">26.0</td>
+<td style="text-align: right;">4</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">0</td>
-<td style="text-align: right;">14.3</td>
+<td style="text-align: right;">17.3</td>
 <td style="text-align: right;">8</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">0</td>
-<td style="text-align: right;">18.7</td>
-<td style="text-align: right;">8</td>
+<td style="text-align: right;">21.0</td>
+<td style="text-align: right;">6</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">1</td>
-<td style="text-align: right;">21.4</td>
-<td style="text-align: right;">4</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: right;">15.0</td>
+<td style="text-align: right;">8</td>
 </tr>
 </tbody>
 </table>

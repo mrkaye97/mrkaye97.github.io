@@ -243,7 +243,7 @@ Sometimes we need environment variables like a Github token or a database URL, e
 
 #### Build Time Config
 
-For instance, if your build requires downloading a package from a private Github repository (for which you need to have a `GITHUB_PAT` set), then you would specify your `GITHUB_PAT` as a build arg). Let's try that:
+For instance, if your build requires downloading a package from a private Github repository (for which you need to have a `GITHUB_PAT` set), then you would specify your `GITHUB_PAT` as a build arg. Let's try that:
 
 ```Dockerfile
 ## Dockerfile
