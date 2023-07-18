@@ -534,5 +534,76 @@ Note that in the spirit of unit testing, we can get very granular here. For inst
 
 This was a bit of an in the weeds, technical post. The goal was to shed some light on something that, from what I've heard, not many people are talking about, and likely even fewer are actually _doing_. My hope is that every analytics engineering team will write unit tests for their dbt pipelines, and my goal in writing this post was to make setting up your test suite more approachable. The main takeaway is this: Since dbt plays so nicely with pytest, it should be fast and simple to get your unit test suite off the ground! And once you're in the habit of writing unit tests, you can have significantly more confidence in the correctness of the SQL that's running in your dbt builds. After all: dbt sells itself as bringing software engineering practices to data pipelines, and unit testing is maybe the best of those best practices.
 
+## Appendix
 
+### `common` Code
+
+I'm going to leave some of the code we have in our `common` module here, for others to copy.
+
+First, connecting to our test database:
+
+```python
+from sqlalchemy import create_engine
+from sqlalchemy.engine.url import URL
+import os
+
+def connect_to_test_db():
+    url = URL.create(
+        "postgresql",
+        username = os.environ.get("TEST_DB_USER"),
+        password = os.environ.get("TEST_DB_PASSWORD"),
+        host = "localhost",
+        database = os.environ.get("TEST_DB_NAME"),
+        port = int(os.environ.get("TEST_DB_PORT"))
+    )
+
+    return create_engine(url)
+```
+
+Next, converting a list of dictionaries to a stringified CSV:
+
+```python
+import pandas as pd
+
+def convert_dict_to_csv(data):
+    df = pd.DataFrame.from_dict(data)
+    return df.to_csv(index = False)
+```
+
+And finally, loading models and macros. Note that this is much more involved, and there's certainly a way to do this with a macro that relies on the [dbt graph context variable](https://docs.getdbt.com/reference/dbt-jinja-functions/graph), but that was far more involved than this.
+
+```python
+from dbt.tests.util import read_file
+import glob
+
+def load_sql(basename):
+    model_sql_name = basename + ".sql"
+    model_regex = f'../models/**/{model_sql_name}'
+    model_matches = glob.glob(model_regex, recursive=True)
+
+    if not model_matches:
+        raise Exception(
+            f"""
+            Could not find a model named '{model_sql_name}'.
+            Does the path to your test exactly match the path to the model you're testing?
+
+            For example, to test model
+                'models/staging/foo/bar/baz.sql'
+
+            You would put your test in:
+                'tests/staging/foo/bar/test_baz.sql'
+            """
+        )
+
+    if len(model_matches) > 1:
+        raise Exception(
+            f"""
+            Your path matched multiple models. Did you accidentally create a duplicate model?
+
+            The following paths were matched: {model_matches}
+            """
+        )
+
+    return read_file(model_matches[0])
+```
 

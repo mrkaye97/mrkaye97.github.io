@@ -1651,8 +1651,324 @@ font-style: inherit;">6</span>]</span></code></pre></div>
 <section id="wrapping-up" class="level2">
 <h2 class="anchored" data-anchor-id="wrapping-up">Wrapping Up</h2>
 <p>This was a bit of an in the weeds, technical post. The goal was to shed some light on something that, from what I’ve heard, not many people are talking about, and likely even fewer are actually <em>doing</em>. My hope is that every analytics engineering team will write unit tests for their dbt pipelines, and my goal in writing this post was to make setting up your test suite more approachable. The main takeaway is this: Since dbt plays so nicely with pytest, it should be fast and simple to get your unit test suite off the ground! And once you’re in the habit of writing unit tests, you can have significantly more confidence in the correctness of the SQL that’s running in your dbt builds. After all: dbt sells itself as bringing software engineering practices to data pipelines, and unit testing is maybe the best of those best practices.</p>
+</section>
+<section id="appendix" class="level2">
+<h2 class="anchored" data-anchor-id="appendix">Appendix</h2>
+<section id="common-code" class="level3">
+<h3 class="anchored" data-anchor-id="common-code"><code>common</code> Code</h3>
+<p>I’m going to leave some of the code we have in our <code>common</code> module here, for others to copy.</p>
+<p>First, connecting to our test database:</p>
+<div class="sourceCode" id="cb15" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">from</span> sqlalchemy <span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> create_engine</span>
+<span id="cb15-2"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">from</span> sqlalchemy.engine.url <span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> URL</span>
+<span id="cb15-3"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> os</span>
+<span id="cb15-4"></span>
+<span id="cb15-5"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">def</span> connect_to_test_db():</span>
+<span id="cb15-6">    url <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> URL.create(</span>
+<span id="cb15-7">        <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"postgresql"</span>,</span>
+<span id="cb15-8">        username <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> os.environ.get(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"TEST_DB_USER"</span>),</span>
+<span id="cb15-9">        password <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> os.environ.get(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"TEST_DB_PASSWORD"</span>),</span>
+<span id="cb15-10">        host <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"localhost"</span>,</span>
+<span id="cb15-11">        database <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> os.environ.get(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"TEST_DB_NAME"</span>),</span>
+<span id="cb15-12">        port <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">int</span>(os.environ.get(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"TEST_DB_PORT"</span>))</span>
+<span id="cb15-13">    )</span>
+<span id="cb15-14"></span>
+<span id="cb15-15">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">return</span> create_engine(url)</span></code></pre></div>
+<p>Next, converting a list of dictionaries to a stringified CSV:</p>
+<div class="sourceCode" id="cb16" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> pandas <span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">as</span> pd</span>
+<span id="cb16-2"></span>
+<span id="cb16-3"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">def</span> convert_dict_to_csv(data):</span>
+<span id="cb16-4">    df <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> pd.DataFrame.from_dict(data)</span>
+<span id="cb16-5">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">return</span> df.to_csv(index <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">False</span>)</span></code></pre></div>
+<p>And finally, loading models and macros. Note that this is much more involved, and there’s certainly a way to do this with a macro that relies on the <a href="https://docs.getdbt.com/reference/dbt-jinja-functions/graph">dbt graph context variable</a>, but that was far more involved than this.</p>
+<div class="sourceCode" id="cb17" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">from</span> dbt.tests.util <span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> read_file</span>
+<span id="cb17-2"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> glob</span>
+<span id="cb17-3"></span>
+<span id="cb17-4"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">def</span> load_sql(basename):</span>
+<span id="cb17-5">    model_sql_name <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> basename <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">".sql"</span></span>
+<span id="cb17-6">    model_regex <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">f'../models/**/</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span>model_sql_name<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">}</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'</span></span>
+<span id="cb17-7">    model_matches <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> glob.glob(model_regex, recursive<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">True</span>)</span>
+<span id="cb17-8"></span>
+<span id="cb17-9">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">if</span> <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">not</span> model_matches:</span>
+<span id="cb17-10">        <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">raise</span> <span class="pp" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">Exception</span>(</span>
+<span id="cb17-11">            <span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">f"""</span></span>
+<span id="cb17-12"><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">            Could not find a model named '</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span>model_sql_name<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">}</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'.</span></span>
+<span id="cb17-13"><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">            Does the path to your test exactly match the path to the model you're testing?</span></span>
+<span id="cb17-14"></span>
+<span id="cb17-15"><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">            For example, to test model</span></span>
+<span id="cb17-16"><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">                'models/staging/foo/bar/baz.sql'</span></span>
+<span id="cb17-17"></span>
+<span id="cb17-18"><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">            You would put your test in:</span></span>
+<span id="cb17-19"><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">                'tests/staging/foo/bar/test_baz.sql'</span></span>
+<span id="cb17-20"><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">            """</span></span>
+<span id="cb17-21">        )</span>
+<span id="cb17-22"></span>
+<span id="cb17-23">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">if</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">len</span>(model_matches) <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>:</span>
+<span id="cb17-24">        <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">raise</span> <span class="pp" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">Exception</span>(</span>
+<span id="cb17-25">            <span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">f"""</span></span>
+<span id="cb17-26"><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">            Your path matched multiple models. Did you accidentally create a duplicate model?</span></span>
+<span id="cb17-27"></span>
+<span id="cb17-28"><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">            The following paths were matched: </span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span>model_matches<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">}</span></span>
+<span id="cb17-29"><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">            """</span></span>
+<span id="cb17-30">        )</span>
+<span id="cb17-31"></span>
+<span id="cb17-32">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">return</span> read_file(model_matches[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>])</span>
+<span id="cb17-33"></span>
+<span id="cb17-34"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">def</span> load_macro(basename):</span>
+<span id="cb17-35">    macro_sql_name <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> basename <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">".sql"</span></span>
+<span id="cb17-36">    macro_regex <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">f'../macros/**/</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span>macro_sql_name<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">}</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'</span></span>
+<span id="cb17-37">    macro_matches <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> glob.glob(macro_regex, recursive<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">True</span>)</span>
+<span id="cb17-38"></span>
+<span id="cb17-39">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">if</span> <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">not</span> macro_matches:</span>
+<span id="cb17-40">        <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">raise</span> <span class="pp" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">Exception</span>(</span>
+<span id="cb17-41">            <span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">f"""</span></span>
+<span id="cb17-42"><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">            Could not find a macro named '</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span>macro_sql_name<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">}</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'.</span></span>
+<span id="cb17-43"><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">            Does the path to your test exactly match the path to the macro you're testing?</span></span>
+<span id="cb17-44"></span>
+<span id="cb17-45"><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">            For example, to test macro</span></span>
+<span id="cb17-46"><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">                'macros/staging/foo/bar/baz.sql'</span></span>
+<span id="cb17-47"></span>
+<span id="cb17-48"><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">            You would put your test in:</span></span>
+<span id="cb17-49"><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">                'tests/staging/foo/bar/test_baz.sql'</span></span>
+<span id="cb17-50"><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">            """</span></span>
+<span id="cb17-51">        )</span>
+<span id="cb17-52"></span>
+<span id="cb17-53">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">if</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">len</span>(macro_matches) <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>:</span>
+<span id="cb17-54">        <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">raise</span> <span class="pp" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">Exception</span>(</span>
+<span id="cb17-55">            <span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">f"""</span></span>
+<span id="cb17-56"><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">            Your path matched multiple macros. Did you accidentally create a duplicate macro?</span></span>
+<span id="cb17-57"></span>
+<span id="cb17-58"><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">            The following paths were matched: </span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span>macro_matches<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">}</span></span>
+<span id="cb17-59"><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">            """</span></span>
+<span id="cb17-60">        )</span>
+<span id="cb17-61"></span>
+<span id="cb17-62">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">return</span> read_file(macro_matches[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>])</span></code></pre></div>
 
 
+</section>
 </section>
 
  ]]></description>
