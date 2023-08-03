@@ -2,7 +2,7 @@
 title: Doing Data Science
 subtitle: What does a data science project actually take?
 author: Matt Kaye
-date: '2023-06-27'
+date: '2023-08-03'
 categories: [data science]
 toc: true
 toc-depth: 4
@@ -29,3 +29,9 @@ I immediately thought I knew the answer, and confidently jumped into some explan
 
 With hindsight and experience, I've realized that the answer I gave is probably a very common one coming from junior data and analytics people, especially those just out of college or graduate school, who have done lots of learning about data science in the classroom or in a research setting. And if you've read the other posts in this series, you probably have a hunch for what this one is going to be about: What nuance was my answer missing?
 
+## Notes
+
+https://www.reddit.com/r/datascience/comments/15fzcja/seeking_advice_from_experienced_data_scientists/
+
+* Project management
+* Git + doing DS like doing software 

@@ -1,5 +1,4 @@
+testthat
 tibble
 dplyr
-testthat
 rlang
-purrr

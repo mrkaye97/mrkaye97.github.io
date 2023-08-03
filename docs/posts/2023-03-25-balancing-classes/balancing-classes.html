@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.3.353">
+<meta name="generator" content="quarto-1.3.433">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -95,7 +95,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-more-matches-text": "more matches in this document",
     "search-clear-button-title": "Clear",
     "search-detached-cancel-button-title": "Cancel",
-    "search-submit-button-title": "Submit"
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
   }
 }</script>
 <script async="" src="https://www.googletagmanager.com/gtag/js?id=G-J4CH9BY1RY"></script>
@@ -335,20 +336,20 @@ cookieconsent.run({
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: right;">1</td>
+<td style="text-align: right;">5</td>
 <td style="text-align: left;">benign</td>
 </tr>
 <tr class="even">
-<td style="text-align: right;">3</td>
+<td style="text-align: right;">5</td>
 <td style="text-align: left;">benign</td>
 </tr>
 <tr class="odd">
-<td style="text-align: right;">5</td>
-<td style="text-align: left;">malignant</td>
-</tr>
-<tr class="even">
 <td style="text-align: right;">4</td>
 <td style="text-align: left;">benign</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">6</td>
+<td style="text-align: left;">malignant</td>
 </tr>
 <tr class="odd">
 <td style="text-align: right;">1</td>
@@ -435,8 +436,8 @@ cookieconsent.run({
 <span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>And now we can make a calibration plot of our predictions. Remember, the goal is to have the points on the plot lie roughly along the line <code>y = x</code>. Lying below the line means that our predictions are too high, and above the line means our predictions are too low.</p>
-<div class="cell" data-hash="balancing-classes_cache/html/unnamed-chunk-6_20a805dbf7b4dfcacd10ad444a4c3c16">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cal_plot_breaks</span>(preds, <span class="at">truth =</span> truth_int, <span class="at">estimate =</span> estimate)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-hash="balancing-classes_cache/html/unnamed-chunk-6_3795d3e24cff4b6f2bf8499a36371e65">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cal_plot_breaks</span>(preds, <span class="at">truth =</span> truth, <span class="at">estimate =</span> estimate, <span class="at">event_level =</span> <span class="st">"second"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="balancing-classes_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid" width="672"></p>
 </div>
@@ -494,7 +495,7 @@ cookieconsent.run({
 </div>
 </div>
 <p>Now we have the same number of observations for each class. Let’s go ahead and fit another logistic regression model, but this time on the balanced data.</p>
-<div class="cell" data-hash="balancing-classes_cache/html/unnamed-chunk-8_735757caafdc44ca11c2c7594b73d407">
+<div class="cell" data-hash="balancing-classes_cache/html/unnamed-chunk-8_d5126fdf78469f22c49c821f1cc9c368">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>balanced_model <span class="ot">&lt;-</span> <span class="fu">fit_model</span>(balanced, <span class="fu">logistic_reg</span>())</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>preds<span class="sc">$</span>balanced_preds <span class="ot">&lt;-</span> <span class="fu">predict_prob</span>(</span>
@@ -502,7 +503,7 @@ cookieconsent.run({
 <span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  data</span>
 <span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="fu">cal_plot_breaks</span>(preds, <span class="at">truth =</span> truth_int, <span class="at">estimate =</span> balanced_preds)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="fu">cal_plot_breaks</span>(preds, <span class="at">truth =</span> truth, <span class="at">estimate =</span> balanced_preds, <span class="at">event_level =</span> <span class="st">"second"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="balancing-classes_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid" width="672"></p>
 </div>
@@ -552,7 +553,7 @@ cookieconsent.run({
 </div>
 </div>
 <p>Now that we have balanced classes thanks to SMOTE, let’s fit another logistic regresion model and see if it’s any better-calibrated.</p>
-<div class="cell" data-hash="balancing-classes_cache/html/unnamed-chunk-10_6b34fe011f168962a48acd30cbdb7259">
+<div class="cell" data-hash="balancing-classes_cache/html/unnamed-chunk-10_ae0a9219cab0d6b0d7a79dd8dfe19f56">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>smote_model <span class="ot">&lt;-</span> <span class="fu">fit_model</span>(smote, <span class="fu">logistic_reg</span>())</span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>preds<span class="sc">$</span>smote_preds <span class="ot">&lt;-</span> <span class="fu">predict_prob</span>(</span>
@@ -560,7 +561,7 @@ cookieconsent.run({
 <span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  data</span>
 <span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="fu">cal_plot_breaks</span>(preds, <span class="at">truth =</span> truth_int, <span class="at">estimate =</span> smote_preds)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="fu">cal_plot_breaks</span>(preds, <span class="at">truth =</span> truth, <span class="at">estimate =</span> smote_preds, <span class="at">event_level =</span> <span class="st">"second"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="balancing-classes_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid" width="672"></p>
 </div>
@@ -571,15 +572,17 @@ cookieconsent.run({
 <h2 class="anchored" data-anchor-id="a-random-forest">A Random Forest</h2>
 <p>“But no!” you might be thinking. “You need to use a more complicated model like a random forest, because logistic regression won’t pick up on complexities in your data well enough to be well-calibrated.”</p>
 <p>Great! Let’s try a random forest:</p>
-<div class="cell" data-hash="balancing-classes_cache/html/unnamed-chunk-11_1a783e29f38834cc1c230212e4000d0a">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>rf <span class="ot">&lt;-</span> <span class="fu">fit_model</span>(smote, <span class="fu">rand_forest</span>())</span>
+<div class="cell" data-hash="balancing-classes_cache/html/unnamed-chunk-11_a5d0d1777c0a29067fde5bfaaadc5821">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ranger)</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>preds<span class="sc">$</span>rf_preds <span class="ot">&lt;-</span> <span class="fu">predict_prob</span>(</span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  rf,</span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  data</span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="fu">cal_plot_breaks</span>(preds, <span class="at">truth =</span> truth_int, <span class="at">estimate =</span> rf_preds)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>rf <span class="ot">&lt;-</span> <span class="fu">fit_model</span>(smote, <span class="fu">rand_forest</span>())</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>preds<span class="sc">$</span>rf_preds <span class="ot">&lt;-</span> <span class="fu">predict_prob</span>(</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  rf,</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>  data</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="fu">cal_plot_breaks</span>(preds, <span class="at">truth =</span> truth, <span class="at">estimate =</span> rf_preds, <span class="at">event_level =</span> <span class="st">"second"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="balancing-classes_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid" width="672"></p>
 </div>
@@ -613,14 +616,14 @@ cookieconsent.run({
 <tr class="odd">
 <td style="text-align: left;">(Intercept)</td>
 <td style="text-align: right;">-5.1601677</td>
-<td style="text-align: right;">-4.0441444</td>
-<td style="text-align: right;">-4.4363999</td>
+<td style="text-align: right;">-4.4911164</td>
+<td style="text-align: right;">-4.4639646</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">cl_thickness</td>
 <td style="text-align: right;">0.9354593</td>
-<td style="text-align: right;">0.8190776</td>
-<td style="text-align: right;">0.9159715</td>
+<td style="text-align: right;">0.9400247</td>
+<td style="text-align: right;">0.9173742</td>
 </tr>
 </tbody>
 </table>

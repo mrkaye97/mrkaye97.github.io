@@ -1,22 +1,5 @@
 [
   {
-    "listing": "/series.html",
-    "items": [
-      "/posts/series/a-b-testing/2022-03-25-a-b-testing-a-primer/index.html",
-      "/posts/series/a-b-testing/2022-04-10-running-a-b-tests/index.html",
-      "/posts/series/a-b-testing/2022-04-10-calling-a-b-tests/index.html",
-      "/posts/series/a-b-testing/2022-04-17-sequential-testing/index.html",
-      "/posts/series/doing-data-science/2023-04-01-library-code/library-code.html",
-      "/posts/series/doing-data-science/2023-04-03-unit-testing/unit-testing.html",
-      "/posts/series/doing-data-science/2023-04-14-code-review/code-review.html",
-      "/posts/series/doing-data-science/2023-05-06-workflow-orchestration/workflow-orchestration.html",
-      "/posts/series/doing-data-science/2023-05-13-experiment-tracking/experiment-tracking.html",
-      "/posts/series/doing-data-science/2023-05-27-renv-dependency-management/renv-dependency-management.html",
-      "/posts/series/doing-data-science/2023-06-03-docker/docker.html",
-      "/posts/series/doing-data-science/2023-06-20-how-can-others-use-my-model/how-can-others-use-my-model.html"
-    ]
-  },
-  {
     "listing": "/posts.html",
     "items": [
       "/posts/2023-07-09-unit-testing-dbt-models/unit-testing-dbt-models.html",
@@ -45,6 +28,23 @@
       "/posts/2021-01-13-a-gentle-introduction-to-markov-chains-and-mcmc/index.html",
       "/posts/2021-01-10-what-i-ve-been-drinking-in-quarantine/index.html",
       "/posts/2021-01-07-our-2021-big-data-bowl-submission/index.html"
+    ]
+  },
+  {
+    "listing": "/series.html",
+    "items": [
+      "/posts/series/a-b-testing/2022-03-25-a-b-testing-a-primer/index.html",
+      "/posts/series/a-b-testing/2022-04-10-running-a-b-tests/index.html",
+      "/posts/series/a-b-testing/2022-04-10-calling-a-b-tests/index.html",
+      "/posts/series/a-b-testing/2022-04-17-sequential-testing/index.html",
+      "/posts/series/doing-data-science/2023-04-01-library-code/library-code.html",
+      "/posts/series/doing-data-science/2023-04-03-unit-testing/unit-testing.html",
+      "/posts/series/doing-data-science/2023-04-14-code-review/code-review.html",
+      "/posts/series/doing-data-science/2023-05-06-workflow-orchestration/workflow-orchestration.html",
+      "/posts/series/doing-data-science/2023-05-13-experiment-tracking/experiment-tracking.html",
+      "/posts/series/doing-data-science/2023-05-27-renv-dependency-management/renv-dependency-management.html",
+      "/posts/series/doing-data-science/2023-06-03-docker/docker.html",
+      "/posts/series/doing-data-science/2023-06-20-how-can-others-use-my-model/how-can-others-use-my-model.html"
     ]
   }
 ]

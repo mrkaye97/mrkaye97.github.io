@@ -88,7 +88,7 @@ In these two examples, I've gotten two different response _types_ depending on t
 
 In every other programming language that I'm aware of being used in production environments, this is not the case. For instance:
 
-```{python}
+```{python, python.reticulate = FALSE}
 import json
 import sys
 
@@ -195,7 +195,7 @@ Now, let's try the same in Python:
 pip install pandas
 ```
 
-```{python}
+```{python, python.reticulate = FALSE}
 from timeit import timeit
 import pandas as pd
 

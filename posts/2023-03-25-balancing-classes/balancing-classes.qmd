@@ -109,7 +109,7 @@ preds <- tibble(
 And now we can make a calibration plot of our predictions. Remember, the goal is to have the points on the plot lie roughly along the line `y = x`. Lying below the line means that our predictions are too high, and above the line means our predictions are too low.
 
 ```{r}
-cal_plot_breaks(preds, truth = truth_int, estimate = estimate)
+cal_plot_breaks(preds, truth = truth, estimate = estimate, event_level = "second")
 ```
 Awesome! Even with the class imbalance, our model's probability predictions are well-calibrated. In other words, when we predict that there's a 25% chance that a tumor is malignant, it's actually malignant about 25% of the time.
 
@@ -153,7 +153,7 @@ preds$balanced_preds <- predict_prob(
   data
 )
 
-cal_plot_breaks(preds, truth = truth_int, estimate = balanced_preds)
+cal_plot_breaks(preds, truth = truth, estimate = balanced_preds, event_level = "second")
 ```
 
 All of a sudden, our model is very poorly calibrated. We're consistently overpredicting the probability of a tumor being malignant. Why is that? Think back to what we just did: We removed a bunch of examples of benign tumors from our training data.
@@ -191,7 +191,7 @@ preds$smote_preds <- predict_prob(
   data
 )
 
-cal_plot_breaks(preds, truth = truth_int, estimate = smote_preds)
+cal_plot_breaks(preds, truth = truth, estimate = smote_preds, event_level = "second")
 ```
 
 Interesting -- same problem. With SMOTE, we still make very similar errors to the ones we made in the case where we naively undersampled from our majority class. But let's think back to first principles again, because the exact same rationale applies. When we undersampled, we ended up artificially increasing the baseline rate of malignant tumors in our training data, which resulted in predictions that were too high. With SMOTE, we're doing the exact same thing: We've stil rebalanced our data to 50/50, we've just done it a fancier way. So of course we'll have the same problem with overprediction.
@@ -203,6 +203,8 @@ Interesting -- same problem. With SMOTE, we still make very similar errors to th
 Great! Let's try a random forest:
 
 ```{r}
+library(ranger)
+
 rf <- fit_model(smote, rand_forest())
 
 preds$rf_preds <- predict_prob(
@@ -210,7 +212,7 @@ preds$rf_preds <- predict_prob(
   data
 )
 
-cal_plot_breaks(preds, truth = truth_int, estimate = rf_preds)
+cal_plot_breaks(preds, truth = truth, estimate = rf_preds, event_level = "second")
 ```
 
 Same issue again, albeit not quite as severe. And the same logic holds. In fact, it's even more straightforward with tree-based models. In a decision tree, you would determine a predicted probability by seeing what proportion of the labels in the leaf node that you end up in based on the features belong to the positive class. But then there's the same logic as before: We've just artifically increased the number of instances of the positive class dramatically, so of course the proportion of labels belonging to the positive class in our leaf nodes will increase.
