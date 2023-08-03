@@ -35,6 +35,7 @@ In conversations I have with friends -- and, broadly, conversations with basical
 First thing's first: What's a unit test? It's actually really simple! Unit testing tests the smallest possible components of your code for correctness and what I would define as "good behavior." In analytics, you might test things like feature engineering steps, metric definitions, or data wrangling code. The basic idea of a unit test is that you take a function you've written, and you'd make up some inputs to the function and then check if your code produces the outputs you'd expect. In the simplest case, you might test the identity function as follows:
 
 ```{r}
+library(testthat)
 
 identity <- function(x) {
   x
