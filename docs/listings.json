@@ -2,6 +2,7 @@
   {
     "listing": "/posts.html",
     "items": [
+      "/posts/series/doing-data-science/2023-08-03-doing-data-science/doing-data-science.html",
       "/posts/2023-07-09-unit-testing-dbt-models/unit-testing-dbt-models.html",
       "/posts/2023-06-29-lessons-learned-from-running-r-in-production/lessons-learned-from-running-r-in-production.html",
       "/posts/series/doing-data-science/2023-06-20-how-can-others-use-my-model/how-can-others-use-my-model.html",
@@ -44,7 +45,8 @@
       "/posts/series/doing-data-science/2023-05-13-experiment-tracking/experiment-tracking.html",
       "/posts/series/doing-data-science/2023-05-27-renv-dependency-management/renv-dependency-management.html",
       "/posts/series/doing-data-science/2023-06-03-docker/docker.html",
-      "/posts/series/doing-data-science/2023-06-20-how-can-others-use-my-model/how-can-others-use-my-model.html"
+      "/posts/series/doing-data-science/2023-06-20-how-can-others-use-my-model/how-can-others-use-my-model.html",
+      "/posts/series/doing-data-science/2023-08-03-doing-data-science/doing-data-science.html"
     ]
   }
 ]

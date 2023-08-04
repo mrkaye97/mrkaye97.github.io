@@ -10,7 +10,7 @@
 <meta name="dcterms.date" content="2023-08-03">
 <meta name="description" content="Matt Kaye’s personal website.">
 
-<title>Matt Kaye - Doing Data Science</title>
+<title>Matt Kaye - On Doing Data Science</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -93,10 +93,10 @@ cookieconsent.run({
 
 
 <link rel="stylesheet" href="../../../../styles.css">
-<meta property="og:title" content="Matt Kaye - Doing Data Science">
+<meta property="og:title" content="Matt Kaye - On Doing Data Science">
 <meta property="og:description" content="What does a data science project actually take?">
 <meta property="og:site-name" content="Matt Kaye">
-<meta name="twitter:title" content="Matt Kaye - Doing Data Science">
+<meta name="twitter:title" content="Matt Kaye - On Doing Data Science">
 <meta name="twitter:description" content="What does a data science project actually take?">
 <meta name="twitter:card" content="summary">
 </head>
@@ -207,7 +207,15 @@ cookieconsent.run({
   <ul>
   <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
   <li><a href="#a-harmless-interview-question" id="toc-a-harmless-interview-question" class="nav-link" data-scroll-target="#a-harmless-interview-question">A Harmless Interview Question</a></li>
-  <li><a href="#notes" id="toc-notes" class="nav-link" data-scroll-target="#notes">Notes</a></li>
+  <li><a href="#this-series" id="toc-this-series" class="nav-link" data-scroll-target="#this-series">This Series</a></li>
+  <li><a href="#lessons-learned-along-the-way" id="toc-lessons-learned-along-the-way" class="nav-link" data-scroll-target="#lessons-learned-along-the-way">Lessons Learned Along the Way</a>
+  <ul>
+  <li><a href="#delivering-business-value" id="toc-delivering-business-value" class="nav-link" data-scroll-target="#delivering-business-value">Delivering Business Value</a></li>
+  <li><a href="#keep-it-simple-stupid" id="toc-keep-it-simple-stupid" class="nav-link" data-scroll-target="#keep-it-simple-stupid">Keep It Simple, Stupid</a></li>
+  <li><a href="#ship-fast-learn-and-iterate" id="toc-ship-fast-learn-and-iterate" class="nav-link" data-scroll-target="#ship-fast-learn-and-iterate">Ship Fast, Learn, and Iterate</a></li>
+  <li><a href="#learning-from-developers" id="toc-learning-from-developers" class="nav-link" data-scroll-target="#learning-from-developers">Learning from Developers</a></li>
+  </ul></li>
+  <li><a href="#wrapping-up" id="toc-wrapping-up" class="nav-link" data-scroll-target="#wrapping-up">Wrapping Up</a></li>
   </ul>
 </nav>
     </div>
@@ -216,7 +224,7 @@ cookieconsent.run({
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Doing Data Science</h1>
+<h1 class="title">On Doing Data Science</h1>
 <p class="subtitle lead">What does a data science project actually take?</p>
   <div class="quarto-categories">
     <div class="quarto-category">data science</div>
@@ -264,17 +272,53 @@ cookieconsent.run({
 </section>
 <section id="a-harmless-interview-question" class="level2">
 <h2 class="anchored" data-anchor-id="a-harmless-interview-question">A Harmless Interview Question</h2>
-<p>This whole series, and this post in particular, stems from an interview question that I got when I was interviewing for what ultimately was my first data science job, doing analytics work in the Baltimore Orioles front office. I was in a room surrounded by something like six data scientists who would ultimately become my teammates and one of them asked me the following (paraphrased) question: “What are the steps that you go through when doing an analytics project?”</p>
-<p>I immediately thought I knew the answer, and confidently jumped into some explanation about how first there’s exploratory data analysis (EDA) to figure out what’s what in your data. Once you’ve finished your EDA, you do the feature engineering, and then you do the model fitting - of course not forgetting about cross validation! And finally, you do diagnostics on the model, like checking the accuracy or the MSE. I went on to emphasize how important those diagnostics were - and how smart and knowledgeable I was, because I almost certainly was convinced that most people wouldn’t go the extra yard and would just stop at fitting the model! - and went on about how I’d look into the results myself, and then get other people to look into them as well, and so on, until we were sure that everything was <em>just</em> right.</p>
-<p>With hindsight and experience, I’ve realized that the answer I gave is probably a very common one coming from junior data and analytics people, especially those just out of college or graduate school, who have done lots of learning about data science in the classroom or in a research setting. And if you’ve read the other posts in this series, you probably have a hunch for what this one is going to be about: What nuance was my answer missing?</p>
+<p>This whole series, and this post in particular, stems from an interview question that I got when I was interviewing for what ultimately was my first data science job: Doing analytics work in the Baltimore Orioles front office. I was in a room surrounded by something like six data scientists who would ultimately become my teammates and one of them asked me the following (paraphrased) question: “What are the steps that you go through when doing an analytics project?”</p>
+<p>I immediately thought I knew the answer, and confidently jumped into some explanation about how first there’s exploratory data analysis (EDA) to figure out what’s what in your data. Once you’ve finished your EDA, you do the feature engineering, and then you do the model fitting - of course not forgetting about cross validation! And finally, you do diagnostics on the model, like checking the accuracy or the MSE. I went on to emphasize how important those diagnostics were - and how smart and knowledgeable I was - because I was convinced that most people wouldn’t go the extra yard and would just stop at fitting the model! I went on about how I’d look into the results myself, and then get other people to look into them as well, and so on, until we were sure that everything was <em>just</em> right.</p>
+<p>With hindsight and experience, I’ve realized that the answer I gave is probably a very common one coming from a junior data person, especially one just out of college or graduate school, who has done lots of learning about data science in the classroom or in a research setting. And if you’ve read the other posts in this series, you probably have a hunch for what this one is going to be about: What nuance was my answer missing?</p>
 </section>
-<section id="notes" class="level2">
-<h2 class="anchored" data-anchor-id="notes">Notes</h2>
-<p>https://www.reddit.com/r/datascience/comments/15fzcja/seeking_advice_from_experienced_data_scientists/</p>
-<ul>
-<li>Project management</li>
-<li>Git + doing DS like doing software</li>
-</ul>
+<section id="this-series" class="level2">
+<h2 class="anchored" data-anchor-id="this-series">This Series</h2>
+<p>To a large degree, this series has made up a number of the pieces of the answer to that harmless interview question. When I was first starting out in data science, I wasn’t aware of any of these lesser-discussed but extremely valuable aspects of doing data science professionally. My answer had no mention of deploying my model to production so it could be used by others. It made no mention of testing the code. It made no mention of retraining the model using some kind of orchestration tool. It made no mention of monitoring the performance of the model out-of-sample to learn more about how it was doing on new data.</p>
+<p>I overlooked all of these aspects of the process because, at the time, I didn’t know about any of them. They weren’t part of my data scientific vocabulary. I had been taught lots in school and in internships about writing code, doing statistical tests, and the ins and outs of building machine learning models, but I had no exposure to the practical side of things.</p>
+</section>
+<section id="lessons-learned-along-the-way" class="level2">
+<h2 class="anchored" data-anchor-id="lessons-learned-along-the-way">Lessons Learned Along the Way</h2>
+<p>In addition to the other posts in this series which have gotten into some of the engineering nuts and bolts of shipping data products, I wanted to make part of this post a bit of a love letter to things I’ve learned along the way, especially by working in data at a start up for the past three years. There are lots of technical things that nobody taught me about doing data science, but there are also a few habits and soft skills I’ve picked up over the past few years from shipping data products that I think have been extremely important in my growth as a data scientist, and I’d like to share a few of them here.</p>
+<section id="delivering-business-value" class="level3">
+<h3 class="anchored" data-anchor-id="delivering-business-value">Delivering Business Value</h3>
+<p>First, a meta-principle: Employees, in broad strokes, exist to deliver value for a business. This is true for data scientists just as it is for everyone else. And importantly: Products that are not being used are not currently delivering value.</p>
+<p>Often, I’ll see questions asked on r/DataScience or in person by junior data scientists and analysts asking what skills are the most important for them to learn. Generally, these questions focus on in the weeds technical skills and overlook the single <em>most</em> important skill, which is a bias towards delivering value. Of course, this is a soft skill.</p>
+<p>And with that in mind, a few additional principles I’ve learned and benefitted greatly from following along the way.</p>
+</section>
+<section id="keep-it-simple-stupid" class="level3">
+<h3 class="anchored" data-anchor-id="keep-it-simple-stupid">Keep It Simple, Stupid</h3>
+<p>Or <a href="https://en.wikipedia.org/wiki/Occam%27s_razor">Occam’s Razor</a>, or whatever else you want to call it. In short: Opt for simple solutions over complicated ones.</p>
+<p>In my answer to the interview question about the process I’d follow for completing an analytical project, I was focused on machine learning. I was also very much focused on getting the model <em>just</em> right. I wanted to avoid any footguns and make sure I covered all of my bases. This meant building out a whole model, a feature engineering pipeline, pulling other people in to do diagnostics, tweaking things, and doing it over. All of that takes <em>time</em>.</p>
+<p>The “model” that I was so confidently going on about could have been something much simpler. Sometimes, the answer is to build a dashboard. Sometimes it’s so dump the results of a SQL query to a CSV. Sometimes it’s to use a heuristic. Sometimes it makes sense to use a simple logistic regression model.</p>
+<p>A lot of the time, we refer to these as “80% solutions,” meaning that they get you 80% of the way there. You might think of this as a twist on the <a href="https://www.investopedia.com/terms/1/80-20-rule.asp">80-20 Rule</a>, and interpret it as meaning that 20% of the effort can often get you 80% of the way to the optimal solution. Often, 80% is good enough.</p>
+</section>
+<section id="ship-fast-learn-and-iterate" class="level3">
+<h3 class="anchored" data-anchor-id="ship-fast-learn-and-iterate">Ship Fast, Learn, and Iterate</h3>
+<p>A classic mistake that startups make that often causes them to fail is spending all the time and money they have trying to build the perfect product, only to watch it go unused once they release it. Instead, veterans like the friendly faces at <a href="https://www.ycombinator.com/">Y Combinator</a> generally advise startups to deliver a <a href="https://en.wikipedia.org/wiki/Minimum_viable_product">minimum viable product</a> (MVP) and iterate. Generally, “minimum viable” means “bad.” The point is to put <em>something</em>, even something bad, in front of users to collect feedback from them.</p>
+<p>In startup world, feedback from real users is like gold. The reality is that no matter how perfect you think your recommender system is, or how convincingly human-like your LLM’s response can be, or how accurate your NBA model’s predictions are, and so on, you cannot know if <em>users</em> will like your data product until it is in front of them. This means that in general, it’s a good idea to put a bad product in front of users quickly, in order to prove out the concept. And the inverse is also generally true: It’s a bad idea to tweak and tweak and tweak something to perfection in a dark room for six months without anyone seeing it. Of course, dedicated research projects and extremely high-stakes projects might be exceptions to this rule, but in general, the only way to find out if your project is something people actually <em>want</em> is to ship it.</p>
+<p>After you ship, you do two more things. First, you learn. What’s working? What’s not? Next, you iterate.</p>
+<p>A friend and coworker of mine likes describing the process of building a product as first building a skateboard, then building a bike, then building a car. The alternative would be trying to build the car from the get-go. You probably have a hunch that the car will be the best solution to your problem, but you can get the skateboard working more quickly, learn from mistakes you made in building it, and maybe, just maybe, it’ll end up getting you where you want to go. The skateboard in this analogy is very similar to the dashboard proposed above when discussing Occam’s Razor. In answering the interview question, I should have explained how to build a skateboard well as opposed to explaining how to half-ass the build of a car.</p>
+</section>
+<section id="learning-from-developers" class="level3">
+<h3 class="anchored" data-anchor-id="learning-from-developers">Learning from Developers</h3>
+<p>The last major lesson I’ve learned in my past few years shipping data products is that as you’re working on analytical problems, you’ll eventually face obstacles that are new to you. For instance: How can I let someone else use my model? How can I effectively do code review? How can I deploy changes to my model without breaking anything?</p>
+<p>A few years ago, I would have tried to engineer a solution when faced with a problem like these. But now, my thought process usually goes something like: “<em>Someone</em> must have solved this problem before. How did they do it?” Usually, that someone is a software developer.</p>
+<p>Devs have been solving the nitty gritty problems that data people are just having their eyes opened to for decades. And so my usual bias when faced with a problem like “How do you organize your data projects? Do you use Jira?” is to try my best to emulate what the developers on my team do. For this particular case, that means thinking about how the entire product will work up front, and then laying out the work that it’ll take to ship that product in small chunks that can be delivered in less than two days. Sometimes this means making 20 cards (and, subsequently, 20 pull requests). This is a feature, not a bug.</p>
+<p>Generally speaking, this instinct to ask a developer if they’ve solved a similar problem – or just to ask myself what others have done – has been an extremely high-leverage tool for me. Notably, it’s saved me lots of time and headaches that would have been caused by hacking together bad solutions to problems that others have already solved.</p>
+<p>So in general: It’s rare that problems are genuinely novel, and asking myself what others have done when faced with similar ones has saved me lots of time and effort.</p>
+</section>
+</section>
+<section id="wrapping-up" class="level2">
+<h2 class="anchored" data-anchor-id="wrapping-up">Wrapping Up</h2>
+<p>And with that, we’re at the end of my series on things you probably didn’t learn about data science before starting in the field. My goal in writing this series – and this post, in particular – was to share some tidbits about things I wish I’d learned earlier on and how I like to think about solving analytical problems, in an approachable way.</p>
+<p>The goal of these posts was not to be in the technical weeds or to be exhaustive in any way. Instead, my hope is that this series will give data scientists – both present and future – a few more words in their vocabulary, and that some day, when faced with a dependency hell problem or a data pipeline problem they might think to use a tool like Poetry or remember the words “Workflow Orchestration.” I hope that I’ve shared enough here to point someone in the right direction or to give them a jumping off point, or to help fill in some keywords in a Google search.</p>
+<p>I also hope that some of these lessons – especially the notes on soft skills and ways I think about approaching data science problems – will be helpful to others who are, as I was, flying by the seats of their pants trying to figure out how to make decisions as a data scientist.</p>
+<p>Lastly, I wanted to spend a sentence or two to thank everyone who’s picked up these posts, discussed them, and criticized them. It’s been fun to write things that seem to be meaningful and strike a chord, and I hope that some of these posts will have enough staying power to continue making any impact they can on the community.</p>
 
 
 </section>

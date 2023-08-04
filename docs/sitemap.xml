@@ -2,11 +2,11 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://www.matthewrkaye.com/posts.html</loc>
-    <lastmod>2023-08-03T01:30:52.258Z</lastmod>
+    <lastmod>2023-08-04T22:11:48.268Z</lastmod>
   </url>
   <url>
     <loc>https://www.matthewrkaye.com/index.html</loc>
-    <lastmod>2023-08-03T01:28:53.927Z</lastmod>
+    <lastmod>2023-08-04T21:41:41.301Z</lastmod>
   </url>
   <url>
     <loc>https://www.matthewrkaye.com/code.html</loc>
@@ -122,7 +122,7 @@
   </url>
   <url>
     <loc>https://www.matthewrkaye.com/series.html</loc>
-    <lastmod>2023-08-03T01:30:43.070Z</lastmod>
+    <lastmod>2023-08-04T22:11:45.391Z</lastmod>
   </url>
   <url>
     <loc>https://www.matthewrkaye.com/travel.html</loc>
@@ -131,5 +131,9 @@
   <url>
     <loc>https://www.matthewrkaye.com/blogroll.html</loc>
     <lastmod>2023-08-03T01:28:42.537Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.matthewrkaye.com/posts/series/doing-data-science/2023-08-03-doing-data-science/doing-data-science.html</loc>
+    <lastmod>2023-08-04T22:11:44.472Z</lastmod>
   </url>
 </urlset>
