@@ -32,6 +32,6 @@ about:
 
 # Hi! I'm <strong>Matt</strong>
 
-#### I'm a data scientist at <a href="https://www.collegevine.com">CollegeVine</a>
+#### I'm a data scientist at <a href="https://www.klaviyo.com">Klaviyo</a>
 
 #### I care about doing better data science by leaning into domain knowledge and learning from software engineers
