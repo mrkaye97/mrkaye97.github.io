@@ -10,7 +10,62 @@
 <atom:link href="https://www.matthewrkaye.com/posts.xml" rel="self" type="application/rss+xml"/>
 <description>Matt Kaye&#39;s personal website</description>
 <generator>quarto-1.3.450</generator>
-<lastBuildDate>Thu, 03 Aug 2023 04:00:00 GMT</lastBuildDate>
+<lastBuildDate>Fri, 10 Nov 2023 05:00:00 GMT</lastBuildDate>
+<item>
+  <title>Introducing Jobcrawler</title>
+  <dc:creator>Matt Kaye</dc:creator>
+  <link>https://www.matthewrkaye.com/posts/2023-11-10-jobcrawler/jobcrawler.html</link>
+  <description><![CDATA[ 
+
+
+
+<section id="introduction" class="level2">
+<h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
+<p>I’ve been working on <a href="https://jobcrawler.matthewrkaye.com">Jobcrawler</a> (name pending – thinking of better ones!) for the past six months or so, and I’m proud of where it’s at and thought it might be a good time to share it with all of you (cough, potential beta users). This post will be a brief intro to what the app does, why I built it, and some roadmap items for the future. As a disclaimer: I’m still <em>not</em> an engineer (especially on the front end), so please don’t read through my largely GPT-generated React code with too critical of an eye.</p>
+</section>
+<section id="whats-jobcrawler" class="level2">
+<h2 class="anchored" data-anchor-id="whats-jobcrawler">What’s Jobcrawler?</h2>
+<p>Jobcrawler is an app that I started building when I was passively job hunting from about April until June. I had a problem that I didn’t know of a good solution to: I had a shortlist of companies I thought I might be interested in working for, and I found myself needing to repeatedly check their job boards very often to see if they posted a new job that matched my interests (mostly data science and ML engineering).</p>
+<p>This was a painful, time-consuming, and, largely, easily automatable process. So I build Jobcrawler to automate it, by fetching new jobs from company boards each day and sending me an email containing ones that were relevant to me.</p>
+<p>The app has evolved pretty significantly since then. Now, the app has a handful of core features:</p>
+<ol type="1">
+<li>You can <a href="https://jobcrawler.matthewrkaye.com/companies">view the companies in its database</a> and add new ones that you’re interested in. In many (most?) cases, the app will automatically determine how to collect jobs from a company’s board just based on the company’s website and the name, but in some cases it might request more information.</li>
+<li>You can <a href="https://jobcrawler.matthewrkaye.com/preferences">set up email and search preferences</a>, which will let you filter jobs to relevant ones for you, and will trigger emails to be sent to you when a company you’re interested in posts a job that matches your search query.</li>
+<li>You can <a href="https://jobcrawler.matthewrkaye.com/jobs">peruse the job boards of all companies in the database</a> or of <a href="https://jobcrawler.matthewrkaye.com/jobs/Airbnb">a single company</a> and filter for postings matching your interests. You can also filter by only postings posted in the past day, three days, week, etc.</li>
+<li>You can get <a href="https://jobcrawler.matthewrkaye.com/jobs?tab=recommendations">job recommendations</a> for new jobs you might not have seen yet that match your interests.</li>
+<li>You can <a href="https://jobcrawler.matthewrkaye.com/dashboard">keep track of your search</a> by keeping track of which jobs you’ve applied to, which you’ve gotten interviews at, etc. and view some analytics on your search (such as that famous job search Sankey diagram that’s always on Reddit). <img src="https://www.matthewrkaye.com/posts/2023-11-10-jobcrawler/sankey.png" class="img-fluid" style="width:92.0%" data-fig-align="center" alt="Sankey"></li>
+</ol>
+</section>
+<section id="why-should-i-use-it" class="level2">
+<h2 class="anchored" data-anchor-id="why-should-i-use-it">Why Should I Use It?</h2>
+<p>Basically for the reason it says on the tin: It’s a no-bullshit job searching app. I hate LinkedIn, and I largely built this so I could stay off of LinkedIn and sites like it. On Jobcrawler, there aren’t any ads, there’s no recruiter spam, there aren’t any stale postings that aren’t actually open anymore. It just works directly with company job boards and gets rid of the intermediary.</p>
+<p>It’s also free, and I’m not going to spam you about paying for an account (at least until my hosting costs are higher than the $30 / month that they are now), I’m not going to sell your data, I’m not going to promote jobs from companies that are paying me so it’s impossible to find anything else, and so on.</p>
+<p>And most importantly: I think it’ll make your job search easier and more delightful! It did for me. I’ve found that the tooling that’s available for job searching needs quite the refresh, so this app (which is very much a work in progress!) has been my attempt at filling in some of the holes there. I’ve basically built something that I wanted when I was job hunting because I found it useful, and I hope others will too!</p>
+</section>
+<section id="roadmap" class="level2">
+<h2 class="anchored" data-anchor-id="roadmap">Roadmap</h2>
+<p>I have a bunch of ideas for some future things to build, to improve, etc. In no particular order, some things I’ll be working on in the future include:</p>
+<ol type="1">
+<li>Expanding the database of companies and postings. Right now, there are about 550 companies and &gt;12,000 postings.</li>
+<li>Adding more analytics.</li>
+<li>Adding some cover letter and resume assistant functionality to help you write and edit your cover letters and resume, maybe powered by GPT.</li>
+<li>A whole bunch of miscellaneous improvements to the codebase to improve the UX of the app.</li>
+<li>Design improvements!</li>
+</ol>
+</section>
+<section id="wrapping-up" class="level2">
+<h2 class="anchored" data-anchor-id="wrapping-up">Wrapping Up</h2>
+<p>If there are any VCs reading this who think “Wow, this is an amazing start up idea!” or any designers or frond-end engineers who like the idea and want to help out, please reach out to me 😉.</p>
+<p>But in all seriousness: I hope someone comes across this post and finds something here useful, and I’d love to hear any feedback from anyone who’s tried the app!</p>
+
+
+</section>
+
+ ]]></description>
+  <category>hobby-projects</category>
+  <guid>https://www.matthewrkaye.com/posts/2023-11-10-jobcrawler/jobcrawler.html</guid>
+  <pubDate>Fri, 10 Nov 2023 05:00:00 GMT</pubDate>
+</item>
 <item>
   <title>On Doing Data Science</title>
   <dc:creator>Matt Kaye</dc:creator>
@@ -9436,508 +9491,6 @@ font-style: inherit;">TRUE</span>)</span></code></pre></div>
   <category>a/b testing</category>
   <guid>https://www.matthewrkaye.com/posts/series/a-b-testing/2022-03-25-a-b-testing-a-primer/index.html</guid>
   <pubDate>Fri, 25 Mar 2022 04:00:00 GMT</pubDate>
-</item>
-<item>
-  <title>Deploying MLFlow on Heroku (with Heroku Postgres, S3, and nginx for basic auth)</title>
-  <dc:creator>Matt Kaye</dc:creator>
-  <link>https://www.matthewrkaye.com/posts/2021-12-26-deploying-mlflow-on-heroku-with-heroku-postgres-s3-and-nginx-for-basic-auth/index.html</link>
-  <description><![CDATA[ 
-
-
-
-<p>Disclaimer: I followed <a href="https://www.mikulskibartosz.name/how-to-deploy-mlflow-on-heroku/">this guide</a> to setting up MLFlow on Heroku initially. However, there were certain aspects of it that are either outdated or do not work, so this post remedies those issues.</p>
-<section id="mlflow" class="level2">
-<h2 class="anchored" data-anchor-id="mlflow">MLFlow</h2>
-<p><a href="https://www.mlflow.org/">MLFlow</a> is an open source tool for the entire machine learning lifecycle. It lets you create and experiment with models, write notes and descriptions, track parameters, metrics, and artifacts, and deploy to production all through an easy-to-use API and an intuitive UI. You can make calls to a running MLFlow service through the <a href="https://www.mlflow.org/docs/latest/R-api.html">R API</a>, the <a href="https://www.mlflow.org/docs/latest/python_api/index.html">Python API</a>, the <a href="https://www.mlflow.org/docs/latest/java_api/index.html">Java API</a>, or via the command line (cURL) or your favorite language by interacting with the <a href="https://www.mlflow.org/docs/latest/rest-api.html">REST API</a>.</p>
-</section>
-<section id="overview" class="level2">
-<h2 class="anchored" data-anchor-id="overview">Overview</h2>
-<p>MLFlow is surprisingly easy to set up and deploy to Heroku. There are a few steps to follow to get everything running: 1. Dockerize an MLFlow instance 2. Set up an artifact store 3. Set up a database 4. Secure the instance with basic auth</p>
-</section>
-<section id="prerequisites" class="level2">
-<h2 class="anchored" data-anchor-id="prerequisites">Prerequisites</h2>
-<p>This guide assumes you already have AWS (specifically S3) set up. It also assumes some knowledge of shell scripting, Docker, and Heroku.</p>
-</section>
-<section id="creating-a-heroku-app" class="level2">
-<h2 class="anchored" data-anchor-id="creating-a-heroku-app">Creating a Heroku App</h2>
-<p>First, let’s create a Heroku app from the CLI. For the purposes of this example, I’m going to call the app <code>my-mlflow-example</code>. You’ll need to choose your own app name.</p>
-<div class="sourceCode" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">heroku</span> create my-mlflow-example</span></code></pre></div>
-<p>Next, let’s attach a Heroku Postgres instance.</p>
-<div class="sourceCode" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">heroku</span> addons:create heroku-postgresql:hobby-dev <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">--app</span> my-mlflow-example</span></code></pre></div>
-<p>Creating this hobby-dev Heroku Postgres instance will also automatically set the <code>DATABASE_URL</code> environment variable in your app’s configuration.</p>
-<p>Next, we’ll need some other environment variables to be set. You can set your config like this:</p>
-<div class="sourceCode" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">heroku</span> config:set <span class="dt" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">\</span></span>
-<span id="cb3-2">  S3_URI=s3://YOUR-S3-URI <span class="dt" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">\</span></span>
-<span id="cb3-3">  AWS_SECRET_ACCESS_KEY=YOUR-SECRET <span class="dt" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">\</span></span>
-<span id="cb3-4">  AWS_ACCESS_KEY_ID=YOUR-KEY <span class="dt" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">\</span></span>
-<span id="cb3-5">  AWS_DEFAULT_REGION=YOUR-REGION <span class="dt" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">\</span></span>
-<span id="cb3-6">  MLFLOW_TRACKING_USERNAME=YOUR-USERNAME <span class="dt" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">\</span></span>
-<span id="cb3-7">  MLFLOW_TRACKING_PASSWORD=YOUR-PASSWORD <span class="dt" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">\</span></span>
-<span id="cb3-8">  <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">--app</span> my-mlflow-example</span></code></pre></div>
-<p>You can repeat fewer lines of code by creating a <code>.env</code> file that looks like this:</p>
-<pre class="text"><code>S3_URI=s3://YOUR-S3-URI AWS_SECRET_ACCESS_KEY=YOUR-SECRET ...</code></pre>
-<p>and then using <code>heroku config:set .env --app my-mlflow-example</code>.</p>
-<p>Great! At this point, your Heroku app should be all set up. Now all we need to do is create the Docker image that will run MLFlow.</p>
-</section>
-<section id="setup" class="level2">
-<h2 class="anchored" data-anchor-id="setup">Setup</h2>
-<p>First thing’s first, let’s create a folder called <code>my-mlflow-example</code> where we’ll store all the files we’ll need. I’ll do that with:</p>
-<div class="sourceCode" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">mkdir</span> my-mlflow-example <span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&amp;&amp;</span> <span class="bu" style="color: null;
-background-color: null;
-font-style: inherit;">cd</span> my-mlflow-example</span></code></pre></div>
-<p>Next, let’s create a few files we’ll need:</p>
-<div class="sourceCode" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">touch</span> Dockerfile run.sh requirements.txt nginx.conf_template</span></code></pre></div>
-<p>You’ll also want to make your <code>run.sh</code> script executable.</p>
-<div class="sourceCode" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">chmod</span> +x run.sh</span></code></pre></div>
-<p>Great, now we’ve to all the files we’ll need to deploy our MLFlow instance!</p>
-<section id="the-dockerfile" class="level3">
-<h3 class="anchored" data-anchor-id="the-dockerfile">The <code>Dockerfile</code></h3>
-<p>The <a href="https://www.docker.com/">Dockerfile</a> will contain all of the library installs and files you need to run your MLFlow instance. The Dockerfile you’ll need to write for MLFlow should look something like this:</p>
-<div class="sourceCode" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">FROM</span> continuumio/miniconda3</span>
-<span id="cb8-2"></span>
-<span id="cb8-3"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">## Copy files into the image</span></span>
-<span id="cb8-4"><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">COPY</span> run.sh run.sh</span>
-<span id="cb8-5"><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">COPY</span> requirements.txt requirements.txt</span>
-<span id="cb8-6"><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">COPY</span> nginx.conf_template /etc/nginx/sites-available/default/nginx.conf_template</span>
-<span id="cb8-7"></span>
-<span id="cb8-8"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">## Install Postgres</span></span>
-<span id="cb8-9"><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">RUN</span> apt-get <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">-y</span> update <span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&amp;&amp;</span> <span class="dt" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">\</span></span>
-<span id="cb8-10">  <span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">apt-get</span> <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">-y</span> upgrade <span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&amp;&amp;</span> <span class="dt" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">\</span></span>
-<span id="cb8-11">  <span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">apt-get</span> install <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">-y</span> postgresql</span>
-<span id="cb8-12"></span>
-<span id="cb8-13"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">## Install nginx and dependencies</span></span>
-<span id="cb8-14"><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">RUN</span> apt-get <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">-y</span> update <span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&amp;&amp;</span> <span class="dt" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">\</span></span>
-<span id="cb8-15">  <span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">apt-get</span> install <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">-y</span> make vim <span class="dt" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">\</span></span>
-<span id="cb8-16">  automake gcc g++ subversion <span class="dt" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">\</span></span>
-<span id="cb8-17">  musl-dev nginx gettext apache2-utils</span>
-<span id="cb8-18"></span>
-<span id="cb8-19"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">## Install pip and dependencies</span></span>
-<span id="cb8-20"><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">RUN</span> conda install <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">-c</span> anaconda pip <span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&amp;&amp;</span> <span class="dt" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">\</span></span>
-<span id="cb8-21">  <span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">pip</span> install <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">--upgrade</span> pip <span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&amp;&amp;</span> <span class="dt" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">\</span></span>
-<span id="cb8-22">  <span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">pip</span> install <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">-r</span> requirements.txt <span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&amp;&amp;</span> <span class="dt" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">\</span></span>
-<span id="cb8-23">  <span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">conda</span> update <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">-n</span> base <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">-c</span> defaults conda <span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&amp;&amp;</span> <span class="dt" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">\</span></span>
-<span id="cb8-24">  <span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">conda</span> env list <span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&amp;&amp;</span> <span class="dt" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">\</span></span>
-<span id="cb8-25">  <span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">pip</span> freeze list</span>
-<span id="cb8-26"></span>
-<span id="cb8-27"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">## Run your `run.sh` script on container boot</span></span>
-<span id="cb8-28"><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">CMD</span> ./run.sh</span></code></pre></div>
-</section>
-<section id="the-requirements.txt-file" class="level3">
-<h3 class="anchored" data-anchor-id="the-requirements.txt-file">The <code>requirements.txt</code> File</h3>
-<p>Next, copy the following lines into your <code>requirements.txt</code>:</p>
-<div class="sourceCode" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode txt code-with-copy"><code class="sourceCode default"><span id="cb9-1">mlflow</span>
-<span id="cb9-2">psycopg2-binary</span>
-<span id="cb9-3">boto3</span></code></pre></div>
-<p>This file will tell <code>pip</code> which libraries to install in your docker image in the <code>RUN pip install -r requirements.txt</code> line above.</p>
-</section>
-<section id="the-nginx-template" class="level3">
-<h3 class="anchored" data-anchor-id="the-nginx-template">The <code>nginx</code> Template</h3>
-<p>Next, we’ll create a template for the <code>nginx.conf</code> file that we’ll eventually use in the container for basic auth. One important issue here: This file is a <strong><em>template</em></strong> because Heroku randomly assigns a port on dyno start, which means we can’t hard code any ports for <code>nginx</code> (since we don’t know them ahead of time). Instead of hard-coding, we specify a couple of placeholders: <code>$HEROKU_PORT</code> and <code>$MLFLOW_PORT</code>. We’ll replace these with the proper ports on container startup.</p>
-<p>Your <code>nginx.conf_template</code> should look like this:</p>
-<div class="sourceCode" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb10-1"><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">events</span> {}</span>
-<span id="cb10-2"><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">http</span> {</span>
-<span id="cb10-3">  <span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">server</span> {</span>
-<span id="cb10-4">        <span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">listen</span> <span class="va" style="color: #111111;
-background-color: null;
-font-style: inherit;">$HEROKU_PORT</span><span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">;</span></span>
-<span id="cb10-5"></span>
-<span id="cb10-6">        <span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">access_log</span> /var/log/nginx/reverse-access.log<span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">;</span></span>
-<span id="cb10-7">        <span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">error_log</span> /var/log/nginx/reverse-error.log<span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">;</span></span>
-<span id="cb10-8"></span>
-<span id="cb10-9">        <span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">location</span> / {</span>
-<span id="cb10-10">            <span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">auth_basic</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Restricted Content"</span><span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">;</span></span>
-<span id="cb10-11">            <span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">auth_basic_user_file</span> /etc/nginx/.htpasswd<span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">;</span></span>
-<span id="cb10-12"></span>
-<span id="cb10-13">            <span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">proxy_pass</span>                          http://127.0.0.1:<span class="va" style="color: #111111;
-background-color: null;
-font-style: inherit;">$MLFLOW_PORT</span>/<span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">;</span></span>
-<span id="cb10-14">            <span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">proxy_set_header</span> Host               <span class="va" style="color: #111111;
-background-color: null;
-font-style: inherit;">$host</span><span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">;</span></span>
-<span id="cb10-15">            <span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">proxy_set_header</span> X-Real-IP          <span class="va" style="color: #111111;
-background-color: null;
-font-style: inherit;">$remote_addr</span><span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">;</span></span>
-<span id="cb10-16">            <span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">proxy_set_header</span> X-Forwarded-For    <span class="va" style="color: #111111;
-background-color: null;
-font-style: inherit;">$proxy_add_x_forwarded_for</span><span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">;</span></span>
-<span id="cb10-17">        <span class="er" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">}</span></span>
-<span id="cb10-18">    <span class="er" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">}</span></span>
-<span id="cb10-19"><span class="er" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">}</span></span></code></pre></div>
-</section>
-<section id="run-script" class="level3">
-<h3 class="anchored" data-anchor-id="run-script">Run Script</h3>
-<p>Finally, let’s create a script, <code>run.sh</code>, which will run when the Heroku dyno starts.</p>
-<div class="sourceCode" id="cb11" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb11-1"><span class="bu" style="color: null;
-background-color: null;
-font-style: inherit;">export</span> <span class="va" style="color: #111111;
-background-color: null;
-font-style: inherit;">HEROKU_PORT</span><span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span><span class="va" style="color: #111111;
-background-color: null;
-font-style: inherit;">$(</span><span class="bu" style="color: null;
-background-color: null;
-font-style: inherit;">echo</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"</span><span class="va" style="color: #111111;
-background-color: null;
-font-style: inherit;">$PORT</span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"</span><span class="va" style="color: #111111;
-background-color: null;
-font-style: inherit;">)</span></span>
-<span id="cb11-2"><span class="bu" style="color: null;
-background-color: null;
-font-style: inherit;">export</span> <span class="va" style="color: #111111;
-background-color: null;
-font-style: inherit;">MLFLOW_PORT</span><span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span>5000</span>
-<span id="cb11-3"></span>
-<span id="cb11-4"><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">envsubst</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">'$HEROKU_PORT,$MLFLOW_PORT'</span> <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">&lt;</span> /etc/nginx/sites-available/default/nginx.conf_template <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">&gt;</span> /etc/nginx/sites-available/default/nginx.conf</span>
-<span id="cb11-5"></span>
-<span id="cb11-6"><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">htpasswd</span> <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">-bc</span> /etc/nginx/.htpasswd <span class="va" style="color: #111111;
-background-color: null;
-font-style: inherit;">$MLFLOW_TRACKING_USERNAME</span> <span class="va" style="color: #111111;
-background-color: null;
-font-style: inherit;">$MLFLOW_TRACKING_PASSWORD</span></span>
-<span id="cb11-7"></span>
-<span id="cb11-8"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">killall</span> nginx</span>
-<span id="cb11-9"></span>
-<span id="cb11-10"><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">mlflow</span> ui <span class="dt" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">\</span></span>
-<span id="cb11-11">  <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">--port</span> <span class="va" style="color: #111111;
-background-color: null;
-font-style: inherit;">$MLFLOW_PORT</span> <span class="dt" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">\</span></span>
-<span id="cb11-12">  <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">--host</span> 127.0.0.1 <span class="dt" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">\</span></span>
-<span id="cb11-13">  <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">--backend-store-uri</span> <span class="va" style="color: #111111;
-background-color: null;
-font-style: inherit;">$(</span><span class="bu" style="color: null;
-background-color: null;
-font-style: inherit;">echo</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"</span><span class="va" style="color: #111111;
-background-color: null;
-font-style: inherit;">$DATABASE_URL</span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"</span> <span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">|</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">sed</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"s/postgres/postgresql/"</span><span class="va" style="color: #111111;
-background-color: null;
-font-style: inherit;">)</span> <span class="dt" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">\</span></span>
-<span id="cb11-14">  <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">--default-artifact-root</span> <span class="va" style="color: #111111;
-background-color: null;
-font-style: inherit;">$S3_URI</span> <span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&amp;</span></span>
-<span id="cb11-15"></span>
-<span id="cb11-16"><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">nginx</span> <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">-g</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">'daemon off;'</span> <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">-c</span> /etc/nginx/sites-available/default/nginx.conf</span></code></pre></div>
-<p>There are a few things happening here: 1. We set the <code>HEROKU_PORT</code> environment variable from the randomly assigned <code>PORT</code> that Heroku creates on dyno startup 2. We assign <code>MLFLOW_PORT</code> to <code>5000</code>. The chances that Heroku assigns <em>exactly</em> port <code>5000</code> are low. If you want, you can add a few more lines to first check if Heroku assigns <code>5000</code> as the port, and if it does, choose any other port instead (e.g.&nbsp;<code>1000</code>). 3. We substitute the port placeholder variables in our <code>nginx.conf_template</code> file with the actual environment variable values for the ports, so that <code>nginx</code> knows where to listen and direct traffic. 4. We create a new <code>.htpasswd</code> file from the <code>MLFLOW_TRACKING_USERNAME</code> and <code>MLFLOW_TRACKING_PASSWORD</code> environment variables that we set in the Heroku config. This file will be used by <code>nginx</code> to check inputted usernames and passwords against. 5. We start the MLFlow UI in the background, telling it to run on the <code>MLFLOW_PORT</code> variable we created, and pointing it to our Heroku Postgres instance for the backend store and our S3 bucket for artifact storage. <strong>Note: By default, Heroku Postgres provides a URL that begins with <code>postgres</code>. This is not compatible with <code>SQLAlchemy</code>, so we substitute <code>postgresql</code> (which is compatible) for <code>postgres</code>.</strong> 6. We start <code>nginx</code> for basic auth.</p>
-</section>
-</section>
-<section id="deploying" class="level2">
-<h2 class="anchored" data-anchor-id="deploying">Deploying</h2>
-<p>Deployment is simple, and can be done with a few lines of <code>bash</code>:</p>
-<div class="sourceCode" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb12-1"><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">heroku</span> login</span>
-<span id="cb12-2"><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">heroku</span> container:login</span>
-<span id="cb12-3"><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">heroku</span> container:push web <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">--app</span> my-mlflow-example</span>
-<span id="cb12-4"><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">heroku</span> container:release web <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">--app</span> my-mlflow-example</span></code></pre></div>
-<p>And that’s it! Running those four lines should build your Docker image, push it to Heroku, and release it as your app. Once it releases, Heroku will boot up a dyno and you should be able to go to <code>my-mlflow-example.herokuapp.com</code> and see the MLFlow UI.</p>
-</section>
-<section id="using-mlflow" class="level2">
-<h2 class="anchored" data-anchor-id="using-mlflow">Using MLFlow</h2>
-<p>Now that your instance is deployed, you should have no problem using MLFlow for your whole ML lifecycle. For example, in R you might want to create a new experiment. You could do something like this:</p>
-<div class="sourceCode" id="cb13" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><span class="do" style="color: #5E5E5E;
-background-color: null;
-font-style: italic;">## install.packages("mlflow")</span></span>
-<span id="cb13-2"></span>
-<span id="cb13-3"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">library</span>(mlflow)</span>
-<span id="cb13-4"></span>
-<span id="cb13-5"><span class="do" style="color: #5E5E5E;
-background-color: null;
-font-style: italic;">## Set up some environment variables</span></span>
-<span id="cb13-6"><span class="do" style="color: #5E5E5E;
-background-color: null;
-font-style: italic;">## This way, your R session will know where to</span></span>
-<span id="cb13-7"><span class="do" style="color: #5E5E5E;
-background-color: null;
-font-style: italic;">##  look for your MLFlow instance and will have</span></span>
-<span id="cb13-8"><span class="do" style="color: #5E5E5E;
-background-color: null;
-font-style: italic;">##  the proper credentials set up</span></span>
-<span id="cb13-9"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">Sys.setenv</span>(</span>
-<span id="cb13-10">  <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">MLFLOW_TRACKING_URI =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"https://my-mlflow-example.herokuapp.com"</span></span>
-<span id="cb13-11">  <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">MLFLOW_TRACKING_USERNAME =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"YOUR-USERNAME"</span>,</span>
-<span id="cb13-12">  <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">MLFLOW_TRACKING_PASSWORD =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"YOUR-PASSWORD"</span></span>
-<span id="cb13-13">)</span>
-<span id="cb13-14"></span>
-<span id="cb13-15"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">mlflow_create_experiment</span>(<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"my-first-experiment"</span>)</span></code></pre></div>
-<p>And with that, you should be able to harness all of the awesome power of MLFlow for all of your ML lifecycle needs!</p>
-
-
-</section>
-
- ]]></description>
-  <category>mlops</category>
-  <guid>https://www.matthewrkaye.com/posts/2021-12-26-deploying-mlflow-on-heroku-with-heroku-postgres-s3-and-nginx-for-basic-auth/index.html</guid>
-  <pubDate>Sun, 26 Dec 2021 05:00:00 GMT</pubDate>
 </item>
 </channel>
 </rss>
