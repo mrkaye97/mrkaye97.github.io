@@ -2,11 +2,13 @@
 toc: false
 ---
 
-<center>
 I like writing code for fun, to explore interesting questions and problems, and to improve the tools I use. 
 
-Broadly speaking, I'd break down this work into three buckets: R packages I author or maintain, contributions to open-source libraries, and other side projects.
-</center>
+Broadly speaking, I'd break down this work into four buckets: [ZenSearch](https://zensearch.jobs), R packages I author or maintain, contributions to open-source libraries, and other side projects.
+
+ZenSearch
+-------------------------------------
+[ZenSearch](https://zensearch.jobs) is a NextJS / FastAPI app I've been building to make your job hunt more sane. [You can read about it on my blog](https://matthewrkaye.com/posts/2023-11-10-jobcrawler/jobcrawler.html). 
 
 R Packages
 -------------------------------------
@@ -23,7 +25,6 @@ Open-Source Contributions
 
 Miscellaneous Side Projects
 -------------------------------------
-* A small Flask app for getting notified when companies you care about post jobs you're interested in lives at [jobcrawler.matthewrkaye.com](https://jobcrawler.matthewrkaye.com). Feel free to use it!
 * A writeup of my team's submission to the 2021 NFL Big Data Bowl lives on our [Github Pages site](https://hjmbigdatabowl.github.io/bdb2021/articles/submission.html).
 * An over-the-top (yet imperfect) R solution to one of our data science technical interview questions: (roughly) implement K-Means lives in my [ugly-kmeans repo](https://github.com/mrkaye97/ugly-kmeans).
-* The code behind a cursory exploration of the tail behavior of ESPN's college football win probably model lives in my [espn-cfb-win-prob repo] (https://github.com/mrkaye97/espn-cfb-win-prob).
+* The code behind a cursory exploration of the tail behavior of ESPN's college football win probably model lives in my [espn-cfb-win-prob repo](https://github.com/mrkaye97/espn-cfb-win-prob).

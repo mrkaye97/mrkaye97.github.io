@@ -1,32 +1,31 @@
 ---
-title: Introducing Jobcrawler
+title: Introducing ZenSearch
 author: Matt Kaye
 date: '2023-11-10'
-categories: [hobby-projects]
+categories: [hobby-projects, zensearch]
 toc: true
 ---
 
 ## Introduction
 
-I've been working on [Jobcrawler](https://jobcrawler.matthewrkaye.com) (name pending -- thinking of better ones!) for the past six months or so, and I'm proud of where it's at and thought it might be a good time to share it with all of you (cough, potential beta users). This post will be a brief intro to what the app does, why I built it, and some roadmap items for the future. As a disclaimer: I'm still _not_ an engineer (especially on the front end), so please don't read through my largely GPT-generated React code with too critical of an eye.
+I've been working on [ZenSearch](https://zensearch.jobs) for the past six months or so, and I'm proud of where it's at and thought it might be a good time to share it with all of you (cough, potential beta users). This post will be a brief intro to what the app does, why I built it, and some roadmap items for the future. As a disclaimer: I'm still _not_ an engineer (especially on the front end), so please don't read through my largely GPT-generated React code with too critical of an eye.
 
-## What's Jobcrawler?
+## What's Zen?
 
-Jobcrawler is an app that I started building when I was passively job hunting from about April until June. I had a problem that I didn't know of a good solution to: I had a shortlist of companies I thought I might be interested in working for, and I found myself needing to repeatedly check their job boards very often to see if they posted a new job that matched my interests (mostly data science and ML engineering).
+Zen is an app that I started building when I was passively job hunting from about April until June. I had a problem that I didn't know of a good solution to: I had a shortlist of companies I thought I might be interested in working for, and I found myself needing to repeatedly check their job boards very often to see if they posted a new job that matched my interests (mostly data science and ML engineering).
 
-This was a painful, time-consuming, and, largely, easily automatable process. So I build Jobcrawler to automate it, by fetching new jobs from company boards each day and sending me an email containing ones that were relevant to me.
+This was a painful, time-consuming, and, largely, easily automatable process. So I built Zen to automate it, by fetching new jobs from company boards each day and sending me an email containing ones that were relevant to me.
 
 The app has evolved pretty significantly since then. Now, the app has a handful of core features:
 
-1. You can [view the companies in its database](https://jobcrawler.matthewrkaye.com/companies) and add new ones that you're interested in. In many (most?) cases, the app will automatically determine how to collect jobs from a company's board just based on the company's website and the name, but in some cases it might request more information.
-2. You can [set up email and search preferences](https://jobcrawler.matthewrkaye.com/preferences), which will let you filter jobs to relevant ones for you, and will trigger emails to be sent to you when a company you're interested in posts a job that matches your search query.
-3. You can [peruse the job boards of all companies in the database](https://jobcrawler.matthewrkaye.com/jobs) or of [a single company](https://jobcrawler.matthewrkaye.com/jobs/Airbnb) and filter for postings matching your interests. You can also filter by only postings posted in the past day, three days, week, etc.
-4. You can get [job recommendations](https://jobcrawler.matthewrkaye.com/jobs?tab=recommendations) for new jobs you might not have seen yet that match your interests.
-5. You can [keep track of your search](https://jobcrawler.matthewrkaye.com/dashboard) by keeping track of which jobs you've applied to, which you've gotten interviews at, etc. and view some analytics on your search (such as that famous job search Sankey diagram that's always on Reddit). ![Sankey](sankey.png){width=92% fig-align="center"}
+1. You can [view the companies in its database](https://zensearch.jobs/companies) and request new ones to be added. We have about 2,000 companies in the database.
+2. You can [set up email and search preferences](https://zensearch.jobs/jobs), which will let you filter jobs to relevant ones for you, and will trigger emails to be sent to you when a company you're interested in posts a job that matches your search query.
+3. You can [peruse the job boards of all companies in the database](https://zensearch.jobs/jobs) or of [a single company](https://zensearch.jobs/companies/Airbnb) and filter for postings matching your interests. You can also filter by only postings posted in the past day, three days, week, etc.
+4. You can get [job recommendations](https://zensearch.jobs/jobs) for new jobs you might not have seen yet that match your interests.
 
 ## Why Should I Use It?
 
-Basically for the reason it says on the tin: It's a no-bullshit job searching app. I hate LinkedIn, and I largely built this so I could stay off of LinkedIn and sites like it. On Jobcrawler, there aren't any ads, there's no recruiter spam, there aren't any stale postings that aren't actually open anymore. It just works directly with company job boards and gets rid of the intermediary.
+Basically for the reason it says on the tin: It's a no-bullshit job searching app. I hate LinkedIn, and I largely built this so I could stay off of LinkedIn and sites like it. On Zen, there aren't any ads, there's no recruiter spam, there aren't any stale postings that aren't actually open anymore. It just works directly with company job boards and gets rid of the intermediary.
 
 It's also free, and I'm not going to spam you about paying for an account (at least until my hosting costs are higher than the $30 / month that they are now), I'm not going to sell your data, I'm not going to promote jobs from companies that are paying me so it's impossible to find anything else, and so on.
 
@@ -44,6 +43,6 @@ I have a bunch of ideas for some future things to build, to improve, etc. In no 
 
 ## Wrapping Up
 
-If there are any VCs reading this who think "Wow, this is an amazing start up idea!" or any designers or frond-end engineers who like the idea and want to help out, please reach out to me 😉. 
+If there are any VCs reading this who think "Wow, this is an amazing start up idea!" or any designers or front-end engineers who like the idea and want to help out, please reach out to me 😉. 
 
 But in all seriousness: I hope someone comes across this post and finds something here useful, and I'd love to hear any feedback from anyone who's tried the app!

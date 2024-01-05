@@ -12,7 +12,7 @@
 <generator>quarto-1.3.450</generator>
 <lastBuildDate>Fri, 10 Nov 2023 05:00:00 GMT</lastBuildDate>
 <item>
-  <title>Introducing Jobcrawler</title>
+  <title>Introducing ZenSearch</title>
   <dc:creator>Matt Kaye</dc:creator>
   <link>https://www.matthewrkaye.com/posts/2023-11-10-jobcrawler/jobcrawler.html</link>
   <description><![CDATA[ 
@@ -21,24 +21,23 @@
 
 <section id="introduction" class="level2">
 <h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
-<p>I’ve been working on <a href="https://jobcrawler.matthewrkaye.com">Jobcrawler</a> (name pending – thinking of better ones!) for the past six months or so, and I’m proud of where it’s at and thought it might be a good time to share it with all of you (cough, potential beta users). This post will be a brief intro to what the app does, why I built it, and some roadmap items for the future. As a disclaimer: I’m still <em>not</em> an engineer (especially on the front end), so please don’t read through my largely GPT-generated React code with too critical of an eye.</p>
+<p>I’ve been working on <a href="https://zensearch.jobs">ZenSearch</a> for the past six months or so, and I’m proud of where it’s at and thought it might be a good time to share it with all of you (cough, potential beta users). This post will be a brief intro to what the app does, why I built it, and some roadmap items for the future. As a disclaimer: I’m still <em>not</em> an engineer (especially on the front end), so please don’t read through my largely GPT-generated React code with too critical of an eye.</p>
 </section>
-<section id="whats-jobcrawler" class="level2">
-<h2 class="anchored" data-anchor-id="whats-jobcrawler">What’s Jobcrawler?</h2>
-<p>Jobcrawler is an app that I started building when I was passively job hunting from about April until June. I had a problem that I didn’t know of a good solution to: I had a shortlist of companies I thought I might be interested in working for, and I found myself needing to repeatedly check their job boards very often to see if they posted a new job that matched my interests (mostly data science and ML engineering).</p>
-<p>This was a painful, time-consuming, and, largely, easily automatable process. So I build Jobcrawler to automate it, by fetching new jobs from company boards each day and sending me an email containing ones that were relevant to me.</p>
+<section id="whats-zen" class="level2">
+<h2 class="anchored" data-anchor-id="whats-zen">What’s Zen?</h2>
+<p>Zen is an app that I started building when I was passively job hunting from about April until June. I had a problem that I didn’t know of a good solution to: I had a shortlist of companies I thought I might be interested in working for, and I found myself needing to repeatedly check their job boards very often to see if they posted a new job that matched my interests (mostly data science and ML engineering).</p>
+<p>This was a painful, time-consuming, and, largely, easily automatable process. So I built Zen to automate it, by fetching new jobs from company boards each day and sending me an email containing ones that were relevant to me.</p>
 <p>The app has evolved pretty significantly since then. Now, the app has a handful of core features:</p>
 <ol type="1">
-<li>You can <a href="https://jobcrawler.matthewrkaye.com/companies">view the companies in its database</a> and add new ones that you’re interested in. In many (most?) cases, the app will automatically determine how to collect jobs from a company’s board just based on the company’s website and the name, but in some cases it might request more information.</li>
-<li>You can <a href="https://jobcrawler.matthewrkaye.com/preferences">set up email and search preferences</a>, which will let you filter jobs to relevant ones for you, and will trigger emails to be sent to you when a company you’re interested in posts a job that matches your search query.</li>
-<li>You can <a href="https://jobcrawler.matthewrkaye.com/jobs">peruse the job boards of all companies in the database</a> or of <a href="https://jobcrawler.matthewrkaye.com/jobs/Airbnb">a single company</a> and filter for postings matching your interests. You can also filter by only postings posted in the past day, three days, week, etc.</li>
-<li>You can get <a href="https://jobcrawler.matthewrkaye.com/jobs?tab=recommendations">job recommendations</a> for new jobs you might not have seen yet that match your interests.</li>
-<li>You can <a href="https://jobcrawler.matthewrkaye.com/dashboard">keep track of your search</a> by keeping track of which jobs you’ve applied to, which you’ve gotten interviews at, etc. and view some analytics on your search (such as that famous job search Sankey diagram that’s always on Reddit). <img src="https://www.matthewrkaye.com/posts/2023-11-10-jobcrawler/sankey.png" class="img-fluid" style="width:92.0%" data-fig-align="center" alt="Sankey"></li>
+<li>You can <a href="https://zensearch.jobs/companies">view the companies in its database</a> and request new ones to be added. We have about 2,000 companies in the database.</li>
+<li>You can <a href="https://zensearch.jobs/jobs">set up email and search preferences</a>, which will let you filter jobs to relevant ones for you, and will trigger emails to be sent to you when a company you’re interested in posts a job that matches your search query.</li>
+<li>You can <a href="https://zensearch.jobs/jobs">peruse the job boards of all companies in the database</a> or of <a href="https://zensearch.jobs/companies/Airbnb">a single company</a> and filter for postings matching your interests. You can also filter by only postings posted in the past day, three days, week, etc.</li>
+<li>You can get <a href="https://zensearch.jobs/jobs">job recommendations</a> for new jobs you might not have seen yet that match your interests.</li>
 </ol>
 </section>
 <section id="why-should-i-use-it" class="level2">
 <h2 class="anchored" data-anchor-id="why-should-i-use-it">Why Should I Use It?</h2>
-<p>Basically for the reason it says on the tin: It’s a no-bullshit job searching app. I hate LinkedIn, and I largely built this so I could stay off of LinkedIn and sites like it. On Jobcrawler, there aren’t any ads, there’s no recruiter spam, there aren’t any stale postings that aren’t actually open anymore. It just works directly with company job boards and gets rid of the intermediary.</p>
+<p>Basically for the reason it says on the tin: It’s a no-bullshit job searching app. I hate LinkedIn, and I largely built this so I could stay off of LinkedIn and sites like it. On Zen, there aren’t any ads, there’s no recruiter spam, there aren’t any stale postings that aren’t actually open anymore. It just works directly with company job boards and gets rid of the intermediary.</p>
 <p>It’s also free, and I’m not going to spam you about paying for an account (at least until my hosting costs are higher than the $30 / month that they are now), I’m not going to sell your data, I’m not going to promote jobs from companies that are paying me so it’s impossible to find anything else, and so on.</p>
 <p>And most importantly: I think it’ll make your job search easier and more delightful! It did for me. I’ve found that the tooling that’s available for job searching needs quite the refresh, so this app (which is very much a work in progress!) has been my attempt at filling in some of the holes there. I’ve basically built something that I wanted when I was job hunting because I found it useful, and I hope others will too!</p>
 </section>
@@ -55,7 +54,7 @@
 </section>
 <section id="wrapping-up" class="level2">
 <h2 class="anchored" data-anchor-id="wrapping-up">Wrapping Up</h2>
-<p>If there are any VCs reading this who think “Wow, this is an amazing start up idea!” or any designers or frond-end engineers who like the idea and want to help out, please reach out to me 😉.</p>
+<p>If there are any VCs reading this who think “Wow, this is an amazing start up idea!” or any designers or front-end engineers who like the idea and want to help out, please reach out to me 😉.</p>
 <p>But in all seriousness: I hope someone comes across this post and finds something here useful, and I’d love to hear any feedback from anyone who’s tried the app!</p>
 
 
@@ -63,6 +62,7 @@
 
  ]]></description>
   <category>hobby-projects</category>
+  <category>zensearch</category>
   <guid>https://www.matthewrkaye.com/posts/2023-11-10-jobcrawler/jobcrawler.html</guid>
   <pubDate>Fri, 10 Nov 2023 05:00:00 GMT</pubDate>
 </item>
@@ -2405,7 +2405,7 @@ font-style: inherit;">4</span>), <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"milliseconds"</span>)</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] "Mean runtime: 2.8017 milliseconds"</code></pre>
+<pre><code>[1] "Mean runtime: 0.9809 milliseconds"</code></pre>
 </div>
 </div>
 <p>Now, let’s try the same in Python:</p>
@@ -2465,7 +2465,7 @@ background-color: null;
 font-style: inherit;">"milliseconds"</span></span>
 <span id="cb22-12">)</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Mean runtime: 0.2228 milliseconds</code></pre>
+<pre><code>Mean runtime: 0.1773 milliseconds</code></pre>
 </div>
 </div>
 <p>In this particular case, Python’s JSON serialization runs 6-7x faster than R’s. And if you’re thinking “that’s only one millisecond, though!” you’d be right. But the general principle is important even if the magnitude of the issue in this particular case is not.</p>
@@ -6962,7 +6962,7 @@ font-style: inherit;">150</span></span>
 <span id="cb4-19">  )</span>
 <span id="cb4-20">})</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Test passed 😸</code></pre>
+<pre><code>Test passed 😀</code></pre>
 </div>
 </div>
 </section>
@@ -7352,7 +7352,7 @@ font-style: inherit;">10</span></span>
 <span id="cb11-26">  )</span>
 <span id="cb11-27">})</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Test passed 😸</code></pre>
+<pre><code>Test passed 🎉</code></pre>
 </div>
 </div>
 </section>
@@ -7465,33 +7465,33 @@ font-style: inherit;">head</span>(features))</span></code></pre></div>
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: right;">4.917</td>
-<td style="text-align: right;">1.120</td>
+<td style="text-align: right;">4.340</td>
+<td style="text-align: right;">2.766</td>
 <td style="text-align: left;">TRUE</td>
 </tr>
 <tr class="even">
-<td style="text-align: right;">5.187</td>
-<td style="text-align: right;">1.195</td>
+<td style="text-align: right;">7.251</td>
+<td style="text-align: right;">0.913</td>
 <td style="text-align: left;">TRUE</td>
 </tr>
 <tr class="odd">
-<td style="text-align: right;">5.460</td>
-<td style="text-align: right;">2.843</td>
+<td style="text-align: right;">4.519</td>
+<td style="text-align: right;">5.098</td>
 <td style="text-align: left;">TRUE</td>
 </tr>
 <tr class="even">
-<td style="text-align: right;">4.248</td>
-<td style="text-align: right;">1.423</td>
+<td style="text-align: right;">5.627</td>
+<td style="text-align: right;">0.919</td>
 <td style="text-align: left;">TRUE</td>
 </tr>
 <tr class="odd">
-<td style="text-align: right;">4.789</td>
-<td style="text-align: right;">1.297</td>
+<td style="text-align: right;">5.339</td>
+<td style="text-align: right;">4.325</td>
 <td style="text-align: left;">TRUE</td>
 </tr>
 <tr class="even">
-<td style="text-align: right;">3.761</td>
-<td style="text-align: right;">2.467</td>
+<td style="text-align: right;">6.146</td>
+<td style="text-align: right;">4.990</td>
 <td style="text-align: left;">TRUE</td>
 </tr>
 </tbody>
@@ -7524,15 +7524,15 @@ font-style: inherit;">coef</span>(model))</span></code></pre></div>
 <tbody>
 <tr class="odd">
 <td style="text-align: left;">(Intercept)</td>
-<td style="text-align: right;">9.305</td>
+<td style="text-align: right;">7.337</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">sepal_length</td>
-<td style="text-align: right;">-1.277</td>
+<td style="text-align: right;">-0.896</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">petal_width</td>
-<td style="text-align: right;">-0.600</td>
+<td style="text-align: right;">-0.592</td>
 </tr>
 </tbody>
 </table>
@@ -7565,7 +7565,7 @@ font-style: inherit;">"Model accuracy is "</span>, accuracy, <span class="st" st
 background-color: null;
 font-style: inherit;">"%"</span>))</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Model accuracy is 84%</code></pre>
+<pre><code>Model accuracy is 75%</code></pre>
 </div>
 </div>
 <p>And that’s it – you have a simple retraining job. This is a very minimal example, but this general framework is very flexible and modular, and it makes up the foundation for how we write our retraining jobs at CollegeVine. You can plug and play all different kinds of feature engineering logic, logic to fetch raw data, metrics, etc. We also use <a href="https://mlflow.org/">MLFlow</a> for versioning models and tracking experiments, so our retraining jobs have lots of logging of artifacts, parameters, and metrics to our MLFlow instance.</p>
@@ -7728,7 +7728,7 @@ font-style: inherit;">"Out-of-sample accuracy is "</span>, accuracy, <span class
 background-color: null;
 font-style: inherit;">"%"</span>))</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Out-of-sample accuracy is 80%</code></pre>
+<pre><code>Out-of-sample accuracy is 74%</code></pre>
 </div>
 </div>
 </section>
@@ -7759,7 +7759,7 @@ font-style: inherit;">"%"</span>))</span></code></pre></div>
 
 <section id="introduction" class="level2">
 <h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
-<p>In <a href="https://matthewrkaye.com/posts/2023-03-20-metrics-calibration/calibration.html">my last post</a> I wrote about common classifications metrics and, especially, calibration.</p>
+<p>In <a href="https://matthewrkaye.com/posts/2023-03-20-metrics-calibration/calibration.html">my last post</a> I wrote about common classification metrics and, especially, calibration.</p>
 <p>With calibration in mind, this post will show why balancing your classes – which is an all-too-common practice when working on classification problems – is generally a bad idea and leads to poorly calibrated models.</p>
 </section>
 <section id="some-example-data" class="level2">
@@ -8898,34 +8898,34 @@ font-style: inherit;">TRUE</span>)</span></code></pre></div>
 </thead>
 <tbody>
 <tr class="odd">
+<td style="text-align: left;">1</td>
+<td style="text-align: right;">17.8</td>
+<td style="text-align: right;">6</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">1</td>
+<td style="text-align: right;">24.4</td>
+<td style="text-align: right;">4</td>
+</tr>
+<tr class="odd">
 <td style="text-align: left;">0</td>
-<td style="text-align: right;">14.7</td>
+<td style="text-align: right;">15.5</td>
 <td style="text-align: right;">8</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">0</td>
-<td style="text-align: right;">10.4</td>
-<td style="text-align: right;">8</td>
-</tr>
-<tr class="odd">
 <td style="text-align: left;">1</td>
 <td style="text-align: right;">22.8</td>
 <td style="text-align: right;">4</td>
 </tr>
-<tr class="even">
-<td style="text-align: left;">0</td>
-<td style="text-align: right;">17.3</td>
-<td style="text-align: right;">8</td>
-</tr>
 <tr class="odd">
-<td style="text-align: left;">0</td>
-<td style="text-align: right;">15.2</td>
-<td style="text-align: right;">8</td>
+<td style="text-align: left;">1</td>
+<td style="text-align: right;">30.4</td>
+<td style="text-align: right;">4</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">0</td>
-<td style="text-align: right;">15.2</td>
-<td style="text-align: right;">8</td>
+<td style="text-align: left;">1</td>
+<td style="text-align: right;">21.4</td>
+<td style="text-align: right;">6</td>
 </tr>
 </tbody>
 </table>

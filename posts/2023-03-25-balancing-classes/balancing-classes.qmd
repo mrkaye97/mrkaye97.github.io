@@ -9,7 +9,7 @@ toc: true
 
 ## Introduction
 
-In [my last post](https://matthewrkaye.com/posts/2023-03-20-metrics-calibration/calibration.html) I wrote about common classifications metrics and, especially, calibration.
+In [my last post](https://matthewrkaye.com/posts/2023-03-20-metrics-calibration/calibration.html) I wrote about common classification metrics and, especially, calibration.
 
 With calibration in mind, this post will show why balancing your classes -- which is an all-too-common practice when working on classification problems -- is generally a bad idea and leads to poorly calibrated models.
 

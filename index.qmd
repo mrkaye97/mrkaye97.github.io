@@ -34,4 +34,4 @@ about:
 
 #### I'm a data scientist at <a href="https://www.klaviyo.com">Klaviyo</a>
 
-#### I care about doing better data science by leaning into domain knowledge and learning from software engineers
+#### In my free time, I like to ski, read fantasy books, cook, and work on <a href="https://zensearch.jobs">ZenSearch</a>
