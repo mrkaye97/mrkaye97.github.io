@@ -1,0 +1,53 @@
+[
+  {
+    "listing": "/posts.html",
+    "items": [
+      "/posts/2023-11-10-jobcrawler/jobcrawler.html",
+      "/posts/series/doing-data-science/2023-08-03-doing-data-science/doing-data-science.html",
+      "/posts/2023-07-09-unit-testing-dbt-models/unit-testing-dbt-models.html",
+      "/posts/2023-06-29-lessons-learned-from-running-r-in-production/lessons-learned-from-running-r-in-production.html",
+      "/posts/series/doing-data-science/2023-06-20-how-can-others-use-my-model/how-can-others-use-my-model.html",
+      "/posts/series/doing-data-science/2023-06-03-docker/docker.html",
+      "/posts/series/doing-data-science/2023-05-27-renv-dependency-management/renv-dependency-management.html",
+      "/posts/series/doing-data-science/2023-05-13-experiment-tracking/experiment-tracking.html",
+      "/posts/series/doing-data-science/2023-05-06-workflow-orchestration/workflow-orchestration.html",
+      "/posts/series/doing-data-science/2023-04-14-code-review/code-review.html",
+      "/posts/series/doing-data-science/2023-04-03-unit-testing/unit-testing.html",
+      "/posts/series/doing-data-science/2023-04-01-library-code/library-code.html",
+      "/posts/2023-03-25-balancing-classes/balancing-classes.html",
+      "/posts/2023-03-20-metrics-calibration/calibration.html",
+      "/posts/2023-03-09-on-auc-roc/index.html",
+      "/posts/2023-01-09-exploring-the-tail-behavior-of-espn-s-win-probability-model/index.html",
+      "/posts/series/a-b-testing/2022-04-17-sequential-testing/index.html",
+      "/posts/series/a-b-testing/2022-04-10-calling-a-b-tests/index.html",
+      "/posts/series/a-b-testing/2022-04-10-running-a-b-tests/index.html",
+      "/posts/series/a-b-testing/2022-03-25-a-b-testing-a-primer/index.html",
+      "/posts/2021-12-26-deploying-mlflow-on-heroku-with-heroku-postgres-s3-and-nginx-for-basic-auth/index.html",
+      "/posts/2021-12-22-notes-on-hiring-data-analysts-scientists/index.html",
+      "/posts/2021-06-08-working-with-your-fitbit-data-in-r/index.html",
+      "/posts/2021-02-11-highlights-from-rstudio-global/index.html",
+      "/posts/2021-02-07-what-s-new-in-slackr-2-1-0/index.html",
+      "/posts/2021-01-13-a-gentle-introduction-to-markov-chains-and-mcmc/index.html",
+      "/posts/2021-01-10-what-i-ve-been-drinking-in-quarantine/index.html",
+      "/posts/2021-01-07-our-2021-big-data-bowl-submission/index.html"
+    ]
+  },
+  {
+    "listing": "/series.html",
+    "items": [
+      "/posts/series/a-b-testing/2022-03-25-a-b-testing-a-primer/index.html",
+      "/posts/series/a-b-testing/2022-04-10-running-a-b-tests/index.html",
+      "/posts/series/a-b-testing/2022-04-10-calling-a-b-tests/index.html",
+      "/posts/series/a-b-testing/2022-04-17-sequential-testing/index.html",
+      "/posts/series/doing-data-science/2023-04-01-library-code/library-code.html",
+      "/posts/series/doing-data-science/2023-04-03-unit-testing/unit-testing.html",
+      "/posts/series/doing-data-science/2023-04-14-code-review/code-review.html",
+      "/posts/series/doing-data-science/2023-05-06-workflow-orchestration/workflow-orchestration.html",
+      "/posts/series/doing-data-science/2023-05-13-experiment-tracking/experiment-tracking.html",
+      "/posts/series/doing-data-science/2023-05-27-renv-dependency-management/renv-dependency-management.html",
+      "/posts/series/doing-data-science/2023-06-03-docker/docker.html",
+      "/posts/series/doing-data-science/2023-06-20-how-can-others-use-my-model/how-can-others-use-my-model.html",
+      "/posts/series/doing-data-science/2023-08-03-doing-data-science/doing-data-science.html"
+    ]
+  }
+]
