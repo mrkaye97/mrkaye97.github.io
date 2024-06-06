@@ -1,0 +1,36 @@
+---
+import MySiteLayout from "../layouts/Layout.astro";
+---
+
+<MySiteLayout>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Astro</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body class="bg-gray-200 text-gray-800 flex flex-col min-h-screen">
+    <main class="flex-grow max-w-4xl mx-auto p-6">
+      <h1 class="text-4xl font-bold text-center mt-6">
+        My Astro Learning Blog
+      </h1>
+      <p class="mt-4 text-lg text-center">
+        This is where I will post about my journey learning Astro.
+      </p>
+      <ul class="mt-6 space-y-4">
+        <li>
+          <a
+            href="/blog/zen"
+            class="block p-4 bg-white rounded-lg shadow hover:bg-gray-100 transition"
+          >
+            <h2 class="text-2xl font-semibold">Post 1</h2>
+            <p class="mt-2 text-gray-600">Learn about the zen of Astro.</p>
+          </a>
+        </li>
+      </ul>
+    </main>
+  </body>
+</MySiteLayout>
