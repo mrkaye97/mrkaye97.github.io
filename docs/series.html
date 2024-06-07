@@ -8,7 +8,7 @@
 
 <meta name="description" content="Matt Kaye’s personal website.">
 
-<title>Matt Kaye - My Three Favorite, Alphabetically</title>
+<title>Matt Kaye - Series</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -32,6 +32,8 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
 <link href="./photos/favicon.png" rel="icon" type="image/png">
+<script src="site_libs/quarto-listing/list.min.js"></script>
+<script src="site_libs/quarto-listing/quarto-listing.js"></script>
 <script src="site_libs/cookie-consent/cookie-consent.js"></script>
 <link href="site_libs/cookie-consent/cookie-consent.css" rel="stylesheet">
 <script src="site_libs/quarto-html/quarto.js"></script>
@@ -63,6 +65,63 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
+<script>
+
+  window.document.addEventListener("DOMContentLoaded", function (_event) {
+    const listingTargetEl = window.document.querySelector('#listing-a-b-testing .list');
+    if (!listingTargetEl) {
+      // No listing discovered, do not attach.
+      return;
+    }
+
+    const options = {
+      valueNames: ['listing-date','listing-title','listing-reading-time',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-title-sort'] }],
+
+      searchColumns: ["listing-date","listing-title","listing-author"],
+    };
+
+    window['quarto-listings'] = window['quarto-listings'] || {};
+    window['quarto-listings']['listing-a-b-testing'] = new List('listing-a-b-testing', options);
+
+    if (window['quarto-listing-loaded']) {
+      window['quarto-listing-loaded']();
+    }
+  });
+
+  window.addEventListener('hashchange',() => {
+    if (window['quarto-listing-loaded']) {
+      window['quarto-listing-loaded']();
+    }
+  })
+
+
+  window.document.addEventListener("DOMContentLoaded", function (_event) {
+    const listingTargetEl = window.document.querySelector('#listing-doing-data-science .list');
+    if (!listingTargetEl) {
+      // No listing discovered, do not attach.
+      return;
+    }
+
+    const options = {
+      valueNames: ['listing-date','listing-title','listing-reading-time',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-title-sort'] }],
+
+      searchColumns: ["listing-date","listing-title","listing-author"],
+    };
+
+    window['quarto-listings'] = window['quarto-listings'] || {};
+    window['quarto-listings']['listing-doing-data-science'] = new List('listing-doing-data-science', options);
+
+    if (window['quarto-listing-loaded']) {
+      window['quarto-listing-loaded']();
+    }
+  });
+
+  window.addEventListener('hashchange',() => {
+    if (window['quarto-listing-loaded']) {
+      window['quarto-listing-loaded']();
+    }
+  })
+  </script>
 <script async="" src="https://www.googletagmanager.com/gtag/js?id=G-6KV13R4B6Y"></script>
 
 <script type="text/plain" cookie-consent="tracking">
@@ -89,15 +148,19 @@ cookieconsent.run({
 </script>
 
 
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 <link rel="stylesheet" href="styles.css">
-<meta property="og:title" content="Matt Kaye - My Three Favorite, Alphabetically">
+<meta property="og:title" content="Matt Kaye - Series">
+<meta property="og:description" content="">
 <meta property="og:site-name" content="Matt Kaye">
-<meta name="twitter:title" content="Matt Kaye - My Three Favorite, Alphabetically">
+<meta name="twitter:title" content="Matt Kaye - Series">
+<meta name="twitter:description" content="">
 <meta name="twitter:card" content="summary">
 </head>
 
-<body class="nav-fixed fullcontent">
+<body class="nav-fixed">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -167,16 +230,26 @@ cookieconsent.run({
     </nav>
 </header>
 <!-- content -->
-<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
 
+  <ul>
+  <li><a href="#the-missing-semester-of-your-ds-education" id="toc-the-missing-semester-of-your-ds-education" class="nav-link active" data-scroll-target="#the-missing-semester-of-your-ds-education">The Missing Semester of Your <strong><em>DS</em></strong> Education</a></li>
+  <li><a href="#ab-testing" id="toc-ab-testing" class="nav-link" data-scroll-target="#ab-testing">A/B Testing</a></li>
+  <li><a href="#all-posts" id="toc-all-posts" class="nav-link" data-scroll-target="#all-posts">All Posts</a></li>
+  </ul>
+</nav>
+    </div>
 <!-- main -->
-<main class="content" id="quarto-document-content">
+<main class="content column-page-left" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">My Three Favorite, Alphabetically</h1>
+<h1 class="title">Series</h1>
 </div>
 
 
@@ -191,39 +264,225 @@ cookieconsent.run({
 
 </header>
 
-<ul>
-<li><strong>ALGORITHMS:</strong> <a href="https://en.wikipedia.org/wiki/Bogosort">Bogo Sort</a>, <a href="https://en.wikipedia.org/wiki/Logistic_regression">Logistic Regression</a>, <a href="https://en.wikipedia.org/wiki/Metropolis%E2%80%93Hastings_algorithm">Metropolis-Hastings</a></li>
-<li><strong>ARTISTS (Musical, According to Spotify):</strong> Bad Bunny, Imagine Dragons, Taylor Swift</li>
-<li><strong>AUTHORS:</strong> Fredrik Backman, Khaled Hosseini, Sally Rooney</li>
-<li><strong>BEERS:</strong> <a href="https://untappd.com/b/the-alchemist-heady-topper/4691">Heady Topper</a>, <a href="https://untappd.com/b/toppling-goliath-brewing-co-king-sue/594015">King Sue</a>, <a href="https://untappd.com/b/tree-house-brewing-company-very-green/689944">Very Green</a></li>
-<li><strong>BOOKS (Fiction):</strong> <a href="https://app.thestorygraph.com/books/6c6726eb-8580-4be7-ab60-5ccd073d7ae5"><em>The Kite Runner</em></a>, <a href="https://app.thestorygraph.com/books/148a1a01-1f5f-440e-8239-f641afa637e0"><em>Neverwhere</em></a>, <a href="https://app.thestorygraph.com/books/ff263f0f-121e-41d2-b2ba-b261fc974cc3"><em>A Storm of Swords</em></a></li>
-<li><strong>BOOKS (Non-Fiction):</strong> <a href="https://app.thestorygraph.com/books/b5d084fb-6417-4803-8a47-da827d3d7270"><em>Algorithms to Live By</em></a>, <a href="https://app.thestorygraph.com/books/b771dbda-1528-4886-8814-b530b3a07431"><em>The Signal and the Noise</em></a>, <a href="https://app.thestorygraph.com/books/dedebd43-d2f7-4f9e-8ee3-b73671df1311"><em>Factfulness</em></a></li>
-<li><strong>CITIES (American):</strong> Bozeman, Cambridge, New York City</li>
-<li><strong>CITIES (European):</strong> Barcelona, Budapest, Stockholm</li>
-<li><strong>CITIES (Other):</strong> Medellín, Oaxaca, Vancouver</li>
-<li><strong>COLLEGE COURSES:</strong> Advanced Algorithms, Mathematical Structures, Price Theory</li>
-<li><strong>CONDIMENTS:</strong> Calabrian Chiles, Preserved Lemons, Secret Aardvark Hot Sauce</li>
-<li><strong>CUISINES (Couldn’t pick three):</strong> Italian, Japanese, Lebanese, Mexican</li>
-<li><strong>DATA STRUCTURES:</strong> <a href="https://en.wikipedia.org/wiki/Graph_(abstract_data_type)">Graph</a>, <a href="https://en.wikipedia.org/wiki/Skip_list">Skip List</a>, <a href="https://tibble.tidyverse.org/">Tibble</a></li>
-<li><strong>ECONOMIC SUBFIELDS:</strong> Labor Economics, Monetary Theory, Urban Economics</li>
-<li><strong>FICTIONAL CHARACTERS:</strong> Elaine Benes, Oberyn Martell, Samwise Gamgee</li>
-<li><strong>FOODS:</strong> Bananas, Maitake Mushrooms, Peanut Butter</li>
-<li><strong>KITCHEN UTENSILS:</strong> 7” Santoku Knife, Tasting Spoon, Tongs</li>
-<li><strong>MOVIES:</strong> <a href="https://www.rottentomatoes.com/m/birdman_2014">Birdman</a>, <a href="https://www.rottentomatoes.com/m/inside_out_2015">Inside Out</a>, <a href="https://www.rottentomatoes.com/m/moonrise_kingdom">Moonrise Kingdom</a></li>
-<li><strong>NON-CITY PLACES:</strong> Acadia National Park, Baseball Hall of Fame, Little Cottonwood Canyon</li>
-<li><strong>PARADIGMS:</strong> <a href="https://en.wikipedia.org/wiki/Bayesian_statistics">Bayesian</a>, <a href="https://en.wikipedia.org/wiki/Behavioral_economics">Behavioral</a>, <a href="https://en.wikipedia.org/wiki/Functional_programming">Functional</a></li>
-<li><strong>PIECES OF COOKWARE:</strong> 3-Quart Saute Pan, Cast Iron Skillet, Dutch Oven</li>
-<li><strong>R PACKAGES:</strong> <a href="https://paul-buerkner.github.io/brms/">brms</a>, <a href="https://dplyr.tidyverse.org/">dplyr</a>, <a href="https://purrr.tidyverse.org/">purrr</a></li>
-<li><strong>SERIOUSEATS RECIPES:</strong> <a href="https://www.seriouseats.com/recipes/2011/12/serious-eats-halal-cart-style-chicken-and-rice-white-sauce-recipe.html">Halal Cart Chicken</a>, <a href="https://www.seriouseats.com/recipes/2017/01/pozole-verde-de-pollo-green-mexican-hominy-and-chicken-soup-recipe.html">Pozole Verde with Chicken</a>, <a href="https://www.seriouseats.com/recipes/2019/12/red-wine-braised-beef-short-ribs-recipe.html">Red Wine-Braised Short Ribs</a></li>
-<li><strong>SKI MOUNTAINS:</strong> Alta, Big Sky, Jackson Hole</li>
-<li><strong>SPIRITS:</strong> Fernet, Islay Scotch, Mezcal</li>
-<li><strong>SPORTS TO WATCH:</strong> Baseball, College Football, Soccer</li>
-<li><strong>SUBREDDITS:</strong> <a href="https://www.reddit.com/r/AdvancedRunning">AdvancedRunning</a>, <a href="https://www.reddit.com/r/MaleLivingSpace">MaleLivingSpace</a>, <a href="https://www.reddit.com/r/UnexpectedFactorial">UnexpectedFactorial</a></li>
-<li><strong>TV SHOWS:</strong> <a href="https://www.rottentomatoes.com/tv/atlanta">Atlanta</a>, <a href="https://www.rottentomatoes.com/tv/chef_s_table">Chef’s Table</a>, <a href="https://www.rottentomatoes.com/tv/seinfeld">Seinfeld</a></li>
-<li><strong>WEBSITES:</strong> <a href="https://www.fangraphs.com/">Fangraphs</a>, <a href="https://fivethirtyeight.com/">FiveThirtyEight</a>, <a href="http://www.seriouseats.com/">Serious Eats</a></li>
-</ul>
+<section id="the-missing-semester-of-your-ds-education" class="level2">
+<h2 class="anchored" data-anchor-id="the-missing-semester-of-your-ds-education">The Missing Semester of Your <strong><em>DS</em></strong> Education</h2>
+<p>Heavily inspired by <a href="https://missing.csail.mit.edu/">The Missing Semester of Your CS Education</a>, this is a series on all of the aspects of doing data science that you probably didn’t learn in class or from doing research. I’ve learned a lot in the past few years about what it takes to do data science professionally and, frankly, my data science education had some gaping holes. The goal of this series is to help others fill some of those holes (to the best of my ability) by sharing some of the things I’ve learned along the way from great mentors and terrible mistakes.</p>
+<div id="listing-doing-data-science" class="quarto-listing quarto-listing-container-table">
+
+<table class="quarto-listing-table table table-striped table-hover">
+<thead>
+<tr>
+<th>
+Date
+</th>
+<th>
+Title
+</th>
+<th>
+Reading Time
+</th>
+</tr>
+</thead>
+<tbody class="list">
+<tr data-index="0" data-categories="R,data science" data-listing-date-sort="1680321600000" data-listing-file-modified-sort="1690755202900" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="14" data-listing-title-sort="Writing Internal Libraries for Analytics Work" data-listing-filename-sort="library-code.qmd" onclick="href = this.querySelector('a').getAttribute('href');
+ if (href) { window.location=href ; return false; }">
+<td>
+<span class="listing-date">Apr 1, 2023</span>
+</td>
+<td>
+<a href="./posts/series/doing-data-science/2023-04-01-library-code/library-code.html" class="title listing-title">Writing Internal Libraries for Analytics Work</a>
+</td>
+<td>
+<span class="listing-reading-time">14 min</span>
+</td>
+</tr>
+<tr data-index="1" data-categories="R,data science" data-listing-date-sort="1680667200000" data-listing-file-modified-sort="1691025895914" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="14" data-listing-title-sort="Unit Testing Analytics Code" data-listing-filename-sort="unit-testing.qmd" onclick="href = this.querySelector('a').getAttribute('href');
+ if (href) { window.location=href ; return false; }">
+<td>
+<span class="listing-date">Apr 5, 2023</span>
+</td>
+<td>
+<a href="./posts/series/doing-data-science/2023-04-03-unit-testing/unit-testing.html" class="title listing-title">Unit Testing Analytics Code</a>
+</td>
+<td>
+<span class="listing-reading-time">14 min</span>
+</td>
+</tr>
+<tr data-index="2" data-categories="R,data science" data-listing-date-sort="1682308800000" data-listing-file-modified-sort="1691025669879" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="12" data-listing-title-sort="Pull Requests, Code Review, and The Art of Requesting Changes" data-listing-filename-sort="code-review.qmd" onclick="href = this.querySelector('a').getAttribute('href');
+ if (href) { window.location=href ; return false; }">
+<td>
+<span class="listing-date">Apr 24, 2023</span>
+</td>
+<td>
+<a href="./posts/series/doing-data-science/2023-04-14-code-review/code-review.html" class="title listing-title">Pull Requests, Code Review, and The Art of Requesting Changes</a>
+</td>
+<td>
+<span class="listing-reading-time">12 min</span>
+</td>
+</tr>
+<tr data-index="3" data-categories="data science" data-listing-date-sort="1683345600000" data-listing-file-modified-sort="1690755203305" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="8" data-listing-title-sort="Workflow Orchestration" data-listing-filename-sort="workflow-orchestration.qmd" onclick="href = this.querySelector('a').getAttribute('href');
+ if (href) { window.location=href ; return false; }">
+<td>
+<span class="listing-date">May 6, 2023</span>
+</td>
+<td>
+<a href="./posts/series/doing-data-science/2023-05-06-workflow-orchestration/workflow-orchestration.html" class="title listing-title">Workflow Orchestration</a>
+</td>
+<td>
+<span class="listing-reading-time">8 min</span>
+</td>
+</tr>
+<tr data-index="4" data-categories="data science" data-listing-date-sort="1684036800000" data-listing-file-modified-sort="1690755203305" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="9" data-listing-title-sort="Experiment Tracking and Model Versioning" data-listing-filename-sort="experiment-tracking.qmd" onclick="href = this.querySelector('a').getAttribute('href');
+ if (href) { window.location=href ; return false; }">
+<td>
+<span class="listing-date">May 14, 2023</span>
+</td>
+<td>
+<a href="./posts/series/doing-data-science/2023-05-13-experiment-tracking/experiment-tracking.html" class="title listing-title">Experiment Tracking and Model Versioning</a>
+</td>
+<td>
+<span class="listing-reading-time">9 min</span>
+</td>
+</tr>
+<tr data-index="5" data-categories="data science,R,python" data-listing-date-sort="1685246400000" data-listing-file-modified-sort="1690755203312" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="10" data-listing-title-sort="Dependency Management" data-listing-filename-sort="renv-dependency-management.qmd" onclick="href = this.querySelector('a').getAttribute('href');
+ if (href) { window.location=href ; return false; }">
+<td>
+<span class="listing-date">May 28, 2023</span>
+</td>
+<td>
+<a href="./posts/series/doing-data-science/2023-05-27-renv-dependency-management/renv-dependency-management.html" class="title listing-title">Dependency Management</a>
+</td>
+<td>
+<span class="listing-reading-time">10 min</span>
+</td>
+</tr>
+<tr data-index="6" data-categories="R,data science" data-listing-date-sort="1686024000000" data-listing-file-modified-sort="1690755203315" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="12" data-listing-title-sort="A Gentle Introduction to Docker" data-listing-filename-sort="docker.qmd" onclick="href = this.querySelector('a').getAttribute('href');
+ if (href) { window.location=href ; return false; }">
+<td>
+<span class="listing-date">Jun 6, 2023</span>
+</td>
+<td>
+<a href="./posts/series/doing-data-science/2023-06-03-docker/docker.html" class="title listing-title">A Gentle Introduction to Docker</a>
+</td>
+<td>
+<span class="listing-reading-time">12 min</span>
+</td>
+</tr>
+<tr data-index="7" data-categories="data science,R,python" data-listing-date-sort="1687320000000" data-listing-file-modified-sort="1691026240383" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="10" data-listing-title-sort="How Can Someone Else Use My Model?" data-listing-filename-sort="how-can-others-use-my-model.qmd" onclick="href = this.querySelector('a').getAttribute('href');
+ if (href) { window.location=href ; return false; }">
+<td>
+<span class="listing-date">Jun 21, 2023</span>
+</td>
+<td>
+<a href="./posts/series/doing-data-science/2023-06-20-how-can-others-use-my-model/how-can-others-use-my-model.html" class="title listing-title">How Can Someone Else Use My Model?</a>
+</td>
+<td>
+<span class="listing-reading-time">10 min</span>
+</td>
+</tr>
+<tr data-index="8" data-categories="data science" data-listing-date-sort="1691035200000" data-listing-file-modified-sort="1691627747203" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="10" data-listing-title-sort="On Doing Data Science" data-listing-filename-sort="doing-data-science.qmd" onclick="href = this.querySelector('a').getAttribute('href');
+ if (href) { window.location=href ; return false; }">
+<td>
+<span class="listing-date">Aug 3, 2023</span>
+</td>
+<td>
+<a href="./posts/series/doing-data-science/2023-08-03-doing-data-science/doing-data-science.html" class="title listing-title">On Doing Data Science</a>
+</td>
+<td>
+<span class="listing-reading-time">10 min</span>
+</td>
+</tr>
+</tbody>
+
+</table>
+<div class="listing-no-matching d-none">
+No matching items
+</div>
+</div>
+</section>
+<section id="ab-testing" class="level2">
+<h2 class="anchored" data-anchor-id="ab-testing">A/B Testing</h2>
+<p>A series on common pitfalls in A/B testing and how sequential testing solves many common A/B testing problems.</p>
+<div id="listing-a-b-testing" class="quarto-listing quarto-listing-container-table">
+
+<table class="quarto-listing-table table table-striped table-hover">
+<thead>
+<tr>
+<th>
+Date
+</th>
+<th>
+Title
+</th>
+<th>
+Reading Time
+</th>
+</tr>
+</thead>
+<tbody class="list">
+<tr data-index="0" data-categories="data science,statistics,a/b testing" data-listing-date-sort="1648180800000" data-listing-file-modified-sort="1690755202896" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="4" data-listing-title-sort="A/B Testing: A Primer" data-listing-filename-sort="index.md" onclick="href = this.querySelector('a').getAttribute('href');
+ if (href) { window.location=href ; return false; }">
+<td>
+<span class="listing-date">Mar 25, 2022</span>
+</td>
+<td>
+<a href="./posts/series/a-b-testing/2022-03-25-a-b-testing-a-primer/index.html" class="title listing-title">A/B Testing: A Primer</a>
+</td>
+<td>
+<span class="listing-reading-time">4 min</span>
+</td>
+</tr>
+<tr data-index="1" data-categories="data science,statistics,a/b testing" data-listing-date-sort="1649476800000" data-listing-file-modified-sort="1690755202897" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="5" data-listing-title-sort="Running A/B Tests" data-listing-filename-sort="index.md" onclick="href = this.querySelector('a').getAttribute('href');
+ if (href) { window.location=href ; return false; }">
+<td>
+<span class="listing-date">Apr 9, 2022</span>
+</td>
+<td>
+<a href="./posts/series/a-b-testing/2022-04-10-running-a-b-tests/index.html" class="title listing-title">Running A/B Tests</a>
+</td>
+<td>
+<span class="listing-reading-time">5 min</span>
+</td>
+</tr>
+<tr data-index="2" data-categories="data science,statistics,a/b testing" data-listing-date-sort="1649563200000" data-listing-file-modified-sort="1690755202897" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="7" data-listing-title-sort="Calling A/B Tests" data-listing-filename-sort="index.md" onclick="href = this.querySelector('a').getAttribute('href');
+ if (href) { window.location=href ; return false; }">
+<td>
+<span class="listing-date">Apr 10, 2022</span>
+</td>
+<td>
+<a href="./posts/series/a-b-testing/2022-04-10-calling-a-b-tests/index.html" class="title listing-title">Calling A/B Tests</a>
+</td>
+<td>
+<span class="listing-reading-time">7 min</span>
+</td>
+</tr>
+<tr data-index="3" data-categories="data science,statistics" data-listing-date-sort="1650168000000" data-listing-file-modified-sort="1690755202898" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="5" data-listing-title-sort="Sequential Testing" data-listing-filename-sort="index.md" onclick="href = this.querySelector('a').getAttribute('href');
+ if (href) { window.location=href ; return false; }">
+<td>
+<span class="listing-date">Apr 17, 2022</span>
+</td>
+<td>
+<a href="./posts/series/a-b-testing/2022-04-17-sequential-testing/index.html" class="title listing-title">Sequential Testing</a>
+</td>
+<td>
+<span class="listing-reading-time">5 min</span>
+</td>
+</tr>
+</tbody>
+
+</table>
+<div class="listing-no-matching d-none">
+No matching items
+</div>
+</div>
+</section>
+<section id="all-posts" class="level2">
+<h2 class="anchored" data-anchor-id="all-posts">All Posts</h2>
+<p>To see all of my blog posts, go to <a href="./posts.html">the posts page</a></p>
 
 
+
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

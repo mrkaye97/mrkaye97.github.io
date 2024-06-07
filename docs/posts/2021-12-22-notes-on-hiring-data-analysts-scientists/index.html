@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.450">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Matt Kaye">
+<meta name="dcterms.date" content="2021-12-22">
+<meta name="description" content="Matt Kaye’s personal website.">
+
+<title>Matt Kaye - Notes on Hiring Data Analysts + Scientists</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../photos/favicon.png" rel="icon" type="image/png">
+<script src="../../site_libs/cookie-consent/cookie-consent.js"></script>
+<link href="../../site_libs/cookie-consent/cookie-consent.css" rel="stylesheet">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-6KV13R4B6Y"></script>
+
+<script type="text/plain" cookie-consent="tracking">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-6KV13R4B6Y', { 'anonymize_ip': true});
+</script>
+
+<script type="text/javascript" charset="UTF-8">
+document.addEventListener('DOMContentLoaded', function () {
+cookieconsent.run({
+  "notice_banner_type":"simple",
+  "consent_type":"implied",
+  "palette":"light",
+  "language":"en",
+  "page_load_consent_levels":["strictly-necessary","functionality","tracking","targeting"],
+  "notice_banner_reject_button_hide":false,
+  "preferences_center_close_button_hide":false,
+  "website_name":""
+  });
+});
+</script>
+
+
+
+<link rel="stylesheet" href="../../styles.css">
+<meta property="og:title" content="Matt Kaye - Notes on Hiring Data Analysts + Scientists">
+<meta property="og:description" content="">
+<meta property="og:site-name" content="Matt Kaye">
+<meta name="twitter:title" content="Matt Kaye - Notes on Hiring Data Analysts + Scientists">
+<meta name="twitter:description" content="">
+<meta name="twitter:card" content="summary">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Matt Kaye</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-blog" role="button" data-bs-toggle="dropdown" aria-expanded="false" rel="" target="">
+ <span class="menu-text">Blog</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-blog">
+        <li>
+    <a class="dropdown-item" href="../../posts.html" rel="" target="">
+ <span class="dropdown-text">Posts</span></a>
+  </li>
+        <li>
+    <a class="dropdown-item" href="../../series.html" rel="" target="">
+ <span class="dropdown-text">Series</span></a>
+  </li>
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="../../code.html" rel="" target="">
+ <span class="menu-text">Code</span></a>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-more" role="button" data-bs-toggle="dropdown" aria-expanded="false" rel="" target="">
+ <span class="menu-text">More</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-more">
+        <li>
+    <a class="dropdown-item" href="../../my-three-favorite.html" rel="" target="">
+ <span class="dropdown-text">My three favorite</span></a>
+  </li>
+        <li>
+    <a class="dropdown-item" href="../../travel.html" rel="" target="">
+ <span class="dropdown-text">Going places</span></a>
+  </li>
+        <li>
+    <a class="dropdown-item" href="../../blogroll.html" rel="" target="">
+ <span class="dropdown-text">Blogroll</span></a>
+  </li>
+    </ul>
+  </li>
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="../../posts.xml" rel="" target=""><i class="bi bi-rss" role="img">
+</i>
+ <span class="menu-text"></span></a>
+  </li>
+</ul>
+            <div class="quarto-navbar-tools">
+</div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar"><div class="quarto-margin-header"><div class="margin-header-item">
+<style type="text/css">
+    #mc_embed_signup{background:#fff; clear:left; font:14px Helvetica,Arial,sans-serif;  width:100%;}
+</style>
+<div id="mc_embed_signup">
+    <form action="https://matthewrkaye.us18.list-manage.com/subscribe/post?u=ec09e4d843f1bd163969cd497&amp;id=57e1f0d88d&amp;f_id=00a914e7f0" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_self">
+        <div id="mc_embed_signup_scroll" {margin:0px;="" padding:0px;="" display:inline;}="">
+        <h2>Subscribe</h2>
+<div class="mc-field-group">
+
+    <input type="email" value="" name="EMAIL" class="required email" id="mce-EMAIL" placeholder="email address" required="">
+    <span id="mce-EMAIL-HELPERTEXT" class="helper_text"></span>
+</div>
+    <div id="mce-responses" class="clear foot">
+        <div class="response" id="mce-error-response" style="display:none"></div>
+        <div class="response" id="mce-success-response" style="display:none"></div>
+    </div>    <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+    <div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_ec09e4d843f1bd163969cd497_57e1f0d88d" tabindex="-1" value=""></div>
+        <div class="optionalParent">
+            <div class="clear foot">
+                <input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="button">
+            </div>
+        </div>
+    </div>
+</form>
+</div>
+</div></div>
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+
+  <ul>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
+  <li><a href="#our-process" id="toc-our-process" class="nav-link" data-scroll-target="#our-process">Our Process</a></li>
+  <li><a href="#the-data-science-analysis-interview" id="toc-the-data-science-analysis-interview" class="nav-link" data-scroll-target="#the-data-science-analysis-interview">The Data Science / Analysis Interview</a>
+  <ul class="collapse">
+  <li><a href="#creating-challenging-questions" id="toc-creating-challenging-questions" class="nav-link" data-scroll-target="#creating-challenging-questions">Creating Challenging Questions</a></li>
+  <li><a href="#layering-questions" id="toc-layering-questions" class="nav-link" data-scroll-target="#layering-questions">Layering Questions</a></li>
+  </ul></li>
+  <li><a href="#the-take-home" id="toc-the-take-home" class="nav-link" data-scroll-target="#the-take-home">The Take Home</a></li>
+  <li><a href="#wrapping-up" id="toc-wrapping-up" class="nav-link" data-scroll-target="#wrapping-up">Wrapping Up</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Notes on Hiring Data Analysts + Scientists</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">data science</div>
+    <div class="quarto-category">hiring</div>
+  </div>
+  </div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Matt Kaye </p>
+          </div>
+  </div>
+
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">December 22, 2021</p>
+    </div>
+  </div>
+
+
+  </div>
+
+
+</header>
+
+<section id="introduction" class="level2">
+<h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
+<p>In the past four months, I’ve been involved in hiring for two new roles at <a href="https://www.collegevine.com/">CollegeVine</a>: a second data scientist, and our first data analyst. I’ve learned a lot along the way: Things that work, things that don’t, and things to ask in order to maximize the amount of signal we’re getting from our interviews. This post will sketch out our hiring process (the processes are very similar for our DS and DA roles, with slightly different questions), and I’ll add some notes about things I’ve learned along the way. It’s been a long time since I’ve written anything! I’m excited, so here goes.</p>
+</section>
+<section id="our-process" class="level2">
+<h2 class="anchored" data-anchor-id="our-process">Our Process</h2>
+<p>Our hiring process only has a few steps. We try to keep things simple and quick:</p>
+<ol type="1">
+<li>A phone screen with the hiring manager (30-45 minutes)</li>
+<li>A technical interview with two data scientists (60-90 minutes)</li>
+<li>A technical interview with two software developers (60 minutes, data science only)</li>
+<li>Two cultural / behavioral interviews</li>
+</ol>
+<p>Since my portion of the process is the <em>data science</em> part, I’ll leave the phone screens, behavioral rounds, and system design round out of this post.</p>
+</section>
+<section id="the-data-science-analysis-interview" class="level2">
+<h2 class="anchored" data-anchor-id="the-data-science-analysis-interview">The Data Science / Analysis Interview</h2>
+<p>I’ve done a whole bunch of data science interviews from both sides of the table. Some have been better than others. Often, while on the hot seat, I’ve gotten a smorgasborg of questions that felt like they came from the first page of the first Google result for “Data science interview questions.” A handful of examples:</p>
+<ul>
+<li>What’s the difference between supervised and unsupervised learning?</li>
+<li>What’s the difference between linear regression and logistic regression?</li>
+<li>What’s a p-value?</li>
+<li>How do you know when something is an outlier?</li>
+</ul>
+<p>And many, many more. In my view, these questions are <em>fine</em>. They ask about a relevant concept to data science and put your skills to the test. But I have two issues with them. First, they’re neither challenging nor questions that are easy to build on in terms of difficulty. Second, they’re not going to be good questions to figure out someone’s ability level.</p>
+<section id="creating-challenging-questions" class="level3">
+<h3 class="anchored" data-anchor-id="creating-challenging-questions">Creating Challenging Questions</h3>
+<p>When I say the questions above aren’t challenging, I mean that these are the kinds of questions that someone who’s taken a single stats or machine learning class would be able to answer. This is fine if you’re trying to figure out if someone has taken one of said classes, but that isn’t our goal. We’re trying to determine your ability to succeed as a data scientist or analyst. This means that we need to know more than just your academic background: We need to know how you reason about stats and ML, and how you think in general. How do you approach a statistics problem where you haven’t seen the solution before? Can you intuit an answer and defend it?</p>
+<p>As a result, we’ve designed our questions to be challenging enough that you wouldn’t have seen them in a class you took, and to build off of one another. For example, we often ask the following question:</p>
+<blockquote class="blockquote">
+<p>Imagine you’re looking at a distribution of the heights of men in Spain. How might you find which men are outliers?</p>
+</blockquote>
+<p>Sure, easy question. There are a handful of fine answers here, but we’re generally looking for something along the lines of using a <a href="https://en.wikipedia.org/wiki/Standard_score">Z-Score</a> or the <a href="https://en.wikipedia.org/wiki/Interquartile_range#:~:text=In%20descriptive%20statistics%2C%20the%20interquartile,25th%20percentiles%20of%20the%20data.">IQR</a>. Either of those shows that you’ve seen some rule of thumb in a statistics class and realize that you can apply it to this problem.</p>
+<p>But then, we ask a follow-up:</p>
+<blockquote class="blockquote">
+<p>Now, let’s imagine you’re looking at the distribution of <em>incomes</em> of men in Spain, instead of their heights. Does your approach change at all?</p>
+</blockquote>
+<p>This is a question that most candidates need to think about for a little bit. At first, it seems simple. But we give you a hint: We explicitly ask if your approach to the problem would change, which is a push to think about <em>how</em> it might change. Many candidates struggle with this question, seemingly for a few reasons:</p>
+<ul>
+<li>They understand the hint, but don’t immediately realize why the Z-Score or the IQR approach breaks down, so they feel stuck.</li>
+<li>They understand why those approaches don’t work, but it doesn’t jump out at them what they should <em>do</em> about it.</li>
+</ul>
+<p>These types of responses aren’t surprising to us: In statistics classes, you normally work with normally distributed data where nice properties and rules of thumb hold up, but now we have a problem: Everyone knows that incomes are skewed, and so now what do we do? Some candidates stick to their guns and insist the IQR or Z-score would still be fine. Here’s how I’d answer the question:</p>
+<ul>
+<li>First, I’d make a point that incomes are <a href="https://en.wikipedia.org/wiki/Skewness">right-skewed</a>. Everyone probably has this image in their head already, but it’s important.</li>
+<li>Next, I’d note that the IQR / Z-score approach would break down, since the rules of thumb we use about 95% of the data (e.g.) lying within 2 standard deviations of the mean only works on a normal distribution, which incomes do not follow. This means we can’t just arbitrarly say “Oh, this person is more than 2 standard deviations from the mean, so he’s an outlier!” anymore.</li>
+<li>Finally, I’d think about other approaches. One might be something fancy like an <a href="https://en.wikipedia.org/wiki/Isolation_forest">isolation forest</a>, but I think there’s a simpler approach that’d work: Since incomes are severely right skewed, we could try taking the log of the incomes to see if the logged income looks roughly normally distributed. If it does, we can fall back on our IQR or Z-score approach.</li>
+</ul>
+<p>The point here is to ask the candidate a question that makes them think intuitively about having to solve a real-world problem (in this case, one we face all the time) that they probably haven’t seen before, which gives us a lot of signal about their statistical foundations and intuitions.</p>
+<p>We follow up this follow-up with another:</p>
+<blockquote class="blockquote">
+<p>Now, let’s imagine we’re looking for outliers in the heights of men again, but this time they’re from Sweden <em>and</em> Spain. Does your approach change?</p>
+</blockquote>
+<p>Similar question here, with no real clear, immediate answer that jumps out at most candidates. A reasonable response would be to just separate the distributions into Swedish and Spanish (since we know that Swedes are taller than Spaniards, on average), and then fall back on the Z-score or IQR approach again. Again, not a particularly challenging, in the weeds, or niche technical question by any stretch, but definitely one that lets us really get a sense for your intuitive ability.</p>
+<blockquote class="blockquote">
+<p><strong>TL;DR: We build questions that aren’t tricky (in the trick question sense), but should’t have an immediately obvious canned answer. These types of questions should give us a window into how you reason intuitvely about statistics and machine learning concepts at all levels of complexity.</strong></p>
+</blockquote>
+</section>
+<section id="layering-questions" class="level3">
+<h3 class="anchored" data-anchor-id="layering-questions">Layering Questions</h3>
+<p>This point is a nice segue into the second issue I noted above: It’s important to build questions that have multiple layers of difficulty to them, so that if someone immediately answers your question, you don’t completely shift gears and move to a different topic. Instead, we want to keep digging, so that we can figure out just how much you know. The question I laid out above is a good example of a simple, relatively straightforward question with multiple layers.</p>
+<p>Here’s another example:</p>
+<blockquote class="blockquote">
+<p>Imagine you’re asking people their symptoms and trying to figure out if they have COVID or not. Sometimes you’ll say someone has COVID when they don’t, and sometimes you’ll say they don’t when they do. What are these two types of mistakes called? And which one do you think is worse? Why?</p>
+</blockquote>
+<p>This is a question about <a href="https://en.wikipedia.org/wiki/Type_I_and_type_II_errors">Type I and Type II</a> error (also known as false positives and false negatives, respectively). Most candidates realize this right away, and then make an argument for why they think a Type II error (the false negative) is a worse mistake. Generally, the argument centers on someone who <em>is</em> infected unknowingly spreading COVID. That’s a great answer. It shows that they can reason about different types of mistakes and can make an argument for why we might want to minimize one or the other. But this isn’t a particularly challenging question.</p>
+<p>We ask a follow-up:</p>
+<blockquote class="blockquote">
+<p>Now, let’s imagine you get some COVID test results back from the people whose symptoms you were asking about. What’s wrong with this statement: ‘If COVID tests have a 10% false negative rate and you got a COVID test and it’s negative, that means there’s a 10% chance it’s wrong and you’re actually positive.’?</p>
+</blockquote>
+<p>This question is a little more challenging, and it builds of the types of error we discussed in the previous question. Here, you need to realize what a <a href="https://en.wikipedia.org/wiki/False_positives_and_false_negatives">false negative</a> is, and it’s easy to get the <a href="https://en.wikipedia.org/wiki/Conditional_probability">conditioning</a> flipped. In this case, the false negative rate of the test being 10% means that the probability that you test negative <em>given that you have COVID</em> is 10%. This is <em>not</em> the same as saying that the probability that you have COVID <em>given that you test negative</em> is 10%. In the second case, the conditioning is flipped around backwards. Most candidates get hung up on this, and rightfully so. It’s a tricky question to work out without pen and paper.</p>
+<p>For those that get through that question, we have another, more difficult follow-up:</p>
+<blockquote class="blockquote">
+<p>Okay, so you got a negative test result, but you know the false negative rate of COVID tests is 10%. Imagine you wanted to calculate the actual chance you were <em>positive</em> given that you just got your negative result. What other information would you need to do your calculation?</p>
+</blockquote>
+<p>For the Bayesians in the back, this question should be a slam dunk. It’s an obvious <a href="https://en.wikipedia.org/wiki/Bayes%27_theorem">Bayes’ Rule</a> question: we’re asking you to calculate <code>p( COVID | negative test )</code>, so you can use Bayes’ Rule to find the answer. It turns out the other information you’d need to do this calculation (in addition to the false negative rate) are a true negative rate and a <a href="https://en.wikipedia.org/wiki/Prior_probability">prior</a>, and you’re golden.</p>
+<p>Lastly, once a candidate successfully identified Bayes’ Rule and (hopefully) discussed priors, we’d ask them how they’d elicit this prior. There’s no “right” answer here, but there are a couple options that are better than others:</p>
+<ul>
+<li>Ask an expert</li>
+<li>Use something relatively uninformative</li>
+<li>Take an “empirical” approach and use something like the overall positive test rate</li>
+</ul>
+<p>Any of these answers would be totally reasonable, given that there’s a whole literature on prior elicitation.</p>
+<p>And that’s one example of a multi-layer question we might ask in a data science interview. The vast majority of candidates won’t get through all the parts, and that’s totally fine! Errr, maybe “fine” isn’t actually the right word: That’s <em>the goal</em>. The point is that we’re constructing a question that lets us learn <em>a lot</em> about you: We learn how much you know about Type I / II error and how you reason about them. We learn about if you understand conditional probability and Bayes’ Rule. And we learn how you reason about prior elicitation. We also learn how you argue for decisions you make, and how you communicate complicated statistical concepts (Bayes’ Rule and Type I / II error aren’t simple). And finally, we learn something about the <em>depth</em> of your knowledge. The first part of this question you’d probably know the answer to if you’d taken an introductory statistics or ML class. The second part you’d likely see in a probability course or an inferential statistics course. The third part would also probably come up in one of those two courses, and if not, then certainly in a Bayesian statistics course. And finally, the fourth part you’d likely only see in a very advanced inferential statistics course or a Bayesian course. So not only do we see how you reason about statistics, how much you know, and how you communicate difficult concepts, we also learn something about the types of problems you’ve seen or worked on in the past, whether they be in classes or in a former job or internship. This is <em>a lot</em> of useful information.</p>
+</section>
+</section>
+<section id="the-take-home" class="level2">
+<h2 class="anchored" data-anchor-id="the-take-home">The Take Home</h2>
+<p>The other piece to our interview process is a take home project. For data science, we have a take-home that you can find in our <a href="https://github.com/collegevine/ds-hiring">CollegeVine DS Hiring Github repo</a>. For data analysts, we ask them to bring in any project they’ve done in the past: Anything from a homework assignment to another company’s take home.</p>
+<p>We spend about 25-30 minutes going through the take home project, and we’re looking for a few main things. For the most part, candidates are good at describing what they’ve done, so we’re generally trying to dig to figure out <em>why</em> they made the decisions they did. Can they defend them? How did they think through the pros and cons of each decision? What’s their thought process like? The idea here is that everyone in a data-related role will need to make decisions where there’s no clear “right” answer, so we want to see why you chose to make a pie chart instead of a box plot, or chose to use <a href="https://en.wikipedia.org/wiki/XGBoost">XGBoost</a> instead of logistic regression. Can you talk me through the pros and cons of each option?</p>
+<p>In the data science take home we give, there are also some tricks we’re trying to test the candidates out on. In an effort to not give away our whole bag of tricks, I invite everyone to give the exercise a shot! I’d even be happy to take a look through your projects to see what you come up with. The short of it is that there are some issues in the data that, if you don’t notice them and do something to fix them, will end up ruining the predictions your model produces. We don’t expect anyone to catch all of these issues in the short amount of time we ask them to spend on the problem, but we hope that they’ll be thoughtful about how they’d solve them once we point them out in the interview.</p>
+<p>Finally, there’s one elephant in the room here that’s important to address: Many people feel negatively about take homes. So do we – they tend to be long and unnecessarily complicated, and often feel like a waste of the candidate’s time. In our view, though, the take home is necessary for one main reason: It lets you familiarize yourself with a data science problem beforehand, so that when you get to the interview we can hit the ground running. In a sense, we’re giving you the rules of the game in advance so we can start playing right away. This lets us avoid any confusion or annoying ambiguity with regards to the types of problems were asking about, and to entirely avoid requiring candidates to reason through questions about entirely hypothetical problems that they’ve never seen before. For these reasons, and also because there’s historically been lots of signal that we’ve gotten from how candidates respond to our questions about the project they bring in, we’ve decided to stick with the take home. In addition, we don’t screen out any candidates on the basis of their take home. We don’t ask them to be submitted in advance, so every candidate who does a take home gets an interview.</p>
+</section>
+<section id="wrapping-up" class="level2">
+<h2 class="anchored" data-anchor-id="wrapping-up">Wrapping Up</h2>
+<p>In a nutshell, that’s our whole data scientific technical interview! We discuss a take home you bring in, and then we talk through some miscellaneous statistics and machine learning questions like the ones we discussed above. In general, we’re not looking for any specific expertise or knowledge – we’re a start up, after all. Instead, we’re testing candidates to see how they reason about problems that are similar to the ones they’ll work on at CollegeVine, and how they explain the ins and outs of different possible solutions to those problems. We’re looking at their intuitions about statistics and machine learning, their ability to think on their feet when faced with questions they don’t immediately know the answer to, and their curiosity and creativity when it comes to solving challenging questions. At the end of the day, it’s these traits, not any hyper-specific technical knowledge, that’ll make for a great CV data team member.</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button,
+        { trigger: "manual",
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config);
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<script src="https://utteranc.es/client.js" repo="mrkaye97/mrkaye97.github.io" issue-term="pathname" theme="github-light" crossorigin="anonymous" async="">
+</script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left"> Matt Kaye, 2023<br></div>
+    <div class="nav-footer-center"><div class="cookie-consent-footer"><a href="#" id="open_preferences_center">Cookie Preferences</a></div></div>
+    <div class="nav-footer-right">Built with <a href="https://quarto.org/">Quarto</a> and ❤<br></div>
+  </div>
+</footer>
+
+
+
+</body></html>

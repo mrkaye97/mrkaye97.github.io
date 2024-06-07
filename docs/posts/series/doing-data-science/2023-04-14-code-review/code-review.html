@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.450">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Matt Kaye">
+<meta name="dcterms.date" content="2023-04-24">
+<meta name="description" content="Matt Kaye’s personal website.">
+
+<title>Matt Kaye - Pull Requests, Code Review, and The Art of Requesting Changes</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../../../">
+<link href="../../../../photos/favicon.png" rel="icon" type="image/png">
+<script src="../../../../site_libs/cookie-consent/cookie-consent.js"></script>
+<link href="../../../../site_libs/cookie-consent/cookie-consent.css" rel="stylesheet">
+<script src="../../../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-6KV13R4B6Y"></script>
+
+<script type="text/plain" cookie-consent="tracking">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-6KV13R4B6Y', { 'anonymize_ip': true});
+</script>
+
+<script type="text/javascript" charset="UTF-8">
+document.addEventListener('DOMContentLoaded', function () {
+cookieconsent.run({
+  "notice_banner_type":"simple",
+  "consent_type":"implied",
+  "palette":"light",
+  "language":"en",
+  "page_load_consent_levels":["strictly-necessary","functionality","tracking","targeting"],
+  "notice_banner_reject_button_hide":false,
+  "preferences_center_close_button_hide":false,
+  "website_name":""
+  });
+});
+</script>
+
+
+<script src="../../../../site_libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="../../../../site_libs/lightable-0.0.1/lightable.css" rel="stylesheet">
+
+
+<link rel="stylesheet" href="../../../../styles.css">
+<meta property="og:title" content="Matt Kaye - Pull Requests, Code Review, and The Art of Requesting Changes">
+<meta property="og:description" content="">
+<meta property="og:site-name" content="Matt Kaye">
+<meta name="twitter:title" content="Matt Kaye - Pull Requests, Code Review, and The Art of Requesting Changes">
+<meta name="twitter:description" content="">
+<meta name="twitter:card" content="summary">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="../../../../index.html">
+    <span class="navbar-title">Matt Kaye</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-blog" role="button" data-bs-toggle="dropdown" aria-expanded="false" rel="" target="">
+ <span class="menu-text">Blog</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-blog">
+        <li>
+    <a class="dropdown-item" href="../../../../posts.html" rel="" target="">
+ <span class="dropdown-text">Posts</span></a>
+  </li>
+        <li>
+    <a class="dropdown-item" href="../../../../series.html" rel="" target="">
+ <span class="dropdown-text">Series</span></a>
+  </li>
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="../../../../code.html" rel="" target="">
+ <span class="menu-text">Code</span></a>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-more" role="button" data-bs-toggle="dropdown" aria-expanded="false" rel="" target="">
+ <span class="menu-text">More</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-more">
+        <li>
+    <a class="dropdown-item" href="../../../../my-three-favorite.html" rel="" target="">
+ <span class="dropdown-text">My three favorite</span></a>
+  </li>
+        <li>
+    <a class="dropdown-item" href="../../../../travel.html" rel="" target="">
+ <span class="dropdown-text">Going places</span></a>
+  </li>
+        <li>
+    <a class="dropdown-item" href="../../../../blogroll.html" rel="" target="">
+ <span class="dropdown-text">Blogroll</span></a>
+  </li>
+    </ul>
+  </li>
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="../../../../posts.xml" rel="" target=""><i class="bi bi-rss" role="img">
+</i>
+ <span class="menu-text"></span></a>
+  </li>
+</ul>
+            <div class="quarto-navbar-tools">
+</div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar"><div class="quarto-margin-header"><div class="margin-header-item">
+<style type="text/css">
+    #mc_embed_signup{background:#fff; clear:left; font:14px Helvetica,Arial,sans-serif;  width:100%;}
+</style>
+<div id="mc_embed_signup">
+    <form action="https://matthewrkaye.us18.list-manage.com/subscribe/post?u=ec09e4d843f1bd163969cd497&amp;id=57e1f0d88d&amp;f_id=00a914e7f0" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_self">
+        <div id="mc_embed_signup_scroll" {margin:0px;="" padding:0px;="" display:inline;}="">
+        <h2>Subscribe</h2>
+<div class="mc-field-group">
+
+    <input type="email" value="" name="EMAIL" class="required email" id="mce-EMAIL" placeholder="email address" required="">
+    <span id="mce-EMAIL-HELPERTEXT" class="helper_text"></span>
+</div>
+    <div id="mce-responses" class="clear foot">
+        <div class="response" id="mce-error-response" style="display:none"></div>
+        <div class="response" id="mce-success-response" style="display:none"></div>
+    </div>    <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+    <div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_ec09e4d843f1bd163969cd497_57e1f0d88d" tabindex="-1" value=""></div>
+        <div class="optionalParent">
+            <div class="clear foot">
+                <input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="button">
+            </div>
+        </div>
+    </div>
+</form>
+</div>
+</div></div>
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+
+  <ul>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
+  <li><a href="#but-first-git" id="toc-but-first-git" class="nav-link" data-scroll-target="#but-first-git">But First: Git</a></li>
+  <li><a href="#on-code-review" id="toc-on-code-review" class="nav-link" data-scroll-target="#on-code-review">On Code Review</a>
+  <ul>
+  <li><a href="#why-do-we-review-code" id="toc-why-do-we-review-code" class="nav-link" data-scroll-target="#why-do-we-review-code">Why Do We Review Code?</a></li>
+  <li><a href="#other-reasons-to-review-code" id="toc-other-reasons-to-review-code" class="nav-link" data-scroll-target="#other-reasons-to-review-code">Other Reasons To Review Code</a></li>
+  <li><a href="#an-example-review" id="toc-an-example-review" class="nav-link" data-scroll-target="#an-example-review">An Example Review</a></li>
+  </ul></li>
+  <li><a href="#wrapping-up" id="toc-wrapping-up" class="nav-link" data-scroll-target="#wrapping-up">Wrapping Up</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Pull Requests, Code Review, and The Art of Requesting Changes</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">R</div>
+    <div class="quarto-category">data science</div>
+  </div>
+  </div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Matt Kaye </p>
+          </div>
+  </div>
+
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">April 24, 2023</p>
+    </div>
+  </div>
+
+
+  </div>
+
+
+</header>
+
+<div class="callout callout-style-simple callout-note no-icon">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-body-container">
+<p>This post is part of a series called <a href="https://matthewrkaye.com/series.html#the-missing-semester-of-your-ds-education">The Missing Semester of Your DS Education</a>.</p>
+</div>
+</div>
+</div>
+<section id="introduction" class="level2">
+<h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
+<p>In <a href="https://matthewrkaye.com/posts/series/doing-data-science/2023-04-03-unit-testing/unit-testing.html">my last post</a> on unit testing analytics code, I started off by saying that I had never heard of unit testing until my second data science job. Not in college, not in internships, and not in my first data science job. The same is true for pull requests and code review – they were completely new to me.</p>
+<p>This, in my view, is a very unfortunate commonality in analytics teams. All too often, code will go unreviewed or kept out of any kind of version control system entirely. Ultimately, this practice, albeit common, is detrimental to the teams practicing it.</p>
+<p>Since then, code review – both doing code review for others and getting feedback from others on my code – has grown to become one of my favorite parts of my job. It’s also a mission-critical process for any team that strives to maintain a high-quality codebase. But more importantly, it’s an valuable social exercise, and an fun way for contributors to come together as a team to collaborate, learn from each other, and improve their skills.</p>
+<div class="callout callout-style-simple callout-note no-icon">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-body-container">
+<p>I’d also like to note that the Tidyverse team just published a <a href="https://tidyverse.github.io/code-review/">great series on code review</a>, which I’d highly recommend reading.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="but-first-git" class="level2">
+<h2 class="anchored" data-anchor-id="but-first-git">But First: Git</h2>
+<p>There are a ton of introductions to Git online, all of which are far better than anything I could write here. If you’re not already at least somewhat familiar with Git, I’d recommend starting with a post like one of these:</p>
+<ul>
+<li><a href="https://docs.github.com/en/get-started/using-git/about-git">From GitHub</a></li>
+<li><a href="https://www.atlassian.com/git/tutorials/what-is-version-control">From Atlassian</a></li>
+<li><a href="https://git-scm.com/book/en/v2/Getting-Started-What-is-Git%3F">From Git itself</a></li>
+</ul>
+<p>That said, what I’ll discuss here doesn’t require any particular Git knowledge.</p>
+</section>
+<section id="on-code-review" class="level2">
+<h2 class="anchored" data-anchor-id="on-code-review">On Code Review</h2>
+<p>I wasn’t sure where to start this post. I considered discussing Git itself, but I decided it would be better to leave it to the experts. Then I thought about discussing the function of <a href="https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/about-pull-requests">pull requests</a>, but that didn’t seem particularly valuable either. So I figured I might just jump into the meat of it: Why code review is valuable, and why analytics teams should be doing more of it than they are.</p>
+<section id="why-do-we-review-code" class="level3">
+<h3 class="anchored" data-anchor-id="why-do-we-review-code">Why Do We Review Code?</h3>
+<p>People and teams have wildly differing opinions about what the main objective of code review is. The following is the opinion of the Tidyverse team:</p>
+<blockquote class="blockquote">
+<p>The primary purpose of code review is to ensure that the overall “code health” of our packages is improving over time.</p>
+</blockquote>
+<p>Another common opinion on the main purpose of code review is to catch bugs in code before they hit production.</p>
+<p>In my opinion, these are both important objectives of code review to be sure, but are not the <em>main</em> objective. My team’s view is that the main objective of code review is knowledge transfer between teammates. On our team – with “team” encompassing both data and engineering – we talk often about the <a href="https://en.wikipedia.org/wiki/Bus_factor">bus factor</a> of our work. A toned-down explanation of the bus factor is that it represents the number of people who need to go on vacation, or be out sick, or leave for a new job for a project to come to a grinding halt because else nobody on the team knows how a particular system works. We’ve been bitten multiple times by projects with a bus factor of one, meaning that if one person were to leave, that project would be left in limbo.</p>
+<p>Analytics work is no different than engineering work in this respect: If one data scientist lives in a dark room for two years building a novel model and ships it to production without anyone else knowing how it works, how to maintain it, and how to monitor it, then that project is risky. If that data scientist were to leave, there would be a model in production that nobody else had experience working with, which could result in any number of issues. In steps code review to help us solve this problem.</p>
+</section>
+<section id="other-reasons-to-review-code" class="level3">
+<h3 class="anchored" data-anchor-id="other-reasons-to-review-code">Other Reasons To Review Code</h3>
+<p>Aside from knowledge transfer, code review is also a valuable opportunity to do quality control. In no particular order, all of the following (and more) can be suggested in code review:</p>
+<ol type="1">
+<li>Bug fixes</li>
+<li>Maintainability improvements, such as improving the readability of the code, adding comments, adding tests, etc.</li>
+<li>Performance improvements</li>
+<li>Security improvements</li>
+</ol>
+<p>All of these are important aspects of maintaining a codebase over the long-term, and, in my experience, are far too often overlooked by analytics teams. In particular, a past team of mine – as well as many others, from what I’ve read and heard in talking to others in analytical roles – had a bad habit of data scientists being siloed and not having any eyes on their work until things were “ready” to be shipped to production. In my opinion, data products are software and should be treated as such. This means that if our models will be shipped to production, then it’s imperative that the code underlying them is written in a way that’s understandable by others, safe, correct, and, to whatever extent necessary, performant. Code review helps achieve all of these goals.</p>
+<p>Lastly, code review is a social exercise. It’s a great way for a team to work together, especially in the world of remote work. In getting feedback from teammates, data scientists get to flex their collaboration muscle and, ideally, this type of collaboration allows the whole to be more than the sum of its parts.</p>
+</section>
+<section id="an-example-review" class="level3">
+<h3 class="anchored" data-anchor-id="an-example-review">An Example Review</h3>
+<p>Since code review is unfamiliar to a lot of us in the analytics world, I’ll give an example of how I might do a review. Our team often works with data from external sources like the Census for doing all kinds of analysis. Let’s imagine reviewing the following code that a hypothetical teammate has put in to determine the five counties in Arizona with the highest percentage of Native American residents:</p>
+<div class="cell" data-layout-align="center" data-hash="code-review_cache/html/unnamed-chunk-2_c1ec406875876f9127deb3a4b1812bb4">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(httr)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(purrr)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>variables <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  <span class="st">"NAME"</span>,</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  <span class="st">"B01001A_001E"</span>,</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  <span class="st">"B01001B_001E"</span>,</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  <span class="st">"B01001C_001E"</span>,</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>  <span class="st">"B01001D_001E"</span>,</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>  <span class="st">"B01001E_001E"</span>,</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>  <span class="st">"B01001F_001E"</span>,</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>  <span class="st">"B01001G_001E"</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>response <span class="ot">&lt;-</span> <span class="fu">GET</span>(</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>  <span class="st">"https://api.census.gov/data/2019/acs/acs5"</span>,</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">query =</span> <span class="fu">list</span>(</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">get =</span> <span class="fu">paste</span>(variables, <span class="at">collapse =</span> <span class="st">","</span>),</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>    <span class="st">"for"</span> <span class="ot">=</span> <span class="st">"tract:*"</span>,</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>    <span class="st">"in"</span> <span class="ot">=</span> <span class="st">"state:04"</span>,</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">key =</span> secret<span class="sc">::</span><span class="fu">get_secret</span>(<span class="st">"CENSUS_API_KEY"</span>, <span class="at">vault =</span> <span class="fu">sprintf</span>(<span class="st">"%s/posts/config"</span>, <span class="fu">Sys.getenv</span>(<span class="st">"SITE_ROOT_DIR"</span>)))</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">content</span>()</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>cols <span class="ot">&lt;-</span> response[[<span class="dv">1</span>]]</span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>response <span class="ot">&lt;-</span> response[<span class="sc">-</span><span class="dv">1</span>]</span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>response <span class="sc">%&gt;%</span></span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">map_dfr</span>(</span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>    <span class="sc">~</span> <span class="fu">set_names</span>(.x, cols)</span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>  janitor<span class="sc">::</span><span class="fu">clean_names</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>    <span class="fu">across</span>(</span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>      <span class="sc">-</span><span class="fu">c</span>(name, tract, county, state),</span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a>      as.numeric</span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(county) <span class="sc">%&gt;%</span></span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(</span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a>    <span class="at">na_pct =</span> <span class="fu">sum</span>(b01001c_001e) <span class="sc">/</span> <span class="fu">sum</span>(<span class="fu">rowSums</span>(<span class="fu">across</span>(<span class="fu">where</span>(is.numeric))))</span>
+<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_max</span>(</span>
+<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a>    <span class="at">order_by =</span> na_pct,</span>
+<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a>    <span class="at">n =</span> <span class="dv">5</span></span>
+<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pretty_print</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">county</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">na_pct</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">001</td>
+<td style="text-align: right;">0.7377187</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">017</td>
+<td style="text-align: right;">0.4465544</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">005</td>
+<td style="text-align: right;">0.2654699</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">007</td>
+<td style="text-align: right;">0.1630934</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">012</td>
+<td style="text-align: right;">0.1495215</td>
+</tr>
+</tbody>
+</table>
+
+
+</div>
+</div>
+<p>At first glance, this code looks pretty involved and poorly written to me. In the real world, we often write complicated code that relies on hyper-specific domain knowledge about the problem being solved in order to really understand it. As I mentioned above, our team often finds ourselves working with external data sources, such as the Census data shown here. And these sources usually have their own internal codes or identifiers that denote what the data you’re actually looking at is about. For instance, the series <code>B01001C_001E</code> used above represents the total Native American population in a region. In the Census, it’s corresponding “concept” is defined as the following:</p>
+<blockquote class="blockquote">
+<p>B01001C_001E: SEX BY AGE (AMERICAN INDIAN AND ALASKA NATIVE ALONE)</p>
+</blockquote>
+<p>Obviously, these codes are not comprehensible for the layman. There’s method to the madness, but we so often work with gibberish codes that don’t correspond to anything intuitive and make code review and maintenance dramatically harder. The challenge here is that in order to effectively review this code, the reviewer not only needs to review what the code is trying to accomplish in some high-level sense, but also needs to understand the data itself and its schema in order to understand how the author is trying to accomplish their goal. Unfortunately, the code’s author has not done a good job of helping the reviewer (me) understand the code.</p>
+<p>Not only do I not have any context on the Census codes, but there’s no documentation linked (or written out) to help me find what the codes mean, there’s no documentation of the API response to explain why they’re seemingly removing the first item in the response’s body and setting it as the names of the columns in my final data frame, and there’s no explanation of what <code>na_pct</code> means, which in the context of this work means “percentage Native American” but could also reasonably mean something like “percentage of the data that’s <code>null</code>”.</p>
+<p>And this is exactly where the value of code review comes in. We often like to say that you’re not writing code for yourself right now. Instead, you should be writing it for a future you in six months or a year who won’t remember all of the intricacies of this problem anymore. In short, you want your code to be understandable to future you, and, by extension, your teammates. But code authors, just like anyone else working on a project of any sort, are often so deep in the weeds of their work and so familiar with all of the ins and outs that it’s easy to forget just how confusing their work can be at times. Code review is a great opportunity for others to ask for clarification, which is the knowledge transfer I mentioned before.</p>
+<p>If a teammate put in these changes, I’d request a few improvements:</p>
+<ol type="1">
+<li>What do the Census codes mean?</li>
+<li>What does <code>na_pct</code> mean?</li>
+<li>What does the response from the Census API look like?</li>
+<li>What does <code>state:04</code> mean?</li>
+</ol>
+<p>After requesting clarification on all of those points, I’d hope the code would ultimately end up looking something like this:</p>
+<div class="cell" data-layout-align="center" data-hash="code-review_cache/html/unnamed-chunk-3_bc7e9589d4c80bfdaf8689be7b9da287">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Data from the Census ACS (American Community Survey)</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="do">##</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="do">## ACS 2019 5-year data</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="do">## B01001A_001E: Total White alone population</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="do">## B01001B_001E: Total Black or African American alone population</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="do">## B01001C_001E: Total American Indian and Alaska Native alone population</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="do">## B01001D_001E: Total Asian alone population</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="do">## B01001E_001E: Total Native Hawaiian and Other Pacific Islander alone population</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="do">## B01001F_001E: Total Some other race alone population</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="do">## B01001G_001E: Total Two or more races population</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="do">##</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="do">## Codes of the form B01001X_001E</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="do">## correspond to "Total X population" where X</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="do">## is a race as defined by the Census. For instance,</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="do">## B01001A_001E: Total White alone population</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>variables <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">white_alone =</span> <span class="st">"B01001A_001E"</span>,</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">black =</span> <span class="st">"B01001B_001E"</span>,</span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>  <span class="at">native_american =</span> <span class="st">"B01001C_001E"</span>,</span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>  <span class="at">asian =</span> <span class="st">"B01001D_001E"</span>,</span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>  <span class="at">hawaiian_pacific_islander =</span> <span class="st">"B01001E_001E"</span>,</span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>  <span class="at">other_alone =</span> <span class="st">"B01001F_001E"</span>,</span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>  <span class="at">multi_racial =</span> <span class="st">"B01001G_001E"</span></span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>response <span class="ot">&lt;-</span> <span class="fu">GET</span>(</span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>  <span class="st">"https://api.census.gov/data/2019/acs/acs5"</span>,</span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>  <span class="at">query =</span> <span class="fu">list</span>(</span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>    <span class="at">get =</span> <span class="fu">paste</span>(variables, <span class="at">collapse =</span> <span class="st">","</span>),</span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>    <span class="st">"for"</span> <span class="ot">=</span> <span class="st">"tract:*"</span>,</span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>    <span class="st">"in"</span> <span class="ot">=</span> <span class="st">"state:04"</span>,</span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>    <span class="at">key =</span> secret<span class="sc">::</span><span class="fu">get_secret</span>(<span class="st">"CENSUS_API_KEY"</span>, <span class="at">vault =</span> <span class="fu">sprintf</span>(<span class="st">"%s/posts/config"</span>, <span class="fu">Sys.getenv</span>(<span class="st">"SITE_ROOT_DIR"</span>)))</span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span></span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">content</span>()</span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a><span class="do">## The first item in the JSON response body is a vector</span></span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a><span class="do">## of the names of the fields returned.</span></span>
+<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a><span class="do">## For this query, we get: </span></span>
+<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a><span class="do">##</span></span>
+<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a><span class="do">##   * B01001A_001E</span></span>
+<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a><span class="do">##   * B01001B_001E</span></span>
+<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a><span class="do">##   * B01001C_001E</span></span>
+<span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a><span class="do">##   * B01001D_001E</span></span>
+<span id="cb2-45"><a href="#cb2-45" aria-hidden="true" tabindex="-1"></a><span class="do">##   * B01001E_001E</span></span>
+<span id="cb2-46"><a href="#cb2-46" aria-hidden="true" tabindex="-1"></a><span class="do">##   * B01001F_001E</span></span>
+<span id="cb2-47"><a href="#cb2-47" aria-hidden="true" tabindex="-1"></a><span class="do">##   * B01001G_001E</span></span>
+<span id="cb2-48"><a href="#cb2-48" aria-hidden="true" tabindex="-1"></a><span class="do">##   * state</span></span>
+<span id="cb2-49"><a href="#cb2-49" aria-hidden="true" tabindex="-1"></a><span class="do">##   * county</span></span>
+<span id="cb2-50"><a href="#cb2-50" aria-hidden="true" tabindex="-1"></a><span class="do">##   * tract</span></span>
+<span id="cb2-51"><a href="#cb2-51" aria-hidden="true" tabindex="-1"></a><span class="do">##</span></span>
+<span id="cb2-52"><a href="#cb2-52" aria-hidden="true" tabindex="-1"></a><span class="do">## Every other record contains data corresponding to these fields.</span></span>
+<span id="cb2-53"><a href="#cb2-53" aria-hidden="true" tabindex="-1"></a><span class="do">## The values in the population fields (e.g. B01001A_001E) are integers</span></span>
+<span id="cb2-54"><a href="#cb2-54" aria-hidden="true" tabindex="-1"></a><span class="do">## representing the total population for that racial group in that tract.</span></span>
+<span id="cb2-55"><a href="#cb2-55" aria-hidden="true" tabindex="-1"></a><span class="do">## The state, county, and tract are all FIPS codes.</span></span>
+<span id="cb2-56"><a href="#cb2-56" aria-hidden="true" tabindex="-1"></a>cols <span class="ot">&lt;-</span> response[[<span class="dv">1</span>]]</span>
+<span id="cb2-57"><a href="#cb2-57" aria-hidden="true" tabindex="-1"></a>response <span class="ot">&lt;-</span> response[<span class="sc">-</span><span class="dv">1</span>]</span>
+<span id="cb2-58"><a href="#cb2-58" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-59"><a href="#cb2-59" aria-hidden="true" tabindex="-1"></a>response <span class="sc">%&gt;%</span></span>
+<span id="cb2-60"><a href="#cb2-60" aria-hidden="true" tabindex="-1"></a>  <span class="fu">map_dfr</span>(</span>
+<span id="cb2-61"><a href="#cb2-61" aria-hidden="true" tabindex="-1"></a>    <span class="sc">~</span> <span class="fu">set_names</span>(.x, cols)</span>
+<span id="cb2-62"><a href="#cb2-62" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb2-63"><a href="#cb2-63" aria-hidden="true" tabindex="-1"></a>  janitor<span class="sc">::</span><span class="fu">clean_names</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb2-64"><a href="#cb2-64" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb2-65"><a href="#cb2-65" aria-hidden="true" tabindex="-1"></a>    <span class="fu">across</span>(</span>
+<span id="cb2-66"><a href="#cb2-66" aria-hidden="true" tabindex="-1"></a>      <span class="fu">all_of</span>(<span class="fu">tolower</span>(<span class="fu">unname</span>(variables))),</span>
+<span id="cb2-67"><a href="#cb2-67" aria-hidden="true" tabindex="-1"></a>      as.numeric</span>
+<span id="cb2-68"><a href="#cb2-68" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb2-69"><a href="#cb2-69" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb2-70"><a href="#cb2-70" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(county) <span class="sc">%&gt;%</span></span>
+<span id="cb2-71"><a href="#cb2-71" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(</span>
+<span id="cb2-72"><a href="#cb2-72" aria-hidden="true" tabindex="-1"></a>    <span class="at">percent_native_american =</span> <span class="fu">sum</span>(b01001c_001e) <span class="sc">/</span> <span class="fu">sum</span>(<span class="fu">rowSums</span>(<span class="fu">across</span>(<span class="fu">all_of</span>(<span class="fu">tolower</span>(<span class="fu">unname</span>(variables))))))</span>
+<span id="cb2-73"><a href="#cb2-73" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb2-74"><a href="#cb2-74" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_max</span>(</span>
+<span id="cb2-75"><a href="#cb2-75" aria-hidden="true" tabindex="-1"></a>    <span class="at">order_by =</span> percent_native_american,</span>
+<span id="cb2-76"><a href="#cb2-76" aria-hidden="true" tabindex="-1"></a>    <span class="at">n =</span> <span class="dv">5</span></span>
+<span id="cb2-77"><a href="#cb2-77" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb2-78"><a href="#cb2-78" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pretty_print</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">county</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">percent_native_american</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">001</td>
+<td style="text-align: right;">0.7377187</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">017</td>
+<td style="text-align: right;">0.4465544</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">005</td>
+<td style="text-align: right;">0.2654699</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">007</td>
+<td style="text-align: right;">0.1630934</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">012</td>
+<td style="text-align: right;">0.1495215</td>
+</tr>
+</tbody>
+</table>
+
+
+</div>
+</div>
+<p>Now that the code has been rewritten, future readers of the code have some much needed context. The author has explained what the data looks like when we get it back from the API, has explained what each of the codes corresponds to, and has renamed a variable to be more helpful. Ultimately, these changes will make it easier for readers to understand what this code is trying to accomplish and work with it.</p>
+</section>
+</section>
+<section id="wrapping-up" class="level2">
+<h2 class="anchored" data-anchor-id="wrapping-up">Wrapping Up</h2>
+<p>The key takeaway here should be that in doing this review, we’ve established some shared sense of how this code works between <em>multiple</em> people instead of just one (the author) understanding it. In addition, the reviewer helped the author rework their code to make it easier for anyone else on the team to understand. This means that when we need to use this code in the future, it’ll be written in a way that makes it easier for that future person to work with, which will ultimately lead to them being able to ship more quickly and confidently, and needing to reinvent the wheel less often.</p>
+<p>A popular saying is that code is read ten times more than it’s written since we often need to understand existing code to author new code. Reviews are a great way to make sure that code is written in a maintainable, understandable way so that when it’s read all of those many times in the future, it’s able to be understood effortlessly.</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button,
+        { trigger: "manual",
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config);
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Handle positioning of the toggle
+      window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+      const annoteTargets = window.document.querySelectorAll('.code-annotation-anchor');
+      for (let i=0; i<annoteTargets.length; i++) {
+        const annoteTarget = annoteTargets[i];
+        const targetCell = annoteTarget.getAttribute("data-target-cell");
+        const targetAnnotation = annoteTarget.getAttribute("data-target-annotation");
+        const contentFn = () => {
+          const content = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          if (content) {
+            const tipContent = content.cloneNode(true);
+            tipContent.classList.add("code-annotation-tip-content");
+            return tipContent.outerHTML;
+          }
+        }
+        const config = {
+          allowHTML: true,
+          content: contentFn,
+          onShow: (instance) => {
+            selectCodeLines(instance.reference);
+            instance.reference.classList.add('code-annotation-active');
+            window.tippy.hideAll();
+          },
+          onHide: (instance) => {
+            unselectCodeLines();
+            instance.reference.classList.remove('code-annotation-active');
+          },
+          maxWidth: 300,
+          delay: [50, 0],
+          duration: [200, 0],
+          offset: [5, 10],
+          arrow: true,
+          appendTo: function(el) {
+            return el.parentElement.parentElement.parentElement;
+          },
+          interactive: true,
+          interactiveBorder: 10,
+          theme: 'quarto',
+          placement: 'right',
+          popperOptions: {
+            modifiers: [
+            {
+              name: 'flip',
+              options: {
+                flipVariations: false, // true by default
+                allowedAutoPlacements: ['right'],
+                fallbackPlacements: ['right', 'top', 'top-start', 'top-end'],
+              },
+            },
+            {
+              name: 'preventOverflow',
+              options: {
+                mainAxis: false,
+                altAxis: false
+              }
+            }
+            ]
+          }
+        };
+        window.tippy(annoteTarget, config);
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<script src="https://utteranc.es/client.js" repo="mrkaye97/mrkaye97.github.io" issue-term="pathname" theme="github-light" crossorigin="anonymous" async="">
+</script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left"> Matt Kaye, 2023<br></div>
+    <div class="nav-footer-center"><div class="cookie-consent-footer"><a href="#" id="open_preferences_center">Cookie Preferences</a></div></div>
+    <div class="nav-footer-right">Built with <a href="https://quarto.org/">Quarto</a> and ❤<br></div>
+  </div>
+</footer>
+
+
+
+</body></html>
