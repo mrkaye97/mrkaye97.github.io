@@ -51,6 +51,7 @@ website:
 
 format:
   html:
+    embed-resources: true
     theme:
       light: [cosmo, theme-light.scss]
     css: styles.css
