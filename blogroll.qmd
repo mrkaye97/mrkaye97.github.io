@@ -1,6 +1,0 @@
----
-title: "Blogroll"
-toc: false
----
-
-* [R-Bloggers](https://www.r-bloggers.com)

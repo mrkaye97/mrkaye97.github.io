@@ -1,9 +1,0 @@
----
-title: Page Not Found
----
-
-<br> 
-
-These are not the HTML nodes you're looking for.
-
-[Back to home](index.qmd), go. And find your page, you will.
