@@ -161,7 +161,7 @@ const favorites: FavoriteCategoryProps[] = [
         link: "https://en.wikipedia.org/wiki/Graph_(abstract_data_type)",
       },
       { name: "Skip List", link: "https://en.wikipedia.org/wiki/Skip_list" },
-      { name: "Tibble", link: "https://tibble.tidyverse.org/" },
+      { name: "B-Tree", link: "https://en.wikipedia.org/wiki/B-tree" },
     ],
   },
   {
@@ -283,8 +283,8 @@ const favorites: FavoriteCategoryProps[] = [
     title: "SUBREDDITS",
     items: [
       {
-        name: "AdvancedRunning",
-        link: "https://www.reddit.com/r/AdvancedRunning",
+        name: "ExperiencedDevs",
+        link: "https://www.reddit.com/r/ExperiencedDevs",
       },
       {
         name: "MaleLivingSpace",
