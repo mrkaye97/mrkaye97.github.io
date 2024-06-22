@@ -56,7 +56,7 @@ const favorites: FavoriteCategoryProps[] = [
   {
     title: "AUTHORS",
     items: [
-      { name: "Fredrik Backman" },
+      { name: "Cal Newport" },
       { name: "Khaled Hosseini" },
       { name: "Sally Rooney" },
     ],
@@ -305,14 +305,6 @@ const favorites: FavoriteCategoryProps[] = [
         link: "https://www.rottentomatoes.com/tv/chef_s_table",
       },
       { name: "Seinfeld", link: "https://www.rottentomatoes.com/tv/seinfeld" },
-    ],
-  },
-  {
-    title: "WEBSITES",
-    items: [
-      { name: "Fangraphs", link: "https://www.fangraphs.com/" },
-      { name: "FiveThirtyEight", link: "https://fivethirtyeight.com/" },
-      { name: "Serious Eats", link: "http://www.seriouseats.com/" },
     ],
   },
 ];
