@@ -32,20 +32,6 @@ function FavoriteCategory({ title, items }: FavoriteCategoryProps) {
 
 const favorites: FavoriteCategoryProps[] = [
   {
-    title: "ALGORITHMS",
-    items: [
-      { name: "Bogo Sort", link: "https://en.wikipedia.org/wiki/Bogosort" },
-      {
-        name: "Logistic Regression",
-        link: "https://en.wikipedia.org/wiki/Logistic_regression",
-      },
-      {
-        name: "Metropolis-Hastings",
-        link: "https://en.wikipedia.org/wiki/Metropolis%E2%80%93Hastings_algorithm",
-      },
-    ],
-  },
-  {
     title: "ARTISTS (Musical, According to Spotify)",
     items: [
       { name: "Bad Bunny" },
