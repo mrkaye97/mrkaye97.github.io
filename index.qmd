@@ -32,6 +32,6 @@ about:
 
 # Hi! I'm <strong>Matt</strong>
 
-#### I'm a data scientist at <a href="https://www.klaviyo.com">Klaviyo</a>
+#### I'm an engineer at <a href="https://www.klaviyo.com">Klaviyo</a>
 
 #### In my free time, I like to ski, read fantasy books, cook, and work on <a href="https://zensearch.jobs">ZenSearch</a>

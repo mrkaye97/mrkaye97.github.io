@@ -2405,7 +2405,7 @@ font-style: inherit;">4</span>), <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"milliseconds"</span>)</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] "Mean runtime: 0.9809 milliseconds"</code></pre>
+<pre><code>[1] "Mean runtime: 0.9756 milliseconds"</code></pre>
 </div>
 </div>
 <p>Now, let’s try the same in Python:</p>
@@ -2465,7 +2465,7 @@ background-color: null;
 font-style: inherit;">"milliseconds"</span></span>
 <span id="cb22-12">)</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Mean runtime: 0.1773 milliseconds</code></pre>
+<pre><code>Mean runtime: 0.1984 milliseconds</code></pre>
 </div>
 </div>
 <p>In this particular case, Python’s JSON serialization runs 6-7x faster than R’s. And if you’re thinking “that’s only one millisecond, though!” you’d be right. But the general principle is important even if the magnitude of the issue in this particular case is not.</p>
@@ -6962,7 +6962,7 @@ font-style: inherit;">150</span></span>
 <span id="cb4-19">  )</span>
 <span id="cb4-20">})</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Test passed 😀</code></pre>
+<pre><code>Test passed 😸</code></pre>
 </div>
 </div>
 </section>
@@ -7352,7 +7352,7 @@ font-style: inherit;">10</span></span>
 <span id="cb11-26">  )</span>
 <span id="cb11-27">})</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Test passed 🎉</code></pre>
+<pre><code>Test passed 🥇</code></pre>
 </div>
 </div>
 </section>
@@ -7465,33 +7465,33 @@ font-style: inherit;">head</span>(features))</span></code></pre></div>
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: right;">4.340</td>
-<td style="text-align: right;">2.766</td>
+<td style="text-align: right;">5.085</td>
+<td style="text-align: right;">1.255</td>
 <td style="text-align: left;">TRUE</td>
 </tr>
 <tr class="even">
-<td style="text-align: right;">7.251</td>
-<td style="text-align: right;">0.913</td>
+<td style="text-align: right;">5.765</td>
+<td style="text-align: right;">2.224</td>
 <td style="text-align: left;">TRUE</td>
 </tr>
 <tr class="odd">
-<td style="text-align: right;">4.519</td>
-<td style="text-align: right;">5.098</td>
+<td style="text-align: right;">3.998</td>
+<td style="text-align: right;">0.295</td>
 <td style="text-align: left;">TRUE</td>
 </tr>
 <tr class="even">
-<td style="text-align: right;">5.627</td>
-<td style="text-align: right;">0.919</td>
+<td style="text-align: right;">4.873</td>
+<td style="text-align: right;">2.700</td>
 <td style="text-align: left;">TRUE</td>
 </tr>
 <tr class="odd">
-<td style="text-align: right;">5.339</td>
-<td style="text-align: right;">4.325</td>
+<td style="text-align: right;">5.252</td>
+<td style="text-align: right;">2.953</td>
 <td style="text-align: left;">TRUE</td>
 </tr>
 <tr class="even">
-<td style="text-align: right;">6.146</td>
-<td style="text-align: right;">4.990</td>
+<td style="text-align: right;">5.796</td>
+<td style="text-align: right;">1.587</td>
 <td style="text-align: left;">TRUE</td>
 </tr>
 </tbody>
@@ -7524,15 +7524,15 @@ font-style: inherit;">coef</span>(model))</span></code></pre></div>
 <tbody>
 <tr class="odd">
 <td style="text-align: left;">(Intercept)</td>
-<td style="text-align: right;">7.337</td>
+<td style="text-align: right;">9.640</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">sepal_length</td>
-<td style="text-align: right;">-0.896</td>
+<td style="text-align: right;">-1.239</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">petal_width</td>
-<td style="text-align: right;">-0.592</td>
+<td style="text-align: right;">-0.702</td>
 </tr>
 </tbody>
 </table>
@@ -7565,7 +7565,7 @@ font-style: inherit;">"Model accuracy is "</span>, accuracy, <span class="st" st
 background-color: null;
 font-style: inherit;">"%"</span>))</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Model accuracy is 75%</code></pre>
+<pre><code>Model accuracy is 79%</code></pre>
 </div>
 </div>
 <p>And that’s it – you have a simple retraining job. This is a very minimal example, but this general framework is very flexible and modular, and it makes up the foundation for how we write our retraining jobs at CollegeVine. You can plug and play all different kinds of feature engineering logic, logic to fetch raw data, metrics, etc. We also use <a href="https://mlflow.org/">MLFlow</a> for versioning models and tracking experiments, so our retraining jobs have lots of logging of artifacts, parameters, and metrics to our MLFlow instance.</p>
@@ -7728,7 +7728,7 @@ font-style: inherit;">"Out-of-sample accuracy is "</span>, accuracy, <span class
 background-color: null;
 font-style: inherit;">"%"</span>))</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Out-of-sample accuracy is 74%</code></pre>
+<pre><code>Out-of-sample accuracy is 80%</code></pre>
 </div>
 </div>
 </section>
@@ -8899,33 +8899,33 @@ font-style: inherit;">TRUE</span>)</span></code></pre></div>
 <tbody>
 <tr class="odd">
 <td style="text-align: left;">1</td>
-<td style="text-align: right;">17.8</td>
-<td style="text-align: right;">6</td>
+<td style="text-align: right;">27.3</td>
+<td style="text-align: right;">4</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">1</td>
-<td style="text-align: right;">24.4</td>
-<td style="text-align: right;">4</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: right;">19.2</td>
+<td style="text-align: right;">8</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">0</td>
-<td style="text-align: right;">15.5</td>
+<td style="text-align: right;">21.0</td>
+<td style="text-align: right;">6</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">0</td>
+<td style="text-align: right;">15.0</td>
+<td style="text-align: right;">8</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">0</td>
+<td style="text-align: right;">13.3</td>
 <td style="text-align: right;">8</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">1</td>
-<td style="text-align: right;">22.8</td>
-<td style="text-align: right;">4</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">1</td>
-<td style="text-align: right;">30.4</td>
-<td style="text-align: right;">4</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">1</td>
-<td style="text-align: right;">21.4</td>
-<td style="text-align: right;">6</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: right;">10.4</td>
+<td style="text-align: right;">8</td>
 </tr>
 </tbody>
 </table>
