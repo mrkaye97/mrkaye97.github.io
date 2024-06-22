@@ -19,7 +19,7 @@ export default function Code() {
           more sane.{" "}
           <TextLink
             text="You can read about it on my blog"
-            href="https://matthewrkaye.com/posts/2023-11-10-jobcrawler/jobcrawler.html"
+            href="/blog/introducing-zensearch"
           />
           .
         </p>
