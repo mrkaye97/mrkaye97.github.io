@@ -3,7 +3,7 @@ import RenderedMarkdown from "@/src/components/markdown";
 
 export default function BlogPost({ postData }: { postData: PostData }) {
   return (
-    <main className="max-w-3xl mx-auto py-8 px-4">
+    <main className="max-w-full sm:max-w-lg md:max-w-xl lg:max-w-2xl xl:max-w-3xl mx-auto py-8 px-4">
       <article className="bg-white shadow-lg rounded-lg p-6 prose lg:prose-xl">
         <RenderedMarkdown content={postData.content} />
       </article>
