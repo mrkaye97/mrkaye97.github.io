@@ -4,12 +4,16 @@ import { config } from "@fortawesome/fontawesome-svg-core";
 import "@fortawesome/fontawesome-svg-core/styles.css";
 import Layout from "./layout";
 import { GoogleAnalytics } from "nextjs-google-analytics";
+import Head from "next/head";
 
 config.autoAddCss = false;
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
     <>
+      <Head>
+        <title>Matt Kaye</title>
+      </Head>
       <GoogleAnalytics trackPageViews gaMeasurementId="G-6KV13R4B6Y" />
       <Layout>
         <Component {...pageProps} />
