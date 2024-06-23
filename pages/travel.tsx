@@ -20,7 +20,7 @@ const images: ImageWithAStory[] = [
   {
     filename: "arbeit-macht-frei.jpg",
     location: "Auschwitz, Poland",
-    date: "December 2018",
+    date: "December 2017",
   },
   {
     filename: "blomqvist.jpg",
@@ -95,7 +95,7 @@ const images: ImageWithAStory[] = [
   {
     filename: "fishermans-bastion.jpg",
     location: "Fisherman's Bastion, Budapest, Hungary",
-    date: "December 2018",
+    date: "December 2017",
   },
   {
     filename: "galapagos.jpg",
@@ -135,7 +135,7 @@ const images: ImageWithAStory[] = [
   {
     filename: "hungarian-parliament.jpg",
     location: "Hungarian Parliament, Budapest, Hungary",
-    date: "December 2018",
+    date: "December 2017",
   },
   {
     filename: "nyhavn.jpg",
@@ -175,7 +175,7 @@ const images: ImageWithAStory[] = [
   {
     filename: "salzburg.jpg",
     location: "Salzburg, Austria",
-    date: "December 2018",
+    date: "December 2017",
   },
   {
     filename: "sarajevo-bobsled.jpg",
@@ -194,7 +194,7 @@ const images: ImageWithAStory[] = [
   },
   {
     filename: "st-andrews.jpeg",
-    location: "Saint Andrews, Scotland",
+    location: "St. Andrews, Scotland",
     date: "October 2019",
   },
   {
