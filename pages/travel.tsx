@@ -24,7 +24,7 @@ const images: ImageWithAStory[] = [
   },
   {
     filename: "blomqvist.jpg",
-    location: "Mikael Blomqvist's House, Sweden",
+    location: "Mikael Blomqvist's House, Stockholm, Sweden",
     date: "September, 2019",
   },
   {
