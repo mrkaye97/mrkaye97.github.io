@@ -4,14 +4,14 @@ import Link from "next/link";
 function PostCard({ postData }: { postData: PostData }) {
   return (
     <Link href={`/blog/${postData.id}`}>
-      <div className="bg-white shadow-lg rounded-lg p-6 prose lg:prose-xl m-2">
-        <h3 className="text-xl font-bold text-dark-blue mx-4 my-2">
+      <div className=" bg-opacity-100 border border-gray-500 shadow-2xl rounded-lg p-6 m-4">
+        <h3 className="text-xl font-bold text-white mx-4 my-2">
           {postData.date}
         </h3>
-        <h2 className="text-3xl font-bold text-dark-blue mt-4 mx-4">
+        <h2 className="text-3xl font-bold text-white mt-4 mx-4">
           {postData.title}
         </h2>
-        <p className="text-xl text-dark-blue mx-4 my-2">{postData.preview}</p>
+        <p className="text-xl text-gray-300 mx-4 my-2">{postData.preview}</p>
       </div>
     </Link>
   );
