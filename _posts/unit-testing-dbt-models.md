@@ -9,6 +9,8 @@ toc-depth: 4
 code-annotations: hover
 ---
 
+> NOTE: As of version 1.8, dbt now supports unit testing! You can read more [in the documentation](https://docs.getdbt.com/docs/build/unit-tests).
+
 ## Introduction
 
 Our team adopted [dbt](https://www.getdbt.com/) about a year ago, and it's become an integral part of our data stack. dbt is a major component of the so-called "[modern data stack](https://www.fivetran.com/blog/what-is-the-modern-data-stack)" and has exploded onto the scene in the past few years.
