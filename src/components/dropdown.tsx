@@ -21,7 +21,7 @@ export default function Dropdown({ buttonText, dropdownItems }: DropdownProps) {
     >
       <button
         id="dropdownHoverButton"
-        className="text-seafoam-green bg-darker-blue hover:text-light-seafoam focus:ring-4 focus:outline-none focus:ring-0 font-semibold rounded-lg text-lg px-4 py-2 text-center inline-flex items-center"
+        className="text-white bg-darker-blue hover:text-light-seafoam focus:ring-4 focus:outline-none focus:ring-0 font-semibold rounded-lg text-lg px-4 py-2 text-center inline-flex items-center"
         type="button"
       >
         {buttonText}
@@ -46,7 +46,7 @@ export default function Dropdown({ buttonText, dropdownItems }: DropdownProps) {
         className={`absolute left-0 z-10 ${isOpen ? "block" : "hidden"} bg-dark-blue divide-y divide-gray-100 rounded-lg shadow w-48`}
       >
         <ul
-          className="py-2 text-lg text-seafoam-green"
+          className="py-2 text-lg text-white"
           aria-labelledby="dropdownHoverButton"
         >
           {dropdownItems.map((item) => (

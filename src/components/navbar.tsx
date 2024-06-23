@@ -6,12 +6,12 @@ export default function Navbar() {
     <nav className="bg-darker-blue py-4 px-8 flex justify-between items-center w-full">
       <div className="flex space-x-2 max-w-screen-xl mx-auto">
         <Link href="/">
-          <div className="text-seafoam-green font-semibold hover:text-light-seafoam text-lg py-2 px-4">
+          <div className="text-white font-semibold hover:text-light-seafoam text-lg py-2 px-4">
             Home
           </div>
         </Link>
         <Link href="/blog">
-          <div className="text-seafoam-green font-semibold hover:text-light-seafoam text-lg py-2 px-4">
+          <div className="text-white font-semibold hover:text-light-seafoam text-lg py-2 px-4">
             Blog
           </div>
         </Link>

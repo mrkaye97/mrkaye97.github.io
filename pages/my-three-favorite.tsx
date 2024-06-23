@@ -13,7 +13,7 @@ type FavoriteCategoryProps = {
 
 function FavoriteCategory({ title, items }: FavoriteCategoryProps) {
   return (
-    <li className="text-lg text-seafoam-green mb-4">
+    <li className="text-lg text-white mb-4">
       <strong className="pr-2">{title + ":"}</strong>
       {items.map((item, index) => {
         return item.link ? (
@@ -299,7 +299,7 @@ export default function MyThreeFavorite() {
   return (
     <div className="max-w-3xl mx-auto px-4 py-8">
       <div>
-        <h2 className="text-3xl font-bold text-light-seafoam mb-8">
+        <h2 className="text-3xl font-bold text-white mb-8">
           My Three Favorite, Alphabetically
         </h2>
         <ul className="">

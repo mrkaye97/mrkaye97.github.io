@@ -4,12 +4,12 @@ import React from "react";
 export default function Code() {
   return (
     <div className="max-w-3xl mx-auto px-4 py-8">
-      <p className="text-lg text-seafoam-green mb-4">
+      <p className="text-lg text-white mb-4">
         I like writing code for fun, to explore interesting questions and
         problems, to learn, and to improve the tools I use.
       </p>
 
-      <p className="text-lg text-seafoam-green mb-4">
+      <p className="text-lg text-white mb-4">
         I usually have at least one or two things I&apos;m toying around with at
         any given time, whether it&apos;s{" "}
         <TextLink
@@ -40,10 +40,8 @@ export default function Code() {
       </p>
 
       <div className="my-8">
-        <h2 className="text-3xl font-bold text-seafoam-green mb-2">
-          ZenSearch
-        </h2>
-        <p className="text-lg text-seafoam-green mb-4">
+        <h2 className="text-3xl font-bold text-white mb-2">ZenSearch</h2>
+        <p className="text-lg text-white mb-4">
           <TextLink text="ZenSearch" href="https://zensearch.jobs" /> is a
           NextJS / FastAPI app I&apos;ve been building to make your job hunt
           more sane. I started working on it when I realized that I didn&apos;t
@@ -52,7 +50,7 @@ export default function Code() {
           <em>without needing to check their job board every day.</em>
         </p>
 
-        <p className="text-lg text-seafoam-green mb-4">
+        <p className="text-lg text-white mb-4">
           It&apos;s come a long way since then - our small team now is
           supporting thousands of job seekers looking for jobs at almost ten
           thousand companies, and we&apos;re adding new features all the time.{" "}
@@ -66,22 +64,22 @@ export default function Code() {
       </div>
 
       <div className="mb-8">
-        <h2 className="text-3xl font-bold text-seafoam-green mb-2">
+        <h2 className="text-3xl font-bold text-white mb-2">
           Open-Source Contributions
         </h2>
-        <p className="text-lg text-seafoam-green mb-4">
+        <p className="text-lg text-white mb-4">
           I&apos;m a big believer in open-source, and like to contribute to
           projects - aside from my own - that I use and love when I get a
-          chance.
+          chance. Some contributions I&apos;m proud of include:
         </p>
         <ul className="list-disc pl-6">
-          <li className="text-lg text-seafoam-green mb-2">
+          <li className="text-lg text-white mb-2">
             <TextLink
               text="Adding JSON schema validation to MLFlow"
               href="https://github.com/mlflow/mlflow/pull/5458"
             />
           </li>
-          <li className="text-lg text-seafoam-green mb-2">
+          <li className="text-lg text-white mb-2">
             <TextLink
               text="Adding a MAP@K implementation to `recmetrics`"
               href="https://github.com/statisticianinstilettos/recmetrics/pull/50"
