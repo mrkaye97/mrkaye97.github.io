@@ -4,7 +4,7 @@ import Link from "next/link";
 function PostCard({ postData }: { postData: PostData }) {
   return (
     <Link href={`/blog/${postData.id}`}>
-      <div className=" bg-opacity-100 border border-gray-500 shadow-2xl rounded-lg p-6 m-4">
+      <div className="bg-opacity-100 border border-gray-500 shadow-2xl rounded-lg p-6 m-4 transition-transform transform-gpu hover:scale-95 hover:bg-opacity-90">
         <h3 className="text-xl font-bold text-white mx-4 my-2">
           {postData.date}
         </h3>
