@@ -129,7 +129,7 @@ const images: ImageWithAStory[] = [
   },
   {
     filename: "hobbiton.jpg",
-    location: "Bag End, Hobbiton, Middle Earth",
+    location: "Bag End, Hobbiton, The Shire, Middle-earth",
     date: "April 2024",
   },
   {
