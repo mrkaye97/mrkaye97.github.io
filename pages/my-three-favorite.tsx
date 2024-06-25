@@ -309,9 +309,17 @@ export default function MyThreeFavorite() {
   return (
     <div className="xs:px-0 md:px-16 xl:px-64 px-4 py-8">
       <div>
-        <h2 className="text-3xl font-bold text-white mb-8">
-          My Three Favorite, Alphabetically
-        </h2>
+        <div className="flex flex-col bg-opacity-100 border border-gray-500 shadow-2xl rounded-lg p-6 m-1">
+          <h2 className="text-3xl font-bold text-white mb-4">
+            My Three Favorite
+          </h2>
+          <p className="text-xl font-bold text-gray-300">
+            These are a bunch of things I like to do, eat, drink, read, and
+            watch. Sometimes I had to pick more than three because I
+            couldn&apos;t decide, but the goal is to help you get to know a
+            little bit about me!
+          </p>
+        </div>
         <ResponsiveMasonry
           columnsCountBreakPoints={{ 350: 1, 750: 2, 900: 3, 1200: 4 }}
         >
