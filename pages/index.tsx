@@ -12,7 +12,7 @@ import { TextLink } from "@/src/components/links";
 
 export default function Home() {
   return (
-    <div className="flex flex-col items-center justify-center text-white mt-24">
+    <div className="flex flex-col items-center justify-center text-white mt-0 sm:mt-24">
       <div className="w-full p-8 flex items-center justify-center">
         <div className="text-center space-y-4">
           <Image
