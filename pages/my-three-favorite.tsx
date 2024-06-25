@@ -41,16 +41,18 @@ function FavoriteCategory({
         <ul>
           {items.map((item, index) => {
             return (
-              <li key={index} className="list-disc ml-2 pl-1 text-white">
-                {item.link ? (
-                  <TextLink
-                    key={title + item.name}
-                    text={item.name}
-                    href={item.link}
-                  />
-                ) : (
-                  <p className="text-white">{item.name}</p>
-                )}
+              <li
+                key={index}
+                className="list-disc ml-2 pl-1 text-white"
+                onClick={(e) => {
+                  e.stopPropagation();
+                }}
+              >
+                <TextLink
+                  key={title + item.name}
+                  text={item.name}
+                  href={item.link}
+                />
               </li>
             );
           })}
