@@ -40,7 +40,7 @@ export default function Code() {
           or{" "}
           <TextLink
             text="Advent of Code"
-            href="https://github.com/mrkaye97/advent-of-code-2023"
+            href="https://github.com/mrkaye97/advent-of-code"
           />{" "}
           problems, working on{" "}
           <TextLink
