@@ -1,5 +1,6 @@
 import { TextLink } from "@/src/components/links";
 import React from "react";
+import Masonry, { ResponsiveMasonry } from "react-responsive-masonry";
 
 type FavoriteItem = {
   name: string;
@@ -13,26 +14,32 @@ type FavoriteCategoryProps = {
 
 function FavoriteCategory({ title, items }: FavoriteCategoryProps) {
   return (
-    <li className="text-lg text-white mb-4">
-      <strong className="pr-2">{title + ":"}</strong>
-      {items.map((item, index) => {
-        return item.link ? (
-          <TextLink
-            key={title + item.name}
-            text={item.name + (index === items.length - 1 ? "" : ", ")}
-            href={item.link}
-          />
-        ) : (
-          item.name + (index === items.length - 1 ? "" : ", ")
-        );
-      })}
-    </li>
+    <div className="flex flex-col bg-opacity-100 border border-gray-500 shadow-2xl rounded-lg p-6 m-1">
+      <strong className="pr-2 text-white text-center pb-2">{title}</strong>
+      <ul>
+        {items.map((item, index) => {
+          return (
+            <li key={index} className="list-disc ml-2 pl-1 text-gray-300">
+              {item.link ? (
+                <TextLink
+                  key={title + item.name}
+                  text={item.name}
+                  href={item.link}
+                />
+              ) : (
+                <p className="text-gray-300">{item.name}</p>
+              )}
+            </li>
+          );
+        })}
+      </ul>
+    </div>
   );
 }
 
 const favorites: FavoriteCategoryProps[] = [
   {
-    title: "ARTISTS (Musical, According to Spotify)",
+    title: "Artists (Musical, According to Spotify)",
     items: [
       { name: "Bad Bunny" },
       { name: "Imagine Dragons" },
@@ -40,7 +47,7 @@ const favorites: FavoriteCategoryProps[] = [
     ],
   },
   {
-    title: "AUTHORS",
+    title: "Authors",
     items: [
       { name: "Cal Newport" },
       { name: "Khaled Hosseini" },
@@ -48,7 +55,7 @@ const favorites: FavoriteCategoryProps[] = [
     ],
   },
   {
-    title: "BEERS",
+    title: "Beers",
     items: [
       {
         name: "Heady Topper",
@@ -65,7 +72,7 @@ const favorites: FavoriteCategoryProps[] = [
     ],
   },
   {
-    title: "BOOKS (Fiction)",
+    title: "Books (Fiction)",
     items: [
       {
         name: "The Kite Runner",
@@ -82,7 +89,7 @@ const favorites: FavoriteCategoryProps[] = [
     ],
   },
   {
-    title: "BOOKS (Non-Fiction)",
+    title: "Books (Non-Fiction)",
     items: [
       {
         name: "Algorithms to Live By",
@@ -99,7 +106,18 @@ const favorites: FavoriteCategoryProps[] = [
     ],
   },
   {
-    title: "CITIES (American)",
+    title: "Charitable Organizations",
+    items: [
+      { name: "The Equal Justice Initiative", link: "https://eji.org" },
+      {
+        name: "International Refugee Assistance Project",
+        link: "https://refugeerights.org",
+      },
+      { name: "World Central Kitchen", link: "https://wck.org" },
+    ],
+  },
+  {
+    title: "Cities (American)",
     items: [
       { name: "Bozeman" },
       { name: "Cambridge" },
@@ -107,15 +125,15 @@ const favorites: FavoriteCategoryProps[] = [
     ],
   },
   {
-    title: "CITIES (European)",
+    title: "Cities (European)",
     items: [{ name: "Barcelona" }, { name: "Budapest" }, { name: "Stockholm" }],
   },
   {
-    title: "CITIES (Other)",
+    title: "Cities (Other)",
     items: [{ name: "Melbourne" }, { name: "Oaxaca" }, { name: "Vancouver" }],
   },
   {
-    title: "COLLEGE COURSES",
+    title: "College Courses",
     items: [
       { name: "Advanced Algorithms" },
       { name: "Mathematical Structures" },
@@ -123,7 +141,7 @@ const favorites: FavoriteCategoryProps[] = [
     ],
   },
   {
-    title: "CONDIMENTS",
+    title: "Condiments",
     items: [
       { name: "Calabrian Chiles" },
       { name: "Preserved Lemons" },
@@ -131,7 +149,7 @@ const favorites: FavoriteCategoryProps[] = [
     ],
   },
   {
-    title: "CUISINES (Couldn't pick three)",
+    title: "Cuisines (Couldn't pick three)",
     items: [
       { name: "Italian" },
       { name: "Japanese" },
@@ -140,7 +158,7 @@ const favorites: FavoriteCategoryProps[] = [
     ],
   },
   {
-    title: "DATA STRUCTURES",
+    title: "Data Structures",
     items: [
       {
         name: "Graph",
@@ -151,7 +169,7 @@ const favorites: FavoriteCategoryProps[] = [
     ],
   },
   {
-    title: "ECONOMIC SUBFIELDS",
+    title: "Economic Subfields",
     items: [
       { name: "Labor Economics" },
       { name: "Monetary Theory" },
@@ -159,7 +177,7 @@ const favorites: FavoriteCategoryProps[] = [
     ],
   },
   {
-    title: "FICTIONAL CHARACTERS",
+    title: "Fictional Characters",
     items: [
       { name: "Elaine Benes" },
       { name: "Oberyn Martell" },
@@ -167,7 +185,7 @@ const favorites: FavoriteCategoryProps[] = [
     ],
   },
   {
-    title: "FOODS",
+    title: "Foods",
     items: [
       { name: "Bananas" },
       { name: "Maitake Mushrooms" },
@@ -175,7 +193,7 @@ const favorites: FavoriteCategoryProps[] = [
     ],
   },
   {
-    title: "KITCHEN UTENSILS",
+    title: "Kitchen Utensils",
     items: [
       { name: '7" Santoku Knife' },
       { name: "Tasting Spoon" },
@@ -183,7 +201,7 @@ const favorites: FavoriteCategoryProps[] = [
     ],
   },
   {
-    title: "MOVIES",
+    title: "Movies",
     items: [
       {
         name: "Birdman",
@@ -200,7 +218,7 @@ const favorites: FavoriteCategoryProps[] = [
     ],
   },
   {
-    title: "NON-CITY PLACES",
+    title: "Non-City Places",
     items: [
       { name: "Acadia National Park" },
       { name: "Baseball Hall of Fame" },
@@ -208,7 +226,7 @@ const favorites: FavoriteCategoryProps[] = [
     ],
   },
   {
-    title: "PARADIGMS",
+    title: "Paradigms",
     items: [
       {
         name: "Bayesian",
@@ -225,7 +243,7 @@ const favorites: FavoriteCategoryProps[] = [
     ],
   },
   {
-    title: "PIECES OF COOKWARE",
+    title: "Pieces of Cookware",
     items: [
       { name: "3-Quart Saute Pan" },
       { name: "Cast Iron Skillet" },
@@ -233,7 +251,7 @@ const favorites: FavoriteCategoryProps[] = [
     ],
   },
   {
-    title: "SERIOUSEATS RECIPES",
+    title: "SeriousEats Recipes",
     items: [
       {
         name: "Halal Cart Chicken",
@@ -250,23 +268,15 @@ const favorites: FavoriteCategoryProps[] = [
     ],
   },
   {
-    title: "SKI MOUNTAINS",
+    title: "Ski Mountains",
     items: [{ name: "Alta" }, { name: "Big Sky" }, { name: "Jackson Hole" }],
   },
   {
-    title: "SPIRITS",
+    title: "Spirits",
     items: [{ name: "Fernet" }, { name: "Islay Scotch" }, { name: "Mezcal" }],
   },
   {
-    title: "SPORTS TO WATCH",
-    items: [
-      { name: "Baseball" },
-      { name: "College Football" },
-      { name: "Soccer" },
-    ],
-  },
-  {
-    title: "SUBREDDITS",
+    title: "Subreddits",
     items: [
       {
         name: "ExperiencedDevs",
@@ -283,7 +293,7 @@ const favorites: FavoriteCategoryProps[] = [
     ],
   },
   {
-    title: "TV SHOWS",
+    title: "TV Shows",
     items: [
       { name: "Atlanta", link: "https://www.rottentomatoes.com/tv/atlanta" },
       {
@@ -297,22 +307,26 @@ const favorites: FavoriteCategoryProps[] = [
 
 export default function MyThreeFavorite() {
   return (
-    <div className="max-w-3xl mx-auto px-4 py-8">
+    <div className="xs:px-0 md:px-16 xl:px-64 px-4 py-8">
       <div>
         <h2 className="text-3xl font-bold text-white mb-8">
           My Three Favorite, Alphabetically
         </h2>
-        <ul className="">
-          {favorites.map((category) => {
-            return (
-              <FavoriteCategory
-                key={category.title}
-                title={category.title}
-                items={category.items}
-              />
-            );
-          })}
-        </ul>
+        <ResponsiveMasonry
+          columnsCountBreakPoints={{ 350: 1, 750: 2, 900: 3, 1200: 4 }}
+        >
+          <Masonry>
+            {favorites.map((category) => {
+              return (
+                <FavoriteCategory
+                  key={category.title}
+                  title={category.title}
+                  items={category.items}
+                />
+              );
+            })}
+          </Masonry>
+        </ResponsiveMasonry>
       </div>
     </div>
   );
