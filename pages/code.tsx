@@ -60,7 +60,7 @@ export default function Code() {
           <TextLink text="ZenSearch" href="https://zensearch.jobs" /> is a
           NextJS / FastAPI app I&apos;ve been building to make your job hunt
           more sane. I started working on it when I realized that I didn&apos;t
-          know of a good way to be notified when a company that I am interested
+          know of a good way to be notified when a company that I was interested
           in posts a new job to their board that matches my criteria{" "}
           <em>without needing to check their job board every day.</em>
         </p>
