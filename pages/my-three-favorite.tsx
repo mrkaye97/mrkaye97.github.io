@@ -5,7 +5,7 @@ import Masonry, { ResponsiveMasonry } from "react-responsive-masonry";
 
 type FavoriteItem = {
   name: string;
-  link?: string | null | undefined;
+  link: string;
 };
 
 type Item = {
@@ -64,17 +64,35 @@ const favorites: Item[] = [
   {
     title: "Artists (Musical, According to Spotify)",
     items: [
-      { name: "Bad Bunny" },
-      { name: "Imagine Dragons" },
-      { name: "Taylor Swift" },
+      {
+        name: "Bad Bunny",
+        link: "https://open.spotify.com/artist/4q3ewBCX7sLwd24euuV69X",
+      },
+      {
+        name: "Imagine Dragons",
+        link: "https://open.spotify.com/artist/53XhwfbYqKCa1cC15pYq2q",
+      },
+      {
+        name: "Taylor Swift",
+        link: "https://open.spotify.com/artist/06HL4z0CvFAxyc27GXpf02",
+      },
     ],
   },
   {
     title: "Authors",
     items: [
-      { name: "Cal Newport" },
-      { name: "Khaled Hosseini" },
-      { name: "Sally Rooney" },
+      {
+        name: "Cal Newport",
+        link: "https://app.thestorygraph.com/authors/0968e7ef-339e-4fbf-8ed3-03bbd52a63bb?page=4",
+      },
+      {
+        name: "Khaled Hosseini",
+        link: "https://app.thestorygraph.com/authors/4f3848b7-15fd-41e8-9b11-782db69ddb04",
+      },
+      {
+        name: "Sally Rooney",
+        link: "https://app.thestorygraph.com/authors/c376f2e1-78fc-44a2-b0d8-e6430a056b7e",
+      },
     ],
   },
   {
@@ -142,42 +160,89 @@ const favorites: Item[] = [
   {
     title: "Cities (American)",
     items: [
-      { name: "Bozeman" },
-      { name: "Cambridge" },
-      { name: "New York City" },
+      {
+        name: "Bozeman",
+        link: "https://en.wikipedia.org/wiki/Bozeman,_Montana",
+      },
+      {
+        name: "Cambridge",
+        link: "https://en.wikipedia.org/wiki/Cambridge,_Massachusetts",
+      },
+      {
+        name: "New York City",
+        link: "https://en.wikipedia.org/wiki/New_York_City",
+      },
     ],
   },
   {
     title: "Cities (European)",
-    items: [{ name: "Barcelona" }, { name: "Budapest" }, { name: "Stockholm" }],
+    items: [
+      { name: "Barcelona", link: "https://en.wikipedia.org/wiki/Barcelona" },
+      { name: "Budapest", link: "https://en.wikipedia.org/wiki/Budapest" },
+      { name: "Stockholm", link: "https://en.wikipedia.org/wiki/Stockholm" },
+    ],
   },
   {
     title: "Cities (Other)",
-    items: [{ name: "Melbourne" }, { name: "Oaxaca" }, { name: "Vancouver" }],
+    items: [
+      { name: "Melbourne", link: "https://en.wikipedia.org/wiki/Melbourne" },
+      { name: "Oaxaca", link: "https://en.wikipedia.org/wiki/Oaxaca_City" },
+      { name: "Vancouver", link: "https://en.wikipedia.org/wiki/Vancouver" },
+    ],
   },
   {
     title: "College Courses",
     items: [
-      { name: "Advanced Algorithms" },
-      { name: "Mathematical Structures" },
-      { name: "Price Theory" },
+      {
+        name: "Advanced Algorithms",
+        link: "https://www.carleton.edu/computer-science/courses/",
+      },
+      {
+        name: "Mathematical Structures",
+        link: "https://www.carleton.edu/math/courses/",
+      },
+      {
+        name: "Price Theory",
+        link: "https://www.carleton.edu/economics/courses/",
+      },
     ],
   },
   {
     title: "Condiments",
     items: [
-      { name: "Calabrian Chiles" },
-      { name: "Preserved Lemons" },
-      { name: "Secret Aardvark Hot Sauce" },
+      {
+        name: "Calabrian Chiles",
+        link: "https://www.seriouseats.com/the-condiments-we-put-on-everything",
+      },
+      {
+        name: "Preserved Lemons",
+        link: "https://www.seriouseats.com/how-to-make-preserved-lemons",
+      },
+      {
+        name: "Secret Aardvark Hot Sauce",
+        link: "https://secretaardvark.com/",
+      },
     ],
   },
   {
     title: "Cuisines (Couldn't pick three)",
     items: [
-      { name: "Italian" },
-      { name: "Japanese" },
-      { name: "Lebanese" },
-      { name: "Mexican" },
+      {
+        name: "Italian",
+        link: "https://en.wikipedia.org/wiki/Italian_cuisine",
+      },
+      {
+        name: "Japanese",
+        link: "https://en.wikipedia.org/wiki/Japanese_cuisine",
+      },
+      {
+        name: "Lebanese",
+        link: "https://en.wikipedia.org/wiki/Lebanese_cuisine",
+      },
+      {
+        name: "Mexican",
+        link: "https://en.wikipedia.org/wiki/Mexican_cuisine",
+      },
     ],
   },
   {
@@ -192,35 +257,48 @@ const favorites: Item[] = [
     ],
   },
   {
-    title: "Economic Subfields",
-    items: [
-      { name: "Labor Economics" },
-      { name: "Monetary Theory" },
-      { name: "Urban Economics" },
-    ],
-  },
-  {
     title: "Fictional Characters",
     items: [
-      { name: "Elaine Benes" },
-      { name: "Oberyn Martell" },
-      { name: "Samwise Gamgee" },
+      {
+        name: "Elaine Benes",
+        link: "https://en.wikipedia.org/wiki/Elaine_Benes",
+      },
+      {
+        name: "Oberyn Martell",
+        link: "https://awoiaf.westeros.org/index.php/Oberyn_Martell",
+      },
+      {
+        name: "Samwise Gamgee",
+        link: "https://lotr.fandom.com/wiki/Samwise_Gamgee",
+      },
     ],
   },
   {
     title: "Foods",
     items: [
-      { name: "Bananas" },
-      { name: "Maitake Mushrooms" },
-      { name: "Peanut Butter" },
+      { name: "Bananas", link: "https://en.wikipedia.org/wiki/Banana" },
+      {
+        name: "Chicken of the Woods Mushrooms",
+        link: "https://en.wikipedia.org/wiki/Laetiporus",
+      },
+      {
+        name: "Peanut Butter",
+        link: "https://en.wikipedia.org/wiki/Peanut_butter",
+      },
     ],
   },
   {
     title: "Kitchen Utensils",
     items: [
-      { name: '7" Santoku Knife' },
-      { name: "Tasting Spoon" },
-      { name: "Tongs" },
+      {
+        name: '7" Santoku Knife',
+        link: "https://madeincookware.com/products/santoku-knife/pomme-red",
+      },
+      {
+        name: "Wooden Spoon",
+        link: "https://madeincookware.com/products/the-wooden-spoon/utensil",
+      },
+      { name: "Tongs", link: "https://www.oxo.com/12-tongs-619.html" },
     ],
   },
   {
@@ -243,9 +321,15 @@ const favorites: Item[] = [
   {
     title: "Non-City Places",
     items: [
-      { name: "Acadia National Park" },
-      { name: "Baseball Hall of Fame" },
-      { name: "Little Cottonwood Canyon" },
+      {
+        name: "Acadia National Park",
+        link: "https://en.wikipedia.org/wiki/Acadia_National_Park",
+      },
+      { name: "Baseball Hall of Fame", link: "https://baseballhall.org/" },
+      {
+        name: "Little Cottonwood Canyon",
+        link: "https://www.visitsaltlake.com/listing/little-cottonwood-canyon/55176/",
+      },
     ],
   },
   {
@@ -268,9 +352,18 @@ const favorites: Item[] = [
   {
     title: "Pieces of Cookware",
     items: [
-      { name: "3-Quart Saute Pan" },
-      { name: "Cast Iron Skillet" },
-      { name: "Dutch Oven" },
+      {
+        name: "3-Quart Saute Pan",
+        link: "https://www.all-clad.com/copper-core-5-ply-bonded-cookware-saute-pan-with-lid-3-quart.html",
+      },
+      {
+        name: '11" Carbon Steel Frying Pan',
+        link: "https://www.vollrathfoodservice.com/products/smallwares/cookware-bakeware/vollrath-cookware/vollrath-fry-pans/58920",
+      },
+      {
+        name: "5.5 Quart Dutch Oven",
+        link: "https://www.lecreuset.com/round-dutch-oven/21177US.html",
+      },
     ],
   },
   {
@@ -292,11 +385,25 @@ const favorites: Item[] = [
   },
   {
     title: "Ski Mountains",
-    items: [{ name: "Alta" }, { name: "Big Sky" }, { name: "Jackson Hole" }],
+    items: [
+      { name: "Alta", link: "https://www.alta.com/" },
+      { name: "Big Sky", link: "https://bigskyresort.com/" },
+      { name: "Jackson Hole", link: "https://www.jacksonhole.com/" },
+    ],
   },
   {
     title: "Spirits",
-    items: [{ name: "Fernet" }, { name: "Islay Scotch" }, { name: "Mezcal" }],
+    items: [
+      {
+        name: "Fernet",
+        link: "https://en.wikipedia.org/wiki/Fernet#:~:text=Fernet%20(Italian%3A%20%5Bfer%CB%88n%C9%9Bt%5D,base%20of%20distilled%20grape%20spirits.",
+      },
+      {
+        name: "Islay Scotch",
+        link: "https://en.wikipedia.org/wiki/Islay_single_malts",
+      },
+      { name: "Mezcal", link: "https://en.wikipedia.org/wiki/Mezcal" },
+    ],
   },
   {
     title: "Subreddits",
