@@ -1,5 +1,6 @@
 import { TextLink } from "@/src/components/links";
-import React from "react";
+import React, { useState } from "react";
+import ReactCardFlip from "react-card-flip";
 import Masonry, { ResponsiveMasonry } from "react-responsive-masonry";
 
 type FavoriteItem = {
@@ -7,37 +8,59 @@ type FavoriteItem = {
   link?: string | null | undefined;
 };
 
-type FavoriteCategoryProps = {
+type Item = {
   title: string;
   items: FavoriteItem[];
 };
 
-function FavoriteCategory({ title, items }: FavoriteCategoryProps) {
+type FavoriteCategoryProps = {
+  title: string;
+  items: FavoriteItem[];
+  isFlipped: boolean;
+  onClick: () => void;
+};
+
+function FavoriteCategory({
+  title,
+  items,
+  isFlipped,
+  onClick,
+}: FavoriteCategoryProps) {
   return (
-    <div className="flex flex-col bg-opacity-100 border border-gray-500 shadow-2xl rounded-lg p-6 m-1">
-      <strong className="pr-2 text-white text-center pb-2">{title}</strong>
-      <ul>
-        {items.map((item, index) => {
-          return (
-            <li key={index} className="list-disc ml-2 pl-1 text-gray-300">
-              {item.link ? (
-                <TextLink
-                  key={title + item.name}
-                  text={item.name}
-                  href={item.link}
-                />
-              ) : (
-                <p className="text-gray-300">{item.name}</p>
-              )}
-            </li>
-          );
-        })}
-      </ul>
-    </div>
+    <ReactCardFlip isFlipped={isFlipped}>
+      <div
+        className="flex flex-col bg-opacity-100 border border-gray-500 shadow-2xl rounded-lg p-6 m-1 hover:cursor-pointer"
+        onClick={onClick}
+      >
+        <strong className="pr-2 text-white text-center pb-2">{title}</strong>
+      </div>
+      <div
+        className="flex flex-col bg-opacity-100 border border-gray-500 shadow-2xl rounded-lg p-6 m-1 hover:cursor-pointer"
+        onClick={onClick}
+      >
+        <ul>
+          {items.map((item, index) => {
+            return (
+              <li key={index} className="list-disc ml-2 pl-1 text-white">
+                {item.link ? (
+                  <TextLink
+                    key={title + item.name}
+                    text={item.name}
+                    href={item.link}
+                  />
+                ) : (
+                  <p className="text-white">{item.name}</p>
+                )}
+              </li>
+            );
+          })}
+        </ul>
+      </div>
+    </ReactCardFlip>
   );
 }
 
-const favorites: FavoriteCategoryProps[] = [
+const favorites: Item[] = [
   {
     title: "Artists (Musical, According to Spotify)",
     items: [
@@ -306,6 +329,16 @@ const favorites: FavoriteCategoryProps[] = [
 ];
 
 export default function MyThreeFavorite() {
+  const [flippedCardIndex, setFlippedCardIndex] = useState(-1);
+
+  function handleClick(index: number) {
+    if (flippedCardIndex === index) {
+      setFlippedCardIndex(-1);
+    } else {
+      setFlippedCardIndex(index);
+    }
+  }
+
   return (
     <div className="xs:px-0 md:px-16 xl:px-64 px-4 py-8">
       <div>
@@ -316,20 +349,21 @@ export default function MyThreeFavorite() {
           <p className="text-xl font-bold text-gray-300">
             These are a bunch of things I like to do, eat, drink, read, and
             watch. Sometimes I had to pick more than three because I
-            couldn&apos;t decide, but the goal is to help you get to know a
-            little bit about me!
+            couldn&apos;t decide. Flip a card to get to know a little about me!
           </p>
         </div>
         <ResponsiveMasonry
           columnsCountBreakPoints={{ 350: 1, 750: 2, 900: 3, 1200: 4 }}
         >
           <Masonry>
-            {favorites.map((category) => {
+            {favorites.map((category, ix) => {
               return (
                 <FavoriteCategory
                   key={category.title}
                   title={category.title}
                   items={category.items}
+                  isFlipped={flippedCardIndex === ix}
+                  onClick={() => handleClick(ix)}
                 />
               );
             })}
