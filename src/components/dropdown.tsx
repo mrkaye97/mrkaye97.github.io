@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 type DropdownItem = {
   name: string;
@@ -12,14 +12,6 @@ export type DropdownProps = {
 
 export default function Dropdown({ buttonText, dropdownItems }: DropdownProps) {
   const [isOpen, setIsOpen] = useState(false);
-
-  useEffect(() => {
-    if (isOpen) {
-      document.body.classList.add("overflow-hidden");
-    } else {
-      document.body.classList.remove("overflow-hidden");
-    }
-  }, [isOpen]);
 
   return (
     <div
