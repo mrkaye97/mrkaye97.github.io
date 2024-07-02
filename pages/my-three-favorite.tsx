@@ -372,16 +372,16 @@ const favorites: Item[] = [
     title: "SeriousEats Recipes",
     items: [
       {
-        name: "Halal Cart Chicken",
-        link: "https://www.seriouseats.com/recipes/2011/12/serious-eats-halal-cart-style-chicken-and-rice-white-sauce-recipe.html",
+        name: "Miso Salmon",
+        link: "https://www.seriouseats.com/miso-glazed-salmon-in-the-toaster-oven-recipe",
+      },
+      {
+        name: "Miso Squash Soup with Sesame-Ginger Apples",
+        link: "https://www.seriouseats.com/miso-squash-soup-recipe",
       },
       {
         name: "Pozole Verde with Chicken",
         link: "https://www.seriouseats.com/recipes/2017/01/pozole-verde-de-pollo-green-mexican-hominy-and-chicken-soup-recipe.html",
-      },
-      {
-        name: "Red Wine-Braised Short Ribs",
-        link: "https://www.seriouseats.com/recipes/2019/12/red-wine-braised-beef-short-ribs-recipe.html",
       },
     ],
   },
