@@ -6,6 +6,7 @@ import Layout from "./layout";
 import { GoogleAnalytics } from "nextjs-google-analytics";
 import Head from "next/head";
 import { usePathname } from "next/navigation";
+import Script from "next/script";
 
 config.autoAddCss = false;
 
@@ -47,6 +48,13 @@ export default function App({ Component, pageProps }: AppProps) {
         <Head>
           <title>{title}</title>
         </Head>
+        <link
+          rel="stylesheet"
+          href="https://unpkg.com/@highlightjs/cdn-assets@11.9.0/styles/nord.min.css"
+        />
+        <Script src="https://unpkg.com/@highlightjs/cdn-assets@11.9.0/highlight.min.js"></Script>
+        <Script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/highlight.min.js" />
+
         <GoogleAnalytics trackPageViews gaMeasurementId="G-6KV13R4B6Y" />
         <Layout>
           <Component {...pageProps} />
