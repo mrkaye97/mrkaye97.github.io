@@ -8,7 +8,7 @@ export default function RenderedMarkdown({ content }: { content: string }) {
   useEffect(() => {
     rootRef?.current?.querySelectorAll("pre code").forEach((block) => {
       if (block instanceof HTMLElement) {
-        hljs.highlightBlock(block);
+        hljs.highlightElement(block);
       }
     });
   }, [content]);
