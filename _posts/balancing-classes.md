@@ -15,21 +15,11 @@ With calibration in mind, this post will show why balancing your classes -- whic
 
 ## Some Example Data
 
-```{r, echo = FALSE}
-knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE, cache = TRUE)
-
-pretty_print <- function(data) {
-  data |>
-    knitr::kable("html") |>
-    kableExtra::kable_styling(position = "center", full_width = FALSE)
-}
-```
-
 For the purposes of this example, I'll use the Wisconsin breast cancer data. The data is built into the `mlbench` package in R and `scikit-learn` in python. You can also get it from the [UCI Machine Learning Repository](<https://archive.ics.uci.edu/ml/datasets/Breast+Cancer+Wisconsin+(Diagnostic)>).
 
 I'll only be using `cl_thickness`, which is the indicator for clump thickness.
 
-```{r}
+```r
 library(readr)
 library(dplyr)
 library(janitor)
@@ -61,7 +51,7 @@ data %>%
 
 The data is imbalanced: There are far more (about 2x) benign tumors than malignant ones in the sample.
 
-```{r}
+```r
 data %>%
   count(class) %>%
   mutate(prop = n / sum(n)) %>%
@@ -79,7 +69,7 @@ With that class imbalance in mind, let's get to model fitting. The first thing I
 
 First, I've written a bit of `tidymodels` helper code below for reuse later.
 
-```{r}
+```r
 library(tidymodels)
 
 fit_model <- function(data, spec) {
@@ -104,7 +94,7 @@ predict_prob <- function(model, data) {
 
 Now, I'll fit a simple logistic regression model by specifying `logistic_reg()` as the model specification in `fit_model()`.
 
-```{r}
+```r
 library(probably)
 
 unbalanced_model <- fit_model(
@@ -121,7 +111,7 @@ preds <- tibble(
 
 And now we can make a calibration plot of our predictions. Remember, the goal is to have the points on the plot lie roughly along the line `y = x`. Lying below the line means that our predictions are too high, and above the line means our predictions are too low.
 
-```{r}
+```r
 cal_plot_breaks(preds, truth = truth, estimate = estimate, event_level = "second")
 ```
 
@@ -133,7 +123,7 @@ Awesome! Even with the class imbalance, our model's probability predictions are 
 
 So then, what happens if we balance the training data as we're so often told to do? First, let's balance by undersampling from the majority class.
 
-```{r}
+```r
 minority_class <- data %>%
   count(class) %>%
   filter(n == min(n))
@@ -166,7 +156,7 @@ balanced %>%
 
 Now we have the same number of observations for each class. Let's go ahead and fit another logistic regression model, but this time on the balanced data.
 
-```{r}
+```r
 balanced_model <- fit_model(balanced, logistic_reg())
 
 preds$balanced_preds <- predict_prob(
@@ -191,7 +181,7 @@ Let's think about that from first principles for a minute. If you had no informa
 
 Great! Let's see if using SMOTE fixes our calibration issues. I'll first use SMOTE to intelligently oversample the minority class.
 
-```{r}
+```r
 library(themis)
 
 smote <- recipe(class ~ cl_thickness, data = data) %>%
@@ -211,7 +201,7 @@ smote %>%
 
 Now that we have balanced classes thanks to SMOTE, let's fit another logistic regresion model and see if it's any better-calibrated.
 
-```{r}
+```r
 smote_model <- fit_model(smote, logistic_reg())
 
 preds$smote_preds <- predict_prob(
@@ -232,7 +222,7 @@ Interesting -- same problem. With SMOTE, we still make very similar errors to th
 
 Great! Let's try a random forest:
 
-```{r}
+```r
 library(ranger)
 
 rf <- fit_model(smote, rand_forest())
@@ -253,7 +243,7 @@ Same issue again, albeit not quite as severe. And the same logic holds. In fact,
 
 Looking at the coefficients of our three models can help understand what's going on here.
 
-```{r}
+```r
 list(
   "Original" = unbalanced_model,
   "Undersampled" = balanced_model,
@@ -276,7 +266,7 @@ The thing that does change, though, is the intercept term. In both the model whe
 
 We can illustrate this more clearly with three intercept-only models:
 
-```{r}
+```r
 unbalanced_intercept_only <-  glm(class ~ 1, data = data, family = binomial)
 undersampled_intecept_only <- glm(class ~ 1, data = balanced, family = binomial)
 smote_intercept_only <-       glm(class ~ 1, data = smote, family = binomial)
@@ -284,7 +274,7 @@ smote_intercept_only <-       glm(class ~ 1, data = smote, family = binomial)
 
 Now, let's compare the intercept coefficients of these three models on a probability (read: not a log-odds) scale.
 
-```{r}
+```r
 convert_log_odds_to_probability <- function(x) {
   odds <- exp(x)
   odds / (1 + odds)
