@@ -120,46 +120,11 @@ pr() %>%
 
 Obviously, `n` is indented to be a number. You can even define it as such in an annotation like this:
 
-```r
-#* @param n:int
-```
-
 But R won't enforce that type declaration at runtime, which means you need to explicitly handle all of the possible cases where someone provides a value for `n` that is not of type `int`. For instance, if you call that service and provide `n=foobar`, you'd see the following in your logs (and the client would get back an unhelpful `HTTP 500` error):
-
-```r
-<simpleError in n * 2: non-numeric argument to binary operator>
-```
 
 If you do the equivalent in FastAPI, you'd have vastly different results:
 
-```python
-from fastapi import FastAPI
-
-app = FastAPI()
-
-@app.get("/types")
-async def types(n: int) -> int:
-  return n * 2
-```
-
 Running that API and making the following call returns a very nice error:
-
-```json
-curl "http://127.0.0.1:8000/types?n=foobar" | jq
-
-{
-  "detail": [
-    {
-      "loc": [
-        "query",
-        "n"
-      ],
-      "msg": "value is not a valid integer",
-      "type": "type_error.integer"
-    }
-  ]
-}
-```
 
 I didn't need to do any type checking. All I did was supply a type annotation, just like I could in Plumber, and FastAPI, via `pydantic`, did all the lifting for me. I provided `foobar`, which is not a valid integer, and I get a helpful error back saying that the value I provided for `n` is not a valid integer. FastAPI also returns an `HTTP 422` error (the error code is configurable), which tells the client that _they_ did something wrong, as opposed to the `500` that Plumber returns, indicating that something went wrong on the server side.
 
@@ -171,36 +136,7 @@ Another issue with Plumber is that it doesn't integrate nicely with any testing 
 
 When I've defended R in that past, I've also heard a common complaint about it's speed. There are very often arguments that R is slow, full-stop. And that's not true, or at least mostly not true. Especially relative to Python, you can write basically equally performant code in R as you can in `numpy` or similar. But some things in R _are_ slow. For instance, let's serialize some JSON:
 
-```r
-library(jsonlite)
-
-iris <- read.csv("fastapi-example/iris.csv")
-
-result <- microbenchmark::microbenchmark(
-  tojson = {toJSON(iris)},
-  unit = "ms",
-  times = 1000
-)
-
-paste("Mean runtime:", round(summary(result)$mean, 4), "milliseconds")
-```
-
 Now, let's try the same in Python:
-
-```python
-from timeit import timeit
-import pandas as pd
-
-iris = pd.read_csv("fastapi-example/iris.csv")
-
-N = 1000
-
-print(
-  "Mean runtime:",
-  round(1000 * timeit('iris.to_json(orient = "records")', globals = locals(), number = N) / N, 4),
-  "milliseconds"
-)
-```
 
 In this particular case, Python's JSON serialization runs 6-7x faster than R's. And if you're thinking "that's only one millisecond, though!" you'd be right. But the general principle is important even if the magnitude of the issue in this particular case is not.
 
@@ -237,53 +173,6 @@ Horizontal scaling fixes this issue to some extent, but the magnitude of the pro
 ### NGINX As A Substitute
 
 We also tried to get around R's lack of an ASGI server like Uvicorn by sitting our Plumber API behind an [NGINX](https://www.nginx.com/) load balancer. The technical nuts and bolts were a little involved, so I'll just summarize the highlights here. We used a very simple NGINX conf template:
-
-```json
-## nginx.conf
-
-events {}
-
-http {
-  upstream api {
-
-      ## IMPORTANT: Keep ports + workers here
-      ## in sync with ports + workers declared
-      ## in scripts/run.sh
-
-      server localhost:8000;
-      server localhost:8001;
-      server localhost:8002;
-      server localhost:8003;
-  }
-
-  server {
-    listen $PORT;
-    server_name localhost;
-    location / {
-      proxy_pass http://api;
-    }
-  }
-}
-```
-
-Then, we'd boot the API as follows:
-
-```bash
-## run.sh
-
-# !/bin/bash
-
-## IMPORTANT: Keep ports + workers here
-## in sync with ports + workers declared
-## in nginx.conf
-
-Rscript -e "plumber::options_plumber(port = 8000); source('app.R')"&
-Rscript -e "plumber::options_plumber(port = 8001); source('app.R')"&
-Rscript -e "plumber::options_plumber(port = 8002); source('app.R')"&
-Rscript -e "plumber::options_plumber(port = 8003); source('app.R')"&
-
-sed -i -e 's/$PORT/'"$PORT"'/g' /etc/nginx/nginx.conf && nginx -g 'daemon off;'
-```
 
 The basic premise was that we'd boot four instances of our Plumber API as background processes, and then let NGINX load balance between them.
 
@@ -344,19 +233,6 @@ Ultimately, as data scientists, we get paid to deliver business value. We don't 
 ### Types and `stopifnot`
 
 One proposed fix for the "R doesn't do a good job of handling types" issues that I outlined above is to use something like this to check types:
-
-```r
-#* Double a number
-#*
-#* @param n:int The number to double
-#*
-#* @get /double
-function(n) {
-  stopifnot(is.integer(n))
-
-  n * 2
-}
-```
 
 This attempts to stop processing the request if the API receives a value for `n` that is not an integer. Unfortunately, it doesn't work. And ironically, the reason why it doesn't work is because of Plumber not enforcing types. If you run this API and make a request to `/double` with `n=foobar`, you'll get the following response:
 
