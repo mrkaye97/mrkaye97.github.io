@@ -52,7 +52,7 @@ But let's put aside the "non-starter" bit for a second, and let's imagine that y
 
 In my opinion, one of the biggest issues with R is the type system. R is dynamically typed, and primitive types are generally represented as length-one vectors. That's why these two variables are of the same type:
 
-```{r}
+```r
 class(1)
 
 class(c(1, 2))
@@ -60,19 +60,19 @@ class(c(1, 2))
 
 This is a big problem. What happens when we try to serialize the number `1` to JSON?
 
-```{r}
+```r
 jsonlite::toJSON(1)
 ```
 
 It returns `[1]` -- as in: A length-one list, where the one element is the number one. Of course, you can set `auto_unbox = TRUE`, but that has other issues:
 
-```{r}
+```r
 jsonlite::toJSON(1, auto_unbox = TRUE)
 ```
 
 This is fine, but the problem with `auto_unbox = TRUE` is that if you have a return type that is genuinely a list, it could sometimes return a list, and sometimes return a single number, depending on the length of the thing being returned:
 
-```{r}
+```r
 get_my_fake_endpoint <- function(x) {
   jsonlite::toJSON(x + 1, auto_unbox = TRUE)
 }
@@ -171,7 +171,7 @@ Another issue with Plumber is that it doesn't integrate nicely with any testing 
 
 When I've defended R in that past, I've also heard a common complaint about it's speed. There are very often arguments that R is slow, full-stop. And that's not true, or at least mostly not true. Especially relative to Python, you can write basically equally performant code in R as you can in `numpy` or similar. But some things in R _are_ slow. For instance, let's serialize some JSON:
 
-```{r}
+```r
 library(jsonlite)
 
 iris <- read.csv("fastapi-example/iris.csv")
@@ -187,11 +187,7 @@ paste("Mean runtime:", round(summary(result)$mean, 4), "milliseconds")
 
 Now, let's try the same in Python:
 
-```{bash, echo = FALSE, include = FALSE}
-pip install pandas
-```
-
-```{python, python.reticulate = FALSE}
+```python
 from timeit import timeit
 import pandas as pd
 
@@ -407,7 +403,7 @@ function(n) {
 
 Let's run this code for a few examples:
 
-```{r, error = TRUE}
+```r
 n1 <- "2"
 n2 <- "foo"
 n3 <- "2,3"

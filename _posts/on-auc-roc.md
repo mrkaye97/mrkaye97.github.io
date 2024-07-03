@@ -40,7 +40,7 @@ First, let's start by writing a function to do exactly what's described above. A
 
 Now, let's write this in R with a little help from some vectorization.
 
-```{r}
+```r
 library(rlang)
 library(dplyr)
 library(tibble)
@@ -78,7 +78,7 @@ interpretable_auc <- function(data, N, truth_col = "truth", estimate_col = "esti
 
 Next, we can test our simple implementation against `yardstick` on some real data. For the sake of demonstration, I just used the built-in `mtcars` data. Here's how the data looks:
 
-```{r}
+```r
 library(knitr)
 library(kableExtra)
 ## Doing a little data wrangling
@@ -106,7 +106,7 @@ data %>%
 
 Now, let's fit a few logistic regression models to the data to see how our AUC implementation compares to the `yardstick` one.
 
-```{r}
+```r
 library(purrr)
 library(yardstick)
 ## Simplest model -- Just an intercept. AUC should be 50%
