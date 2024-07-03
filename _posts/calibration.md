@@ -32,7 +32,7 @@ You might be reading this thinking about how this is all about predicting classe
 
 The problem is that there is no such threshold. More likely, college admissions is a bit of a game of chance: If five students each have a 20% chance of getting in to Carleton, for instance, I'd expect that about one of the five would get in on average. But it'd be disingenuous to make a class prediction, and I'm not sure how we'd even do that. For the five previously mentioned students, we'd expect one to get in. But if we were predicting classes we'd either predict all five to be accepted or all five to be rejected depending on where we set our threshold, and neither of those is the most likely scenario.
 
-With all of that in mind, what metrics do we use instead? There are three metrics that we look at when we're evaluating our models: The [Brier Skill Score](https://en.wikipedia.org/wiki/Brier_score), [AUC](https://matthewrkaye.com/posts/2023-03-09-on-auc-roc/), and calibration. I've already written about AUC, and for the purposes of this post, I'm going to focus on the one I view as the most important: Calibration.
+With all of that in mind, what metrics do we use instead? There are three metrics that we look at when we're evaluating our models: The [Brier Skill Score](https://en.wikipedia.org/wiki/Brier_score), [AUC](/blog/on-auc-roc), and calibration. I've already written about AUC, and for the purposes of this post, I'm going to focus on the one I view as the most important: Calibration.
 
 ## Calibration
 
