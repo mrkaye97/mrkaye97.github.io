@@ -234,7 +234,7 @@ Horizontal scaling fixes this issue to some extent, but the magnitude of the pro
 
 We also tried to get around R's lack of an ASGI server like Uvicorn by sitting our Plumber API behind an [NGINX](https://www.nginx.com/) load balancer. The technical nuts and bolts were a little involved, so I'll just summarize the highlights here. We used a very simple NGINX conf template:
 
-```json
+```nginx
 ## nginx.conf
 
 events {}
