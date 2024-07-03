@@ -282,6 +282,7 @@ Rscript -e "plumber::options_plumber(port = 8001); source('app.R')"&
 Rscript -e "plumber::options_plumber(port = 8002); source('app.R')"&
 Rscript -e "plumber::options_plumber(port = 8003); source('app.R')"&
 
+sed -i -e 's/$PORT/'"$PORT"'/g' /etc/nginx/nginx.conf && nginx -g 'daemon off;'
 ```
 
 The basic premise was that we'd boot four instances of our Plumber API as background processes, and then let NGINX load balance between them.
@@ -359,25 +360,7 @@ function(n) {
 
 This attempts to stop processing the request if the API receives a value for `n` that is not an integer. Unfortunately, it doesn't work. And ironically, the reason why it doesn't work is because of Plumber not enforcing types. If you run this API and make a request to `/double` with `n=foobar`, you'll get the following response:
 
-```json
-curl "http://127.0.0.1:7012/double?n=foobar" | jq
-
-{
-  "error": "500 - Internal server error",
-  "message": "Error in (function (n) : is.integer(n) is not TRUE\n"
-}
-```
-
 But if you make the request with `n=2`, which you would expect to return 4, you'll get the same error:
-
-```json
-curl "http://127.0.0.1:7012/double?n=2" | jq
-
-{
-  "error": "500 - Internal server error",
-  "message": "Error in (function (n) : is.integer(n) is not TRUE\n"
-}
-```
 
 There are three major problems here.
 
@@ -385,40 +368,7 @@ There are three major problems here.
 
 The first is that query parameters in Plumber are treated as strings and need to be coerced to other types, since Plumber doesn't enforce the types as defined. This means that `is.integer(n)` will _always_ return `FALSE`, no matter what value is provided. To get this to work, you'd need to do something like this: `is.integer(as.integer(n))`. But this also doesn't work, since `is.integer(as.integer("foo"))` returns `TRUE`. So this means that what we actually need to do is add _yet another_ type check. Something like this would work, but look how cumbersome it is:
 
-```r
-#* Double a number
-#*
-#* @param n:int The number to double
-#*
-#* @get /double
-function(n) {
-  n <- as.integer(n)
-
-  stopifnot(is.integer(n) && !is.na(n))
-
-  n * 2
-}
-```
-
 Let's run this code for a few examples:
-
-```r
-n1 <- "2"
-n2 <- "foo"
-n3 <- "2,3"
-
-double <- function(n) {
-  n <- as.integer(n)
-
-  stopifnot(is.integer(n) && !is.na(n))
-
-  n * 2
-}
-
-double(n1)
-double(n2)
-double(n3)
-```
 
 Great! That works. It's just ugly since we now need to handle both the integer case and the `NA` case, but it's not the end of the world.
 
@@ -432,43 +382,7 @@ To fix this, we'd need to add a custom implementation of some logic that's _simi
 
 Something like this might work as a quick fix:
 
-```r
-error_400 <- function(res, msg) {
-  code <- 400L
-
-  res$status <- code
-  res$body <- list(
-    status_code = code,
-    message = msg
-  )
-}
-
-#* Double a number
-#*
-#* @param n:int The number to double
-#* @serializer unboxedJSON
-#*
-#* @get /double
-function(req, res, n) {
-  n <- as.integer(n)
-  if (!is.integer(n) || is.na(n)) {
-    error_400(res, "N must be an integer.")
-  } else {
-    return(n * 2)
-  }
-}
-```
-
 In practice, you'd want something much more robust than this. Some helpful examples for structuring Plumber errors are laid out [in this post](https://unconj.ca/blog/structured-errors-in-plumber-apis.html). But if we run the API now, let's see how our error looks.
-
-```json
-curl "http://127.0.0.1:7012/double?n=foobar" | jq
-
-{
-  "status_code": 400,
-  "message": "N must be an integer."
-}
-```
 
 Much better.
 
