@@ -4,10 +4,6 @@ preview: And why I probably won't be doing it again
 author: Matt Kaye
 date: "2023-06-29"
 categories: [R, data science]
-toc: true
-toc-depth: 4
-callout-appearance: minimal
-code-annotations: hover
 ---
 
 ## Introduction
@@ -52,21 +48,71 @@ But let's put aside the "non-starter" bit for a second, and let's imagine that y
 
 In my opinion, one of the biggest issues with R is the type system. R is dynamically typed, and primitive types are generally represented as length-one vectors. That's why these two variables are of the same type:
 
+```r
+class(1)
+
+class(c(1, 2))
+```
+
 This is a big problem. What happens when we try to serialize the number `1` to JSON?
+
+```r
+jsonlite::toJSON(1)
+```
 
 It returns `[1]` -- as in: A length-one list, where the one element is the number one. Of course, you can set `auto_unbox = TRUE`, but that has other issues:
 
+```r
+jsonlite::toJSON(1, auto_unbox = TRUE)
+```
+
 This is fine, but the problem with `auto_unbox = TRUE` is that if you have a return type that is genuinely a list, it could sometimes return a list, and sometimes return a single number, depending on the length of the thing being returned:
+
+```r
+get_my_fake_endpoint <- function(x) {
+  jsonlite::toJSON(x + 1, auto_unbox = TRUE)
+}
+
+get_my_fake_endpoint(1)
+get_my_fake_endpoint(c(1, 2))
+```
 
 In these two examples, I've gotten two different response _types_ depending on the length of the input: One was a list, the other was an integer. This means that, without explicit handling of this edge case, your client has no guarantee of the type of the response it's going to get from the server, which will inevitably be a source of errors on the client side.
 
 In every other programming language that I'm aware of being used in production environments, this is not the case. For instance:
+
+```python
+import json
+import sys
+
+x = 1
+y = [1, 2]
+
+print(type(x))
+print(type(y))
+
+json.dump(x, sys.stdout)
+json.dump(y, sys.stdout)
+```
 
 In Python, the number `1` is an integer type. The list `[1, 2]` is a list type. And the JSON library reflects that. No need for unboxing.
 
 But there's more! R (and Plumber) also do not enforce types of parameters to your API, as opposed to FastAPI, for instance, which does via the use of [pydantic](https://docs.pydantic.dev/latest/). That means that if you have a Plumber route that takes an integer parameter `n` and someone calls your route with `?n=foobar`, you won't know about that until the rest of your code runs, at which point you might get an error about `n` being non-numeric.
 
 Here's an example:
+
+```r
+library(plumber)
+
+pr() %>%
+  pr_get(
+    "/types",
+    function(n) {
+      n * 2
+    }
+  ) %>%
+  pr_run()
+```
 
 Obviously, `n` is indented to be a number. You can even define it as such in an annotation like this:
 
