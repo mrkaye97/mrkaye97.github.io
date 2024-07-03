@@ -282,7 +282,6 @@ Rscript -e "plumber::options_plumber(port = 8001); source('app.R')"&
 Rscript -e "plumber::options_plumber(port = 8002); source('app.R')"&
 Rscript -e "plumber::options_plumber(port = 8003); source('app.R')"&
 
-sed -i -e 's/$PORT/'"$PORT"'/g' /etc/nginx/nginx.conf && nginx -g 'daemon off;'
 ```
 
 The basic premise was that we'd boot four instances of our Plumber API as background processes, and then let NGINX load balance between them.

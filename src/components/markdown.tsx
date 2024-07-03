@@ -3,18 +3,18 @@ import React, { useEffect, useRef } from "react";
 import hljs from "highlight.js";
 
 export default function RenderedMarkdown({ content }: { content: string }) {
-  // const rootRef = useRef<HTMLDivElement>(null);
+  const rootRef = useRef<HTMLDivElement>(null);
 
-  // useEffect(() => {
-  //   rootRef?.current?.querySelectorAll("pre code").forEach((block) => {
-  //     if (block instanceof HTMLElement) {
-  //       hljs.highlightElement(block);
-  //     }
-  //   });
-  // }, [content]);
+  useEffect(() => {
+    rootRef?.current?.querySelectorAll("pre code").forEach((block) => {
+      if (block instanceof HTMLElement) {
+        hljs.highlightElement(block);
+      }
+    });
+  }, [content]);
 
   return (
-    // <div ref={rootRef}>
+    <div ref={rootRef}>
       <Markdown
         options={{
           overrides: {
@@ -90,6 +90,6 @@ export default function RenderedMarkdown({ content }: { content: string }) {
       >
         {content}
       </Markdown>
-    // </div>
+    </div>
   );
 }
