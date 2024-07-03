@@ -52,52 +52,15 @@ But let's put aside the "non-starter" bit for a second, and let's imagine that y
 
 In my opinion, one of the biggest issues with R is the type system. R is dynamically typed, and primitive types are generally represented as length-one vectors. That's why these two variables are of the same type:
 
-```r
-class(1)
-
-class(c(1, 2))
-```
-
 This is a big problem. What happens when we try to serialize the number `1` to JSON?
-
-```r
-jsonlite::toJSON(1)
-```
 
 It returns `[1]` -- as in: A length-one list, where the one element is the number one. Of course, you can set `auto_unbox = TRUE`, but that has other issues:
 
-```r
-jsonlite::toJSON(1, auto_unbox = TRUE)
-```
-
 This is fine, but the problem with `auto_unbox = TRUE` is that if you have a return type that is genuinely a list, it could sometimes return a list, and sometimes return a single number, depending on the length of the thing being returned:
-
-```r
-get_my_fake_endpoint <- function(x) {
-  jsonlite::toJSON(x + 1, auto_unbox = TRUE)
-}
-
-get_my_fake_endpoint(1)
-get_my_fake_endpoint(c(1, 2))
-```
 
 In these two examples, I've gotten two different response _types_ depending on the length of the input: One was a list, the other was an integer. This means that, without explicit handling of this edge case, your client has no guarantee of the type of the response it's going to get from the server, which will inevitably be a source of errors on the client side.
 
 In every other programming language that I'm aware of being used in production environments, this is not the case. For instance:
-
-```{python, python.reticulate = FALSE}
-import json
-import sys
-
-x = 1
-y = [1, 2]
-
-print(type(x))
-print(type(y))
-
-json.dump(x, sys.stdout)
-json.dump(y, sys.stdout)
-```
 
 In Python, the number `1` is an integer type. The list `[1, 2]` is a list type. And the JSON library reflects that. No need for unboxing.
 
@@ -105,26 +68,48 @@ But there's more! R (and Plumber) also do not enforce types of parameters to you
 
 Here's an example:
 
-```r
-library(plumber)
-
-pr() %>%
-  pr_get(
-    "/types",
-    function(n) {
-      n * 2
-    }
-  ) %>%
-  pr_run()
-```
-
 Obviously, `n` is indented to be a number. You can even define it as such in an annotation like this:
+
+```r
+#* @param n:int
+```
 
 But R won't enforce that type declaration at runtime, which means you need to explicitly handle all of the possible cases where someone provides a value for `n` that is not of type `int`. For instance, if you call that service and provide `n=foobar`, you'd see the following in your logs (and the client would get back an unhelpful `HTTP 500` error):
 
+```r
+<simpleError in n * 2: non-numeric argument to binary operator>
+```
+
 If you do the equivalent in FastAPI, you'd have vastly different results:
 
+```python
+from fastapi import FastAPI
+
+app = FastAPI()
+
+@app.get("/types")
+async def types(n: int) -> int:
+  return n * 2
+```
+
 Running that API and making the following call returns a very nice error:
+
+```json
+curl "http://127.0.0.1:8000/types?n=foobar" | jq
+
+{
+  "detail": [
+    {
+      "loc": [
+        "query",
+        "n"
+      ],
+      "msg": "value is not a valid integer",
+      "type": "type_error.integer"
+    }
+  ]
+}
+```
 
 I didn't need to do any type checking. All I did was supply a type annotation, just like I could in Plumber, and FastAPI, via `pydantic`, did all the lifting for me. I provided `foobar`, which is not a valid integer, and I get a helpful error back saying that the value I provided for `n` is not a valid integer. FastAPI also returns an `HTTP 422` error (the error code is configurable), which tells the client that _they_ did something wrong, as opposed to the `500` that Plumber returns, indicating that something went wrong on the server side.
 
@@ -136,7 +121,36 @@ Another issue with Plumber is that it doesn't integrate nicely with any testing 
 
 When I've defended R in that past, I've also heard a common complaint about it's speed. There are very often arguments that R is slow, full-stop. And that's not true, or at least mostly not true. Especially relative to Python, you can write basically equally performant code in R as you can in `numpy` or similar. But some things in R _are_ slow. For instance, let's serialize some JSON:
 
+```r
+library(jsonlite)
+
+iris <- read.csv("fastapi-example/iris.csv")
+
+result <- microbenchmark::microbenchmark(
+  tojson = {toJSON(iris)},
+  unit = "ms",
+  times = 1000
+)
+
+paste("Mean runtime:", round(summary(result)$mean, 4), "milliseconds")
+```
+
 Now, let's try the same in Python:
+
+```python
+from timeit import timeit
+import pandas as pd
+
+iris = pd.read_csv("fastapi-example/iris.csv")
+
+N = 1000
+
+print(
+  "Mean runtime:",
+  round(1000 * timeit('iris.to_json(orient = "records")', globals = locals(), number = N) / N, 4),
+  "milliseconds"
+)
+```
 
 In this particular case, Python's JSON serialization runs 6-7x faster than R's. And if you're thinking "that's only one millisecond, though!" you'd be right. But the general principle is important even if the magnitude of the issue in this particular case is not.
 
@@ -173,6 +187,53 @@ Horizontal scaling fixes this issue to some extent, but the magnitude of the pro
 ### NGINX As A Substitute
 
 We also tried to get around R's lack of an ASGI server like Uvicorn by sitting our Plumber API behind an [NGINX](https://www.nginx.com/) load balancer. The technical nuts and bolts were a little involved, so I'll just summarize the highlights here. We used a very simple NGINX conf template:
+
+```json
+## nginx.conf
+
+events {}
+
+http {
+  upstream api {
+
+      ## IMPORTANT: Keep ports + workers here
+      ## in sync with ports + workers declared
+      ## in scripts/run.sh
+
+      server localhost:8000;
+      server localhost:8001;
+      server localhost:8002;
+      server localhost:8003;
+  }
+
+  server {
+    listen $PORT;
+    server_name localhost;
+    location / {
+      proxy_pass http://api;
+    }
+  }
+}
+```
+
+Then, we'd boot the API as follows:
+
+```bash
+## run.sh
+
+# !/bin/bash
+
+## IMPORTANT: Keep ports + workers here
+## in sync with ports + workers declared
+## in nginx.conf
+
+Rscript -e "plumber::options_plumber(port = 8000); source('app.R')"&
+Rscript -e "plumber::options_plumber(port = 8001); source('app.R')"&
+Rscript -e "plumber::options_plumber(port = 8002); source('app.R')"&
+Rscript -e "plumber::options_plumber(port = 8003); source('app.R')"&
+
+sed -i -e 's/$PORT/'"$PORT"'/g' /etc/nginx/nginx.conf && nginx -g 'daemon off;'
+```
 
 The basic premise was that we'd boot four instances of our Plumber API as background processes, and then let NGINX load balance between them.
 
@@ -234,9 +295,40 @@ Ultimately, as data scientists, we get paid to deliver business value. We don't 
 
 One proposed fix for the "R doesn't do a good job of handling types" issues that I outlined above is to use something like this to check types:
 
+```r
+#* Double a number
+#*
+#* @param n:int The number to double
+#*
+#* @get /double
+function(n) {
+  stopifnot(is.integer(n))
+
+  n * 2
+}
+```
+
 This attempts to stop processing the request if the API receives a value for `n` that is not an integer. Unfortunately, it doesn't work. And ironically, the reason why it doesn't work is because of Plumber not enforcing types. If you run this API and make a request to `/double` with `n=foobar`, you'll get the following response:
 
+```json
+curl "http://127.0.0.1:7012/double?n=foobar" | jq
+
+{
+  "error": "500 - Internal server error",
+  "message": "Error in (function (n) : is.integer(n) is not TRUE\n"
+}
+```
+
 But if you make the request with `n=2`, which you would expect to return 4, you'll get the same error:
+
+```json
+curl "http://127.0.0.1:7012/double?n=2" | jq
+
+{
+  "error": "500 - Internal server error",
+  "message": "Error in (function (n) : is.integer(n) is not TRUE\n"
+}
+```
 
 There are three major problems here.
 
@@ -244,7 +336,40 @@ There are three major problems here.
 
 The first is that query parameters in Plumber are treated as strings and need to be coerced to other types, since Plumber doesn't enforce the types as defined. This means that `is.integer(n)` will _always_ return `FALSE`, no matter what value is provided. To get this to work, you'd need to do something like this: `is.integer(as.integer(n))`. But this also doesn't work, since `is.integer(as.integer("foo"))` returns `TRUE`. So this means that what we actually need to do is add _yet another_ type check. Something like this would work, but look how cumbersome it is:
 
+```r
+#* Double a number
+#*
+#* @param n:int The number to double
+#*
+#* @get /double
+function(n) {
+  n <- as.integer(n)
+
+  stopifnot(is.integer(n) && !is.na(n))
+
+  n * 2
+}
+```
+
 Let's run this code for a few examples:
+
+```r
+n1 <- "2"
+n2 <- "foo"
+n3 <- "2,3"
+
+double <- function(n) {
+  n <- as.integer(n)
+
+  stopifnot(is.integer(n) && !is.na(n))
+
+  n * 2
+}
+
+double(n1)
+double(n2)
+double(n3)
+```
 
 Great! That works. It's just ugly since we now need to handle both the integer case and the `NA` case, but it's not the end of the world.
 
@@ -258,7 +383,43 @@ To fix this, we'd need to add a custom implementation of some logic that's _simi
 
 Something like this might work as a quick fix:
 
+```r
+error_400 <- function(res, msg) {
+  code <- 400L
+
+  res$status <- code
+  res$body <- list(
+    status_code = code,
+    message = msg
+  )
+}
+
+#* Double a number
+#*
+#* @param n:int The number to double
+#* @serializer unboxedJSON
+#*
+#* @get /double
+function(req, res, n) {
+  n <- as.integer(n)
+  if (!is.integer(n) || is.na(n)) {
+    error_400(res, "N must be an integer.")
+  } else {
+    return(n * 2)
+  }
+}
+```
+
 In practice, you'd want something much more robust than this. Some helpful examples for structuring Plumber errors are laid out [in this post](https://unconj.ca/blog/structured-errors-in-plumber-apis.html). But if we run the API now, let's see how our error looks.
+
+```json
+curl "http://127.0.0.1:7012/double?n=foobar" | jq
+
+{
+  "status_code": 400,
+  "message": "N must be an integer."
+}
+```
 
 Much better.
 
