@@ -29,13 +29,13 @@ function FavoriteCategory({
   return (
     <ReactCardFlip isFlipped={isFlipped}>
       <div
-        className="flex flex-col bg-opacity-100 border border-gray-500 shadow-2xl rounded-lg p-6 m-1 hover:cursor-pointer"
+        className="flex flex-col bg-opacity-100 border border-gray-500 justify-center shadow-2xl rounded-lg p-6 m-1 hover:cursor-pointer h-36"
         onClick={onClick}
       >
         <strong className="pr-2 text-white text-center pb-2">{title}</strong>
       </div>
       <div
-        className="flex flex-col bg-opacity-100 border border-gray-500 shadow-2xl rounded-lg p-6 m-1 hover:cursor-pointer"
+        className="flex flex-col bg-opacity-100 border border-gray-500 shadow-2xl justify-center rounded-lg p-6 m-1 hover:cursor-pointer h-36"
         onClick={onClick}
       >
         <ul>
@@ -190,23 +190,6 @@ const favorites: Item[] = [
       { name: "Melbourne", link: "https://en.wikipedia.org/wiki/Melbourne" },
       { name: "Oaxaca", link: "https://en.wikipedia.org/wiki/Oaxaca_City" },
       { name: "Vancouver", link: "https://en.wikipedia.org/wiki/Vancouver" },
-    ],
-  },
-  {
-    title: "College Courses",
-    items: [
-      {
-        name: "Advanced Algorithms",
-        link: "https://www.carleton.edu/computer-science/courses/",
-      },
-      {
-        name: "Mathematical Structures",
-        link: "https://www.carleton.edu/math/courses/",
-      },
-      {
-        name: "Price Theory",
-        link: "https://www.carleton.edu/economics/courses/",
-      },
     ],
   },
   {
