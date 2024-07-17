@@ -29,34 +29,32 @@ function FavoriteCategory({
   return (
     <ReactCardFlip isFlipped={isFlipped}>
       <div
-        className="flex flex-col bg-opacity-100 border border-gray-500 justify-center shadow-2xl rounded-lg p-6 m-1 hover:cursor-pointer h-36"
+        className="flex flex-col bg-opacity-100 border border-gray-500 justify-center shadow-2xl rounded-lg p-6 m-1 hover:cursor-pointer h-48"
         onClick={onClick}
       >
         <strong className="pr-2 text-white text-center pb-2">{title}</strong>
       </div>
       <div
-        className="flex flex-col bg-opacity-100 border border-gray-500 shadow-2xl justify-center rounded-lg p-6 m-1 hover:cursor-pointer h-36"
+        className="flex flex-col bg-opacity-100 border border-gray-500 shadow-2xl justify-center rounded-lg hover:cursor-pointer h-48 divide-y divide-gray-500 m-1"
         onClick={onClick}
       >
-        <ul>
-          {items.map((item, index) => {
-            return (
-              <li
-                key={index}
-                className="list-disc ml-2 pl-1 text-white"
-                onClick={(e) => {
-                  e.stopPropagation();
-                }}
-              >
-                <TextLink
-                  key={title + item.name}
-                  text={item.name}
-                  href={item.link}
-                />
-              </li>
-            );
-          })}
-        </ul>
+        {items.map((item, index) => {
+          return (
+            <div
+              key={index}
+              className="p-2 ml-2 mr-2 text-white text-center"
+              onClick={(e) => {
+                e.stopPropagation();
+              }}
+            >
+              <TextLink
+                key={title + item.name}
+                text={item.name}
+                href={item.link}
+              />
+            </div>
+          );
+        })}
       </div>
     </ReactCardFlip>
   );
