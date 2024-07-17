@@ -32,7 +32,9 @@ function FavoriteCategory({
         className="flex flex-col bg-opacity-100 border border-gray-500 justify-center shadow-2xl rounded-lg p-6 m-1 hover:cursor-pointer h-48"
         onClick={onClick}
       >
-        <strong className="pr-2 text-white text-center pb-2">{title}</strong>
+        <strong className="pr-2 text-white text-lg text-center pb-2">
+          {title}
+        </strong>
       </div>
       <div
         className="flex flex-col bg-opacity-100 border border-gray-500 shadow-2xl justify-center rounded-lg hover:cursor-pointer h-48 divide-y divide-gray-500 m-1"
@@ -62,7 +64,7 @@ function FavoriteCategory({
 
 const favorites: Item[] = [
   {
-    title: "Artists (Musical, According to Spotify)",
+    title: "Musicians (According to Spotify)",
     items: [
       {
         name: "Bad Bunny",
@@ -208,7 +210,7 @@ const favorites: Item[] = [
     ],
   },
   {
-    title: "Cuisines (Couldn't pick three)",
+    title: "Cuisines",
     items: [
       {
         name: "Italian",
