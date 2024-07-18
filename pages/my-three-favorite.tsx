@@ -448,17 +448,19 @@ export default function MyThreeFavorite() {
           columnsCountBreakPoints={{ 350: 1, 750: 2, 900: 3, 1200: 4 }}
         >
           <Masonry>
-            {favorites.map((category, ix) => {
-              return (
-                <FavoriteCategory
-                  key={category.title}
-                  title={category.title}
-                  items={category.items}
-                  isFlipped={flippedCardIndex === ix}
-                  onClick={() => handleClick(ix)}
-                />
-              );
-            })}
+            {favorites
+              .sort((a, b) => a.title.localeCompare(b.title))
+              .map((category, ix) => {
+                return (
+                  <FavoriteCategory
+                    key={category.title}
+                    title={category.title}
+                    items={category.items}
+                    isFlipped={flippedCardIndex === ix}
+                    onClick={() => handleClick(ix)}
+                  />
+                );
+              })}
           </Masonry>
         </ResponsiveMasonry>
       </div>
