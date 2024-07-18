@@ -40,23 +40,27 @@ function FavoriteCategory({
         className="flex flex-col bg-opacity-100 border border-gray-500 shadow-2xl justify-center rounded-lg hover:cursor-pointer h-48 divide-y divide-gray-500 m-1"
         onClick={onClick}
       >
-        {items.map((item, index) => {
-          return (
-            <div
-              key={index}
-              className="p-2 ml-2 mr-2 text-white text-center"
-              onClick={(e) => {
-                e.stopPropagation();
-              }}
-            >
-              <TextLink
-                key={title + item.name}
-                text={item.name}
-                href={item.link}
-              />
-            </div>
-          );
-        })}
+        {items
+          .sort((a, b) =>
+            a.name.toLowerCase().localeCompare(b.name.toLowerCase()),
+          )
+          .map((item, index) => {
+            return (
+              <div
+                key={index}
+                className="p-2 ml-2 mr-2 text-white text-center"
+                onClick={(e) => {
+                  e.stopPropagation();
+                }}
+              >
+                <TextLink
+                  key={title + item.name}
+                  text={item.name}
+                  href={item.link}
+                />
+              </div>
+            );
+          })}
       </div>
     </ReactCardFlip>
   );
