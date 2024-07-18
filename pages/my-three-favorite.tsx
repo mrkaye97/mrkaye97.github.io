@@ -453,7 +453,9 @@ export default function MyThreeFavorite() {
         >
           <Masonry>
             {favorites
-              .sort((a, b) => a.title.localeCompare(b.title))
+              .sort((a, b) =>
+                a.title.toLowerCase().localeCompare(b.title.toLowerCase()),
+              )
               .map((category, ix) => {
                 return (
                   <FavoriteCategory
