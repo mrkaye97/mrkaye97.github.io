@@ -65,52 +65,66 @@ export default function Contact() {
   };
 
   return (
-    <div className="max-w-3xl md:mx-auto px-4 py-8 md:w-full">
+    <div className="max-w-3xl mx-auto px-4 py-8">
       <form
         ref={form}
         onSubmit={handleSubmit}
         className="bg-opacity-100 border border-gray-500 shadow-2xl rounded-lg p-6"
       >
-        <label className="block text-white mb-2">Name</label>
+        <label className="block text-white text-lg mb-2">Name</label>
         <input
           type="text"
           name="name"
           value={formData.name}
           onChange={handleChange}
-          className="w-full p-2 mb-4 rounded border border-gray-300"
+          className="w-full p-2 mb-4 rounded border border-black bg-white text-black focus:border-black focus:outline-none focus:ring-0"
           required
         />
-        <label className="block text-white mb-2">Email</label>
+        <label className="block text-white text-lg mb-2">Email</label>
         <input
           type="email"
           name="email"
+          autoComplete="off"
           value={formData.email}
           onChange={handleChange}
-          className="w-full p-2 mb-4 rounded border border-gray-300"
+          className="w-full p-2 mb-4 rounded border border-black bg-white text-black focus:border-black focus:outline-none focus:ring-0"
           required
         />
-        <label className="block text-white mb-2">Message</label>
+        <label className="block text-white text-lg mb-2">Message</label>
         <textarea
           name="message"
           value={formData.message}
           onChange={handleChange}
-          className="w-full p-2 mb-4 rounded border border-gray-300"
+          className="w-full p-2 mb-4 rounded border border-black bg-white text-black focus:border-black focus:outline-none focus:ring-0"
           rows={4}
           required
         />
-        <div className="flex flex-column items-center align-center justify-center">
+        <div className="flex justify-center">
           <button
             type="submit"
             disabled={sending}
-            className="bg-light-seafoam text-black px-4 py-2 rounded hover:bg-dark-seafoam transition-colors items-center"
+            className="bg-light-seafoam text-black px-4 py-2 rounded hover:bg-dark-seafoam transition-colors"
           >
             {sending ? "Sending..." : "Send"}
           </button>
         </div>
-        <div className="flex flex-column items-center align-center justify-center">
-          {status && <p className="mt-4 text-white">{status}</p>}
-        </div>
+        {status && (
+          <div className="mt-4 text-white text-center">
+            <p>{status}</p>
+          </div>
+        )}
       </form>
+      <div className="mt-8 text-center text-white">
+        <p className="text-lg font-bold mb-2">
+          Feel free to email me directly at{" "}
+          <a
+            href="mailto:mrkaye97@gmail.com"
+            className="text-light-seafoam hover:text-seafoam-green transition-colors"
+          >
+            mrkaye97@gmail.com
+          </a>
+        </p>
+      </div>
     </div>
   );
 }
