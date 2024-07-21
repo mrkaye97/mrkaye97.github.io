@@ -27,7 +27,7 @@ export default function Contact() {
 
     const templateParams = {
       from_name: formData.name,
-      from_email: formData.email,
+      reply_to_email: formData.email,
       message: formData.message,
     };
 
@@ -65,12 +65,11 @@ export default function Contact() {
   };
 
   return (
-    <div className="max-w-3xl mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold text-white mb-4">Contact Me</h1>
+    <div className="max-w-3xl md:mx-auto px-4 py-8 md:w-full">
       <form
         ref={form}
         onSubmit={handleSubmit}
-        className="bg-opacity-100 border border-gray-500 shadow-2xl rounded-lg p-6 m-4"
+        className="bg-opacity-100 border border-gray-500 shadow-2xl rounded-lg p-6"
       >
         <label className="block text-white mb-2">Name</label>
         <input
@@ -99,14 +98,18 @@ export default function Contact() {
           rows={4}
           required
         />
-        <button
-          type="submit"
-          disabled={sending}
-          className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors"
-        >
-          {sending ? "Sending..." : "Send"}
-        </button>
-        {status && <p className="mt-4 text-white">{status}</p>}
+        <div className="flex flex-column items-center align-center justify-center">
+          <button
+            type="submit"
+            disabled={sending}
+            className="bg-light-seafoam text-black px-4 py-2 rounded hover:bg-dark-seafoam transition-colors items-center"
+          >
+            {sending ? "Sending..." : "Send"}
+          </button>
+        </div>
+        <div className="flex flex-column items-center align-center justify-center">
+          {status && <p className="mt-4 text-white">{status}</p>}
+        </div>
       </form>
     </div>
   );
