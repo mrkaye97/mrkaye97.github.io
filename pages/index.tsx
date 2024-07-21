@@ -22,18 +22,18 @@ export default function Home() {
             height={200}
             className="rounded-full mx-auto shadow-lg my-8"
           />
-          <h1 className="text-white text-4xl mt-4">
+          <h1 className="text-white text-4xl mt-4 fade-in">
             Hi! I&apos;m <strong>Matt</strong>
           </h1>
-          <p className="text-white text-2xl mt-2">
+          <p className="text-white text-2xl mt-2 fade-in">
             I&apos;m an engineer at{" "}
             <TextLink href="https://www.klaviyo.com" text="Klaviyo" />
           </p>
-          <p className="text-white text-2xl mt-2">
+          <p className="text-white text-2xl mt-2 fade-in">
             In my free time, I like to ski, read fantasy books, cook, and work
             on <TextLink href="https://zensearch.jobs" text="ZenSearch" />
           </p>
-          <div className="flex justify-center space-x-6 py-4">
+          <div className="flex justify-center space-x-6 py-4 fade-in">
             <a
               href="https://github.com/mrkaye97"
               className="text-light-seafoam hover:text-seafoam-green transition-colors"
@@ -43,36 +43,12 @@ export default function Home() {
               <span className="sr-only">Github</span>
             </a>
             <a
-              href="https://www.strava.com/athletes/16125633"
-              className="text-light-seafoam hover:text-seafoam-green transition-colors"
-              target="_blank"
-            >
-              <FontAwesomeIcon icon={faStrava} size="2x" />
-              <span className="sr-only">Strava</span>
-            </a>
-            <a
               href="mailto:mrkaye97@gmail.com"
               className="text-light-seafoam hover:text-seafoam-green transition-colors"
               target="_blank"
             >
               <FontAwesomeIcon icon={faEnvelope} size="2x" />
               <span className="sr-only">Email</span>
-            </a>
-            <a
-              href="https://app.thestorygraph.com/profile/mrkaye97"
-              className="text-light-seafoam hover:text-seafoam-green transition-colors"
-              target="_blank"
-            >
-              <FontAwesomeIcon icon={faBook} size="2x" />
-              <span className="sr-only">StoryGraph</span>
-            </a>
-            <a
-              href="https://untappd.com/user/mrkaye97"
-              className="text-light-seafoam hover:text-seafoam-green transition-colors"
-              target="_blank"
-            >
-              <FontAwesomeIcon icon={faUntappd} size="2x" />
-              <span className="sr-only">Untappd</span>
             </a>
           </div>
         </div>

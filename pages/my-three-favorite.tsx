@@ -356,7 +356,7 @@ const favorites: Item[] = [
     ],
   },
   {
-    title: "SeriousEats Recipes",
+    title: "Serious Eats Recipes",
     items: [
       {
         name: "Miso Salmon",
@@ -420,6 +420,51 @@ const favorites: Item[] = [
         link: "https://www.rottentomatoes.com/tv/chef_s_table",
       },
       { name: "Seinfeld", link: "https://www.rottentomatoes.com/tv/seinfeld" },
+    ],
+  },
+  {
+    title: "Hikes",
+    items: [
+      {
+        name: "Six Summits",
+        link: "https://www.alltrails.com/trail/us/maine/six-summit-trail",
+      },
+      {
+        name: "Gertrude Saddle",
+        link: "https://www.alltrails.com/trail/new-zealand/southland/gertrude-saddle-route",
+      },
+      {
+        name: "Mount Healy Overlook",
+        link: "https://www.alltrails.com/explore/trail/us/alaska/mount-healy-overlook-trail",
+      },
+    ],
+  },
+  {
+    title: "Moments in Baseball History",
+    items: [
+      {
+        name: "The Catch",
+        link: "https://www.youtube.com/watch?v=7bLt2xKaNH0&ab_channel=MLBVault",
+      },
+      {
+        name: "Torii Hunter 2002 All Star Game Catch",
+        link: "https://www.youtube.com/watch?v=dcQ5De9ZcZc&ab_channel=MLB",
+      },
+      {
+        name: "Kirk Gibson's Walk-Off Home Run",
+        link: "https://www.youtube.com/watch?v=N4nwMDZYXTI",
+      },
+    ],
+  },
+  {
+    title: "Wine Grapes",
+    items: [
+      {
+        name: "Tempranillo",
+        link: "https://en.wikipedia.org/wiki/Tempranillo",
+      },
+      { name: "Sangiovese", link: "https://en.wikipedia.org/wiki/Sangiovese" },
+      { name: "Syrah", link: "https://en.wikipedia.org/wiki/Syrah" },
     ],
   },
 ];
