@@ -17,14 +17,14 @@ function CodeCard({
         {title}
       </h1>
       {imageUrl && (
-        <div className="flex justify-center py-4 md:px-6">
+        <div className="flex justify-center py-4 ">
           <Image
             src={imageUrl}
             alt={`${title} screenshot`}
             width={0}
             height={0}
             sizes="100vw"
-            style={{ width: "100%", height: "auto" }}
+            style={{ width: "100%", height: "auto", borderRadius: "8px" }}
           />
         </div>
       )}
