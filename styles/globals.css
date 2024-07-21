@@ -16,7 +16,7 @@
 }
 
 .fade-in:nth-child(3) {
-  animation-delay: .75s;
+  animation-delay: 0.75s;
 }
 
 .fade-in:nth-child(4) {
