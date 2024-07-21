@@ -15,6 +15,11 @@ export default function Navbar() {
             Blog
           </div>
         </Link>
+        <Link href="/contact">
+          <div className="text-white font-semibold hover:text-light-seafoam text-lg py-2 px-4">
+            Contact
+          </div>
+        </Link>
         <Dropdown
           buttonText="About Me"
           dropdownItems={[
