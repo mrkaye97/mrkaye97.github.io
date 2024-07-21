@@ -109,8 +109,10 @@ export default function Contact() {
           </button>
         </div>
         {status && (
-          <div className="mt-4 text-white text-center">
-            <p>{status}</p>
+          <div className="mt-4 max-w-[100%] flex justify-center">
+            <div className="text-white text-center text-pretty justify-center max-w-[80%]">
+              <p>{status}</p>
+            </div>
           </div>
         )}
       </form>
