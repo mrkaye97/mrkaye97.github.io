@@ -22,18 +22,18 @@ export default function Home() {
             height={200}
             className="rounded-full mx-auto shadow-lg my-8"
           />
-          <h1 className="text-white text-4xl mt-4 fade-in">
+          <h1 className="text-white text-4xl mt-4">
             Hi! I&apos;m <strong>Matt</strong>
           </h1>
-          <p className="text-white text-2xl mt-2 fade-in">
+          <p className="text-white text-2xl mt-2">
             I&apos;m an engineer at{" "}
             <TextLink href="https://www.klaviyo.com" text="Klaviyo" />
           </p>
-          <p className="text-white text-2xl mt-2 fade-in">
+          <p className="text-white text-2xl mt-2">
             In my free time, I like to ski, read fantasy books, cook, and work
             on <TextLink href="https://zensearch.jobs" text="ZenSearch" />
           </p>
-          <div className="flex justify-center space-x-6 py-4 fade-in">
+          <div className="flex justify-center space-x-6 py-4">
             <a
               href="https://github.com/mrkaye97"
               className="text-light-seafoam hover:text-seafoam-green transition-colors"
