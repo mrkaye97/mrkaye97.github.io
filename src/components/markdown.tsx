@@ -20,7 +20,7 @@ export default function RenderedMarkdown({ content }: { content: string }) {
           overrides: {
             h1: {
               props: {
-                className: "text-4xl font-bold text-blue-500 m-4",
+                className: "text-3xl font-bold text-dark-blue m-4",
               },
             },
             h2: {
@@ -58,7 +58,7 @@ export default function RenderedMarkdown({ content }: { content: string }) {
               component: "blockquote",
               props: {
                 className:
-                  "border-l-4 border-dark-blue p-2 text-lg text-gray-700 italic my-4 mx-4",
+                  "border-l-4 border-dark-blue text-lg text-gray-700 italic my-4 mx-4",
               },
             },
             table: {

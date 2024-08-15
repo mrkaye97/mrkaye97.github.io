@@ -1,0 +1,50 @@
+---
+title: "Lessons Learned from Building ZenSearch, Part I: Backstory"
+author: Matt Kaye
+preview: Backstory on ZenSearch
+date: "2024-08-14"
+categories: ["engineering", "zensearch"]
+slug: building-zensearch-part-i
+---
+
+> Note: This is a crosspost from [the ZenSearch blog](https://zensearch.jobs/blog/2024-08-14-lessons-learned-building-zensearch-part-1?utm_source=matt_personal_site&utm_medium=referral)
+
+# Introduction
+
+I started building ZenSearch about a year and a half ago, which is hard to believe. In hindsight, I wish I'd taken more screenshots - the app was nothing like it is now at the time.
+
+This post is going to be the first of a few talking about things I've learned along the way. I've grown more than I can imagine as an engineer (and as a product manager, designer, and _founder_) over the past 17 months, and I've learned a lot of valuable lessons in that time.
+
+## Why Zen?
+
+I started building Zen in April 2023 when I was casually looking for a job. At the time, I was working for a small EdTech startup called [CollegeVine](https://www.collegevine.com/), and had been there about three years. I wasn't in a rush to leave, but it was starting to feel like a good time for me to start thinking about looking for opportunities to work on new types of problems and experience a new place.
+
+So I figured I might try passively job hunting, which basically translates to "wait and see if something I'd be very interested in comes up." I had a shortlist of companies - many in Boston, some fully remote - that I thought I'd be interested in working at, based on my interests and their products or services. Some of them were the likes of Klaviyo (where I am now), Strava, AllTrails, and a few others.
+
+The problem, though, was that I didn't have a good way to find out when those companies posted a new job that was relevant to me without just checking their job boards every day, which I didn't want to do. Even at the simplest level: I was looking for data scientist jobs as those companies. But I wasn't aware of any sites or tools (think LinkedIn, etc.) that would notify me when _those specific companies_ posted new jobs that I'd be interested in _without spamming me with promoted content, etc._
+
+Out of this, ZenSearch was born.
+
+## Building a Prototype
+
+My initial pass at what's now ZenSearch was simple - basically as simple as possible. I reached into my then data scientist's toolbox and pulled out Selenium and cron, and deployed an app on DigitalOcean for $5 / month that ran a [Flask](https://flask.palletsprojects.com/en/3.0.x/) backend with [APScheduler](https://apscheduler.readthedocs.io/en/3.x/#) for scheduling tasks, and a Postgres database for another $12 for storing companies and postings. I created a couple tables for said companies and postings, and went off writing some scraping logic to collect and parse job postings.
+
+And it worked great! It did basically exactly what I wanted - I had an extremely rudimentary way to add new companies to the database (manually), and the scraping job would run once a day and collect each company's jobs.
+
+Once that was shipped, I started receiving emails (on no particular cadence). I'd run my background tasks to collect postings once a day, and, eventually, I got emailed about [this one at Klaviyo](https://zensearch.jobs/postings/cab3e9fb-dc39-4be8-a132-970c1ea08281), which I ultimately accepted.
+
+Largely because of Zen, I only applied to a few companies, interviewed with three (a small health tech startup, Whoop, and Klaviyo), and ended up accepting an offer from Klaviyo.
+
+In short, my job search was not what I had been used to in the past. Instead of unleashing a flood of applications, I let the jobs flow to me, mindfully applied to a few I was particularly interested in, and landed one.
+
+## The Initial Stack
+
+As I mentioned, the app was initially built in Flask. It was (and still is!) backed by a Postgres database, served some Jinja-templated HTML from the Flask backend, and that was about it. There was a tiny bit of interactivity to allow a user to mark a company as one they were interested in and to log in and log out, but it was extremely barebones. At that point, the site wasn't even responsive, meaning that if I wanted to view it on my phone, I'd need to click `Request Desktop Site` in my browser's settings.
+
+The database and the web server both lived on DigitalOcean, which made up the extent of the infrastructure. All in all, it was $17 / month. At this point, we had about 20 companies in the database, a few hundred postings, and one user.
+
+Then, I got addicted.
+
+## What's Next?
+
+The next post in this series will talk about some of the early ways ZenSearch evolved, including adding React, migrating to FastAPI, and adding too many new features to support, all far too quickly. I'll also address some early decisions that I would make differently if I could do it again.
