@@ -21,7 +21,7 @@ I started building Zen in April 2023 when I was casually looking for a job. At t
 
 So I figured I might try passively job hunting, which basically translates to "wait and see if something I'd be very interested in comes up." I had a shortlist of companies - many in Boston, some fully remote - that I thought I'd be interested in working at, based on my interests and their products or services. Some of them were the likes of Klaviyo (where I am now), Strava, AllTrails, and a few others.
 
-The problem, though, was that I didn't have a good way to find out when those companies posted a new job that was relevant to me without just checking their job boards every day, which I didn't want to do. Even at the simplest level: I was looking for data scientist jobs as those companies. But I wasn't aware of any sites or tools (think LinkedIn, etc.) that would notify me when _those specific companies_ posted new jobs that I'd be interested in _without spamming me with promoted content, etc._
+The problem, though, was that I didn't have a good way to find out when those companies posted a new job that was relevant to me without just checking their job boards every day, which I didn't want to do. Even at the simplest level: I was looking for data scientist jobs at those companies. But I wasn't aware of any sites or tools (think LinkedIn, etc.) that would notify me when _those specific companies_ posted new jobs that I'd be interested in _without spamming me with promoted content, etc._
 
 Out of this, ZenSearch was born.
 
