@@ -72,6 +72,14 @@ Another footgun was that with SQS, there's a broker visibility timeout that you 
 
 In general, writing tasks that can be rerun and finish quickly is a good way to combat some of these issues. We've made heavy use of techniques like fanout (where a single task enqueues a number of other tasks concurrently) and pagination (also sometimes known as batching, where a single task re-enqueues itself but with a "next page" pointer, such as incrementing an offset), in order to process large numbers of what would otherwise be long-running tasks individually with no loss of performance. This is extremely useful for things like indexing a large number of records into OpenSearch (more on this in a future post), where paginating through the records in each task is a great way to keep the individual task run times down, or using fanout to run a large number of posting ingestion tasks concurrently while keeping one process responsible for one task (company, in this case) at a time.
 
+The last issue we've repeatedly had issues with is a [known issue](https://docs.hatchet.run/blog/problems-with-celery) [among Celery users](https://steve.dignam.xyz/2023/05/20/many-problems-with-celery/), which is Celery's lack of `async` support. For our tasks, we would (if we could) make heavy use of `async / await`, since so much of what we're doing are I/O bound operations (collecting job postings). However, since Celery does not support async, we instead need to use Celery's [concurrency](https://docs.celeryq.dev/en/stable/userguide/workers.html#concurrency) mechanisms to improve the performance of the workers. Largely, this has worked fine, but we did run into some issues periodically when trying to use the `gevent` pool where we'd get errors like this:
+
+```
+Couldn't ack 8360, reason:"SSLEOFError(8, 'EOF occurred in violation of protocol (_ssl.c:2423)')"
+```
+
+This would cause our Celery workers to hang without actually crashing, which would mean no tasks would be processed until we restarted the worker. As a workaround, we switched to using the `threads` pool instead of `gevent`.
+
 ## Doing It Again
 
 If I could do it again, I'd definitely make some choices differently early on. With the experience I have now, I would've reached straight for Celery instead of using the APScheduler. The APScheduler worked well and was easy to set up with the knowledge I had at the time, but knowing what I know now, Celery is very straightforward to orchestrate (at least when you're only using a few workers, have a single broker, are running on a managed service like ECS, etc.), and it would've saved a lot of refactoring to be able to go in that direction right away.
