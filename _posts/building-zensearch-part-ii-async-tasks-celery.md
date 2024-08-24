@@ -74,9 +74,7 @@ In general, writing tasks that can be rerun and finish quickly is a good way to 
 
 The last issue we've repeatedly had issues with is a [known issue](https://docs.hatchet.run/blog/problems-with-celery) [among Celery users](https://steve.dignam.xyz/2023/05/20/many-problems-with-celery/), which is Celery's lack of `async` support. For our tasks, we would (if we could) make heavy use of `async / await`, since so much of what we're doing are I/O bound operations (collecting job postings). However, since Celery does not support async, we instead need to use Celery's [concurrency](https://docs.celeryq.dev/en/stable/userguide/workers.html#concurrency) mechanisms to improve the performance of the workers. Largely, this has worked fine, but we did run into some issues periodically when trying to use the `gevent` pool where we'd get errors like this:
 
-```
-Couldn't ack 8360, reason:"SSLEOFError(8, 'EOF occurred in violation of protocol (_ssl.c:2423)')"
-```
+`Couldn't ack 8360, reason:"SSLEOFError(8, 'EOF occurred in violation of protocol (_ssl.c:2423)')"`
 
 This would cause our Celery workers to hang without actually crashing, which would mean no tasks would be processed until we restarted the worker. As a workaround, we switched to using the `threads` pool instead of `gevent`.
 
