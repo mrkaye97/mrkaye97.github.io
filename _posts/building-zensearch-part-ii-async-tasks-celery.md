@@ -82,4 +82,10 @@ This would cause our Celery workers to hang without actually crashing, which wou
 
 If I could do it again, I'd definitely make some choices differently early on. With the experience I have now, I would've reached straight for Celery instead of using the APScheduler. The APScheduler worked well and was easy to set up with the knowledge I had at the time, but knowing what I know now, Celery is very straightforward to orchestrate (at least when you're only using a few workers, have a single broker, are running on a managed service like ECS, etc.), and it would've saved a lot of refactoring to be able to go in that direction right away.
 
-There have been also a few side quests along the way that I probably wouldn't repeat, such as using Redis and then SQS as the brokers for Celery before ultimately deciding on Rabbit. Redis and SQS definitely had their benefits,
+There have been also a few side quests along the way that I probably wouldn't repeat, such as using Redis and then SQS as the brokers for Celery before ultimately deciding on Rabbit.
+
+One other viable option that I never considered would have been doing something even simpler, and using a tool like [PGQueuer](https://pgqueuer.readthedocs.io/en/latest/dashboard.html) early on to keep the stack as simple as possible. Since we already rely heavily on Postgres, this would've required no new infrastructure for setting up a broker, and since our needs are pretty straightforward (basically just running cron jobs periodically), it likely would've worked just fine.
+
+## Up Next
+
+In the next post, I'll discuss some things I've learned over time about making frontend code more friendly to work with, and choices I wish I'd made earlier on. Stay tuned!
