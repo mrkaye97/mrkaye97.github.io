@@ -3,7 +3,7 @@ import Dropdown from "./dropdown";
 
 export default function Navbar() {
   return (
-    <nav className="bg-darker-blue py-4 px-8 flex justify-between items-center w-full">
+    <nav className="bg-darker-blue py-4 md:px-8 flex justify-between items-center w-full">
       <div className="flex space-x-2 max-w-screen-xl mx-auto">
         <Link href="/">
           <div className="text-white font-semibold hover:text-light-seafoam text-lg py-2 px-4">
