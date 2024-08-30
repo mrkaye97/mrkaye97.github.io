@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
 type DropdownItem = {
   name: string;
@@ -12,6 +12,19 @@ export type DropdownProps = {
 
 export default function Dropdown({ buttonText, dropdownItems }: DropdownProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const [alignLeft, setAlignLeft] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (isOpen && dropdownRef.current) {
+      const dropdownRect = dropdownRef.current.getBoundingClientRect();
+      if (dropdownRect.right > window.innerWidth) {
+        setAlignLeft(true);
+      } else {
+        setAlignLeft(false);
+      }
+    }
+  }, [isOpen]);
 
   useEffect(() => {
     if (isOpen) {
@@ -20,7 +33,6 @@ export default function Dropdown({ buttonText, dropdownItems }: DropdownProps) {
       document.body.style.overflow = "";
     }
 
-    // Cleanup on unmount
     return () => {
       document.body.style.overflow = "";
     };
@@ -57,9 +69,12 @@ export default function Dropdown({ buttonText, dropdownItems }: DropdownProps) {
 
       <div
         id="dropdownHover"
-        className={`absolute left-0 z-10 ${
+        ref={dropdownRef}
+        className={`absolute z-10 ${
           isOpen ? "block" : "hidden"
-        } bg-dark-blue divide-y divide-gray-100 rounded-lg shadow w-48`}
+        } bg-dark-blue divide-y divide-gray-100 rounded-lg shadow w-48 ${
+          alignLeft ? "right-0" : "left-0"
+        }`}
       >
         <ul
           className="py-2 text-lg text-white"
