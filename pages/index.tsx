@@ -1,26 +1,21 @@
 import Image from "next/image";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faGithub,
-  faStrava,
-  faUntappd,
-} from "@fortawesome/free-brands-svg-icons";
+import { faGithub } from "@fortawesome/free-brands-svg-icons";
 import { faEnvelope } from "@fortawesome/free-regular-svg-icons";
-import { faBook } from "@fortawesome/free-solid-svg-icons";
 import { imageRoot } from "@/src/common/images";
 import { TextLink } from "@/src/components/links";
 
 export default function Home() {
   return (
-    <div className="flex flex-col items-center justify-center text-white mt-0 sm:mt-24">
-      <div className="w-full p-8 flex items-center justify-center">
+    <div className="flex grow flex-col items-center justify-center text-white mt-0 h-full">
+      <div className="w-full p-8 md:pb-16 flex items-center justify-center">
         <div className="text-center space-y-4">
           <Image
             src={imageRoot + "headshot.jpg"}
             alt="Headshot"
             width={200}
             height={200}
-            className="rounded-full mx-auto shadow-lg my-8"
+            className="rounded-full mx-auto shadow-lg mb-8"
           />
           <h1 className="text-white text-4xl mt-4">
             Hi! I&apos;m <strong>Matt</strong>
