@@ -17,7 +17,7 @@ import {
   PaperPlaneIcon,
   CodeIcon,
 } from "@radix-ui/react-icons";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Drawer, DrawerContent, DrawerTrigger } from "./ui/drawer";
 
 const dropdownItems = [
@@ -28,6 +28,20 @@ const dropdownItems = [
 
 export function DesktopNavbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const closeTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  const openMenu = () => {
+    if (closeTimeoutRef.current) {
+      clearTimeout(closeTimeoutRef.current);
+    }
+    setIsOpen(true);
+  };
+
+  const closeMenu = () => {
+    closeTimeoutRef.current = setTimeout(() => {
+      setIsOpen(false);
+    }, 500);
+  };
 
   return (
     <nav className="bg-darker-blue py-4 md:px-8 justify-between items-center w-full hidden md:flex">
@@ -48,7 +62,11 @@ export function DesktopNavbar() {
           </div>
         </Link>
         <DropdownMenu open={isOpen}>
-          <DropdownMenuTrigger asChild onMouseEnter={() => setIsOpen(true)}>
+          <DropdownMenuTrigger
+            asChild
+            onMouseEnter={openMenu}
+            onMouseLeave={closeMenu}
+          >
             <Button className="text-white font-semibold hover:text-light-seafoam text-lg py-2 px-2 m-0 bg-transparent border-none hover:bg-transparent h-[44px]">
               About Me
               <ChevronDownIcon className="w-4 h-4" />
@@ -56,8 +74,8 @@ export function DesktopNavbar() {
           </DropdownMenuTrigger>
           <DropdownMenuContent
             className="w-56 bg-darker-blue text-white"
-            onMouseEnter={() => setIsOpen(true)}
-            onMouseLeave={() => setIsOpen(false)}
+            onMouseEnter={openMenu}
+            onMouseLeave={closeMenu}
           >
             <DropdownMenuGroup className="hover:bg-none focus:bg-none">
               {dropdownItems.map((item) => (
@@ -139,7 +157,7 @@ export function MobileNavbar() {
 
   return (
     <>
-      <nav className="fixed bottom-0 w-full bg-darker-blue py-1 flex justify-around items-center shadow-lg md:hidden border-t border-white z-50">
+      <nav className="fixed bottom-0 w-full bg-darker-blue py-1 flex justify-around items-center shadow-lg md:hidden border-t border-white z-50 h-14">
         <NavItem type="link" text="Home" href="/" Icon={HomeIcon} />
         <NavItem type="link" text="Blog" href="/blog" Icon={Pencil1Icon} />
         <NavItem
@@ -153,7 +171,7 @@ export function MobileNavbar() {
           onOpenChange={setDrawerOpen}
           direction="bottom"
         >
-          <DrawerTrigger>
+          <DrawerTrigger asChild>
             <NavItem
               type="button"
               text="About"
