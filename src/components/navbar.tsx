@@ -165,7 +165,7 @@ export function MobileNavbar() {
             {dropdownItems.map((item) => (
               <div key={item.name} className="bg-white rounded-none">
                 <Link href={item.link} onClick={() => setDrawerOpen(false)}>
-                  <Button className="w-full justify-start items-start text-left text-light-seafoam hover:bg-opacity-10 bg-darker-blue rounded-none">
+                  <Button className="w-full justify-start items-start text-left text-white hover:bg-opacity-10 bg-darker-blue rounded-none">
                     <item.Icon className="w-6 h-6" />
                     {item.name}
                   </Button>
