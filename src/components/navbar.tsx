@@ -48,21 +48,30 @@ export function DesktopNavbar() {
           </div>
         </Link>
         <DropdownMenu open={isOpen}>
-          <DropdownMenuTrigger
-            asChild
-            onMouseEnter={() => setIsOpen(true)}
-            onMouseOut={() => setIsOpen(false)}
-          >
+          <DropdownMenuTrigger asChild onMouseEnter={() => setIsOpen(true)}>
             <Button className="text-white font-semibold hover:text-light-seafoam text-lg py-2 px-2 m-0 bg-transparent border-none hover:bg-transparent h-[44px]">
               About Me
               <ChevronDownIcon className="w-4 h-4" />
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent className="w-56">
-            <DropdownMenuGroup>
+          <DropdownMenuContent
+            className="w-56 bg-darker-blue text-white"
+            onMouseEnter={() => setIsOpen(true)}
+            onMouseLeave={() => setIsOpen(false)}
+          >
+            <DropdownMenuGroup className="hover:bg-none focus:bg-none">
               {dropdownItems.map((item) => (
-                <DropdownMenuItem key={item.name}>
-                  <Link href={item.link}>{item.name}</Link>
+                <DropdownMenuItem
+                  key={item.name}
+                  className="focus:bg-darker-blue focus:text-light-seafoam w-full"
+                >
+                  <Link
+                    href={item.link}
+                    onClick={() => setIsOpen(false)}
+                    className="w-full"
+                  >
+                    {item.name}
+                  </Link>
                 </DropdownMenuItem>
               ))}
             </DropdownMenuGroup>
