@@ -8,7 +8,7 @@ import { TextLink } from "@/src/components/links";
 export default function Home() {
   return (
     <div className="flex grow flex-col items-center justify-center text-white mt-0 h-full">
-      <div className="w-full p-8 md:pb-16 flex items-center justify-center">
+      <div className="w-full p-3 md:p-8 md:pb-16 flex items-center justify-center">
         <div className="text-center space-y-4">
           <Image
             src={imageRoot + "headshot.jpg"}
