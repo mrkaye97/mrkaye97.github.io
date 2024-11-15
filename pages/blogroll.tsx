@@ -93,7 +93,9 @@ export default function BlogPostsILike() {
       <ResponsiveMasonry columnsCountBreakPoints={{ 350: 1, 750: 2, 900: 3 }}>
         <Masonry>
           {posts.map((post) => (
-            <PostCard key={post.url} post={post} />
+            <div key={post.title} className="p-1">
+              <PostCard key={post.url} post={post} />
+            </div>
           ))}
         </Masonry>
       </ResponsiveMasonry>

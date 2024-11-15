@@ -25,7 +25,7 @@ const dropdownItems = [
   { name: "My three favorite", link: "/my-three-favorite", Icon: HeartIcon },
   {
     name: "Blog posts I like",
-    link: "/blog-posts-i-like",
+    link: "/blogroll",
     Icon: DrawingPinIcon,
   },
   { name: "Going places", link: "/travel", Icon: PaperPlaneIcon },
