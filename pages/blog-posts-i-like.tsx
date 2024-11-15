@@ -78,11 +78,9 @@ const posts: BlogPost[] = [
 function PostCard({ post }: { post: BlogPost }) {
   return (
     <Link href={post.url}>
-      <div className="bg-opacity-100 border border-gray-500 shadow-2xl rounded-lg p-6 m-4 transition-transform transform-gpu hover:scale-95 hover:bg-opacity-90">
-        <h2 className="text-3xl font-bold text-white mt-4 mx-4">
-          {post.title}
-        </h2>
-        <p className="text-xl text-gray-300 mx-4 my-2">{post.author}</p>
+      <div className="bg-opacity-100 border border-gray-500 shadow-2xl rounded-lg p-6 m-4 max-w-md w-full transition-transform transform-gpu hover:scale-95 hover:bg-opacity-90">
+        <h2 className="text-3xl font-bold text-white mt-4">{post.title}</h2>
+        <p className="text-xl text-gray-300 mt-2">{post.author}</p>
       </div>
     </Link>
   );
