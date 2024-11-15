@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Masonry, { ResponsiveMasonry } from "react-responsive-masonry";
 
 type BlogPost = {
   url: string;
@@ -77,8 +78,8 @@ const posts: BlogPost[] = [
 
 function PostCard({ post }: { post: BlogPost }) {
   return (
-    <Link href={post.url}>
-      <div className="bg-opacity-100 border border-gray-500 shadow-2xl rounded-lg p-6 m-4 max-w-md w-full transition-transform transform-gpu hover:scale-95 hover:bg-opacity-90">
+    <Link href={post.url} target="_blank">
+      <div className="bg-opacity-100 border border-gray-500 shadow-2xl rounded-lg p-6 w-full transition-transform transform-gpu hover:scale-95 hover:bg-opacity-90">
         <h2 className="text-3xl font-bold text-white mt-4">{post.title}</h2>
         <p className="text-xl text-gray-300 mt-2">{post.author}</p>
       </div>
@@ -88,10 +89,14 @@ function PostCard({ post }: { post: BlogPost }) {
 
 export default function BlogPostsILike() {
   return (
-    <div className="flex flex-col items-center max-w-3xl mx-auto">
-      {posts.map((post) => (
-        <PostCard key={post.url} post={post} />
-      ))}
+    <div className="m-2">
+      <ResponsiveMasonry columnsCountBreakPoints={{ 350: 1, 750: 2, 900: 3 }}>
+        <Masonry>
+          {posts.map((post) => (
+            <PostCard key={post.url} post={post} />
+          ))}
+        </Masonry>
+      </ResponsiveMasonry>
     </div>
   );
 }

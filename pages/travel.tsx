@@ -143,6 +143,11 @@ const images: ImageWithAStory[] = [
     date: "December 2017",
   },
   {
+    filename: "leiden.jpeg",
+    location: "Leiden, Netherlands",
+    date: "November 2024",
+  },
+  {
     filename: "nyhavn.jpg",
     location: "Nyhavn, Copenhagen, Denmark",
     date: "September 2019",
