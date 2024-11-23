@@ -1,14 +1,6 @@
 import { Button } from "./ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "./ui/dropdown-menu";
 import Link from "next/link";
 import {
-  ChevronDownIcon,
   EnvelopeClosedIcon,
   Pencil1Icon,
   PersonIcon,
@@ -17,7 +9,7 @@ import {
   PaperPlaneIcon,
   DrawingPinIcon,
 } from "@radix-ui/react-icons";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { Drawer, DrawerContent, DrawerTrigger } from "./ui/drawer";
 
 const dropdownItems = [
@@ -31,22 +23,6 @@ const dropdownItems = [
 ];
 
 export function DesktopNavbar() {
-  const [isOpen, setIsOpen] = useState(false);
-  const closeTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-
-  const openMenu = () => {
-    if (closeTimeoutRef.current) {
-      clearTimeout(closeTimeoutRef.current);
-    }
-    setIsOpen(true);
-  };
-
-  const closeMenu = () => {
-    closeTimeoutRef.current = setTimeout(() => {
-      setIsOpen(false);
-    }, 500);
-  };
-
   return (
     <nav className="bg-blue-600 py-4 md:px-8 justify-between items-center w-full hidden md:flex">
       <div className="flex space-x-2 max-w-screen-xl mx-auto">
@@ -60,45 +36,26 @@ export function DesktopNavbar() {
             Blog
           </div>
         </Link>
+        <Link href="/my-three-favorite">
+          <div className="text-white font-semibold hover:text-light-seafoam text-lg py-2 px-4">
+            My three favorite
+          </div>
+        </Link>
+        <Link href="/blogroll">
+          <div className="text-white font-semibold hover:text-light-seafoam text-lg py-2 px-4">
+            Blog posts I like
+          </div>
+        </Link>
+        <Link href="/travel">
+          <div className="text-white font-semibold hover:text-light-seafoam text-lg py-2 px-4">
+            Travel
+          </div>
+        </Link>
         <Link href="/contact">
           <div className="text-white font-semibold hover:text-light-seafoam text-lg py-2 px-4">
             Contact
           </div>
         </Link>
-        <DropdownMenu open={isOpen}>
-          <DropdownMenuTrigger
-            asChild
-            onMouseEnter={openMenu}
-            onMouseLeave={closeMenu}
-          >
-            <Button className="text-white font-semibold hover:text-light-seafoam text-lg py-2 px-2 m-0 bg-transparent border-none hover:bg-transparent h-[44px]">
-              About Me
-              <ChevronDownIcon className="w-4 h-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent
-            className="w-56 bg-blue-600 text-white"
-            onMouseEnter={openMenu}
-            onMouseLeave={closeMenu}
-          >
-            <DropdownMenuGroup className="hover:bg-none focus:bg-none">
-              {dropdownItems.map((item) => (
-                <DropdownMenuItem
-                  key={item.name}
-                  className="focus:bg-blue-600 focus:text-light-seafoam w-full"
-                >
-                  <Link
-                    href={item.link}
-                    onClick={() => setIsOpen(false)}
-                    className="w-full"
-                  >
-                    {item.name}
-                  </Link>
-                </DropdownMenuItem>
-              ))}
-            </DropdownMenuGroup>
-          </DropdownMenuContent>
-        </DropdownMenu>
       </div>
     </nav>
   );
