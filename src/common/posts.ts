@@ -2,7 +2,7 @@ import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
 
-const postsDirectory = path.join(process.cwd(), "_posts");
+const postsDirectory = path.join(process.cwd(), "pages/blog");
 
 export type PostData = {
   id: string;
@@ -15,33 +15,34 @@ export type PostData = {
 };
 
 export function getSortedPostsData() {
+  // Get file names under /posts
   const fileNames = fs.readdirSync(postsDirectory);
-  const allPostsData = fileNames.map((fileName) => {
-    const id = fileName.replace(/\.md$/, "");
 
-    const fullPath = path.join(postsDirectory, fileName);
-    const fileContents = fs.readFileSync(fullPath, "utf8");
+  // Read each file, parse the frontmatter, and return the post data
+  const allPostsData = fileNames
+    .filter((fileName) => fileName.endsWith(".mdx"))
+    .map((fileName) => {
+      const fullPath = path.join(postsDirectory, fileName);
+      const fileContents = fs.readFileSync(fullPath, "utf8");
 
-    const matterResult = matter(fileContents);
+      // Parse markdown content with frontmatter using gray-matter
+      const matterResult = matter(fileContents);
+      const { data, content } = matterResult;
 
-    const data: PostData = {
-      id,
-      title: matterResult.data.title,
-      author: matterResult.data.author,
-      date: matterResult.data.date,
-      categories: matterResult.data.categories,
-      content: matterResult.content,
-      preview: matterResult.data.preview,
-    };
+      // Create the post data object
+      const postData: PostData = {
+        id: fileName.replace(/\.mdx$/, ""), // Remove .mdx extension to get the post ID
+        title: data.title,
+        author: data.author,
+        date: data.date,
+        categories: data.categories || [],
+        content, // This will be the raw MDX content
+        preview: data.preview || "", // Using preview from frontmatter
+      };
 
-    return data;
-  });
+      return postData;
+    });
 
-  return allPostsData.sort((a, b) => {
-    if (a.date < b.date) {
-      return 1;
-    } else {
-      return -1;
-    }
-  });
+  // Sort posts by date (most recent first)
+  return allPostsData.sort((a, b) => (a.date > b.date ? -1 : 1));
 }

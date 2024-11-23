@@ -1,10 +1,15 @@
-/** @type {import('next').NextConfig} */
-const nextConfig = {
+import nextra from "nextra";
+
+const withNextra = nextra({
+  theme: "nextra-theme-blog",
+  themeConfig: "./theme.config.jsx",
+});
+
+export default withNextra({
   reactStrictMode: true,
   output: "export",
   images: {
     unoptimized: true,
   },
-};
-
-export default nextConfig;
+  pageExtensions: ["js", "jsx", "ts", "tsx", "md", "mdx"], // Include MDX files
+});

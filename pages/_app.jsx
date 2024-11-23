@@ -1,5 +1,4 @@
 import "@/styles/globals.css";
-import type { AppProps } from "next/app";
 import { config } from "@fortawesome/fontawesome-svg-core";
 import "@fortawesome/fontawesome-svg-core/styles.css";
 import Layout from "./layout";
@@ -7,10 +6,11 @@ import { GoogleAnalytics } from "nextjs-google-analytics";
 import Head from "next/head";
 import { usePathname } from "next/navigation";
 import Script from "next/script";
+import { useRouter } from "next/router";
 
 config.autoAddCss = false;
 
-function createPathAddendum(path: string) {
+function createPathAddendum(path) {
   switch (path) {
     case "/":
       return "Home";
@@ -27,7 +27,7 @@ function createPathAddendum(path: string) {
   }
 }
 
-function pathToTitle(path: string) {
+function pathToTitle(path) {
   const addendum = createPathAddendum(path);
   const base = "Matt Kaye";
 
@@ -38,9 +38,10 @@ function pathToTitle(path: string) {
   }
 }
 
-export default function App({ Component, pageProps }: AppProps) {
+export default function MyApp({ Component, pageProps }) {
   const path = usePathname();
   const title = pathToTitle(path);
+  const router = useRouter();
 
   return (
     path && (

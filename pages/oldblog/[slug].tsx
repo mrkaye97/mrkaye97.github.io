@@ -1,9 +1,8 @@
 import { Badge } from "@/components/ui/badge";
 import { getSortedPostsData, PostData } from "@/src/common/posts";
-import RenderedMarkdown from "@/src/components/markdown";
+import Link from "next/link";
 import { Button } from "@/src/components/ui/button";
 import { ArrowLeftIcon } from "@radix-ui/react-icons";
-import Link from "next/link";
 
 export default function BlogPost({ postData }: { postData: PostData }) {
   return (
@@ -28,7 +27,9 @@ export default function BlogPost({ postData }: { postData: PostData }) {
             ))}
           </div>
         </div>
-        <RenderedMarkdown content={postData.content} />
+
+        {/* Render the post's MDX content here */}
+        <div className="mx-4">{postData.content}</div>
       </article>
     </main>
   );
@@ -47,6 +48,8 @@ export async function getStaticProps({ params }: { params: { slug: string } }) {
 
 export async function getStaticPaths() {
   const allPostsData = getSortedPostsData();
+
+  console.log(allPostsData);
 
   const paths = allPostsData.map((post) => ({
     params: { slug: post.id },
