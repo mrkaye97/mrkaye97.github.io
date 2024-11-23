@@ -15,7 +15,6 @@ import {
   HomeIcon,
   HeartIcon,
   PaperPlaneIcon,
-  CodeIcon,
   DrawingPinIcon,
 } from "@radix-ui/react-icons";
 import { useRef, useState } from "react";
@@ -29,7 +28,6 @@ const dropdownItems = [
     Icon: DrawingPinIcon,
   },
   { name: "Going places", link: "/travel", Icon: PaperPlaneIcon },
-  { name: "Code", link: "/code", Icon: CodeIcon },
 ];
 
 export function DesktopNavbar() {
