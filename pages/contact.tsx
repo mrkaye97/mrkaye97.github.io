@@ -121,7 +121,7 @@ export default function Contact() {
           Feel free to email me directly at{" "}
           <a
             href="mailto:mrkaye97@gmail.com"
-            className="text-light-seafoam hover:text-seafoam-green transition-colors"
+            className="text-light-seafoam hover:text-blue-200 transition-colors"
           >
             mrkaye97@gmail.com
           </a>

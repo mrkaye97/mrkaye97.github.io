@@ -20,22 +20,22 @@ export default function RenderedMarkdown({ content }: { content: string }) {
           overrides: {
             h1: {
               props: {
-                className: "text-3xl font-bold text-dark-blue m-4",
+                className: "text-3xl font-bold text-blue-500 m-4",
               },
             },
             h2: {
               props: {
-                className: "text-3xl font-bold text-dark-blue m-4",
+                className: "text-3xl font-bold text-blue-500 m-4",
               },
             },
             h3: {
               props: {
-                className: "text-2xl font-bold text-dark-blue m-4",
+                className: "text-2xl font-bold text-blue-500 m-4",
               },
             },
             h4: {
               props: {
-                className: "text-xl font-bold text-dark-blue m-4",
+                className: "text-xl font-bold text-blue-500 m-4",
               },
             },
             p: {
@@ -58,7 +58,7 @@ export default function RenderedMarkdown({ content }: { content: string }) {
               component: "blockquote",
               props: {
                 className:
-                  "border-l-4 border-dark-blue text-lg text-gray-700 italic my-4 mx-4",
+                  "border-l-4 border-blue-500 text-lg text-gray-700 italic my-4 mx-4",
               },
             },
             table: {
@@ -70,7 +70,7 @@ export default function RenderedMarkdown({ content }: { content: string }) {
             thead: {
               component: "thead",
               props: {
-                className: "bg-dark-blue text-white",
+                className: "bg-blue-500 text-white",
               },
             },
             tbody: {
