@@ -15,7 +15,6 @@ import {
   HomeIcon,
   HeartIcon,
   PaperPlaneIcon,
-  CodeIcon,
   DrawingPinIcon,
 } from "@radix-ui/react-icons";
 import { useRef, useState } from "react";
@@ -29,7 +28,6 @@ const dropdownItems = [
     Icon: DrawingPinIcon,
   },
   { name: "Going places", link: "/travel", Icon: PaperPlaneIcon },
-  { name: "Code", link: "/code", Icon: CodeIcon },
 ];
 
 export function DesktopNavbar() {
@@ -50,7 +48,7 @@ export function DesktopNavbar() {
   };
 
   return (
-    <nav className="bg-darker-blue py-4 md:px-8 justify-between items-center w-full hidden md:flex">
+    <nav className="bg-blue-600 py-4 md:px-8 justify-between items-center w-full hidden md:flex">
       <div className="flex space-x-2 max-w-screen-xl mx-auto">
         <Link href="/">
           <div className="text-white font-semibold hover:text-light-seafoam text-lg py-2 px-4">
@@ -79,7 +77,7 @@ export function DesktopNavbar() {
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent
-            className="w-56 bg-darker-blue text-white"
+            className="w-56 bg-blue-600 text-white"
             onMouseEnter={openMenu}
             onMouseLeave={closeMenu}
           >
@@ -87,7 +85,7 @@ export function DesktopNavbar() {
               {dropdownItems.map((item) => (
                 <DropdownMenuItem
                   key={item.name}
-                  className="focus:bg-darker-blue focus:text-light-seafoam w-full"
+                  className="focus:bg-blue-600 focus:text-light-seafoam w-full"
                 >
                   <Link
                     href={item.link}
@@ -163,7 +161,7 @@ export function MobileNavbar() {
 
   return (
     <>
-      <nav className="fixed bottom-0 w-full bg-darker-blue py-1 flex justify-around items-center shadow-lg md:hidden border-t border-white z-50 h-14">
+      <nav className="fixed bottom-0 w-full bg-blue-600 py-1 flex justify-around items-center shadow-lg md:hidden border-t border-white z-50 h-14">
         <NavItem type="link" text="Home" href="/" Icon={HomeIcon} />
         <NavItem type="link" text="Blog" href="/blog" Icon={Pencil1Icon} />
         <NavItem
@@ -185,11 +183,11 @@ export function MobileNavbar() {
               Icon={PersonIcon}
             />
           </DrawerTrigger>
-          <DrawerContent className="m-0 p-0 py-2 bg-darker-blue rounded-none border-none">
+          <DrawerContent className="m-0 p-0 py-2 bg-blue-600 rounded-none border-none">
             {dropdownItems.map((item) => (
               <div key={item.name} className="bg-white rounded-none">
                 <Link href={item.link} onClick={() => setDrawerOpen(false)}>
-                  <Button className="w-full justify-start items-start text-left text-white hover:bg-opacity-10 bg-darker-blue rounded-none">
+                  <Button className="w-full justify-start items-start text-left text-white hover:bg-opacity-10 bg-blue-600 rounded-none">
                     <item.Icon className="w-6 h-6" />
                     {item.name}
                   </Button>

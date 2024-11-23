@@ -18,8 +18,6 @@ function createPathAddendum(path: string) {
       return "My Three Favorite";
     case "/blogroll":
       return "Blog Posts I Like";
-    case "/code":
-      return "Code";
     case "/blog":
       return "Blog";
     case "/travel":

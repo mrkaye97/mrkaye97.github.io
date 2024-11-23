@@ -9,7 +9,7 @@ export type PostData = {
   title: string;
   author: string;
   date: string;
-  categories: string;
+  categories: string[];
   content: string;
   preview: string;
 };

@@ -8,8 +8,6 @@ preview: >
   ZenSearch is a seeker-first tool for job hunting. I started working on it when I was last looking for a job with the goal of making it simple to find out when companies I care about post new jobs I'd be interested in.
 ---
 
-## Introduction
-
 I've been working on [ZenSearch](https://zensearch.jobs) for the past six months or so, and I'm proud of where it's at and thought it might be a good time to share it with all of you (cough, potential beta users). This post will be a brief intro to what the app does, why I built it, and some roadmap items for the future. As a disclaimer: I'm still _not_ an engineer (especially on the front end), so please don't read through my largely GPT-generated React code with too critical of an eye.
 
 ## What's Zen?

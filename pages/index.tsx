@@ -31,7 +31,7 @@ export default function Home() {
           <div className="flex justify-center space-x-6 py-4">
             <a
               href="https://github.com/mrkaye97"
-              className="text-light-seafoam hover:text-seafoam-green transition-colors"
+              className="text-light-seafoam hover:text-blue-200 transition-colors"
               target="_blank"
             >
               <FontAwesomeIcon icon={faGithub} size="2x" />
@@ -39,7 +39,7 @@ export default function Home() {
             </a>
             <a
               href="mailto:mrkaye97@gmail.com"
-              className="text-light-seafoam hover:text-seafoam-green transition-colors"
+              className="text-light-seafoam hover:text-blue-200 transition-colors"
               target="_blank"
             >
               <FontAwesomeIcon icon={faEnvelope} size="2x" />

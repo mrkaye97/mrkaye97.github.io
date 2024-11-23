@@ -7,8 +7,6 @@ slug: calibration-classification-models
 preview: The least-taught, most important classification diagnostic
 ---
 
-## Introduction
-
 There's something of a complexity trajectory in evaluating classification models that I've observed over the past few years. It starts with accuracy. But soon after learning about accuracy, data scientists are taught that accuracy is problematic for two reasons:
 
 1. It doesn't work well with unbalanced classes. This is the "if 95% of people don't have cancer and you always predict 'no cancer', your model isn't actually good" argument.

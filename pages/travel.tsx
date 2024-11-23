@@ -260,11 +260,11 @@ export default function TravelPhotos({
   imagesWithStories: ImageWithAStory[];
 }) {
   return (
-    <div className="m-2">
+    <div className="px-4 md:px-16 py-8">
       <ResponsiveMasonry columnsCountBreakPoints={{ 350: 1, 750: 2, 900: 3 }}>
         <Masonry>
           {imagesWithStories.map((el) => (
-            <div key={el.filename} className="p-1 relative group">
+            <div key={el.filename} className="p-2 relative group">
               <div className="overflow-hidden rounded-md shadow-md transition-transform transform-gpu group-hover:scale-95">
                 <Image
                   className="object-cover"
