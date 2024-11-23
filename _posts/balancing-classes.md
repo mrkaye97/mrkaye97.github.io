@@ -7,8 +7,6 @@ preview: And why it's generally a bad idea
 categories: [R, data science]
 ---
 
-## Introduction
-
 In [my last post](/blog/calibration) I wrote about common classification metrics and, especially, calibration.
 
 With calibration in mind, this post will show why balancing your classes -- which is an all-too-common practice when working on classification problems -- is generally a bad idea and leads to poorly calibrated models.

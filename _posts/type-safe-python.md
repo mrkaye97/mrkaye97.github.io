@@ -92,3 +92,5 @@ Third, once the column is mapped to a Python type, it must be mapped to a `str`,
 Speaking of MyPy, the next issue is that once the ORM maps the type in the database (`nullable varchar`) to the type in Python `str`, MyPy thinks all is well, and that the type of that column must be `str` everywhere, which then propagates downstream to the Pydantic models. Ultimately, this means that MyPy has no issues with asserting that the type in the database will be correctly parsed by Pydantic, since it's sure that the `str` from the ORM will always map the `str` in the Pydantic model for the corresponding field.
 
 At runtime, it turns out that the column in the database contains nulls, which eventually make their way to Pydantic, which throws a validation error.
+
+### How do we fix this?

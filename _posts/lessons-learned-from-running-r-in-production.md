@@ -6,8 +6,6 @@ date: "2023-06-29"
 categories: [R, data science]
 ---
 
-## Introduction
-
 A couple weeks ago, I wrote a high-level post on REST APIs. One thing that I noted was that I couldn't, in good faith, recommend running R (or Plumber, a common library used to create APIs in R) in any type of moderately high-load production system.
 
 Admittedly, this was a pretty inflammatory thing to say. I know there's a whole community of R developers working on R in production, as well as lots of believers in R for production services. I know this, in part, because I've been one of them in the past. But more on that in a bit.

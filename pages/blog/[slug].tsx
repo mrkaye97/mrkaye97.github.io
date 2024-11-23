@@ -1,3 +1,4 @@
+import { Badge } from "@/components/ui/badge";
 import { getSortedPostsData, PostData } from "@/src/common/posts";
 import RenderedMarkdown from "@/src/components/markdown";
 import { Button } from "@/src/components/ui/button";
@@ -13,6 +14,20 @@ export default function BlogPost({ postData }: { postData: PostData }) {
             <ArrowLeftIcon style={{ color: "black" }} />
           </Button>
         </Link>
+        <div className="mx-4 text-blue-500 flex flex-col gap-y-2">
+          <h1 className="font-bold text-3xl">{postData.title}</h1>
+          <h3 className="font-bold text-lg">{postData.date}</h3>
+          <div className="flex flex-row gap-x-1 py-2">
+            {postData.categories.map((c) => (
+              <Badge
+                key={c}
+                className="bg-light-seafoam text-black hover:bg-bg-light-seafoam"
+              >
+                {c}
+              </Badge>
+            ))}
+          </div>
+        </div>
         <RenderedMarkdown content={postData.content} />
       </article>
     </main>
