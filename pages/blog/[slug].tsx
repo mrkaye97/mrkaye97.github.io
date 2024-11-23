@@ -20,7 +20,7 @@ export default function BlogPost({ postData }: { postData: PostData }) {
           <div className="flex flex-row gap-x-1 py-2">
             {postData.categories.map((c) => (
               <Badge
-                key={c}
+                key={c.toLowerCase()}
                 className="bg-light-seafoam text-black hover:bg-bg-light-seafoam"
               >
                 {c}
