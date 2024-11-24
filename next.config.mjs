@@ -5,11 +5,16 @@ const withNextra = nextra({
   themeConfig: "./theme.config.jsx",
 });
 
-export default withNextra({
-  reactStrictMode: true,
-  output: "export",
+module.exports = {
+  ...withNextra({
+    reactStrictMode: true,
+    output: "export",
+    images: {
+      unoptimized: true,
+    },
+    pageExtensions: ["js", "jsx", "ts", "tsx", "md", "mdx"], // Include MDX files
+  }),
   images: {
     unoptimized: true,
   },
-  pageExtensions: ["js", "jsx", "ts", "tsx", "md", "mdx"], // Include MDX files
-});
+}
