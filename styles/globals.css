@@ -68,3 +68,8 @@
 body {
   padding: 0;
 }
+
+article {
+  padding-top: 8px;
+  margin-top: 16px;
+}

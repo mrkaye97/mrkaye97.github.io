@@ -3,19 +3,22 @@ const theme = {
   head: ({ title, meta }) => {
     return (
       <>
-        {meta.description && (
-          <meta name="description" content={meta.description} />
+        {meta.preview && <meta name="description" content={meta.preview} />}
+        {meta.categories && (
+          <meta name="keywords" content={meta.categories.join(", ")} />
         )}
-        {meta.tag && <meta name="keywords" content={meta.tag} />}
         {meta.author && <meta name="author" content={meta.author} />}
       </>
     );
   },
   darkMode: false,
-  navs: [],
-  navigation: {
-    prev: true,
-    next: true,
+  components: {
+    pre: ({ children }) => (
+      <pre className="bg-blue-700 rounded-xl px-0 py-4">{children}</pre>
+    ),
+    article: ({ children }) => (
+      <article className="mt-4 pt-4">{children}</article>
+    ),
   },
 };
 
