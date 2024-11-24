@@ -49,8 +49,6 @@ export async function getStaticProps({ params }: { params: { slug: string } }) {
 export async function getStaticPaths() {
   const allPostsData = getSortedPostsData();
 
-  console.log(allPostsData);
-
   const paths = allPostsData.map((post) => ({
     params: { slug: post.id },
   }));

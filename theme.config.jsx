@@ -1,7 +1,6 @@
 const theme = {
   footer: <p></p>,
   head: ({ title, meta }) => {
-    console.log(title, meta);
     return (
       <>
         {meta.description && (
@@ -14,6 +13,10 @@ const theme = {
   },
   darkMode: false,
   navs: [],
+  navigation: {
+    prev: true,
+    next: true,
+  },
 };
 
 export default theme;
