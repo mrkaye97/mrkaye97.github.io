@@ -11,5 +11,5 @@ export default withNextra({
   images: {
     unoptimized: true,
   },
-  pageExtensions: ["js", "jsx", "ts", "tsx", "md", "mdx"], // Include MDX files
+  pageExtensions: ["js", "jsx", "ts", "tsx", "md", "mdx"],
 });
