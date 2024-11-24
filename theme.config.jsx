@@ -16,9 +16,6 @@ const theme = {
     pre: ({ children }) => (
       <pre className="bg-blue-700 rounded-xl px-0 py-4">{children}</pre>
     ),
-    article: ({ children }) => (
-      <article className="mt-4 pt-4">{children}</article>
-    ),
   },
 };
 
