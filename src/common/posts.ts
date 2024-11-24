@@ -9,9 +9,9 @@ export type PostData = {
   title: string;
   author: string;
   date: string;
-  categories: string[];
+  tag: string[];
   content: string;
-  preview: string;
+  description: string;
 };
 
 export function getSortedPostsData() {
@@ -35,9 +35,9 @@ export function getSortedPostsData() {
         title: data.title,
         author: data.author,
         date: data.date,
-        categories: data.categories || [],
+        tag: data.tag || [],
         content, // This will be the raw MDX content
-        preview: data.preview || "", // Using preview from frontmatter
+        description: data.description || "", // Using description from frontmatter
       };
 
       return postData;

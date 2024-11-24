@@ -3,9 +3,9 @@ const theme = {
   head: ({ title, meta }) => {
     return (
       <>
-        {meta.preview && <meta name="description" content={meta.preview} />}
-        {meta.categories && (
-          <meta name="keywords" content={meta.categories.join(", ")} />
+        {meta.description && <meta name="description" content={meta.description} />}
+        {meta.tag && (
+          <meta name="keywords" content={meta.tag.join(", ")} />
         )}
         {meta.author && <meta name="author" content={meta.author} />}
       </>

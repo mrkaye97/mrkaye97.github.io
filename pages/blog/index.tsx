@@ -8,12 +8,12 @@ function PostCard({ postData }: { postData: PostData }) {
       <div className="h-full bg-opacity-100 shadow-2xl rounded-lg p-6 transition-transform transform-gpu hover:scale-95 hover:bg-opacity-90 flex flex-col justify-between bg-blue-500 gap-y-4 min-h-64">
         <div className="flex flex-col gap-y-2">
           <h2 className="text-3xl font-bold text-white">{postData.title}</h2>
-          <p className="text-xl text-gray-300">{postData.preview}</p>
+          <p className="text-xl text-gray-300">{postData.description}</p>
         </div>
         <div className="flex flex-col md:flex-row justify-between md:items-center gap-y-2">
           <p className="text-md font-semibold text-white">{postData.date}</p>
           <div className="flex flex-row items-center gap-x-1">
-            {postData.categories.map((c) => (
+            {postData.tag.map((c) => (
               <Badge
                 className="bg-light-seafoam text-black hover:bg-bg-light-seafoam"
                 key={c}
