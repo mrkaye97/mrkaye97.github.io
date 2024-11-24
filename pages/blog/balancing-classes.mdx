@@ -7,6 +7,8 @@ preview: And why it's generally a bad idea
 categories: [R, data science]
 ---
 
+import { Callout } from 'nextra/components'
+
 In [my last post](/blog/calibration) I wrote about common classification metrics and, especially, calibration.
 
 With calibration in mind, this post will show why balancing your classes -- which is an all-too-common practice when working on classification problems -- is generally a bad idea and leads to poorly calibrated models.
@@ -171,7 +173,10 @@ All of a sudden, our model is very poorly calibrated. We're consistently overpre
 
 Let's think about that from first principles for a minute. If you had no information at all, a reasonable guess for whether or not a tumor is malignant would be the overall proportion of tumors that are malignant. In the unbalanced data, that number was about 34%. But after balancing, it's now 50%. That means that we've just biased our "no-information" prediction upwards by about 16 percentage points (or 50%). And so it shouldn't be surprising that in our calibration plot above, we see that we're consistently over-predicting. Our probabilities are too high because the baseline rate at which the true class appears in our training data has just increased significantly.
 
-> An important note which I'll circle back to later is that this intuition about a baseline guess is directly rated to the intercept term of the logistic regression model you fit.
+
+<Callout emoji="ℹ️" type="info">
+An important note which I'll circle back to later is that this intuition about a baseline guess is directly rated to the intercept term of the logistic regression model you fit.
+</Callout>
 
 ## SMOTE
 

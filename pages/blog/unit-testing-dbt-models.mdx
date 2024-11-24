@@ -9,7 +9,11 @@ toc-depth: 4
 code-annotations: hover
 ---
 
-> NOTE: As of version 1.8, dbt now supports unit testing! You can read more [in the documentation](https://docs.getdbt.com/docs/build/unit-tests).
+import { Callout } from 'nextra/components'
+
+<Callout emoji="ℹ️" type="info">
+As of version 1.8, dbt now supports unit testing! You can read more [in the documentation](https://docs.getdbt.com/docs/build/unit-tests).
+</Callout>
 
 ## Introduction
 
@@ -19,7 +23,9 @@ The basic gist is this: You use an ELT tool like [Fivetran](https://www.fivetran
 
 dbt is the transformation tool (the "T" in "ELT") in that stack: It runs SQL inside of your data warehouse and abstracts away the often boilerplate DDL code, so that you can focus on writing transformations as `SELECT` statements and spend your time on driving business value. dbt also allows you to easily write documentation and tests, write macros for often-reused code, and so on. The testing bit of dbt is what this post will focus on. In short, dbt sells itself as a tool that lets you bring software engineering best practices to ELT pipelines.
 
-> If you're not familiar with dbt, I would recommend reading some of [their documentation](https://docs.getdbt.com/) before continuing this post. It will not cover many dbt basics.
+<Callout emoji="ℹ️" type="info">
+If you're not familiar with dbt, I would recommend reading some of [their documentation](https://docs.getdbt.com/) before continuing this post. It will not cover many dbt basics.
+</Callout>
 
 ## Tests in dbt
 
