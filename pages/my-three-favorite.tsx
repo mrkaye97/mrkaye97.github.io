@@ -878,7 +878,7 @@ export function Ticket({ item }: { item: Item }) {
   return (
     <div className="shadow-2xl rounded-lg flex flex-col bg-blue-500 gap-y-2">
       <div className="p-4 gap-y-4 flex flex-col">
-        <div className="flex flex-row justify-center items-center gap-x-4">
+        <div className="flex flex-row justify-start items-center gap-x-4">
           {item.icon}
           <p className="text-center text-white font-semibold">{item.title}</p>
         </div>
@@ -892,7 +892,7 @@ export function Ticket({ item }: { item: Item }) {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <div className="w-full bg-light-seafoam opacity-70 rounded-md p-2 hover:opacity-100">
+                <div className="w-full bg-blue-300 text-white rounded-md p-2 hover:opacity-100 hover:bg-dark-seafoam">
                   <p>{i.name}</p>
                 </div>
               </Link>
