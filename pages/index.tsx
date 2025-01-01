@@ -22,7 +22,7 @@ export default function Home() {
           </h1>
           <p className="text-white text-2xl mt-2">
             I&apos;m an engineer at{" "}
-            <TextLink href="https://www.klaviyo.com" text="Klaviyo" />
+            <TextLink href="https://hatchet.run/" text="Hatchet" />
           </p>
           <p className="text-white text-2xl mt-2">
             In my free time, I like to ski, read fantasy books, cook, and work
