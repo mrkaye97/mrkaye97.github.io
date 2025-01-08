@@ -102,6 +102,13 @@ const posts: BlogPost[] = [
     date: "2019-06-04",
     tag: ["engineering", "react"],
   },
+  {
+    url: "https://www.seangoedecke.com/large-established-codebases/",
+    title: "Mistakes engineers make in large established codebases",
+    author: "Sean Goedecke",
+    date: "2024-01-07",
+    tag: ["engineering"],
+  },
 ];
 
 function PostCard({ post }: { post: BlogPost }) {
