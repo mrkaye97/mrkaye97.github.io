@@ -260,7 +260,7 @@ export default function TravelPhotos({
   imagesWithStories: ImageWithAStory[];
 }) {
   return (
-    <div className="px-4 md:px-16 py-8">
+    <div className="px-4 md:px-16 py-8 mb-16 md:mb-0">
       <ResponsiveMasonry columnsCountBreakPoints={{ 350: 1, 750: 2, 900: 3 }}>
         <Masonry>
           {imagesWithStories.map((el) => (

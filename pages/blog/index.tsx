@@ -30,7 +30,7 @@ function PostCard({ postData }: { postData: PostData }) {
 
 export default function BlogPosts({ allPosts }: { allPosts: PostData[] }) {
   return (
-    <div className="py-8 px-4 md:px-16 grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+    <div className="py-8 px-4 md:px-16 grid md:grid-cols-2 lg:grid-cols-3 gap-4 mb-16 md:mb-0">
       {allPosts.map((postData) => (
         <PostCard key={postData.id} postData={postData} />
       ))}
