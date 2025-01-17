@@ -18,11 +18,6 @@ const images: ImageWithAStory[] = [
     date: "February 2022",
   },
   {
-    filename: "arbeit-macht-frei.jpg",
-    location: "Auschwitz, Poland",
-    date: "December 2017",
-  },
-  {
     filename: "blomqvist.jpg",
     location: "Mikael Blomqvist's House, Stockholm, Sweden",
     date: "September, 2019",
@@ -213,6 +208,11 @@ const images: ImageWithAStory[] = [
     date: "October 2019",
   },
   {
+    filename: "arbeit-macht-frei.jpg",
+    location: "Auschwitz, Poland",
+    date: "December 2017",
+  },
+  {
     filename: "sthlm.jpg",
     location: "Stadshuset, Kungsholmen, Stockholm, Sweden",
     date: "September 2019",
@@ -293,7 +293,7 @@ export async function getStaticProps() {
   const imageFilenames = await fs.readdir(imageDirectory);
 
   const imagesWithStories = images.filter((i) =>
-    imageFilenames.includes(i.filename),
+    imageFilenames.includes(i.filename)
   );
 
   return {
