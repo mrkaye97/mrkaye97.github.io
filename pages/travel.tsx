@@ -209,7 +209,7 @@ const images: ImageWithAStory[] = [
   },
   {
     filename: "arbeit-macht-frei.jpg",
-    location: "Auschwitz, Poland",
+    location: "Oświęcim, Poland",
     date: "December 2017",
   },
   {
