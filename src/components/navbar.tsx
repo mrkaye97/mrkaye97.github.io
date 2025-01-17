@@ -1,7 +1,6 @@
 import { Button } from "./ui/button";
 import Link from "next/link";
 import {
-  EnvelopeClosedIcon,
   Pencil1Icon,
   PersonIcon,
   HomeIcon,
@@ -49,11 +48,6 @@ export function DesktopNavbar() {
         <Link href="/travel">
           <div className="text-white font-semibold hover:text-light-seafoam text-lg py-2 px-4">
             Travel
-          </div>
-        </Link>
-        <Link href="/contact">
-          <div className="text-white font-semibold hover:text-light-seafoam text-lg py-2 px-4">
-            Contact
           </div>
         </Link>
       </div>
@@ -120,13 +114,7 @@ export function MobileNavbar() {
     <>
       <nav className="fixed bottom-0 w-full bg-blue-600 py-1 flex justify-around items-center shadow-lg md:hidden border-t border-white z-50 h-14">
         <NavItem type="link" text="Home" href="/" Icon={HomeIcon} />
-        <NavItem type="link" text="Blog" href="/blog" Icon={Pencil1Icon} />
-        <NavItem
-          type="link"
-          text="Contact"
-          href="/contact"
-          Icon={EnvelopeClosedIcon}
-        />
+
         <Drawer
           open={isDrawerOpen}
           onOpenChange={setDrawerOpen}
@@ -153,6 +141,7 @@ export function MobileNavbar() {
             ))}
           </DrawerContent>
         </Drawer>
+        <NavItem type="link" text="Blog" href="/blog" Icon={Pencil1Icon} />
       </nav>
     </>
   );
