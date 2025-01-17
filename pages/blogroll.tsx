@@ -109,6 +109,13 @@ const posts: BlogPost[] = [
     date: "2024-01-07",
     tag: ["engineering"],
   },
+  {
+    url: "https://docs.hatchet.run/blog/postgres-events-table",
+    title: "Use Postgres for your events table",
+    author: "Alexander Belanger",
+    date: "2024-11-20",
+    tag: ["engineering"],
+  },
 ];
 
 function PostCard({ post }: { post: BlogPost }) {
