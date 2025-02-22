@@ -116,6 +116,14 @@ const posts: BlogPost[] = [
     date: "2024-11-20",
     tag: ["engineering"],
   },
+  {
+    url: "https://timsh.org/tracking-myself-down-through-in-app-ads/",
+    title:
+      "Everyone knows your location: tracking myself down through in-app ads",
+    author: "Tim",
+    date: "2025-02-01",
+    tag: ["privacy"],
+  },
 ];
 
 function PostCard({ post }: { post: BlogPost }) {

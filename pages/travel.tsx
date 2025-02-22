@@ -293,7 +293,7 @@ export async function getStaticProps() {
   const imageFilenames = await fs.readdir(imageDirectory);
 
   const imagesWithStories = images.filter((i) =>
-    imageFilenames.includes(i.filename)
+    imageFilenames.includes(i.filename),
   );
 
   return {
