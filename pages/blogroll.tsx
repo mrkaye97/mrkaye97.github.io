@@ -124,6 +124,13 @@ const posts: BlogPost[] = [
     date: "2025-02-01",
     tag: ["privacy"],
   },
+  {
+    url: "https://haterade.substack.com/p/i-tasted-hondas-spicy-rodent-repelling",
+    title: "I Tasted Honda's Spicy Rodent-Repelling Tape",
+    author: "Liz Cook",
+    date: "2021-07-30",
+    tag: ["misc"],
+  },
 ];
 
 function PostCard({ post }: { post: BlogPost }) {
