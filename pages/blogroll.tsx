@@ -131,6 +131,13 @@ const posts: BlogPost[] = [
     date: "2021-07-30",
     tag: ["misc"],
   },
+  {
+    url: "https://simone.org/advertising/",
+    title: "What if we made advertising illegal?",
+    author: "Kōdō Simone",
+    date: "2025-04-05",
+    tag: ["misc"],
+  },
 ];
 
 function PostCard({ post }: { post: BlogPost }) {
